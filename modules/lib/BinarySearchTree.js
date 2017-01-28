@@ -113,7 +113,7 @@ BinarySearchTree.prototype = {
         return true;
 	},
 	inOrderToArray() {
-		var arr = new Array();
+		var arr = new Array(0);
 		this.inOrderToArrayHelper(this.root, arr);
 		return arr;
 	},

@@ -1,13 +1,3 @@
-/****** import helper functions ******/
-
-import {
-	BSTNode,
-	BinarySearchTree
-} from './lib/BinarySearchTree.js';
-
-/****** import helper functions ******/
-
-
 /****** define helper functions and class ******/
 
 function inherit(proto) {
@@ -121,22 +111,36 @@ function Transition_Graph() {
 }
 Transition_Graph.prototype = {
 	/*
+	returns all states in the graph
+	*/
+	getStates: function() {
+		return Object.keys(this.V);
+	},
+	/*
 	returns all vertices in the graph
 	*/
 	getVertices: function() {
-		return Object.keys(this.adj);
+		return Object.values(this.V);
 	},
 	/*
 	returns all edges (rules) in the graph
 	*/
 	getEdges: function() {
-		var vertices = this.getVertices();
-		var edges = new Array();
-		for (int i = 0; i < vertices.length; i++) {
-			var tree = this.adj[vertices[i]];
-			edges.push.apply(tree.inOrderToArray());
+		var trees = Object.values(this.adj);
+		var edges = new Array(0);
+		for (var i = 0; i < trees.length; i++) {
+			var tree = trees[i];
+			var nodes = tree.inOrderToArray();
+			for (var j = 0; j < nodes.length; j++) 
+				edges.push(nodes[i]);
 		}
 		return edges;
+	},
+	/*
+	state: String
+	*/
+	getState: function(state) {
+		return this.V[state];
 	},
 	/*
 	state: String
@@ -179,10 +183,10 @@ Transition_Graph.prototype = {
 		this.addState(in_state); 
 		this.addState(new_state); 
 
-		var u = this.V[in_state], v = this.V[new_state]
+		var u = this.getState(in_state), v = this.getState(new_state);
 
 		return this.adj[u].insertEdge(new Edge(
-			u, read, write, direction, new_state
+			u, read, write, direction, v
 		));
 	},
 	/*
@@ -190,7 +194,7 @@ Transition_Graph.prototype = {
 	read: String
 	*/
 	ruleExists: function(in_state, read) {
-		if (!this.stateExists())
+		if (!this.stateExists(in_state))
 			return false;
 		var tree = this.adj[this.V[in_state]];
 		return tree.search(read) != null;
@@ -208,20 +212,17 @@ Transition_Graph.prototype = {
 
 		var tree = this.adj[this.V[in_state]];
 		var rule = tree.search(read);
-		rule.write = write;
-		rule.direction = direction;
-		rule.new_state = new_state;
+		rule.val.write = write;
+		rule.val.direction = direction;
+		rule.val.new_state = new_state;
 	},
 	/*
 	in_state: String
 	read: String
-	write: String
-	direction: LEFT or RIGHT defined above
-	new_state: String
 
 	returns True if operation succeeds
 	*/
-	deleteRule: function(in_state, read, write, direction, new_state) {
+	deleteRule: function(in_state, read) {
 		if (!this.ruleExists(in_state, read))
 			return false;
 
@@ -232,7 +233,22 @@ Transition_Graph.prototype = {
 		var rules = this.getEdges();
 		var table = new Array(rules.length);
 		for (var i = 0; i < rules.length; i++)
-			table[i] = rules[i].toArray();
+			table[i] = rules[i].val.toArray();
 		return table;
+	}
+}
+
+function test() {
+	var G = new Transition_Graph();
+	G.addRule("1", "0", "x", LEFT, "0");
+	G.addRule("1", "1", "x", LEFT, "1");
+	G.deleteRule("1", "1");
+	G.modifyRule("1", "0", "y", LEFT, "0");
+
+	var table = G.toTable();
+	for (var i = 0; i < table.length; i++) {
+		for (var j = 0; j < table[i].length; j++) {
+			console.log(table[i][j]);
+		}
 	}
 }
