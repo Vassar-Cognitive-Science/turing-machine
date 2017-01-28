@@ -37,56 +37,139 @@ MyBST.prototype.deleteEdge = function(key) {
 
 /****** define helper functions and class ******/
 
+
+// Global variables
 var _INITIAL_TAPE_SIZE = 20; // initial 
 var LEFT = "L";
 var RIGHT = "R";
 
+/*
+Class: Head
+
+tape: must be a Tape type defined below
+*/
 function Head(tape) {
 	this.tape = tape; // tape to which the head belong
 	this.state = null; // internal state
 	this.index = 0;
 }
 Head.prototype = {
+	/*
+	read from tape
+	*/
 	read: function() {
-		return this.tape.cells[index];
+		return this.tape.cells[this.index];
 	},
+	/*
+	write into tape
+	*/
 	write: function(val) {
-		this.tape.cells[index] = val;
+		this.tape.cells[this.index] = val;
 	},
+	/*
+	get internal state
+	*/
 	getState: function() {
 		return this.state;
 	},
+	/*
+	change internal state
+	*/
 	changeState: function(state) {
 		this.state = state;
 	},
+	/*
+	move to left
+	*/
 	moveLeft: function() {
 		if (this.index - 1 >= 0)
 			this.index--;
 	},
+	/*
+	move to right
+	*/
 	moveRight: function() {
 		if (this.index + 1 < this.tape.cells.length)
 			this.index++;
 	}
 }
 
-function Tape() {
-	this.n = 0; // number of filled cells 
 
-	this.cells = new Array(_INITIAL_TAPE_SIZE);
-	for (var i = 0; i < this.cells.length; i++) // initialization
-		this.cells[i] = null;
+/*
+Class: Tape
+A tape that has infinite cells. Using dynamic array here.
+
+*/
+function Tape(size=_INITIAL_TAPE_SIZE) {
+	this.n = 0; // number of filled cells 
+	this.cells = null;
+	this.size = size;
+	this.initialize(size);
 
 	this.head = new Head(this);
 }
+Tape.prototype = {
+	initialize: function(size) {
+		this.size = size;
+		this.cells = new Array(size);
+		for (var i = 0; i < size; i++)
+			this.cells[i] = null;
+	},
+	clear: function() {
+		this.initialize(_INITIAL_TAPE_SIZE);
+	},
+	fill: function(index, val) {
+		if (index >= 0 && index < this.cells.length) {
+			this.cells[index] = val;
+			this.n++;
+			this.resize();
+		}
+	},
+	erase: function(index) {
+		if (index >= 0 && index < this.cells.length) {
+			this.cells[index]= null;
+			this.n--;
+			this.resize();
+		}
+	},
+	/*
+	Expands when filled.
+	Contracts when not more than 1/4 cells are filled
+	*/
+	resize: function() {
+		if (this.n == this.size) {
+			this.cells = this.copy(this.size*2);
+		} else if (this.n <= this.size / 4) {
+			this.cells = this.copy(this.size/2);
+		} 
+	},
+	copy: function(newSize) {
+		this.size = newSize;
+		var arr = new Array(this.size);
+		for (var i = 0; i < this.size; i++) {
+			if (i < this.cells.length)
+				arr[i] = this.cells[i];
+			else
+				arr[i] = null;
+		}
+		return arr;
+	}
+}
+
 
 /*
+Class: Vertex 
+
 state: String
 */
 function Vertex(state) {
 	this.state = state;
 }
 
+
 /*
+Class: Edge
+
 source: must be Vertex type
 read: String
 write: String
@@ -105,6 +188,9 @@ Edge.prototype.toArray = function() {
 };
 
 
+/*
+Class: Transition Graph
+*/
 function Transition_Graph() {
 	this.V = {}; // the set of vertices representing state informations
 	this.adj = {}; // the adjacency list
@@ -131,7 +217,7 @@ Transition_Graph.prototype = {
 		for (var i = 0; i < trees.length; i++) {
 			var tree = trees[i];
 			var nodes = tree.inOrderToArray();
-			for (var j = 0; j < nodes.length; j++) 
+			for (var j = 0; j < nodes.length; j++)
 				edges.push(nodes[i]);
 		}
 		return edges;
@@ -180,10 +266,11 @@ Transition_Graph.prototype = {
 			return false;
 
 		// will add vertex to the graph if vertex not existed
-		this.addState(in_state); 
-		this.addState(new_state); 
+		this.addState(in_state);
+		this.addState(new_state);
 
-		var u = this.getState(in_state), v = this.getState(new_state);
+		var u = this.getState(in_state),
+			v = this.getState(new_state);
 
 		return this.adj[u].insertEdge(new Edge(
 			u, read, write, direction, v
@@ -238,7 +325,12 @@ Transition_Graph.prototype = {
 	}
 }
 
+
+
+// unit test
 function test() {
+
+	/* Test for graph
 	var G = new Transition_Graph();
 	G.addRule("1", "0", "x", LEFT, "0");
 	G.addRule("1", "1", "x", LEFT, "1");
@@ -251,4 +343,21 @@ function test() {
 			console.log(table[i][j]);
 		}
 	}
+	*/
+
+    /* Test for Tape and Head
+    var T = new Tape(2);
+    T.fill(0, 1);
+    T.fill(1, 2);
+    console.log(T.head.read(1));
+    T.head.moveRight();
+	T.head.write(3);
+    console.log(T.head.read(1));
+    console.log(T.cells);
+    T.erase(1);
+    console.log(T.cells);
+    T.clear();
+    console.log(T.cells);
+    */
+
 }
