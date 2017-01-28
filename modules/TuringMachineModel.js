@@ -198,6 +198,7 @@ Tape.prototype = {
 
 /*
 Class: Vertex 
+Representing state
 
 state: String
 */
@@ -208,6 +209,7 @@ function Vertex(state) {
 
 /*
 Class: Edge
+Representing rule
 
 source: must be Vertex type
 read: String
@@ -270,8 +272,8 @@ Transition_Graph.prototype = {
 	/*
 	state: String
 	*/
-	addState: function(state) {
-		if (!this.stateExists(state)) {
+	addVertex: function(state) {
+		if (!this.vertexExists(state)) {
 			this.V[state] = new Vertex(state);
 			this.adj[state] = new MyBST();
 		}
@@ -279,8 +281,8 @@ Transition_Graph.prototype = {
 	/*
 	state: String
 	*/
-	deleteState: function(state) {
-		if (this.stateExists(state)) {
+	deleteVertex: function(state) {
+		if (this.vertexExists(state)) {
 			delete this.adj[state];
 			delete this.V[state];
 		}
@@ -288,9 +290,9 @@ Transition_Graph.prototype = {
 	/*
 	state: String
 
-	returns True if state exists
+	returns True if vertex (state) exists
 	*/
-	stateExists: function(state) {
+	vertexExists: function(state) {
 		return this.V[state] != undefined;
 	},
 	/*
@@ -302,13 +304,13 @@ Transition_Graph.prototype = {
 
 	returns True if operation succeeds
 	*/
-	addRule: function(in_state, read, write, direction, new_state) {
-		if (this.ruleExists(in_state, read))
+	addEdge: function(in_state, read, write, direction, new_state) {
+		if (this.edgeExists(in_state, read))
 			return false;
 
 		// will add vertex to the graph if vertex not existed
-		this.addState(in_state);
-		this.addState(new_state);
+		this.addVertex(in_state);
+		this.addVertex(new_state);
 
 		var u = this.getVertex(in_state),
 			v = this.getVertex(new_state);
@@ -321,8 +323,8 @@ Transition_Graph.prototype = {
 	in_state: String
 	read: String
 	*/
-	ruleExists: function(in_state, read) {
-		if (!this.stateExists(in_state))
+	edgeExists: function(in_state, read) {
+		if (!this.vertexExists(in_state))
 			return false;
 		var tree = this.adj[in_state];
 		return tree.search(read) != null;
@@ -334,15 +336,15 @@ Transition_Graph.prototype = {
 	direction: LEFT or RIGHT defined above
 	new_state: String
 	*/
-	modifyRule: function(in_state, read, write, direction, new_state) {
-		if (!this.ruleExists(in_state, read))
+	modifyEdge: function(in_state, read, write, direction, new_state) {
+		if (!this.edgeExists(in_state, read))
 			return;
 
 		var tree = this.adj[in_state];
 		var rule = tree.search(read);
 		rule.val.write = write;
 		rule.val.direction = direction;
-		this.addState(new_state);
+		this.addVertex(new_state);
 		rule.val.target = this.getVertex(new_state);
 	},
 	/*
@@ -351,18 +353,18 @@ Transition_Graph.prototype = {
 
 	returns True if operation succeeds
 	*/
-	deleteRule: function(in_state, read) {
-		if (!this.ruleExists(in_state, read))
+	deleteEdge: function(in_state, read) {
+		if (!this.edgeExists(in_state, read))
 			return false;
 
 		var tree = this.adj[in_state];
 		return tree.deleteEdge(read);
 	},
 	/*
-	returns wanted rule, if not existed return Null
+	returns wanted edge (rule), if not existed return Null
 	*/
-	getRule: function(in_state, read) {
-		if (!this.ruleExists(in_state, read))
+	getEdge: function(in_state, read) {
+		if (!this.edgeExists(in_state, read))
 			return null;
 		return this.adj[in_state].search(read).val;
 	},
@@ -376,13 +378,15 @@ Transition_Graph.prototype = {
 }
 
 
-function TuringMachine(startState, acceptStates = {}, rejectStates = {}) {
+function TuringMachine(startState) {
 	this.tape = new Tape();
 	this.head = this.tape.head;
 	this.transitionGraph = new Transition_Graph();
-	this.startState = startState;
-	this.acceptStates = acceptStates;
-	this.rejectStates = rejectStates;
+
+	//
+	// this.setHeadState(startState);
+	// this.transitionGraph.addVertex(startState);
+	//
 }
 TuringMachine.prototype = {
 	/*
@@ -425,7 +429,7 @@ TuringMachine.prototype = {
 		if (this.head.getState() == null) {
 			throw HEAD_STATE_NULL_ERROR;
 		}
-		var edge = this.transitionGraph.getRule(this.head.getState(), this.head.read());
+		var edge = this.getRule(this.head.getState(), this.head.read());
 		if (edge == null) {
 			throw NO_SUCH_RULE_ERROR;
 		}
@@ -443,6 +447,26 @@ TuringMachine.prototype = {
 
 	},
 	/*
+	Wrapper function, add a state to the machine
+
+	state: String
+
+	returns True if operation succeeds
+	*/
+	addState: function(state) {
+		return this.transitionGraph.addVertex(state);
+	},
+	/*
+	Wrapper function, delete a state from the machine
+
+	state: String
+
+	returns True if operation succeeds
+	*/
+	deleteState: function(state) {
+		return this.transitionGraph.deleteVertex(state);
+	},
+	/*
 	Wrapper function, add rule to the machine
 
 	in_state: String
@@ -455,7 +479,7 @@ TuringMachine.prototype = {
 	*/
 	addRule: function(in_state, read, write, 
 		direction, new_state) {
-		return this.transitionGraph.addRule(in_state, read, 
+		return this.transitionGraph.addEdge(in_state, read, 
 			write, direction, new_state);
 	},
 	/*
@@ -468,7 +492,7 @@ TuringMachine.prototype = {
 	new_state: String
 	*/
 	modifyRule: function(in_state, read, write, direction, new_state) {
-		this.transitionGraph.modifyRule(in_state, read, write, 
+		this.transitionGraph.modifyEdge(in_state, read, write, 
 			direction, new_state);
 	},
 	/*
@@ -480,7 +504,7 @@ TuringMachine.prototype = {
 	returns True if operation succeeds
 	*/
 	deleteRule: function(in_state, read) {
-		return this.transitionGraph.deleteRule(in_state, read);
+		return this.transitionGraph.deleteEdge(in_state, read);
 	},
 	/*
 	Wrapper function, get rule from the machine
@@ -488,7 +512,7 @@ TuringMachine.prototype = {
 	returns wanted rule, if not existed return Null
 	*/
 	getRule: function(in_state, read) {
-		return this.transitionGraph.getRule(in_state, read);
+		return this.transitionGraph.getEdge(in_state, read);
 	},
 	/*
 	Wrapper function, turn the transition graph into table
@@ -507,11 +531,11 @@ function test() {
 
 	/*Test for graph
 	var G = new Transition_Graph();
-	G.addRule("1", "0", "x", LEFT, "0");
-	G.addRule("1", "1", "x", LEFT, "1");
-	G.deleteRule("1", "1");
-	G.modifyRule("1", "0", "y", LEFT, "0");
-	console.log(G.getRule("1", "0"));
+	G.addEdge("1", "0", "x", LEFT, "0");
+	G.addEdge("1", "1", "x", LEFT, "1");
+	G.deleteEdge("1", "1");
+	G.modifyEdge("1", "0", "y", LEFT, "0");
+	console.log(G.getEdge("1", "0"));
 	var table = G.toTable();
 	for (var i = 0; i < table.length; i++) {
 		for (var j = 0; j < table[i].length; j++) {
@@ -548,10 +572,8 @@ function test() {
 		M.addRule("1", "1", "y", RIGHT, "0");
 		M.addRule("0", "2", "y", LEFT, "H");
 
-		// M.step();
-		console.log(M.head);
-		console.log(T.cells);
-		M.run();
+		M.step();
+		// M.run();
 		console.log(M.head);
 		console.log(T.cells);
 
