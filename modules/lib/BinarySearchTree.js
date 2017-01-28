@@ -134,6 +134,7 @@ BinarySearchTree.prototype = {
 	}
 }
 
+/*
 function test() {
 	var t = [5, 4, 8, 7, 9, 3, 3];
 	var tree = new BinarySearchTree();
@@ -146,3 +147,4 @@ function test() {
 	tree.delete(tree.search(3));
 	tree.inOrderTraversal(tree.root);
 }
+*/
