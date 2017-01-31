@@ -44,13 +44,12 @@ MyBST.prototype.deleteEdge = function(key) {
 
 
 // Runtime Errors
-var HEAD_MOVE_RIGHT_ERROR = "Cannot move to right anymore.";
-var HEAD_MOVE_LEFT_ERROR = "Cannot move to left anymore.";
+var SET_HEAD_POINTER_ERROR = "Must be a DLNode type."
 var HEAD_STATE_NULL_ERROR = "Internal state needs to be set.";
 var NO_SUCH_RULE_ERROR = "Expected rule is not defined.";
 
 // Global variables
-var _INITIAL_TAPE_SIZE = 20; // initial 
+var _INITIAL_TAPE_SIZE = 21; // initial 
 var LEFT = "L";
 var RIGHT = "R";
 var HALT = "H";
@@ -61,17 +60,17 @@ Class: Head
 
 tape: must be a Tape type defined below
 */
-function Head(tape) {
-	this.tape = tape; // tape to which the head belong
+function Head(tape, cell=null) {
+	this.tape = tape;
 	this.state = null; // internal state
-	this.index = 0;
+	this.pointer = cell;
 }
 Head.prototype = {
 	/*
 	read from tape
 	*/
 	read: function() {
-		return this.tape.cells[this.index];
+		return this.pointer.val;
 	},
 	/*
 	write into tape at designated index
@@ -79,7 +78,7 @@ Head.prototype = {
 	write: function(val, index) {
 		if (val == BLANK)
 			val = "";
-		this.tape.cells[index] = val;
+		this.pointer.val = val;
 	},
 	/*
 	get internal state
@@ -90,37 +89,45 @@ Head.prototype = {
 	/*
 	change internal state
 	*/
-	changeState: function(state) {
+	setState: function(state) {
 		this.state = state;
 	},
 	/*
 	move to left
 	*/
-	moveLeft: function(val) {
-		if (this.index - 1 >= 0) {
-			this.write(val, this.index);
-			this.index--;
-		} else
-			throw HEAD_MOVE_LEFT_ERROR;
+	moveLeft: function() {
+		if (this.pointer.prev == null) {
+			this.tape.expandBeforeHead();
+		}
+		this.pointer = this.pointer.prev;
 	},
 	/*
 	move to right
 	*/
-	moveRight: function(val) {
-		if (this.index + 1 < this.tape.cells.length) {
-			this.write(val, this.index);
-			this.index++;
-		} else
-			throw HEAD_MOVE_RIGHT_ERROR;
+	moveRight: function() {
+		if (this.pointer.next == null) {
+			this.tape.expandAfterTail();
+		}
+		this.pointer = this.pointer.next;
 	},
 	/*
 	Write and Move
 	*/
 	writeAndMove: function(val, direction) {
+		this.write(val);
 		if (direction == LEFT)
-			this.moveLeft(val);
+			this.moveLeft();
 		else
-			this.moveRight(val);
+			this.moveRight();
+	},
+	getPointer: function() {
+		return this.pointer;
+	},
+	setPointer: function(dlNode) {
+		if (dlNode instanceof DLNode)
+			this.pointer = dlNode;
+		else
+			throw SET_HEAD_POINTER_ERROR;
 	}
 }
 
@@ -130,68 +137,45 @@ Class: Tape
 A tape that has infinite cells. Using dynamic array here.
 
 */
-function Tape(size = _INITIAL_TAPE_SIZE) {
-	this.n = 0; // number of filled cells 
-	this.cells = null;
-	this.size = size;
-	this.initialize(size);
-
-	this.head = new Head(this);
+function Tape() {
+	this.cells = new DoublyLinkedList();
+	this.initialize();
 }
 Tape.prototype = {
-	size: function() {
-		return this.size;
-	},
-	initialize: function(size) {
-		this.n = 0;
-		this.size = size;
-		this.cells = new Array(size);
+	initialize: function(size = _INITIAL_TAPE_SIZE) {
+		this.cells = new DoublyLinkedList();
 		for (var i = 0; i < size; i++)
-			this.cells[i] = null;
+			this.cells.appendAfterTail(null);
 	},
-	clear: function() {
-		this.initialize(_INITIAL_TAPE_SIZE);
+	insertBeforeHead(val) {
+		this.cells.insertBeforeHead(val);
 	},
-	fill: function(index, val) {
-		if (index >= 0 && index < this.cells.length) {
-			this.cells[index] = val;
-			this.n++;
-			this.expand();
+	appendAfterTail(val) {
+		this.cells.appendAfterTail(val);
+	},
+	expandBeforeHead(n=1) {
+		while (n--) {
+			this.cells.insertBeforeHead(null);
 		}
 	},
-	// erase: function(index) {
-	// 	if (index >= 0 && index < this.cells.length) {
-	// 		this.cells[index] = null;
-	// 		this.n--;
-	// 		this.resize();
-	// 	}
-	// },
-	/*
-	Expands when filled.
-	Contracts when not more than 1/4 cells are filled
-	*/
-	expand: function() {
-		if (this.n == this.size) {
-			this.cells = this.copyToNewArray(this.size * 2);
-		} 
-		// else if (this.n <= this.size / 4) {
-		// 	this.cells = this.copy(this.size / 2);
-		// }
-	},
-	copyToNewArray: function(newSize) {
-		this.size = newSize;
-		var arr = new Array(this.size);
-		for (var i = 0; i < this.size; i++) {
-			if (i < this.cells.length)
-				arr[i] = this.cells[i];
-			else
-				arr[i] = null;
+	expandAfterTail(n=1) {
+		while (n--) {
+			this.cells.appendAfterTail(null);
 		}
-		return arr;
 	},
-	insertCellAtTail: function() {
-		this.size++;
-		this.cells.push(null);
+	getCellHead() {
+		return this.cells.head;
+	},
+	getCellTail() {
+		return this.cells.tail;
+	},
+	getCellMiddle() {
+		var tmp = this.cells.head;
+		var n = this.cells.size() / 2;
+		while (n--) {
+			tmp = tmp.next;
+		}
+		return tmp;
 	}
 }
 
@@ -336,7 +320,7 @@ Transition_Graph.prototype = {
 	direction: LEFT or RIGHT defined above
 	new_state: String
 	*/
-	modifyEdge: function(in_state, read, write, direction, new_state) {
+	setEdge: function(in_state, read, write, direction, new_state) {
 		if (!this.edgeExists(in_state, read))
 			return;
 
@@ -380,7 +364,7 @@ Transition_Graph.prototype = {
 
 function TuringMachine(startState) {
 	this.tape = new Tape();
-	this.head = this.tape.head;
+	this.head = new Head(this.tape);
 	this.transitionGraph = new Transition_Graph();
 
 	//
@@ -417,34 +401,7 @@ TuringMachine.prototype = {
 	Set internal state
 	*/
 	setHeadState: function(state) {
-		this.head.changeState(state);
-	},
-	/*
-	Step forward
-	*/
-	step: function() {
-		if (this.isHalted())
-			return;
-
-		if (this.head.getState() == null) {
-			throw HEAD_STATE_NULL_ERROR;
-		}
-		var edge = this.getRule(this.head.getState(), this.head.read());
-		if (edge == null) {
-			throw NO_SUCH_RULE_ERROR;
-		}
-		this.head.writeAndMove(edge.write, edge.direction)
-		this.head.changeState(edge.target.state);
-	},
-	/*
-	Run the machine until error or halt
-	*/
-	run: function() {
-
-		while (!this.isHalted()) {
-			this.step();
-		}
-
+		this.head.setState(state);
 	},
 	/*
 	Wrapper function, add a state to the machine
@@ -477,9 +434,9 @@ TuringMachine.prototype = {
 
 	returns True if operation succeeds
 	*/
-	addRule: function(in_state, read, write, 
+	addRule: function(in_state, read, write,
 		direction, new_state) {
-		return this.transitionGraph.addEdge(in_state, read, 
+		return this.transitionGraph.addEdge(in_state, read,
 			write, direction, new_state);
 	},
 	/*
@@ -491,8 +448,8 @@ TuringMachine.prototype = {
 	direction: LEFT or RIGHT defined above
 	new_state: String
 	*/
-	modifyRule: function(in_state, read, write, direction, new_state) {
-		this.transitionGraph.modifyEdge(in_state, read, write, 
+	setRule: function(in_state, read, write, direction, new_state) {
+		this.transitionGraph.setEdge(in_state, read, write,
 			direction, new_state);
 	},
 	/*
@@ -521,6 +478,33 @@ TuringMachine.prototype = {
 	*/
 	transitionGraphToTable: function() {
 		return this.transitionGraph.toTable();
+	},
+	/*
+	Step forward
+	*/
+	step: function() {
+		if (this.isHalted())
+			return;
+
+		if (this.head.getState() == null) {
+			throw HEAD_STATE_NULL_ERROR;
+		}
+		var edge = this.getRule(this.head.getState(), this.head.read());
+		if (edge == null) {
+			throw NO_SUCH_RULE_ERROR;
+		}
+		this.head.writeAndMove(edge.write, edge.direction)
+		this.head.setState(edge.target.state);
+	},
+	/*
+	Run the machine until error or halt
+	*/
+	run: function() {
+
+		while (!this.isHalted()) {
+			this.step();
+		}
+
 	}
 }
 
@@ -534,7 +518,7 @@ function test() {
 	G.addEdge("1", "0", "x", LEFT, "0");
 	G.addEdge("1", "1", "x", LEFT, "1");
 	G.deleteEdge("1", "1");
-	G.modifyEdge("1", "0", "y", LEFT, "0");
+	G.setEdge("1", "0", "y", LEFT, "0");
 	console.log(G.getEdge("1", "0"));
 	var table = G.toTable();
 	for (var i = 0; i < table.length; i++) {
@@ -564,18 +548,25 @@ function test() {
 		M.setHeadState("0");
 		var G = M.transitionGraph;
 		var T = M.tape;
-		T.fill(0, 0);
-		T.fill(1, 1);
-		T.fill(2, 2);
-		M.addRule("0", "0", "x", RIGHT, "1");
-		// M.modifyRule("0", "0", "t", RIGHT, "H");
+		var node = T.getCellHead();
+		var n = 0; 
+		while (node != null) {
+			node.val = n++;
+			node = node.next;
+		}
+
+		var H = M.getHead();
+		console.log(T.cells.toArray());
+		H.pointer = T.getCellTail();
+		M.addRule("0", "20", "x", RIGHT, "1");
+		// M.setRule("0", "0", "t", RIGHT, "H");
 		M.addRule("1", "1", "y", RIGHT, "0");
 		M.addRule("0", "2", "y", LEFT, "H");
 
 		M.step();
 		// M.run();
 		console.log(M.head);
-		console.log(T.cells);
+		console.log(T.cells.toArray());
 
 	} catch (e) {
 		console.log(e);
