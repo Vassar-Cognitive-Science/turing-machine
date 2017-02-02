@@ -4,10 +4,13 @@ export function DLNode() {
 	this.next = null;
 }
 
-export function DoublyLinkedList() {
-	this.n = 0;
+export function DoublyLinkedList(n=0) {
+	this.n = n;
 	this.head = null;
 	this.tail = null;
+	while (n--) {
+		this.insertBeforeHead(null);
+	}
 }
 DoublyLinkedList.prototype = {
 	size: function() {

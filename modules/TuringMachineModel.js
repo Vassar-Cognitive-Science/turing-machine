@@ -1,6 +1,9 @@
+import {DLNode, DoublyLinkedList} from './lib/DoublyLinkedList.js';
+import {BSTNode, BinarySearchTree} from './lib/BinarySearchTree.js';
+
 /****** define helper functions and class ******/
 
-function inherit(proto) {
+export function inherit(proto) {
 	function F() {}
 	F.prototype = proto;
 	return new F;
@@ -15,7 +18,7 @@ if (!String.prototype.capitalize) {
 /*
 Wrapper Class for BST
 */
-function MyBST() {
+export function MyBST() {
 	BinarySearchTree.call(this);
 }
 MyBST.prototype = inherit(BinarySearchTree.prototype);
@@ -40,96 +43,38 @@ MyBST.prototype.deleteEdge = function(key) {
 	return this.delete(z);
 };
 
+
+export function copyMyBST(source) {
+	var cloned = new MyBST();
+	var edges = source.inOrderToArray();
+	for (var i = 0; i < edges.length; i++) {
+		cloned.insertEdge(edges[i].val.clone());
+	}
+	return cloned;
+}
+
+export function copyDoublyLinkedList(source) {
+	var cloned = new DoublyLinkedList();
+	var arr = source.toArray();
+	for (var i = 0; i < arr.length; i++)
+		cloned.insertBeforeHead(arr[i]);
+	return cloned;
+}
+
 /****** define helper functions and class ******/
 
 
 // Runtime Errors
-var SET_HEAD_POINTER_ERROR = "Must be a DLNode type."
-var HEAD_STATE_NULL_ERROR = "Internal state needs to be set.";
-var NO_SUCH_RULE_ERROR = "Expected rule is not defined.";
+export const SET_HEAD_POINTER_ERROR = "Must be a DLNode type."
+export const HEAD_STATE_NULL_ERROR = "Internal state needs to be set.";
+export const NO_SUCH_RULE_ERROR = "Expected rule is not defined.";
 
 // Global variables
-var _INITIAL_TAPE_SIZE = 21; // initial 
-var LEFT = "L";
-var RIGHT = "R";
-var HALT = "H";
-var BLANK = "#";
-
-/*
-Class: Head
-
-tape: must be a Tape type defined below
-*/
-function Head(tape, cell=null) {
-	this.tape = tape;
-	this.state = null; // internal state
-	this.pointer = cell;
-}
-Head.prototype = {
-	/*
-	read from tape
-	*/
-	read: function() {
-		return this.pointer.val;
-	},
-	/*
-	write into tape at designated index
-	*/
-	write: function(val, index) {
-		if (val == BLANK)
-			val = "";
-		this.pointer.val = val;
-	},
-	/*
-	get internal state
-	*/
-	getState: function() {
-		return this.state;
-	},
-	/*
-	change internal state
-	*/
-	setState: function(state) {
-		this.state = state;
-	},
-	/*
-	move to left
-	*/
-	moveLeft: function() {
-		if (this.pointer.prev == null) {
-			this.tape.expandBeforeHead();
-		}
-		this.pointer = this.pointer.prev;
-	},
-	/*
-	move to right
-	*/
-	moveRight: function() {
-		if (this.pointer.next == null) {
-			this.tape.expandAfterTail();
-		}
-		this.pointer = this.pointer.next;
-	},
-	/*
-	Write and Move
-	*/
-	writeAndMove: function(val, direction) {
-		this.write(val);
-		if (direction == LEFT)
-			this.moveLeft();
-		else
-			this.moveRight();
-	},
-	getPointer: function() {
-		return this.pointer;
-	},
-	setPointer: function(dlNode) {
-		if (dlNode instanceof DLNode)
-			this.pointer = dlNode;
-		else
-			throw SET_HEAD_POINTER_ERROR;
-	}
-}
+export const _INITIAL_TAPE_SIZE = 21; // initial 
+export const LEFT = "L";
+export const RIGHT = "R";
+export const HALT = "H";
+export const BLANK = "#";
 
 
 /*
@@ -137,28 +82,66 @@ Class: Tape
 A tape that has infinite cells. Using dynamic array here.
 
 */
-function Tape() {
+export function Tape() {
 	this.cells = new DoublyLinkedList();
 	this.initialize();
+
+	this.internalState = null;
+	this.pointer = 0;
 }
 Tape.prototype = {
+	clone: function() {
+		var cloned = new Tape();
+		cloned.cells = copyDoublyLinkedList(this.cells);
+		cloned.internalState = this.internalState;
+		cloned.pointer = this.pointer;
+
+		return cloned;
+	},
 	initialize: function(size = _INITIAL_TAPE_SIZE) {
 		this.cells = new DoublyLinkedList();
 		for (var i = 0; i < size; i++)
 			this.cells.appendAfterTail(null);
 	},
+	/*
+	read from tape
+	*/
+	read: function() {
+		return this.cells.getNodeAt(this.pointer).val;
+	},
+	/*
+	write into tape at designated index
+	*/
+	write: function(val) {
+		if (val == BLANK)
+			val = "";
+		this.cells.getNodeAt(this.pointer).val = val;
+	},
+	/*
+	get internal state
+	*/
+	getState: function() {
+		return this.internalState;
+	},
+	/*
+	change internal state
+	*/
+	setState: function(state) {
+		this.internalState = state;
+	},
 	insertBeforeHead(val) {
+		this.pointer++;
 		this.cells.insertBeforeHead(val);
 	},
 	appendAfterTail(val) {
 		this.cells.appendAfterTail(val);
 	},
-	expandBeforeHead(n=1) {
+	expandBeforeHead(n = 1) {
 		while (n--) {
 			this.cells.insertBeforeHead(null);
 		}
 	},
-	expandAfterTail(n=1) {
+	expandAfterTail(n = 1) {
 		while (n--) {
 			this.cells.appendAfterTail(null);
 		}
@@ -176,18 +159,44 @@ Tape.prototype = {
 			tmp = tmp.next;
 		}
 		return tmp;
+	},
+	/*
+	move to left
+	*/
+	moveLeft: function() {
+		if (this.pointer-1 < 0) {
+			this.expandBeforeHead();
+		}
+		this.pointer--;
+	},
+	/*
+	move to right
+	*/
+	moveRight: function() {
+		if (this.pointer+1 >= this.cells.size()) {
+			this.expandAfterTail();
+		}
+		this.pointer++;
+	},
+	/*
+	Write and Move
+	*/
+	writeAndMove: function(val, direction) {
+		this.write(val);
+		if (direction == LEFT)
+			this.moveLeft();
+		else
+			this.moveRight();
+	},
+	getPointer: function() {
+		return this.pointer;
+	},
+	setPointer: function(index) {
+		if (index >= 0 && index < this.cells.size())
+			this.pointer = index;
+		else
+			throw SET_HEAD_POINTER_ERROR;
 	}
-}
-
-
-/*
-Class: Vertex 
-Representing state
-
-state: String
-*/
-function Vertex(state) {
-	this.state = state;
 }
 
 
@@ -195,43 +204,58 @@ function Vertex(state) {
 Class: Edge
 Representing rule
 
-source: must be Vertex type
+source: String
 read: String
 write: String
 direction: LEFT or RIGHT defined above
-targe: must be Vertex type
+targe: String
 */
-function Edge(source, read, write, direction, target) {
-	this.source = source; // source vertex representing internal state
+export function Edge(source, read, write, direction, target) {
+	this.inState = source; // source state 
 	this.read = read; // an elt of tape alphabet
 	this.write = write;
 	this.direction = direction; // to which direction the head should move
-	this.target = target; // change internal state to
+	this.newState = target; // change internal state to
 }
-Edge.prototype.toArray = function() {
-	return [this.source.state, this.read, this.write, this.direction, this.target.state];
-};
+Edge.prototype = {
+	toArray: function() {
+		return [this.inState, this.read, this.write, this.direction, this.newState];
+	},
+	clone: function() {
+		var cloned = new Edge();
+
+		cloned.inState = this.inState;
+		cloned.read = this.read;
+		cloned.write = this.write;
+		cloned.direction = this.direction;
+		cloned.newState = this.newState;
+
+		return cloned;
+	}
+}
 
 
 /*
 Class: Transition Graph
 */
-function Transition_Graph() {
-	this.V = {}; // the set of vertices representing state informations
+export function Transition_Graph() {
 	this.adj = {}; // the adjacency list
 }
 Transition_Graph.prototype = {
+	clone: function() {
+		var cloned = new Transition_Graph();
+		var keys = this.getAllVertices();
+		for (var i = 0; i < keys.length; i++) {
+			var key = keys[i];
+			cloned.adj[key] = copyMyBST(this.adj[key]);
+		}
+		return cloned;
+	},
 	/*
 	returns all states in the graph
 	*/
-	getAllStates: function() {
-		return Object.keys(this.V);
-	},
-	/*
-	returns all vertices in the graph
-	*/
 	getAllVertices: function() {
-		return Object.values(this.V);
+		return Object.keys(this.adj);
 	},
 	/*
 	returns all edges (rules) in the graph
@@ -250,15 +274,8 @@ Transition_Graph.prototype = {
 	/*
 	state: String
 	*/
-	getVertex: function(state) {
-		return this.V[state];
-	},
-	/*
-	state: String
-	*/
 	addVertex: function(state) {
 		if (!this.vertexExists(state)) {
-			this.V[state] = new Vertex(state);
 			this.adj[state] = new MyBST();
 		}
 	},
@@ -268,7 +285,6 @@ Transition_Graph.prototype = {
 	deleteVertex: function(state) {
 		if (this.vertexExists(state)) {
 			delete this.adj[state];
-			delete this.V[state];
 		}
 	},
 	/*
@@ -277,7 +293,7 @@ Transition_Graph.prototype = {
 	returns True if vertex (state) exists
 	*/
 	vertexExists: function(state) {
-		return this.V[state] != undefined;
+		return this.adj[state] != undefined;
 	},
 	/*
 	in_state: String
@@ -296,11 +312,8 @@ Transition_Graph.prototype = {
 		this.addVertex(in_state);
 		this.addVertex(new_state);
 
-		var u = this.getVertex(in_state),
-			v = this.getVertex(new_state);
-
 		return this.adj[in_state].insertEdge(new Edge(
-			u, read, write, direction, v
+			in_state, read, write, direction, new_state
 		));
 	},
 	/*
@@ -329,7 +342,7 @@ Transition_Graph.prototype = {
 		rule.val.write = write;
 		rule.val.direction = direction;
 		this.addVertex(new_state);
-		rule.val.target = this.getVertex(new_state);
+		rule.val.newState = new_state;
 	},
 	/*
 	in_state: String
@@ -362,9 +375,8 @@ Transition_Graph.prototype = {
 }
 
 
-function TuringMachine(startState) {
+export function TuringMachine(startState) {
 	this.tape = new Tape();
-	this.head = new Head(this.tape);
 	this.transitionGraph = new Transition_Graph();
 
 	//
@@ -383,25 +395,25 @@ TuringMachine.prototype = {
 	Get head
 	*/
 	getHead: function() {
-		return this.head;
+		return this.tape.getPointer();
+	},
+	setHead: function(dlNode) {
+		this.tape.setPointer(dlNode);
+	},
+	getHeadState: function() {
+		return this.tape.getState();
+	},
+	/*
+	Set internal state
+	*/
+	setHeadState: function(state) {
+		this.tape.setState(state);
 	},
 	/*
 	Get transition graph
 	*/
 	getTransitionGraph: function() {
 		return this.transitionGraph;
-	},
-	/*
-	Check if halted
-	*/
-	isHalted: function() {
-		return this.head.getState().capitalize() == HALT;
-	},
-	/*
-	Set internal state
-	*/
-	setHeadState: function(state) {
-		this.head.setState(state);
 	},
 	/*
 	Wrapper function, add a state to the machine
@@ -480,21 +492,27 @@ TuringMachine.prototype = {
 		return this.transitionGraph.toTable();
 	},
 	/*
+	Check if halted
+	*/
+	isHalted: function() {
+		return this.tape.getState().capitalize() == HALT;
+	},
+	/*
 	Step forward
 	*/
 	step: function() {
 		if (this.isHalted())
 			return;
 
-		if (this.head.getState() == null) {
+		if (this.tape.getState() == null) {
 			throw HEAD_STATE_NULL_ERROR;
 		}
-		var edge = this.getRule(this.head.getState(), this.head.read());
+		var edge = this.getRule(this.tape.getState(), this.tape.read());
 		if (edge == null) {
 			throw NO_SUCH_RULE_ERROR;
 		}
-		this.head.writeAndMove(edge.write, edge.direction)
-		this.head.setState(edge.target.state);
+		this.tape.writeAndMove(edge.write, edge.direction)
+		this.tape.setState(edge.newState);
 	},
 	/*
 	Run the machine until error or halt
@@ -549,25 +567,25 @@ function test() {
 		var G = M.transitionGraph;
 		var T = M.tape;
 		var node = T.getCellHead();
-		var n = 0; 
+		var n = 0;
 		while (node != null) {
 			node.val = n++;
 			node = node.next;
 		}
 
-		var H = M.getHead();
+		T.setPointer(0);
+		
+		console.log(M.getHead());
 		console.log(T.cells.toArray());
-		H.pointer = T.getCellTail();
-		M.addRule("0", "20", "x", RIGHT, "1");
+		M.addRule("0", "0", "x", RIGHT, "1");
 		// M.setRule("0", "0", "t", RIGHT, "H");
 		M.addRule("1", "1", "y", RIGHT, "0");
 		M.addRule("0", "2", "y", LEFT, "H");
 
-		M.step();
-		// M.run();
-		console.log(M.head);
+		// M.step();
+		// M.step();
+		M.run();
 		console.log(T.cells.toArray());
-
 	} catch (e) {
 		console.log(e);
 	}
