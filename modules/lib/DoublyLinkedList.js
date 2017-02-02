@@ -1,10 +1,10 @@
-function DLNode() {
+export function DLNode() {
 	this.val = null;
 	this.prev = null;
 	this.next = null;
 }
 
-function DoublyLinkedList() {
+export function DoublyLinkedList() {
 	this.n = 0;
 	this.head = null;
 	this.tail = null;
@@ -82,6 +82,15 @@ DoublyLinkedList.prototype = {
 			temp = temp.next;
 		}
 		return arr;
+	},
+	getNodeAt: function(index) {
+		if (index >= this.size())
+			return null;
+		var cur = this.head;
+		while (index-- && cur != null) {
+			cur = cur.next;
+		} 
+		return cur;
 	}
 }
 
