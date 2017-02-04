@@ -1,10 +1,10 @@
-export function DLNode() {
+function DLNode() {
 	this.val = null;
 	this.prev = null;
 	this.next = null;
 }
 
-export function DoublyLinkedList(n=0) {
+function DoublyLinkedList(n=0) {
 	this.n = n;
 	this.head = null;
 	this.tail = null;

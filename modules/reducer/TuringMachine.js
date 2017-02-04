@@ -1,14 +1,15 @@
-import {DLNode, DoublyLinkedList} from './lib/DoublyLinkedList.js';
+
+import * as Tape from './TapeHelpers.js';
 import * as TuringMachineModel from '../TuringMachineModel.js';
 
-const initialState = {
-	/* Tape and Head
-	tapePointer: 0,
-	tapeCells: new DoublyLinkedList(),
-	tapeInternalState: null,
-	*/
-	tape: new TuringMachineModel.Tape(),
 
+export const HALT = "H";
+
+
+const initialState = {
+	// Tape 
+	tape: Tape.createTape(),
+	
+	// Rules
 	rules: new TuringMachineModel.Transition_Graph()
 };
-

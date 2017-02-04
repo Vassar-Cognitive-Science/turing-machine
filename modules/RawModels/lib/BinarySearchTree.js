@@ -1,4 +1,4 @@
-export function BSTNode() {
+function BSTNode() {
 	this.key = null;
 	this.val = null;
 	this.left = null;
@@ -11,7 +11,7 @@ Note:
 Each node is kept unique in the tree
 */
 
-export function BinarySearchTree() {
+function BinarySearchTree() {
 	this.n = 0; // size
 	this.root = null;
 }
