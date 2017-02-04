@@ -1,36 +1,26 @@
 /* Constants */
 
-export const LEFT = "L";
-export const RIGHT = "R";
-export const BLANK = "#";
+const LEFT = "L";
+const RIGHT = "R";
+const BLANK = "#";
 
-const CELL_ID_PREFIX = "TAPE-CELL ";
+const CELL_ID_PREFIX = "CELL ";
 
 /* Constants */
 
-/* Useful functions */
 
-export const tapeSize = (state) => {
-	return state.tapeCellsById.length;
+// What initialState should look like
+initialState = {
+	tapeHead: 0,
+	tapeTail: 0,
+	tapePointer: 0,
+	tapeCellsById: [],
+	tapeInternalState: null
 }
-
-export const isTapeEmpty = (state) => {
-	return tapeSize(state) == 0;
-}
-
-export const findCell = (state, id) => {
-	var cell = state[standardizeCellId(id)];
-	if (cell != undefined)
-		return cell;
-	return null;
-}
-
-/* Useful functions */
 
 
 /* Reducer functions */
-
-export const initializeTape = (state, action) => {
+const initializeTape = (state, action) => {
 	var new_state = {
 		tapeHead: 0,
 		tapeTail: 0,
@@ -38,11 +28,11 @@ export const initializeTape = (state, action) => {
 		tapeCellsById: [],
 		tapeInternalState: null
 	}
-	expandAfterTailHelper(new_state, action.tapSize);
+	expandAfterTailHelper(new_state, action.size);
 	return new_state;
 }
 
-export const appendAfterTail = (state, action) => {
+const appendAfterTail = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -50,7 +40,7 @@ export const appendAfterTail = (state, action) => {
 	return new_state;
 }
 
-export const insertBeforeHead = (state, action) => {
+const insertBeforeHead = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -58,7 +48,7 @@ export const insertBeforeHead = (state, action) => {
 	return new_state;
 }
 
-export const expandAfterTail = (state, action) => {
+const expandAfterTail = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -66,13 +56,13 @@ export const expandAfterTail = (state, action) => {
 	return new_state;
 }
 
-export const expandAfterTailHelper = (state, n = 1) => {
+const expandAfterTailHelper = (state, n = 1) => {
 	while (n--) {
 		appendAfterTailHelper(state);
 	}
 }
 
-export const expandBeforeHead = (state, action) => {
+const expandBeforeHead = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -80,13 +70,20 @@ export const expandBeforeHead = (state, action) => {
 	return new_state;
 }
 
-export const write = (state, action) => {
+const findCell = (state, id) => {
+	var cell = state[standardizeCellId(id)];
+	if (cell != undefined)
+		return cell;
+	return null;
+}
+
+const write = (state, action) => {
 	new_state = Object.assign({}, state);
 	new_state[standardizeCellId(state.tapePointer)] = writeHelper(state, action.val);
 	return new_state;
 }
 
-export const moveLeft = (state, action) => {
+const moveLeft = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -94,7 +91,7 @@ export const moveLeft = (state, action) => {
 	return new_state;
 }
 
-export const moveRight = (state, action) => {
+const moveRight = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -102,7 +99,7 @@ export const moveRight = (state, action) => {
 	return new_state;
 }
 
-export const writeAndMove = (state, action) => {
+const writeAndMove = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -110,14 +107,14 @@ export const writeAndMove = (state, action) => {
 	return new_state;
 }
 
-export const read = (state) => {
+const read = (state) => {
 	var cur = findCell(state, state.tapePointer);
 	if (cur == null)
 		return null;
 	return cur.val;
 }
 
-export const setInternalState = (state, action) => {
+const setInternalState = (state, action) => {
 	return Object.assign({}, state, {
 		tapeInternalState: action.state
 	});
@@ -139,6 +136,14 @@ const createCell = (prev = null, next = null, val = null) => {
 const standardizeCellId = (id) => {
 	if (id == null) return null;
 	return CELL_ID_PREFIX + id;
+}
+
+const tapeSize = (state) => {
+	return state.tapeCellsById.length;
+}
+
+const isTapeEmpty = (state) => {
+	return tapeSize(state) == 0;
 }
 
 const appendAfterTailHelper = (state, val = null) => {
