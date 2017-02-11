@@ -1,6 +1,6 @@
 /* Constants */
 
-export const RULE_PREFIX = "RULE - ";
+const RULE_PREFIX = "RULE - ";
 
 // error info
 export const DUPLICATED_RULE_ERROR = "Rule already exists.";
@@ -12,20 +12,34 @@ export const DUPLICATED_RULE_ERROR = "Rule already exists.";
 What initialState should look like
 
 initialState = {
+	...,
 	rulesById: []
+}
+
+A rule cell is something like this, mapped by key in form "RULE - <stateName>-<readValue>"
+cell = {
+	in_state: in_state,
+	read: read,
+	write: write,
+	direction: direction,
+	new_state: new_state
 }
 */
 
 
 /* Useful functions */
 
-export const standardizeRuleId = (stateId, readId) => {
-	if (readId == null) return null;
-	return RULE_PREFIX + stateId + "-" + readId;
+export const standardizeRuleId = (stateName, readValue) => {
+	if (readValue == null) return null;
+	return RULE_PREFIX + stateName + "-" + readValue;
 }
 
 export const ruleExists = (state, id) => {
 	return findRuleById(state, id) != null;
+}
+
+export const findRule = (state, stateName, readValue) => {
+	return findRuleById(state, standardizeRuleId(stateName, readValue));
 }
 
 export const findRuleById = (state, id) => {
@@ -37,6 +51,16 @@ export const findRuleById = (state, id) => {
 
 export const ruleSize = (state) => {
 	return state.rulesById.length;
+}
+
+export const createRule = (in_state, read, write, direction, new_state) => {
+	return {
+		in_state: in_state,
+		read: read,
+		write: write,
+		direction: direction,
+		new_state: new_state
+	};
 }
 
 /* Useful functions */
@@ -66,16 +90,6 @@ export const deleteRule = (state, action) => {
 	return new_state;
 }
 
-export const createRule = (in_state, read, write, direction, new_state) => {
-	return {
-		in_state: in_state,
-		read: read,
-		write: write,
-		direction: direction,
-		new_state: new_state
-	};
-}
-
 /* Reducer functions */
 
 
@@ -83,7 +97,7 @@ export const createRule = (in_state, read, write, direction, new_state) => {
 
 export const addRuleHelper = (state, in_state, read, write, direction, new_state) => {
 	var id = standardizeRuleId(in_state, read);
-	if (ruleExists(state, id)) {
+	if (!ruleExists(state, id)) {
 		state.rulesById.push(id);
 		state[id] = createRule(in_state, read, write, direction, new_state);
 	} else {

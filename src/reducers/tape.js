@@ -1,8 +1,11 @@
-/* Constants */
+import {
+	LEFT,
+	RIGHT,
+	BLANK
+} from '../constants/ReservedWords.js';
 
-export const LEFT = "L";
-export const RIGHT = "R";
-export const BLANK = "#";
+
+/* Constants */
 
 const CELL_ID_PREFIX = "TAPE-CELL ";
 
@@ -31,14 +34,17 @@ export const findCell = (state, id) => {
 /* Reducer functions */
 
 export const initializeTape = (state, action) => {
-	var new_state = {
+	var new_state = Object.assign({}, state, {
 		tapeHead: 0,
 		tapeTail: 0,
 		tapePointer: 0,
 		tapeCellsById: [],
 		tapeInternalState: null
+	});
+	for (let i = 0; i < state.tapeCellsById.length; i++) {
+		delete new_state[state.tapeCellsById[i]];
 	}
-	expandAfterTailHelper(new_state, action.tapSize);
+	expandAfterTailHelper(new_state, action.tapeSize);
 	return new_state;
 }
 
@@ -80,7 +86,7 @@ export const expandBeforeHead = (state, action) => {
 	return new_state;
 }
 
-export const write = (state, action) => {
+export const writeIntoTape = (state, action) => {
 	new_state = Object.assign({}, state);
 	new_state[standardizeCellId(state.tapePointer)] = writeHelper(state, action.val);
 	return new_state;
@@ -104,7 +110,8 @@ export const moveRight = (state, action) => {
 
 export const writeAndMove = (state, action) => {
 	var new_state = Object.assign({}, state, {
-		tapeCellsById: state.tapeCellsById.slice()
+		tapeCellsById: state.tapeCellsById.slice(),
+		tapeInternalState: action.new_state
 	});
 	writeAndMoveHelper(new_state, action.direction, action.val);
 	return new_state;
