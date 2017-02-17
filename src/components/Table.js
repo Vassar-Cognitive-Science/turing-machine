@@ -1,42 +1,7 @@
-/* eslint max-len: 0 */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Draggable from 'react-draggable';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
-class Square extends React.Component {
-  render() {
-    return (
-      <input className="square">
-        {/* TODO */}
-      </input>
-    );
-  }
-}
-
-class Head extends React.Component {
-  render() {
-    return (
-      <Draggable
-        axis="x"
-        handle=".header"
-        defaultPosition={{x: 9, y: 0}}
-        position={null}
-        grid={[49, 49]}
-        zIndex={100}
-        bounds={{left: 9, top: 0, right: 989, bottom: 0}}
-        onStart={this.handleStart}
-        onDrag={this.handleDrag}
-        onStop={this.handleStop}>
-        <div className="header">
-          <button className="head">0</button>
-          <div className="neck"></div>
-          <div className="shoulder"></div>
-        </div>
-      </Draggable>
-      );
-  }
-}
 
 const cellEditProp = {
   mode: 'dbclick'
@@ -69,7 +34,7 @@ class Checkbox extends React.Component {
   }
 }
 
-class RuleTable extends React.Component {
+class Table extends React.Component {
   createCustomModalFooter = (onClose, onSave) => {
     const style = {
       backgroundColor: '#ffffff'
@@ -143,51 +108,4 @@ class RuleTable extends React.Component {
   }
 }
 
-class App extends React.Component {
-  renderSquare(i) {
-    return <Square />;
-  }
-  renderHead(i) {
-    return <Head />;
-  }
-  renderTable() {
-    return <RuleTable />;
-  }
-  render() {
-    return (
-      <div>
-        <div className="head-row">
-        {this.renderHead(0)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-          {this.renderSquare(9)}
-          {this.renderSquare(10)}
-          {this.renderSquare(11)}
-          {this.renderSquare(12)}
-          {this.renderSquare(13)}
-          {this.renderSquare(14)}
-          {this.renderSquare(15)}
-          {this.renderSquare(16)}
-          {this.renderSquare(17)}
-          {this.renderSquare(18)}
-          {this.renderSquare(19)}
-          {this.renderSquare(20)}
-        </div>
-        <div>
-          {this.renderTable()}
-        </div>
-      </div>
-    );
-  }
-}
-
-export default App;
+export default Table;

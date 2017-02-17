@@ -24,10 +24,8 @@ ol, ul {
 }
 
 .hair {
-  border-radius: 50%;
-  width: 5px;
+  width: 30px;
   height: 5px;
-  left: 12.5px;
   position: relative;
   border: 2px solid black;
   background-color: black;
@@ -35,15 +33,13 @@ ol, ul {
 
 .head {
   background: #fff;
-  border: 2px solid black;
-  float: top;
+  border: 1px solid black;
   font-size: 18px;
   font-weight: bold;
-  line-height: 34px;
   height: 30px;
   width: 30px;
   position: relative;
-  text-align: top;
+  text-align: center;
 }
 
 .neck {

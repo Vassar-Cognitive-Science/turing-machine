@@ -47,17 +47,15 @@ export function setInternalStateAction(state) {
 	};
 }
 
-export function moveLeftAction(direction) {
+export function moveLeftAction() {
 	return {
-		type: actionTypes.SHIFT_TAPE_POINTER_LEFT,
-		direction: direction
+		type: actionTypes.SHIFT_TAPE_POINTER_LEFT
 	};
 }
 
-export function moveRightAction(direction) {
+export function moveRightAction() {
 	return {
-		type: actionTypes.SHIFT_TAPE_POINTER_RIGHT,
-		direction: direction
+		type: actionTypes.SHIFT_TAPE_POINTER_RIGHT
 	};
 }
 

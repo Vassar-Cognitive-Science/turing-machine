@@ -5,6 +5,16 @@ import {
 } from '../constants/ReservedWords.js';
 
 
+/*
+A cell is an plain object
+{
+	val: val,
+	prev: prev,
+	next: next
+}
+*/
+
+
 /* Constants */
 
 const CELL_ID_PREFIX = "TAPE-CELL ";
