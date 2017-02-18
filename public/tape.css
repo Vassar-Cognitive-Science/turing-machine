@@ -3,11 +3,12 @@ body {
   margin: 20px;
 }
 
-ol, ul {
-  padding-left: 30px;
+.tape {
+  display: table;
+  margin: 0 auto; 
 }
 
-.board-row:after {
+.tape-row:after {
   clear: both;
   content: "";
   display: table;
@@ -19,8 +20,8 @@ ol, ul {
   display: table;
 }
 
-.status {
-  margin-bottom: 10px;
+.tape-head-cell {
+  display:inline-block;
 }
 
 .hair {
@@ -62,11 +63,10 @@ ol, ul {
 
 .square {
   background: #fff;
-  border: 1px solid #999;
+  border: 1px solid ;
   float: left;
   font-size: 24px;
   font-weight: bold;
-  line-height: 34px;
   height: 50px;
   width: 50px;
   margin-right: -1px;
@@ -76,5 +76,13 @@ ol, ul {
 }
 
 .square:focus {
-  outline: none;
+  background-color: #87dbff;
+}
+
+.square:hover {
+  background-color: #f1fc7e;
+}
+
+.square-highlight {
+  background-color: #f1fc7e;
 }

@@ -34,13 +34,17 @@ function populatedSquares(size) {
 class Tape extends React.Component {
   render() {
     return (
+      <div>
       <div className='tape'>
         <div className="head-row">
         <Head />
         </div>
-        <div className="board-row">
-          {populatedSquares(N_CELLS).map((i) => (<Square key={"CELL- " + i.toString()} read={i} id={standardizeTapeCellId(i)} />))}
+        <div className="tape-row">
+          {populatedSquares(N_CELLS).map((i) => (
+            <Square key={standardizeTapeCellId(i)} read={i} id={standardizeTapeCellId(i)} />
+            ))}
         </div>
+      </div>
       </div>
     );
   }

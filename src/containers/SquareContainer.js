@@ -5,9 +5,9 @@ import { standardizeTapeCellId, getTapeCellNumber } from '../components/Square.j
 import { N_CELLS, shiftAllToLeft, shiftAllToRight } from '../components/Tape.js';
 import Square from '../components/Square.js';
 
-let ANCHOR_CELL_ID = 0;
-let SELECTED_CELL_ID;
-let CELL_INPUT = null;
+var ANCHOR_CELL_ID = 0;
+var SELECTED_CELL_ID;
+var CELL_INPUT = null;
 
 export const isNowLastCell = () => standardizeTapeCellId(N_CELLS-1) === document.activeElement.id;
 
@@ -20,6 +20,8 @@ export const setAnchorCell = (direction) => {
     ANCHOR_CELL_ID += 1;
   }
 }
+
+export const getAnchorCell = () => ANCHOR_CELL_ID;
 
 const rollTapeToRight = (dispatch, active) => {
   if (isNowFirstCell()) {
