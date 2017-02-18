@@ -1,47 +1,53 @@
 import React, { PropTypes } from 'react';
-import Head from './Head.js';
-import Square, { standardizeTapeCellId } from './Square.js';
+import { standardizeTapeCellId } from './Square.js';
+import Square from '../containers/SquareContainer';
+import Head from '../containers/HeadContainer';
 
 export const N_CELLS = 21;
 
+/*Use when fill the last cell*/
 export function shiftAllToLeft() {
-  for (var id = 0; id < N_CELLS; id++) {
-    var curE = document.getElementById(standardizeTapeCellId(id));
-    var nextE = document.getElementById(standardizeTapeCellId(id + 1))
+  var curE, nextE; 
+  for (let i = 0; i < N_CELLS-1; i++) {
+    curE = document.getElementById(standardizeTapeCellId(i));
+    nextE = document.getElementById(standardizeTapeCellId(i + 1));
     curE.value = nextE.value;
   }
 }
 
+/*Use when fill the first cell*/
 export function shiftAllToRight() {
-  for (var id = N_CELLS-1; id >= 0; id--) {
-    var curE = document.getElementById(standardizeTapeCellId(id));
-    var prevE = document.getElementById(standardizeTapeCellId(id - 1))
+  for (var i = N_CELLS-1; i > 0; i--) {
+    var curE = document.getElementById(standardizeTapeCellId(i));
+    var prevE = document.getElementById(standardizeTapeCellId(i - 1))
     curE.value = prevE.value;
   }
 }
 
+function populatedSquares(size) {
+  var squares = [];
+  for (var i = 0; i < size; i++)
+    squares.push(i);
+  return squares;
+}
+
 class Tape extends React.Component {
-  renderSquares(n) {
-    var squares = [];
-    for (var i = 0; i < n; i++)
-      squares.push(<Square />);
-    return squares;
-  }
-  renderHead(i) {
-    return <Head />;
-  }
   render() {
     return (
       <div className='tape'>
         <div className="head-row">
-        {this.renderHead(0)}
+        <Head />
         </div>
         <div className="board-row">
-          {this.renderSquares(21)}
+          {populatedSquares(N_CELLS).map((i) => (<Square key={"CELL- " + i.toString()} read={i} id={standardizeTapeCellId(i)} />))}
         </div>
       </div>
     );
   }
+}
+
+Tape.PropTypes = {
+
 }
 
 export default Tape;

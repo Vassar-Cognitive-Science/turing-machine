@@ -30,7 +30,7 @@ cell = {
 /* Useful functions */
 
 export const standardizeRuleId = (stateName, readValue) => {
-	if (readValue == null) return null;
+	if (readValue === null) return null;
 	return RULE_PREFIX + stateName + "-" + readValue;
 }
 
@@ -113,7 +113,7 @@ export const setRuleHelper = (state, in_state, read, write, direction, new_state
 export const deleteRuleHelper = (state, in_state, read) => {
 	var id = standardizeRuleId(in_state, read);
 	if (ruleExists(state, id)) {
-		state.rulesById = state.rulesById.filter(rid => rid != id);
+		state.rulesById = state.rulesById.filter(rid => rid !== id);
 		delete state[id];
 	}
 }

@@ -35,7 +35,7 @@ class Head extends React.Component {
 }
 
 
-Head.propTypes = {
+Head.PropTypes = {
   in_state: PropTypes.string.isRequired,
   handleStart: PropTypes.func.isRequired,
   handleDrag: PropTypes.func.isRequired

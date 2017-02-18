@@ -1,8 +1,16 @@
-import reducer from './reducers';
-import { createStore } from 'redux';
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import { initializeTape } from './actions/index.js';
+import reducers from './reducers';
+import App from './components/App';
 
 
-let store =  createStore(reducer);
+const store = createStore(reducers);
+store.dispatch(initializeTape(21));
+
+ReactDOM.render(
+  <Provider store={store}><App /></Provider>,
+  document.getElementById('container')
+);

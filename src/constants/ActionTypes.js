@@ -1,3 +1,5 @@
+export const FIRE = "FIRE";
+
 /* Actions for Head */
 export const WRITE_AND_MOVE = 'WRITE_AND_MOVE';
 export const SHIFT_TAPE_POINTER_LEFT = 'SHIFT_TAPE_POINTER_LEFT';
@@ -6,6 +8,9 @@ export const SET_INTERNAL_STATE = 'SET_STATE';
 /* Actions for Head */
 
 /* Actions for Tape */
+export const MOVE_TAPE_LEFT = 'MOVE_TAPE_LEFT';
+export const MOVE_TAPE_RIGHT = 'MOVE_TAPE_RIGHT';
+export const FILL_TAPE = 'FILL_TAPE';
 export const WRITE_INTO_TAPE = 'WRITE_INTO_TAPE';
 export const INITIALIZAE_TAPE = 'INITIALIZAE_TAPE'; 
 export const INSERT_CELL_BEFORE_HEAD = 'INSERT_CELL_BEFORE_HEAD';

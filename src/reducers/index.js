@@ -4,6 +4,8 @@ import * as reservedWords from '../constants/ReservedWords.js';
 import * as actionTypes from '../constants/ActionTypes.js';
 
 export const initialState = {
+	fire: 0,
+
 	/* Tape and Head */
 	tapeHead: 0,
 	tapeTail: 0,
@@ -17,8 +19,10 @@ export const initialState = {
 	/* Rules */
 };
 
-export default function(state, action) {
+export default function(state=initialState, action) {
 	switch (action.type) {
+		case actionTypes.FIRE:
+			return fire(state, action);
 		/* Machine actions */
 		case actionTypes.INITIALIZAE_MACHINE:
 			return initializeMachine(state, action);
@@ -27,6 +31,12 @@ export default function(state, action) {
 		/* Machine actions */
 
 		/* Tape actions */
+		case actionTypes.MOVE_TAPE_RIGHT:
+			return tape.moveTapeRight(state, action);
+		case actionTypes.MOVE_TAPE_LEFT:
+			return tape.moveTapeLeft(state, action);
+		case actionTypes.FILL_TAPE:
+			return tape.fillTape(state, action);
 		case actionTypes.INSERT_CELL_BEFORE_HEAD:
 			return tape.insertCellBeforeHead(state, action);
 		case actionTypes.APPEND_CELL_AFTER_TAIL:
@@ -56,6 +66,12 @@ export default function(state, action) {
 	}
 }
 
+const fire = (state, action) => {
+	return {
+		fire: state.fire +1,
+		...state
+	}
+}
 
 const initializeMachine = (state, action) => {
 	return initialState;

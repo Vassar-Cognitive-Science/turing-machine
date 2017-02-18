@@ -1,39 +1,40 @@
-import React from 'react';
 import { connect } from 'react-redux';
-import { moveLeftAction, moveRightAction } from '../actions/index.js';
+import { moveLeftAction, moveRightAction, fireAction } from '../actions/index.js';
 import Head from '../components/Head.js';
-import Tape from '../components/Tape.js';
+import { shiftAllToLeft, shiftAllToRight } from '../components/Tape.js';
+import { isNowFirstCell, isNowLastCell, setAnchorCell } from './SquareContainer.js';
 
 
-let OLD_MOUSE_X = 0 // mouse horizontal position
+var OLD_MOUSE_X = 0 // mouse horizontal position
 
-const headOnClick = (e, ui) => {
-	OLD_MOUSE_X = e.pageX;
-}
 
 const headOnDrag = (e, ui, dispatch) => {
     if (e.pageX < OLD_MOUSE_X) { // Left
     	dispatch(moveLeftAction());
+    	if (isNowFirstCell()) {
+    		shiftAllToRight();
+            setAnchorCell("L");
+    	}
     } else if (e.pageX > OLD_MOUSE_X) {
         dispatch(moveRightAction());
+        if (isNowLastCell()) {
+        	shiftAllToLeft();
+            setAnchorCell("R");
+        }
     }
     OLD_MOUSE_X = e.pageX;
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    in_state: state.tapeInternalState
-  };
-}
-
-const mapDispatchToProps = (dispatch) => {
-	handleStart: headOnClick,
-	handleDrag: (e, ui) => { headOnDrag(e, ui, dispatch); },
-
+    dispatch(fireAction());
 }
 
 
-const HeadContainer = connect(mapStateToProps, mapDispatchToProps)(Head);
+const mapStateToProps = (state) => ({
+	in_state: state.tapeInternalState
+})
 
-export default HeadContainer;
+const mapDispatchToProps = (dispatch) => ({
+	handleStart: (e, ui) => { OLD_MOUSE_X = e.pageX; },
+	handleDrag: (e, ui) => { headOnDrag(e, ui, dispatch) } 
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Head);

@@ -1,5 +1,11 @@
 import * as actionTypes from '../constants/ActionTypes.js';
 
+export function fireAction() {
+	return {
+		type: actionTypes.FIRE
+	};
+}
+
 export function initMachineAction() {
 	return {
 		type: actionTypes.INITIALIZAE_MACHINE
@@ -39,6 +45,28 @@ export function initializeTape(tapeSize) {
 		tapeSize: tapeSize
 	};
 } 
+
+export function fillTapeAction(position, val=null) {
+	return {
+		type: actionTypes.FILL_TAPE,
+		position: position,
+		val: val
+	}
+} 
+
+export function moveTapeRightAction(position) {
+	return {
+		type: actionTypes.MOVE_TAPE_RIGHT,
+		position: position
+	}
+}
+
+export function moveTapeLeftAction(position) {
+	return {
+		type: actionTypes.MOVE_TAPE_LEFT,
+		position: position
+	}
+}
 
 export function setInternalStateAction(state) {
 	return {
