@@ -193,11 +193,7 @@ export const writeIntoTape = (state, action) => {
 }
 
 export const fillTape = (state, action) => {
-	var new_state;
-	if (action.position + 1 === state.tapeTail) 
-		new_state = appendAfterTail(state, {val: null});
-	else 
-		new_state = Object.assign({}, state);
+	var new_state = Object.assign({}, state);
 	new_state[standardizeCellId(action.position)] = fillHelper(state, action.position, action.val);
 
 	return new_state;

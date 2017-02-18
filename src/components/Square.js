@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 
-let SQUARE = 0; // square id
 const TAPE_CELL_ID_PREFIX = "TAPE-CELL-";
 export function standardizeTapeCellId(i) {
   return TAPE_CELL_ID_PREFIX + i;

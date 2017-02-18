@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { moveLeftAction, moveRightAction, fireAction } from '../actions/index.js';
+import { moveLeftAction, moveRightAction } from '../actions/index.js';
 import Head from '../components/Head.js';
 import { shiftAllToLeft, shiftAllToRight } from '../components/Tape.js';
 import { isNowFirstCell, isNowLastCell, setAnchorCell } from './SquareContainer.js';
@@ -23,7 +23,6 @@ const headOnDrag = (e, ui, dispatch) => {
         }
     }
     OLD_MOUSE_X = e.pageX;
-    dispatch(fireAction());
 }
 
 
