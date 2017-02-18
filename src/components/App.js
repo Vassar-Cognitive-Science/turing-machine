@@ -1,6 +1,5 @@
 import React from 'react';
-import Tape from './Tape.js';
-import Head from '../containers/HeadContainer';
+import Tape from '../containers/TapeContainer';
 
 class App extends React.Component {
 	render() {

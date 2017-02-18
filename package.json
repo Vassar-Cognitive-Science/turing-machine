@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "turing-machine-simulator",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
@@ -8,11 +8,13 @@
     "jest": "^18.1.0",
     "react-addons-test-utils": "^15.3.0",
     "react-draggable": "^2.2.3",
-    "react-scripts": "0.8.5"
+    "react-scripts": "0.8.5",
+    "material-ui": "^0.17.0"
   },
   "dependencies": {
     "react-dom": "^15.4.2",
-    "react-draggable": "^2.2.3"
+    "react-draggable": "^2.2.3",
+    "material-ui": "^0.17.0"
   },
   "scripts": {
     "start": "react-scripts start",

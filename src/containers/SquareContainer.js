@@ -24,6 +24,7 @@ export const setAnchorCell = (direction) => {
 export const getAnchorCell = () => ANCHOR_CELL_ID;
 
 const rollTapeToRight = (dispatch, active) => {
+  onFocus();
   if (isNowFirstCell()) {
       shiftAllToRight();
       setAnchorCell("L");
@@ -33,10 +34,11 @@ const rollTapeToRight = (dispatch, active) => {
       var prevId = getTapeCellNumber(document.activeElement.id) - 1;
       document.getElementById(standardizeTapeCellId(prevId)).focus();
     }
-    onFocus();
+  onFocus();
 }
 
 const rollTapeToLeft = (dispatch, active) => {
+  onFocus();
   if (isNowLastCell()) {
       shiftAllToLeft();
       setAnchorCell("R");
@@ -80,12 +82,13 @@ const onKeyDown = (e, dispatch) => {
   } 
 }
 
-const onFocus = (display=false) => {
+export const onFocus = (display=false) => {
   SELECTED_CELL_ID = ANCHOR_CELL_ID + getTapeCellNumber(document.activeElement.id);
   if (display) console.log(SELECTED_CELL_ID);
 }
 
 const onChange = (dispatch, ownProps) => {
+  onFocus();
 	dispatch(fillTapeAction(SELECTED_CELL_ID, CELL_INPUT));
   var active = document.getElementById(document.activeElement.id);
   

@@ -201,7 +201,7 @@ export const fillTape = (state, action) => {
 
 export const moveTapeRight = (state, action) => {
 	var new_state;
-	if (action.position + 1 === state.tapeTail) {
+	if (action.position + 1 >= state.tapeTail) {
 		new_state = appendAfterTail(state, {val: null});
 	}
 	else 
@@ -212,8 +212,9 @@ export const moveTapeRight = (state, action) => {
 
 export const moveTapeLeft = (state, action) => {
 	var new_state;
-	if (action.position - 1 === state.tapeHead)
+	if (action.position - 1 <= state.tapeHead) {
 		new_state = insertBeforeHead(state, {val: null});
+	}
 	else 
 		new_state = Object.assign({}, state);
 	

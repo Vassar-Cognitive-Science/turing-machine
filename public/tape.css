@@ -3,26 +3,58 @@ body {
   margin: 20px;
 }
 
-.tape {
+.tape-with-button {
   display: table;
   margin: 0 auto; 
+}
+
+.tape {
+  display: table-cell;
 }
 
 .tape-row:after {
   clear: both;
   content: "";
-  display: table;
+  display: table-cell;
 }
 
 .head-row:after {
   clear: both;
   content: "";
-  display: table;
+  display: table-cell;
 }
 
-.tape-head-cell {
-  display:inline-block;
+
+.roll-left {
+  display: table-cell;
+  vertical-align: middle;
+  height:145px;
+  padding-right: 0px;
 }
+
+.roll-right {
+  display: table-cell;
+  vertical-align: middle;
+  height:145px;
+  padding-left: 1.5px;
+}
+
+.roll-left-button {
+  height: 50.7px;
+  width: 30px;
+}
+
+.roll-right-button {
+  height: 50.7px;
+  width: 30px;
+  border: 1px solid black;
+}
+.roll-right-button:after {
+  content: ">";
+  text-align: right; 
+}
+
+
 
 .hair {
   width: 30px;
