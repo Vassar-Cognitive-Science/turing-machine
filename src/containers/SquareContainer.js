@@ -26,10 +26,8 @@ export const getAnchorCell = () => ANCHOR_CELL_ID;
 const rollTapeToRight = (dispatch, active) => {
   onFocus();
   if (isNowFirstCell()) {
-      shiftAllToRight();
       setAnchorCell("L");
       dispatch(moveTapeLeftAction(SELECTED_CELL_ID));
-      active.value = null;
     } else {
       var prevId = getTapeCellNumber(document.activeElement.id) - 1;
       document.getElementById(standardizeTapeCellId(prevId)).focus();
@@ -40,10 +38,8 @@ const rollTapeToRight = (dispatch, active) => {
 const rollTapeToLeft = (dispatch, active) => {
   onFocus();
   if (isNowLastCell()) {
-      shiftAllToLeft();
       setAnchorCell("R");
       dispatch(moveTapeRightAction(SELECTED_CELL_ID));
-      active.value = null;
     } else {
       var nextId = getTapeCellNumber(document.activeElement.id) + 1;
       document.getElementById(standardizeTapeCellId(nextId)).focus();
@@ -60,13 +56,15 @@ const focusOnNext = () => {
 
 const onKeyPress = (e) => {
   if (e.which === 32) CELL_INPUT = ""; // when space == ""
-  else CELL_INPUT = String.fromCharCode(e.which);
+  else {
+    CELL_INPUT = String.fromCharCode(e.which);
+  }
 }
 
 const onKeyDown = (e, dispatch) => {
   var key = e.which;
   var active = document.getElementById(document.activeElement.id);
-
+  
   /* left arrow */
   if (key === 37) { 
     rollTapeToRight(dispatch, active);
@@ -78,7 +76,6 @@ const onKeyDown = (e, dispatch) => {
   /* backspace, delete */
   else if (key === 8 || key === 46) { 
     dispatch(fillTapeAction(SELECTED_CELL_ID, null));
-    active.value = null;
   } 
 }
 
@@ -89,8 +86,8 @@ export const onFocus = (display=false) => {
 
 const onChange = (dispatch, ownProps) => {
   onFocus();
-	dispatch(fillTapeAction(SELECTED_CELL_ID, CELL_INPUT));
   var active = document.getElementById(document.activeElement.id);
+	dispatch(fillTapeAction(SELECTED_CELL_ID, CELL_INPUT));
   
 	// If we reach the last cell presented
 	if (isNowLastCell()) {
@@ -104,15 +101,17 @@ const onChange = (dispatch, ownProps) => {
 
 const mapStateToProps = (state, ownProps) => {
   var tar = state[standardizeCellId(ANCHOR_CELL_ID+ownProps.read)];
-  var val = (tar !== undefined && tar !== null) ? tar.val : null;
-
+  var val = (tar !== undefined && tar !== null) ? tar.val : "";
+  var cell = document.getElementById(ownProps.id);
+  if (cell)
+    cell.value = val;
   return {
-    read: val
+    val: val
   };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	onKeyPress: (e) => { onKeyPress(e) },
+	onKeyPress: (e) => { onKeyPress(e, dispatch) },
 	onChange: () => { onChange(dispatch, ownProps) },
   onFocus: () => { onFocus(true) },
   onKeyDown: (e) => { onKeyDown(e, dispatch) }

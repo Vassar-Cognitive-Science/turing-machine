@@ -18,7 +18,8 @@ class Square extends React.Component {
       onChange={this.props.onChange} 
       onFocus={this.props.onFocus}
       onKeyDown={this.props.onKeyDown}
-      value={this.props.read}
+      type={"text"}
+      value={this.props.val}
       id={this.props.id}
       >
       </input>
