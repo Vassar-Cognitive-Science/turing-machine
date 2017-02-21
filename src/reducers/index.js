@@ -1,7 +1,7 @@
-import * as tape from './tape.js';
-import * as rules from './rule.js';
-import * as reservedWords from '../constants/ReservedWords.js';
-import * as actionTypes from '../constants/ActionTypes.js';
+import * as tape from './tape';
+import * as rules from './rule';
+import * as reservedWords from '../constants/ReservedWords';
+import * as actionTypes from '../constants/ActionTypes';
 
 export const initialState = {
 	fire: 0,

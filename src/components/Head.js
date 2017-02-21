@@ -27,7 +27,6 @@ class Head extends React.Component {
   }
 }
 
-
 Head.PropTypes = {
   in_state: PropTypes.string.isRequired,
   handleStart: PropTypes.func.isRequired,
@@ -36,37 +35,5 @@ Head.PropTypes = {
   onFocus: PropTypes.func.isRequired,
   onDoubleClick: PropTypes.func.isRequired
 }
-
-// export const standardizeHeadId = (id) => HEAD_ID_PREFIX+id;
-
-// class Head extends React.Component {
-//   render() {
-//     return (
-//         <div className="header" id={this.props.id} onMouseDown={this.props.handleStart} onMouseMove={this.props.handleDrag} onmouseup={this.props.handleStop}>
-//           <div className="hair"></div>
-//           <button className="head" >{this.props.in_state}</button>
-//           <div className="neck"></div>
-//           <div className="shoulder"></div>
-//         </div>
-//       );
-//   }
-// }
-
-
-// Head.PropTypes = {
-//   in_state: PropTypes.string.isRequired,
-//   handleStart: PropTypes.func.isRequired,
-//   handleDrag: PropTypes.func.isRequired,
-//   handleStop: PropTypes.func.isRequired,
-//   onFocus: PropTypes.func.isRequired,
-//   onDoubleClick: PropTypes.func.isRequired
-// }
-
-// const GRID = 49;
-// const LEFT_MOST_BOUNDARY = 9;
-// const RIGHT_MOST_BOUNDARY = 9 + N_CELLS * GRID;
-// const START_POSITION = N_CELLS / 2 * GRID + LEFT_MOST_BOUNDARY;
-
-
 
 export default Head;

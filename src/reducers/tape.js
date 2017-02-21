@@ -2,7 +2,7 @@ import {
 	LEFT,
 	RIGHT,
 	BLANK
-} from '../constants/ReservedWords.js';
+} from '../constants/ReservedWords';
 
 
 /*
