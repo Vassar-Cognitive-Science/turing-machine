@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
-import { standardizeTapeCellId } from './Square.js';
+import { standardizeTapeCellId } from './Square';
+import { N_CELLS } from '../constants/index';
 import Square from '../containers/SquareContainer';
 import Head from '../containers/HeadContainer';
 import IconButton from 'material-ui/IconButton';
@@ -7,26 +8,6 @@ import RollRight from 'material-ui/svg-icons/av/skip-next';
 import RollLeft from 'material-ui/svg-icons/av/skip-previous';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-export const N_CELLS = 21;
-
-/*Use when fill the last cell*/
-export function shiftAllToLeft() {
-  var curE, nextE; 
-  for (let i = 0; i < N_CELLS-1; i++) {
-    curE = document.getElementById(standardizeTapeCellId(i));
-    nextE = document.getElementById(standardizeTapeCellId(i + 1));
-    curE.value = nextE.value;
-  }
-}
-
-/*Use when fill the first cell*/
-export function shiftAllToRight() {
-  for (var i = N_CELLS-1; i > 0; i--) {
-    var curE = document.getElementById(standardizeTapeCellId(i));
-    var prevE = document.getElementById(standardizeTapeCellId(i - 1))
-    curE.value = prevE.value;
-  }
-}
 
 function populatedSquares(size) {
   var squares = [];
@@ -59,7 +40,7 @@ class Tape extends React.Component {
               <div className="head-row"><Head /></div>
               <div className="tape-row">
                 {populatedSquares(N_CELLS).map((i) => (
-                  <Square key={standardizeTapeCellId(i)} read={i} id={standardizeTapeCellId(i)} />
+                  <Square key={standardizeTapeCellId(i)} order={i} id={standardizeTapeCellId(i)} />
                   ))}
               </div>
             </div>

@@ -1,4 +1,4 @@
-export const LEFT = "L";
-export const RIGHT = "R";
+export const LEFT = "LEFT";
+export const RIGHT = "RIGHT";
 export const BLANK = "#";
 export const HALT = "H";

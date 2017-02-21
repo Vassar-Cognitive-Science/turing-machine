@@ -1,36 +1,31 @@
 import { connect } from 'react-redux';
-import { moveTapeRightAction, moveTapeLeftAction, fireAction } from '../actions/index.js';
-import Tape, { N_CELLS, shiftAllToLeft, shiftAllToRight } from '../components/Tape.js';
-import { standardizeTapeCellId, getTapeCellNumber } from '../components/Square.js';
-import { isNowFirstCell, isNowLastCell, setAnchorCell, getAnchorCell } from './SquareContainer.js';
+import { moveTapeRightAction, moveTapeLeftAction } from '../actions/index';
+import { N_CELLS } from '../constants/index';
+import Tape from '../components/Tape';
+import { standardizeTapeCellId } from '../components/Square';
+import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
 
 const FIRST_CELL_ID = standardizeTapeCellId(0);
 const LAST_CELL_ID = standardizeTapeCellId(N_CELLS-1);
 
-const getHead = () => {
+const prepareHead = () => {
 	document.getElementById(FIRST_CELL_ID).focus();
 }
 
 const prepareTail = () => {
-	var id = getAnchorCell() + N_CELLS - 1;
 	document.getElementById(LAST_CELL_ID).focus();
-	return id;
 };
 
 const rollLeft = (dispatch) => {
-	getHead();
-    var active = document.getElementById(document.activeElement.id);
-    setAnchorCell("L");
-    dispatch(moveTapeLeftAction(getAnchorCell()));
-    // active.blur();
+	prepareHead();
+    rollTapeToRight(dispatch)
+    // document.getElementById(FIRST_CELL_ID).blur();
 }
 
 const rollRight = (dispatch) => {
-	var selectedId = prepareTail();
-	var active = document.getElementById(document.activeElement.id);
-    setAnchorCell("R");
-    dispatch(moveTapeRightAction(selectedId));
-    // active.blur();
+	prepareTail();
+	rollTapeToLeft(dispatch)
+    // document.getElementById(LAST_CELL_ID).blur();
 }
 
 const mapStateToProps = (state) => ({});

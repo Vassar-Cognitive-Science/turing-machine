@@ -1,119 +1,108 @@
 import { connect } from 'react-redux';
-import { standardizeCellId } from '../reducers/tape.js';
-import { moveTapeRightAction, moveTapeLeftAction, fillTapeAction } from '../actions/index.js';
-import { standardizeTapeCellId, getTapeCellNumber } from '../components/Square.js';
-import { N_CELLS, shiftAllToLeft, shiftAllToRight } from '../components/Tape.js';
-import Square from '../components/Square.js';
+import { standardizeCellId } from '../reducers/tape';
+import { moveTapeRightAction, moveTapeLeftAction, fillTapeAction } from '../actions/index';
+import { LEFT, RIGHT } from '../constants/ReservedWords';
+import { N_CELLS } from '../constants/index';
+import Square, { standardizeTapeCellId, getTapeCellNumber } from '../components/Square';
 
-var ANCHOR_CELL_ID = 0;
-var SELECTED_CELL_ID;
-var CELL_INPUT = null;
+let ANCHOR_CELL_ID = 0;
+let CELL_INPUT = null;
 
-export const isNowLastCell = () => standardizeTapeCellId(N_CELLS-1) === document.activeElement.id;
+const isNowLastCell = () => standardizeTapeCellId(N_CELLS-1) === document.activeElement.id;
 
-export const isNowFirstCell = () => standardizeTapeCellId(0) === document.activeElement.id;
+const isNowFirstCell = () => standardizeTapeCellId(0) === document.activeElement.id;
 
-export const setAnchorCell = (direction) => {
-  if (direction === "L") {
+const setAnchorCell = (direction) => {
+  if (direction === LEFT) {
     ANCHOR_CELL_ID -= 1;
-  } else if (direction === "R") {
+  } else if (direction === RIGHT) {
     ANCHOR_CELL_ID += 1;
   }
 }
 
-export const getAnchorCell = () => ANCHOR_CELL_ID;
-
-const rollTapeToRight = (dispatch, active) => {
-  onFocus();
-  if (isNowFirstCell()) {
-      setAnchorCell("L");
-      dispatch(moveTapeLeftAction(SELECTED_CELL_ID));
-    } else {
-      var prevId = getTapeCellNumber(document.activeElement.id) - 1;
-      document.getElementById(standardizeTapeCellId(prevId)).focus();
-    }
-  onFocus();
-}
-
-const rollTapeToLeft = (dispatch, active) => {
-  onFocus();
-  if (isNowLastCell()) {
-      setAnchorCell("R");
-      dispatch(moveTapeRightAction(SELECTED_CELL_ID));
-    } else {
-      var nextId = getTapeCellNumber(document.activeElement.id) + 1;
-      document.getElementById(standardizeTapeCellId(nextId)).focus();
-    }
-    onFocus();
+const focusOnPrev = () => {
+  var prevId = getTapeCellNumber(document.activeElement.id) - 1;
+  document.getElementById(standardizeTapeCellId(prevId)).focus();
 }
 
 const focusOnNext = () => {
   let nextId = getTapeCellNumber(document.activeElement.id) + 1;
   document.getElementById(standardizeTapeCellId(nextId)).focus();
-  onFocus();
 }
 
+const focusedTrueCellId = (display=false, activeId=document.activeElement.id) => {
+  var selectedId = ANCHOR_CELL_ID + getTapeCellNumber(activeId);
+  if (display) console.log(selectedId);
+  return selectedId;
+}
 
-const onKeyPress = (e) => {
-  if (e.which === 32) CELL_INPUT = ""; // when space == ""
-  else {
-    CELL_INPUT = String.fromCharCode(e.which);
-  }
+export const rollTapeToRight = (dispatch) => {
+  if (isNowFirstCell()) {
+      setAnchorCell(LEFT);
+      dispatch(moveTapeLeftAction(focusedTrueCellId()));
+    } else {
+      focusOnPrev();
+    }
+}
+
+export const rollTapeToLeft = (dispatch) => {
+  if (isNowLastCell()) {
+      setAnchorCell(RIGHT);
+      dispatch(moveTapeRightAction(focusedTrueCellId()));
+    } else {
+      focusOnNext();
+    }
 }
 
 const onKeyDown = (e, dispatch) => {
   var key = e.which;
-  var active = document.getElementById(document.activeElement.id);
-  
+
   /* left arrow */
   if (key === 37) { 
-    rollTapeToRight(dispatch, active);
+    rollTapeToRight(dispatch);
   }
   /* right arrow */
   else if (key === 39) { 
-    rollTapeToLeft(dispatch, active);
+    rollTapeToLeft(dispatch);
   }
   /* backspace, delete */
   else if (key === 8 || key === 46) { 
-    dispatch(fillTapeAction(SELECTED_CELL_ID, null));
+    dispatch(fillTapeAction(focusedTrueCellId(), ""));
   } 
+
+  else {
+    CELL_INPUT = String.fromCharCode(key);
+  }
 }
 
-export const onFocus = (display=false) => {
-  SELECTED_CELL_ID = ANCHOR_CELL_ID + getTapeCellNumber(document.activeElement.id);
-  if (display) console.log(SELECTED_CELL_ID);
-}
+const onChange = (e, dispatch, ownProps) => {
+  // console.log(CELL_INPUT)
+	dispatch(fillTapeAction(focusedTrueCellId(), CELL_INPUT));
+  CELL_INPUT = null;
 
-const onChange = (dispatch, ownProps) => {
-  onFocus();
-  var active = document.getElementById(document.activeElement.id);
-	dispatch(fillTapeAction(SELECTED_CELL_ID, CELL_INPUT));
-  
 	// If we reach the last cell presented
 	if (isNowLastCell()) {
-      rollTapeToLeft(dispatch, active);
+      rollTapeToLeft(dispatch);
   }
   else {
       focusOnNext();
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
-  var tar = state[standardizeCellId(ANCHOR_CELL_ID+ownProps.read)];
+  var tar = state[standardizeCellId(ANCHOR_CELL_ID+ownProps.order)];
   var val = (tar !== undefined && tar !== null) ? tar.val : "";
   var cell = document.getElementById(ownProps.id);
-  if (cell)
-    cell.value = val;
+  if (cell) cell.value = val;
+  
   return {
     val: val
   };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	onKeyPress: (e) => { onKeyPress(e, dispatch) },
-	onChange: () => { onChange(dispatch, ownProps) },
-  onFocus: () => { onFocus(true) },
+	onChange: (e) => { onChange(e, dispatch, ownProps) },
+  onFocus: () => { focusedTrueCellId(true) },
   onKeyDown: (e) => { onKeyDown(e, dispatch) }
 })
 

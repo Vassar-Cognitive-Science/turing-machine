@@ -14,11 +14,9 @@ class Square extends React.Component {
   	// this.props.read[this.props.order] = "";
     return (
       <input className="square" 
-      onKeyPress={this.props.onKeyPress}
       onChange={this.props.onChange} 
       onFocus={this.props.onFocus}
       onKeyDown={this.props.onKeyDown}
-      type={"text"}
       value={this.props.val}
       id={this.props.id}
       >
@@ -30,9 +28,8 @@ class Square extends React.Component {
 Square.PropTypes = {
   onFocus: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
-  onKeyPress: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
-  read: PropTypes.string.isRequired,
+  order: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired
 }
 
