@@ -19,6 +19,33 @@ export const initialState = {
 	/* Rules */
 };
 
+
+const fire = (state, action) => {
+	return {
+		fire: state.fire +1,
+		...state
+	}
+}
+
+const initializeMachine = (state, action) => {
+	return initialState;
+}
+
+const step = (state, action) => {
+	if (state.tapeInternalState === reservedWords.HALT)
+		return state;
+
+	var rule = rules.findRule(state, state.tapeInternalState, tape.read(state));
+	if (rule === null)
+		return state;
+
+	return tape.writeAndMove(state, {
+		direction: rule.direction,
+		new_state: rule.new_state,
+		val: rule.write
+	});
+}
+
 export default function(state=initialState, action) {
 	switch (action.type) {
 		case actionTypes.FIRE:
@@ -64,30 +91,4 @@ export default function(state=initialState, action) {
 		default:
 			return state;
 	}
-}
-
-const fire = (state, action) => {
-	return {
-		fire: state.fire +1,
-		...state
-	}
-}
-
-const initializeMachine = (state, action) => {
-	return initialState;
-}
-
-const step = (state, action) => {
-	if (state.tapeInternalState == reservedWords.HALT)
-		return state;
-
-	var rule = rules.findRule(state, state.tapeInternalState, tape.read(state));
-	if (rule == null)
-		return state;
-
-	return tape.writeAndMove(state, {
-		direction: rule.direction,
-		new_state: rule.new_state,
-		val: rule.write
-	});
 }

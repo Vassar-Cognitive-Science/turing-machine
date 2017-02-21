@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { moveTapeRightAction, moveTapeLeftAction } from '../actions/index';
 import { N_CELLS } from '../constants/index';
 import Tape from '../components/Tape';
 import { standardizeTapeCellId } from '../components/Square';

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import { moveLeftAction, moveRightAction, moveTapeRightAction, moveTapeLeftAction } from '../actions/index';
+import { moveLeftAction, moveRightAction } from '../actions/index';
 import { N_CELLS } from '../constants/index';
-import Head, { standardizeHeadId } from '../components/Head';
+import Head from '../components/Head';
 import { standardizeTapeCellId } from '../components/Square';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
 

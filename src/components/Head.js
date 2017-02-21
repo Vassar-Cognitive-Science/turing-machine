@@ -1,8 +1,5 @@
 import React, { PropTypes } from 'react';
 import Draggable from 'react-draggable';
-import Square from './Square';
-
-const HEAD_ID_PREFIX = "HEAD-";
 
 
 class Head extends React.Component {

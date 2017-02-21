@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react';
 
 const TAPE_CELL_ID_PREFIX = "TAPE-CELL-";
+
 export function standardizeTapeCellId(i) {
   return TAPE_CELL_ID_PREFIX + i;
 }
 
 export function getTapeCellNumber(fullId) {
-  return parseInt(fullId.slice(TAPE_CELL_ID_PREFIX.length, fullId.length));
+  return parseInt(fullId.slice(TAPE_CELL_ID_PREFIX.length, fullId.length), 10);
 }
 
 class Square extends React.Component {
@@ -17,7 +18,7 @@ class Square extends React.Component {
       onChange={this.props.onChange} 
       onFocus={this.props.onFocus}
       onKeyDown={this.props.onKeyDown}
-      value={this.props.val}
+      value={(this.props.val)?this.props.val:""}
       id={this.props.id}
       >
       </input>
