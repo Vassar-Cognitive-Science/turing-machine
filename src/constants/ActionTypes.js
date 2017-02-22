@@ -29,3 +29,8 @@ export const DELETE_RULE = 'DELETE_RULE';
 export const INITIALIZAE_MACHINE = 'INITIALIZAE_MACHINE';
 export const STEP_FORWARD = 'STEP_FORWARD';
 /* Actions for Turing Machine */
+
+export const ADD_ROW = 'ADD_ROW';
+export const DELETE_ROW = 'DELETE_ROW';
+export const SWITCH_ROW_MODE = 'SWITCH_ROW_MODE';
+export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';

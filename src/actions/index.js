@@ -116,3 +116,31 @@ export function deleteRuleAction(in_state, read) {
 		read: read, 
 	};
 }
+
+export function addRowAction(id) {
+	return {
+		type: actionTypes.ADD_ROW,
+		id: id
+	};
+}
+
+export function deleteRowAction(id) {
+	return {
+		type: actionTypes.DELETE_ROW,
+		id: id
+	};
+}
+
+export function switchRowModeAction(id) {
+	return {
+		type: actionTypes.SWITCH_ROW_MODE,
+		id: id,
+	};
+}
+
+export function switchRowDirectionAction(id) {
+	return {
+		type: actionTypes.SWITCH_ROW_DIRECTION,
+		id: id
+	};
+}

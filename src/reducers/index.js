@@ -2,6 +2,7 @@ import * as tape from './tape';
 import * as rules from './rule';
 import * as reservedWords from '../constants/ReservedWords';
 import * as actionTypes from '../constants/ActionTypes';
+import * as table from './table';
 
 export const initialState = {
 	fire: 0,
@@ -15,8 +16,10 @@ export const initialState = {
 	/* Tape and Head */
 
 	/* Rules */
-	rulesById: []
+	rulesById: [],
 	/* Rules */
+
+	rowsById: []
 };
 
 
@@ -88,6 +91,16 @@ export default function(state=initialState, action) {
 		case actionTypes.DELETE_RULE:
 			return rules.deleteRule(state, action);
 		/* Rule actions */
+
+		case actionTypes.ADD_ROW:
+			return table.addRow(state, action);
+		case actionTypes.DELETE_ROW:
+			return table.deleteRow(state, action);
+		case actionTypes.SWITCH_ROW_MODE:
+			return table.switchRowMode(state, action);
+		case actionTypes.SWITCH_ROW_DIRECTION:
+			return table.switchRowDirection(state, action);
+
 		default:
 			return state;
 	}
