@@ -1,9 +1,11 @@
-body {
-  font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 20px;
+.card-of-tape {
+  padding-bottom: 20px;
+  width: 90%;
+  margin: 0 auto; 
 }
 
 .tape-with-button {
+  padding-top: 10px;
   display: table;
   margin: 0 auto; 
 }

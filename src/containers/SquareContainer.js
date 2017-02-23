@@ -5,14 +5,14 @@ import { LEFT, RIGHT } from '../constants/ReservedWords';
 import { N_CELLS } from '../constants/index';
 import Square, { standardizeTapeCellId, getTapeCellNumber } from '../components/Square';
 
-let ANCHOR_CELL_ID = 0;
+export var ANCHOR_CELL_ID = 0;
 let CELL_INPUT = null;
 
 const isNowLastCell = () => standardizeTapeCellId(N_CELLS-1) === document.activeElement.id;
 
 const isNowFirstCell = () => standardizeTapeCellId(0) === document.activeElement.id;
 
-const setAnchorCell = (direction) => {
+export const setAnchorCell = (direction) => {
   if (direction === LEFT) {
     ANCHOR_CELL_ID -= 1;
   } else if (direction === RIGHT) {

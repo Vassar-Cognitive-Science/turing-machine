@@ -33,7 +33,8 @@ Head.PropTypes = {
   handleDrag: PropTypes.func.isRequired,
   handleStop: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
-  onDoubleClick: PropTypes.func.isRequired
+  onDoubleClick: PropTypes.func.isRequired,
+  pointer: PropTypes.number.isRequired
 }
 
 export default Head;

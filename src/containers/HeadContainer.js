@@ -56,15 +56,18 @@ const headOnDrag = (e, ui, dispatch) => {
 }
 
 
-const mapStateToProps = (state) => ({
-	in_state: state.tapeInternalState
-})
+const mapStateToProps = (state) => {
+    return {
+	   in_state: state.tapeInternalState
+    };
+}
 
 const mapDispatchToProps = (dispatch) => ({
 	handleStart: (e, ui) => { headOnStart(e, ui) },
 	handleDrag: (e, ui) => { headOnDrag(e, ui, dispatch) },
     handleStop: (e, ui) => { headOnStop(e, ui) },
-    onFocus: () => {  document.getElementById(standardizeTapeCellId(POSITION)).focus(); },
+    // onFocus: () => {  document.getElementById(standardizeTapeCellId(POSITION)).focus(); },
+    onFocus: (e) => {  },
     onDoubleClick: () => { console.log(1) }
 })
 

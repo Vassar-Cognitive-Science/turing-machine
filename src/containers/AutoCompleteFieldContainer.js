@@ -31,35 +31,42 @@ const getAllStates = (state) => {
 	return dataSource;
 }
 
-const getAllInputs = (state) => {
-	let dataSource = {};
-	for (var i = 0; i < state.rowsById.length; i++) {
-		let row = state[state.rowsById[i]];
-		if (row.read) dataSource[row.read] = 0;
-		if (row.write) dataSource[row.write] = 0;
-	}
-	return dataSource;
-}
+// const getAllInputs = (state) => {
+// 	let dataSource = {};
+// 	for (let i = 0; i < state.rowsById.length; i++) {
+// 		let row = state[state.rowsById[i]];
+// 		if (row.read) dataSource[row.read] = 0;
+// 		if (row.write) dataSource[row.write] = 0;
+// 	}
+
+// 	for (let i = 0; i < state.tapeCellsById.length; i++) {
+// 		let cell = state[state.tapeCellsById[i]];
+// 		if (cell.val) dataSource[cell.val] = 0;
+// 	}
+
+// 	return dataSource;
+// }
 
 const mapStateToProps = (state, ownProps) => {
 	let thisRow = state[ownProps.parent];
 
 	let error = "";
-	if (ownProps.fieldType === FIELD_TYPES[0] || 
-		ownProps.fieldType === FIELD_TYPES[1]) {
-		error = thisRow.error;
-	}
-
 	let dataSource = {};
-
 	switch(ownProps.fieldType) {
 		case FIELD_TYPES[0]:
+			error = thisRow.in_state_error;
+			dataSource = getAllStates(state);
+			break;
 		case FIELD_TYPES[4]:
+			error = thisRow.new_state_error;
 			dataSource = getAllStates(state);
 			break;
 		case FIELD_TYPES[1]:
+			error = thisRow.read_error;
+			break;
 		case FIELD_TYPES[2]:
-			dataSource = getAllInputs(state);
+			error = thisRow.write_error;
+			// dataSource = getAllInputs(state);
 			break;
 		default:
 			break;
@@ -67,7 +74,7 @@ const mapStateToProps = (state, ownProps) => {
 
 	return {
 		errorText: error,
-		dataSource: Object.keys(dataSource)
+		dataSource: Object.keys(dataSource),
 	};
 }
 

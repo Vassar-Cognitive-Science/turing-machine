@@ -174,7 +174,7 @@ export const initializeTape = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeHead: 0,
 		tapeTail: 0,
-		tapePointer: 0,
+		tapePointer: Math.floor(action.tapeSize / 2),
 		tapeCellsById: [],
 		tapeInternalState: null
 	});

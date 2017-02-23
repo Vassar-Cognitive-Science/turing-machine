@@ -1,6 +1,13 @@
+
+.card-of-rule-table {
+  width: 90%;
+  margin: 0 auto; 
+}
+
 .rule-table {
+	padding-bottom: 30px;
 	margin: 0 auto;
 	width: 90%;
-	height: 500px;
+	height: 90%;
 	overflow: auto;
 }

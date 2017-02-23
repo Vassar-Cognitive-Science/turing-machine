@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import FlatButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {Card, CardActions } from 'material-ui/Card';
 import DeleteRowButton from '../containers/DeleteRowButtonContainer';
 import SwitchDirectionButton from '../containers/SwitchDirectionButtonContainer';
 import AutoCompleteField from '../containers/AutoCompleteFieldContainer';
@@ -55,57 +56,63 @@ export const getRowData = (parent) => {
 class DynamicRuleTable extends React.Component {
   render() {
     return (
-      <div className="rule-table">
-        <div>
+      <div className='card-of-rule-table'>
+      <MuiThemeProvider>
+      <Card>
+        <div className="rule-table">
+          <CardActions>
+            <MuiThemeProvider>
+              <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow} />
+            </MuiThemeProvider>  
+           </CardActions>    
           <MuiThemeProvider>
-            <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow} />
-          </MuiThemeProvider>  
-        </div>    
-        <MuiThemeProvider>
-          <Table>
-            <TableHeader displaySelectAll={false}>
-              <TableRow>
-                <TableHeaderColumn style={{width:50}}></TableHeaderColumn>
-                <TableHeaderColumn >Current State</TableHeaderColumn>
-                <TableHeaderColumn >Read</TableHeaderColumn>
-                <TableHeaderColumn >Write</TableHeaderColumn>
-                <TableHeaderColumn >Move Direction</TableHeaderColumn>
-                <TableHeaderColumn >New State</TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false} >
+            <Table>
+              <TableHeader displaySelectAll={false}>
+                <TableRow>
+                  <TableHeaderColumn style={{width:50}}></TableHeaderColumn>
+                  <TableHeaderColumn >Current State</TableHeaderColumn>
+                  <TableHeaderColumn >Read</TableHeaderColumn>
+                  <TableHeaderColumn >Write</TableHeaderColumn>
+                  <TableHeaderColumn >Move Direction</TableHeaderColumn>
+                  <TableHeaderColumn >New State</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody displayRowCheckbox={false} >
 
-              {this.props.state.rowsById.map((id) => (
+                {this.props.state.rowsById.map((id) => (
 
-                <TableRow striped={true} key={id} id={id} selectable={false}>
-                  <TableRowColumn style={{width:90}}>
-                    <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />  
-                  </TableRowColumn>
+                  <TableRow striped={true} key={id} id={id} selectable={false}>
+                    <TableRowColumn style={{width:90}}>
+                      <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />  
+                    </TableRowColumn>
 
-                  <TableRowColumn>
-                      <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} style={{width:180}} id={standardizeCurrentStateFieldId(id)} />
-                  </TableRowColumn>
-                    
-                  <TableRowColumn>
-                      <AutoCompleteField parent={id} fieldType={FIELD_TYPES[1]} style={{width:80}} id={standardizeReadFieldId(id)} />
-                  </TableRowColumn>
-                    
-                  <TableRowColumn>
-                      <AutoCompleteField parent={id} fieldType={FIELD_TYPES[2]} style={{width:80}} id={standardizeWriteFieldId(id)} />
-                  </TableRowColumn>
+                    <TableRowColumn>
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} style={{width:180}} id={standardizeCurrentStateFieldId(id)} />
+                    </TableRowColumn>
+                      
+                    <TableRowColumn>
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[1]} style={{width:80, maxlength:10}} id={standardizeReadFieldId(id)} />
+                    </TableRowColumn>
+                      
+                    <TableRowColumn>
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[2]} style={{width:80, maxlength:1}} id={standardizeWriteFieldId(id)} />
+                    </TableRowColumn>
 
-                  <TableRowColumn>
-                      <SwitchDirectionButton parent={id} fieldType={FIELD_TYPES[3]} value={true} id={standardizeDirectionFieldId(id)} />
-                  </TableRowColumn>
-                    
-                  <TableRowColumn>
-                      <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} style={{width:180}} id={standardizeNewStateFieldId(id)} />
-                  </TableRowColumn>
-              </TableRow>
-              ))}
+                    <TableRowColumn>
+                        <SwitchDirectionButton parent={id} fieldType={FIELD_TYPES[3]} value={true} id={standardizeDirectionFieldId(id)} />
+                    </TableRowColumn>
+                      
+                    <TableRowColumn>
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} style={{width:180}} id={standardizeNewStateFieldId(id)} />
+                    </TableRowColumn>
+                </TableRow>
+                ))}
 
-          </TableBody>
-          </Table>
+            </TableBody>
+            </Table>
+          </MuiThemeProvider>
+        </div>
+      </Card>
       </MuiThemeProvider>
       </div>
     )
