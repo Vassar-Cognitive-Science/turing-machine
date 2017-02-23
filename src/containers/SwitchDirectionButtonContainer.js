@@ -9,8 +9,7 @@ const switchDirection = (dispatch, ownProps) => {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		value: state[ownProps.parent].isLeft,
-		editable: state[ownProps.parent].editable
+		value: state[ownProps.parent].isLeft
 	};
 }
 

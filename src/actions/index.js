@@ -1,11 +1,5 @@
 import * as actionTypes from '../constants/ActionTypes.js';
 
-export function fireAction() {
-	return {
-		type: actionTypes.FIRE
-	};
-}
-
 export function initMachineAction() {
 	return {
 		type: actionTypes.INITIALIZAE_MACHINE
@@ -87,36 +81,6 @@ export function moveRightAction() {
 	};
 }
 
-export function addRuleAction(in_state, read, write, direction, new_state) {
-	return {
-		type: actionTypes.ADD_RULE,
-		in_state: in_state,
-		read: read, 
-		write: write,
-		direction: direction,
-		new_state: new_state
-	};
-}
-
-export function setRuleAction(in_state, read, write, direction, new_state) {
-	return {
-		type: actionTypes.SET_RULE,
-		in_state: in_state,
-		read: read, 
-		write: write,
-		direction: direction,
-		new_state: new_state
-	};
-}
-
-export function deleteRuleAction(in_state, read) {
-	return {
-		type: actionTypes.DELETE_RULE,
-		in_state: in_state,
-		read: read, 
-	};
-}
-
 export function addRowAction(id) {
 	return {
 		type: actionTypes.ADD_ROW,
@@ -144,3 +108,47 @@ export function switchRowDirectionAction(id) {
 		id: id
 	};
 }
+
+export function setRowAction(id, in_state, read, write, isLeft, new_state) {
+	return {
+		type: actionTypes.SET_ROW,
+		id: id,
+		in_state: in_state,
+		read: read, 
+		write: write,
+		isLeft: isLeft,
+		new_state: new_state
+	};
+}
+
+
+
+// export function addRuleAction(in_state, read, write, direction, new_state) {
+// 	return {
+// 		type: actionTypes.ADD_RULE,
+// 		in_state: in_state,
+// 		read: read, 
+// 		write: write,
+// 		direction: direction,
+// 		new_state: new_state
+// 	};
+// }
+
+// export function setRuleAction(in_state, read, write, direction, new_state) {
+// 	return {
+// 		type: actionTypes.SET_RULE,
+// 		in_state: in_state,
+// 		read: read, 
+// 		write: write,
+// 		direction: direction,
+// 		new_state: new_state
+// 	};
+// }
+
+// export function deleteRuleAction(in_state, read) {
+// 	return {
+// 		type: actionTypes.DELETE_RULE,
+// 		in_state: in_state,
+// 		read: read, 
+// 	};
+// }

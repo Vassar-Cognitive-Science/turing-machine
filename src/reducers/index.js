@@ -1,11 +1,10 @@
 import * as tape from './tape';
-import * as rules from './rule';
+// import * as rules from './rule';
 import * as reservedWords from '../constants/ReservedWords';
 import * as actionTypes from '../constants/ActionTypes';
 import * as table from './table';
 
 export const initialState = {
-	fire: 0,
 
 	/* Tape and Head */
 	tapeHead: 0,
@@ -16,19 +15,13 @@ export const initialState = {
 	/* Tape and Head */
 
 	/* Rules */
-	rulesById: [],
+	// rulesById: [],
+
+	rowsById: [],
 	/* Rules */
 
-	rowsById: []
+	error: null
 };
-
-
-const fire = (state, action) => {
-	return {
-		fire: state.fire +1,
-		...state
-	}
-}
 
 const initializeMachine = (state, action) => {
 	return initialState;
@@ -37,22 +30,12 @@ const initializeMachine = (state, action) => {
 const step = (state, action) => {
 	if (state.tapeInternalState === reservedWords.HALT)
 		return state;
-
-	var rule = rules.findRule(state, state.tapeInternalState, tape.read(state));
-	if (rule === null)
-		return state;
-
-	return tape.writeAndMove(state, {
-		direction: rule.direction,
-		new_state: rule.new_state,
-		val: rule.write
-	});
+	
 }
 
 export default function(state=initialState, action) {
 	switch (action.type) {
-		case actionTypes.FIRE:
-			return fire(state, action);
+
 		/* Machine actions */
 		case actionTypes.INITIALIZAE_MACHINE:
 			return initializeMachine(state, action);
@@ -84,22 +67,24 @@ export default function(state=initialState, action) {
 		/* Tape actions */
 
 		/* Rule actions */
-		case actionTypes.ADD_RULE:
-			return rules.addRule(state, action);
-		case actionTypes.SET_RULE:
-			return rules.setRule(state, action);
-		case actionTypes.DELETE_RULE:
-			return rules.deleteRule(state, action);
-		/* Rule actions */
+		// case actionTypes.ADD_RULE:
+		// 	return rules.addRule(state, action);
+		// case actionTypes.SET_RULE:
+		// 	return rules.setRule(state, action);
+		// case actionTypes.DELETE_RULE:
+		// 	return rules.deleteRule(state, action);
+
 
 		case actionTypes.ADD_ROW:
 			return table.addRow(state, action);
 		case actionTypes.DELETE_ROW:
 			return table.deleteRow(state, action);
-		case actionTypes.SWITCH_ROW_MODE:
-			return table.switchRowMode(state, action);
+		case actionTypes.SET_ROW:
+			return table.setRow(state, action);
 		case actionTypes.SWITCH_ROW_DIRECTION:
 			return table.switchRowDirection(state, action);
+		/* Rule actions */
+
 
 		default:
 			return state;

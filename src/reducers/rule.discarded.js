@@ -1,3 +1,11 @@
+/*
+
+*****
+This module is no longer in use. See table.js for same functionality
+*****
+
+*/
+
 /* Constants */
 
 const RULE_PREFIX = "RULE - ";
@@ -42,7 +50,7 @@ export const standardizeRuleId = (stateName, readValue) => {
 }
 
 export const ruleExists = (state, id) => {
-	return findRuleById(state, id) != null;
+	return findRuleById(state, id) !== null;
 }
 
 export const findRule = (state, stateName, readValue) => {
@@ -95,6 +103,9 @@ export const deleteRuleHelper = (state, in_state, read) => {
 /* Reducer functions */
 
 export const addRule = (state, action) => {
+	if (ruleExists(state, action.in_state, action.read)) {
+		return Object.assign({}, state, {error: DUPLICATED_RULE_ERROR});
+	}
 	var new_state = Object.assign({}, state, {
 		rulesById: state.rulesById.slice()
 	});

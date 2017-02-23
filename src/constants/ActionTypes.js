@@ -19,18 +19,19 @@ export const EXPAND_CELLS_BEFORE_HEAD = 'EXPAND_CELLS_BEFORE_HEAD';
 export const EXPAND_CELLS_AFTER_TAIL = 'EXPAND_CELLS_AFTER_TAIL';
 /* Actions for Tape */
 
-/* Actions for Transition Graph */
-export const ADD_RULE = 'ADD_RULE';
-export const SET_RULE = 'SET_RULE';
-export const DELETE_RULE = 'DELETE_RULE';
+/* Actions for Transition Table */
+// export const ADD_RULE = 'ADD_RULE';
+// export const SET_RULE = 'SET_RULE';
+// export const DELETE_RULE = 'DELETE_RULE';
+
+export const ADD_ROW = 'ADD_ROW';
+export const DELETE_ROW = 'DELETE_ROW';
+export const SET_ROW = 'SET_ROW';
+// export const SWITCH_ROW_MODE = 'SWITCH_ROW_MODE';
+export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';
 /* Actions for Transition Graph */
 
 /* Actions for Turing Machine */
 export const INITIALIZAE_MACHINE = 'INITIALIZAE_MACHINE';
 export const STEP_FORWARD = 'STEP_FORWARD';
 /* Actions for Turing Machine */
-
-export const ADD_ROW = 'ADD_ROW';
-export const DELETE_ROW = 'DELETE_ROW';
-export const SWITCH_ROW_MODE = 'SWITCH_ROW_MODE';
-export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';
