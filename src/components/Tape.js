@@ -4,8 +4,8 @@ import { N_CELLS } from '../constants/index';
 import Square from '../containers/SquareContainer';
 import Head from '../containers/HeadContainer';
 import IconButton from 'material-ui/IconButton';
-import RollRight from 'material-ui/svg-icons/av/skip-next';
-import RollLeft from 'material-ui/svg-icons/av/skip-previous';
+import RollRight from 'material-ui/svg-icons/av/fast-forward';
+import RollLeft from 'material-ui/svg-icons/av/fast-rewind';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Card } from 'material-ui/Card';
 
