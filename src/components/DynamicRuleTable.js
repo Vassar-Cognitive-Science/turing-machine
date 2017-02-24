@@ -87,15 +87,15 @@ class DynamicRuleTable extends React.Component {
                     </TableRowColumn>
 
                     <TableRowColumn>
-                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} style={{width:180}} id={standardizeCurrentStateFieldId(id)} />
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} styles={{width:180}} id={standardizeCurrentStateFieldId(id)} />
                     </TableRowColumn>
                       
                     <TableRowColumn>
-                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[1]} style={{width:80, maxlength:10}} id={standardizeReadFieldId(id)} />
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[1]} openOnFocus={true} styles={{width:80}} maxLength="1" id={standardizeReadFieldId(id)} />
                     </TableRowColumn>
                       
                     <TableRowColumn>
-                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[2]} style={{width:80, maxlength:1}} id={standardizeWriteFieldId(id)} />
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[2]} openOnFocus={true} styles={{width:80}} maxLength="1" id={standardizeWriteFieldId(id)} />
                     </TableRowColumn>
 
                     <TableRowColumn>
@@ -103,7 +103,7 @@ class DynamicRuleTable extends React.Component {
                     </TableRowColumn>
                       
                     <TableRowColumn>
-                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} style={{width:180}} id={standardizeNewStateFieldId(id)} />
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} styles={{width:180}} id={standardizeNewStateFieldId(id)} />
                     </TableRowColumn>
                 </TableRow>
                 ))}

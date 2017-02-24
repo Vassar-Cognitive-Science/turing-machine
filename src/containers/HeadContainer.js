@@ -7,7 +7,7 @@ import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
 
 let OLD_X = 499; 
 
-const calcPosition = () => ((OLD_X-9)/49);
+const calcPosition = () => ((OLD_X - 9) / 49);
 
 const focusOnCorresCell = () => {
     document.getElementById(standardizeTapeCellId(calcPosition())).focus();
@@ -18,7 +18,8 @@ const blurOnCorresCell = () => {
 }
 
 const setOldX = (ui) => {
-    if ((ui.x >= 9) && (ui.x <= 989) && ((ui.x-9)%49 === 0)) OLD_X = ui.x;
+    if ((ui.x >= 9) && (ui.x <= 989) && ((ui.x - 9) % 49 === 0)) 
+        OLD_X = ui.x;
 }
 
 const headOnStart = (e, ui, dispatch) => {
@@ -31,26 +32,26 @@ const headOnStop = (e, ui, dispatch) => {
 }
 
 const headOnDrag = (e, ui, dispatch) => {
-    if (ui.x < OLD_X) { // Left
+    if (ui.x < OLD_X && ui.x >= -40 && ui.x <= 989) { // Left
         dispatch(moveLeftAction());
         if (calcPosition() === 0)
             rollTapeToRight(dispatch, true);
-    } else if (ui.x > OLD_X) {
+        setOldX(ui);
+        focusOnCorresCell();
+    } else if (ui.x > OLD_X && ui.x <= 1038 && ui.x >= 9) {
         dispatch(moveRightAction());
         if (calcPosition() === N_CELLS - 1)
-            rollTapeToLeft(dispatch, true);
+            rollTapeToLeft(dispatch, true);    
+        setOldX(ui);
+        focusOnCorresCell();
     }
-    setOldX(ui);
-    focusOnCorresCell();
 }
-
 
 const onChange = (e, dispatch) => {
     dispatch(setInternalStateAction(e.target.value))
 }
 
 const mapStateToProps = (state, ownProps) => {
-    console.log(state.tapePointer)
     return {
 	   value: state.tapeInternalState,
        editable: state.tapeHeadEditable

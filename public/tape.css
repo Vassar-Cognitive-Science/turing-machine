@@ -58,6 +58,7 @@
 }
 
 
+
 .hair {
   width: 30px;
   height: 5px;
@@ -71,6 +72,7 @@
   border: 1px solid black;
   font-size: 18px;
   font-weight: bold;
+  margin: 0 auto; 
   height: auto;
   width: 30px;
   position: relative;

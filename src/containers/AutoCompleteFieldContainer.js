@@ -3,16 +3,10 @@ import AutoCompleteField from '../components/AutoCompleteField';
 import { setRowAction } from '../actions/index';
 import { getRowData, FIELD_TYPES } from '../components/DynamicRuleTable';
 
-// const onFocus = (dispatch, ownProps) => {
-// 	inputRule(dispatch, ownProps);
-// }
-
-const onBlur = (dispatch, ownProps) => {
-	// inputRule(dispatch, ownProps);
-}
 
 const inputRule = (dispatch, ownProps) => {
 	var rowData = getRowData(ownProps.parent);
+	console.log(rowData)
 	dispatch(setRowAction(ownProps.parent, 
 						  rowData[0], 
 					  	  rowData[1], 
@@ -31,25 +25,26 @@ const getAllStates = (state) => {
 	return dataSource;
 }
 
-// const getAllInputs = (state) => {
-// 	let dataSource = {};
-// 	for (let i = 0; i < state.rowsById.length; i++) {
-// 		let row = state[state.rowsById[i]];
-// 		if (row.read) dataSource[row.read] = 0;
-// 		if (row.write) dataSource[row.write] = 0;
-// 	}
+const getAllInputs = (state) => {
+	let dataSource = {};
+	for (let i = 0; i < state.rowsById.length; i++) {
+		let row = state[state.rowsById[i]];
+		if (row.read) dataSource[row.read] = 0;
+		if (row.write) dataSource[row.write] = 0;
+	}
 
-// 	for (let i = 0; i < state.tapeCellsById.length; i++) {
-// 		let cell = state[state.tapeCellsById[i]];
-// 		if (cell.val) dataSource[cell.val] = 0;
-// 	}
+	for (let i = 0; i < state.tapeCellsById.length; i++) {
+		let cell = state[state.tapeCellsById[i]];
+		if (cell.val) dataSource[cell.val] = 0;
+	}
 
-// 	return dataSource;
-// }
+	return dataSource;
+}
 
 const mapStateToProps = (state, ownProps) => {
 	let thisRow = state[ownProps.parent];
-
+	console.log(thisRow)
+	let filter = (searchText, key) => (searchText !== "" && key.startsWith(searchText));
 	let error = "";
 	let dataSource = {};
 	switch(ownProps.fieldType) {
@@ -63,10 +58,13 @@ const mapStateToProps = (state, ownProps) => {
 			break;
 		case FIELD_TYPES[1]:
 			error = thisRow.read_error;
+			dataSource = getAllInputs(state);
+			filter = (searchText, key) => (true);
 			break;
 		case FIELD_TYPES[2]:
 			error = thisRow.write_error;
-			// dataSource = getAllInputs(state);
+			dataSource = getAllInputs(state);
+			filter = (searchText, key) => (true);
 			break;
 		default:
 			break;
@@ -75,16 +73,12 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		errorText: error,
 		dataSource: Object.keys(dataSource),
+		filter: filter
 	};
 }
 
-const filter = (searchText, key) => (searchText !== "" && key.startsWith(searchText));
-
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	onBlur: () => { onBlur(dispatch, ownProps) },
-	onChange: () => { inputRule(dispatch, ownProps) },
-	filter: filter,
-	// onFocus: () => { onFocus(dispatch, ownProps) }
+	onUpdateInput: () => { inputRule(dispatch, ownProps) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AutoCompleteField);
