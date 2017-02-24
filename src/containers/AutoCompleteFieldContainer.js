@@ -17,6 +17,7 @@ const inputRule = (dispatch, ownProps) => {
 
 const getAllStates = (state) => {
 	let dataSource = {};
+	dataSource[state.tapeInternalState] = 0;
 	for (var i = 0; i < state.rowsById.length; i++) {
 		let row = state[state.rowsById[i]];
 		if (row.in_state) dataSource[row.in_state] = 0;
