@@ -31,27 +31,6 @@ export const standardizeNewStateFieldId = (id) => (NEW_STATE_COL_ID_PREFIX + id)
 
 export const translateDirectionValue = (flag) => ( (flag === 'true') ? LEFT : RIGHT ); // true: LEFT, false: RIGHT
 
-export const getRowData = (parent) => {
-  var results = [];
-
-  var current_state = document.getElementById(standardizeCurrentStateFieldId(parent)).value;
-  results.push(current_state);
-
-  var read = document.getElementById(standardizeReadFieldId(parent)).value;
-  results.push(read);
-
-  var write = document.getElementById(standardizeWriteFieldId(parent)).value;
-  results.push(write);
-
-  var direction = document.getElementById(standardizeDirectionFieldId(parent)).value;
-  results.push(direction);
-
-  var new_state = document.getElementById(standardizeNewStateFieldId(parent)).value;
-  results.push(new_state)
-
-  return results;
-}
-
 
 class DynamicRuleTable extends React.Component {
   render() {

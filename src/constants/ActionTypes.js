@@ -1,4 +1,7 @@
-export const FIRE = "FIRE";
+
+/* GUI info */
+export const ADJUST_HEAD_WIDTH = 'ADJUST_HEAD_WIDTH';
+/* GUI info */
 
 /* Actions for Head */
 export const SWITCH_HEAD_MODE = 'SWITCH_HEAD_MODE';
@@ -29,6 +32,10 @@ export const EXPAND_CELLS_AFTER_TAIL = 'EXPAND_CELLS_AFTER_TAIL';
 export const ADD_ROW = 'ADD_ROW';
 export const DELETE_ROW = 'DELETE_ROW';
 export const SET_ROW = 'SET_ROW';
+export const SET_ROW_IN_STATE = 'SET_ROW_IN_STATE';
+export const SET_ROW_NEW_STATE = 'SET_ROW_NEW_STATE';
+export const SET_ROW_READ = 'SET_ROW_READ';
+export const SET_ROW_WRITE = 'SET_ROW_WRITE';
 // export const SWITCH_ROW_MODE = 'SWITCH_ROW_MODE';
 export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';
 /* Actions for Transition Graph */

@@ -87,10 +87,49 @@ export const setRow = (state, action) => {
 	return new_state;
 }
 
-export const switchRowDirection = (state, action) => {
-	var new_state = Object.assign({}, state);
+export const setRowInState = (state, action) => {
 	var oldRow = state[action.id];
+	return setRow(state, {id: action.id, 
+						  in_state: action.in_state, 
+						  read: oldRow.read, 
+						  write: oldRow.write, 
+						  isLeft: oldRow.isLeft,
+						  new_state: oldRow.new_state});
+}
 
+export const setRowNewState = (state, action) => {
+	var oldRow = state[action.id];
+	return setRow(state, {id: action.id, 
+						  in_state: oldRow.in_state, 
+						  read: oldRow.read, 
+						  write: oldRow.write, 
+						  isLeft: oldRow.isLeft,
+						  new_state: action.new_state});
+}
+
+export const setRowRead = (state, action) => {
+	var oldRow = state[action.id];
+	return setRow(state, {id: action.id, 
+						  in_state: oldRow.in_state, 
+						  read: action.read, 
+						  write: oldRow.write, 
+						  isLeft: oldRow.isLeft,
+						  new_state: oldRow.new_state});
+}
+
+export const setRowWrite = (state, action) => {
+	var oldRow = state[action.id];
+	return setRow(state, {id: action.id, 
+						  in_state: oldRow.in_state, 
+						  read: oldRow.read, 
+						  write: action.write, 
+						  isLeft: oldRow.isLeft,
+						  new_state: oldRow.new_state});
+}
+
+
+export const switchRowDirection = (state, action) => {
+	var oldRow = state[action.id];
 	return setRow(state, {id: action.id, 
 						  in_state: oldRow.in_state, 
 						  read: oldRow.read, 

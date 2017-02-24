@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
-import { moveLeftAction, moveRightAction, switchHeadModeAction, setInternalStateAction } from '../actions/index';
+import { moveLeftAction, moveRightAction, switchHeadModeAction, setInternalStateAction, adjustHeadWidthAction } from '../actions/index';
 import { N_CELLS } from '../constants/index';
 import Head from '../components/Head';
 import { standardizeTapeCellId } from '../components/Square';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
+import { getAllStates } from './AutoCompleteFieldContainer';
 
 let OLD_X = 499; 
 
@@ -47,14 +48,30 @@ const headOnDrag = (e, ui, dispatch) => {
     }
 }
 
-const onChange = (e, dispatch) => {
-    dispatch(setInternalStateAction(e.target.value))
+const onUpdateInput = (searchText, dispatch) => {
+    dispatch(adjustHeadWidthAction(searchText));
+    dispatch(setInternalStateAction(searchText));
 }
 
 const mapStateToProps = (state, ownProps) => {
+    let filter = (searchText, key) => (searchText === "" || key.startsWith(searchText));
+    let dataSource = getAllStates(state);
+    delete dataSource[null];
+
     return {
-	   value: state.tapeInternalState,
-       editable: state.tapeHeadEditable
+	   // searchText: state.tapeInternalState,
+       editable: state.tapeHeadEditable,
+       dataSource: Object.keys(dataSource),
+       filter: filter,
+       hair_styles: {
+        width: state.headWidth,
+        left: state.headLeftOffset,
+       },
+       head_styles: {
+        height: state.headHeight,
+        width: state.headWidth,
+        left: state.headLeftOffset,
+       }
     };
 }
 
@@ -62,7 +79,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleStart: (e, ui) => { headOnStart(e, ui, dispatch) },
 	handleDrag: (e, ui) => { headOnDrag(e, ui, dispatch) },
     handleStop: (e, ui) => { headOnStop(e, ui, dispatch) },
-    onChange: (e) => { onChange(e, dispatch) }
+    onUpdateInput: (searchText) => { onUpdateInput(searchText, dispatch) }
 })
 
 

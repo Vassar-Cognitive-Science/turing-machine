@@ -1,14 +1,20 @@
 import * as tape from './tape';
-// import * as rules from './rule';
 import * as reservedWords from '../constants/ReservedWords';
 import * as actionTypes from '../constants/ActionTypes';
 import * as table from './table';
+import * as gui from './gui';
+import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET } from '../constants/index';
 
 export const initialState = {
+	/* GUI info */
+	headWidth: INIT_HEAD_WIDTH,
+	headHeight: INIT_HEAD_HEIGHT,
+	headLeftOffset : INIT_HEAD_LEFT_OFFSET,
+	tapeHeadEditable: false,
+	/* GUI info */
 
 	/* Tape and Head */
 	anchorCell: 0,
-	tapeHeadEditable: false,
 	tapeHead: 0,
 	tapeTail: 0,
 	tapePointer: 0,
@@ -17,12 +23,8 @@ export const initialState = {
 	/* Tape and Head */
 
 	/* Rules */
-	// rulesById: [],
-
 	rowsById: [],
 	/* Rules */
-
-	error: null
 };
 
 const initializeMachine = (state, action) => {
@@ -44,6 +46,11 @@ export default function(state=initialState, action) {
 		case actionTypes.STEP_FORWARD:
 			return step(state, action);
 		/* Machine actions */
+
+		/* GUI info */
+		case actionTypes.ADJUST_HEAD_WIDTH:
+			return gui.adjustHeadWidth(state, action);
+		/* GUI info */
 
 		/* Tape actions */
 		case actionTypes.SET_ANCHOR_CELL:
@@ -89,6 +96,14 @@ export default function(state=initialState, action) {
 			return table.setRow(state, action);
 		case actionTypes.SWITCH_ROW_DIRECTION:
 			return table.switchRowDirection(state, action);
+		case actionTypes.SET_ROW_IN_STATE:
+			return table.setRowInState(state, action);
+		case actionTypes.SET_ROW_READ:
+			return table.setRowRead(state, action);
+		case actionTypes.SET_ROW_WRITE:
+			return table.setRowWrite(state, action);
+		case actionTypes.SET_ROW_NEW_STATE:
+			return table.setRowNewState(state, action);
 		/* Rule actions */
 
 

@@ -8,6 +8,7 @@ class AutoCompleteField extends React.Component {
 			<MuiThemeProvider>
 				<AutoComplete dataSource={this.props.dataSource} 
 							  filter={this.props.filter}
+							  searchText={this.props.searchText}
                               onUpdateInput={this.props.onUpdateInput}
                               textFieldStyle={this.props.styles}
                            	  errorText={this.props.errorText}

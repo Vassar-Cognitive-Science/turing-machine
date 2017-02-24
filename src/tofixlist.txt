@@ -1,8 +1,8 @@
 2017/2/23
-1. Fix potential bug of draggin Head.
-2. Implement Head taking input.
-3. Limit Read and Write fields or table to one character input.
-4. Head expands with label size.
+1. Fix potential bug of draggin Head. Done
+2. Implement Head taking input. Done
+3. Limit Read and Write fields or table to one character input. Done
+4. Head expands with label size. Done
 
 2017/2/23
-1. Head expands with label size.
+1. Head expands with label size. Done

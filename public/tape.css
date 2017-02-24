@@ -60,7 +60,7 @@
 
 
 .hair {
-  width: 30px;
+  /*width: 30px;*/
   height: 5px;
   position: relative;
   border: 2px solid black;
@@ -74,7 +74,7 @@
   font-weight: bold;
   margin: 0 auto; 
   height: auto;
-  width: 30px;
+  /*width: 30px;*/
   position: relative;
   text-align: center;
 }

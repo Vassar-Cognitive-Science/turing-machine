@@ -1,20 +1,29 @@
 import { connect } from 'react-redux';
 import AutoCompleteField from '../components/AutoCompleteField';
-import { setRowAction } from '../actions/index';
-import { getRowData, FIELD_TYPES } from '../components/DynamicRuleTable';
+import { setRowInStateAction, setRowReadAction, setRowWriteAction, setRowNewStateAction } from '../actions/index';
+import { FIELD_TYPES } from '../components/DynamicRuleTable';
 
 
-const inputRule = (dispatch, ownProps) => {
-	var rowData = getRowData(ownProps.parent);
-	dispatch(setRowAction(ownProps.parent, 
-						  rowData[0], 
-					  	  rowData[1], 
-					  	  rowData[2], 
-					  	  rowData[3], 
-					  	  rowData[4]));
+const onUpdateInput = (searchText, dispatch, ownProps) => {
+	switch(ownProps.fieldType) {
+		case FIELD_TYPES[0]:
+			dispatch(setRowInStateAction(ownProps.parent, searchText));
+			break;
+		case FIELD_TYPES[4]:
+			dispatch(setRowNewStateAction(ownProps.parent, searchText));
+			break;
+		case FIELD_TYPES[1]:
+			dispatch(setRowReadAction(ownProps.parent, searchText));
+			break;
+		case FIELD_TYPES[2]:
+			dispatch(setRowWriteAction(ownProps.parent, searchText));
+			break;
+		default:
+			break;
+	}
 }
 
-const getAllStates = (state) => {
+export const getAllStates = (state) => {
 	let dataSource = {};
 	dataSource[state.tapeInternalState] = 0;
 	for (var i = 0; i < state.rowsById.length; i++) {
@@ -46,21 +55,26 @@ const mapStateToProps = (state, ownProps) => {
 	let filter = (searchText, key) => (searchText === "" || key.startsWith(searchText));
 	let error = "";
 	let dataSource = {};
+	let value = "";
 	switch(ownProps.fieldType) {
 		case FIELD_TYPES[0]:
+			value = thisRow.in_state;
 			error = thisRow.in_state_error;
 			dataSource = getAllStates(state);
 			break;
 		case FIELD_TYPES[4]:
+			value = thisRow.new_state;
 			error = thisRow.new_state_error;
 			dataSource = getAllStates(state);
 			break;
 		case FIELD_TYPES[1]:
+			value = thisRow.read;
 			error = thisRow.read_error;
 			dataSource = getAllInputs(state);
 			filter = (searchText, key) => (true);
 			break;
 		case FIELD_TYPES[2]:
+			value = thisRow.write;
 			error = thisRow.write_error;
 			dataSource = getAllInputs(state);
 			filter = (searchText, key) => (true);
@@ -72,6 +86,7 @@ const mapStateToProps = (state, ownProps) => {
 	delete dataSource[null];
 
 	return {
+		searchText: value,
 		errorText: error,
 		dataSource: Object.keys(dataSource),
 		filter: filter
@@ -79,7 +94,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	onUpdateInput: () => { inputRule(dispatch, ownProps) },
+	onUpdateInput: (searchText) => { onUpdateInput(searchText, dispatch, ownProps) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AutoCompleteField);
