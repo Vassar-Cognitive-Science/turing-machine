@@ -6,7 +6,6 @@ import { getRowData, FIELD_TYPES } from '../components/DynamicRuleTable';
 
 const inputRule = (dispatch, ownProps) => {
 	var rowData = getRowData(ownProps.parent);
-	console.log(rowData)
 	dispatch(setRowAction(ownProps.parent, 
 						  rowData[0], 
 					  	  rowData[1], 
@@ -44,7 +43,6 @@ const getAllInputs = (state) => {
 
 const mapStateToProps = (state, ownProps) => {
 	let thisRow = state[ownProps.parent];
-	console.log(thisRow)
 	let filter = (searchText, key) => (searchText === "" || key.startsWith(searchText));
 	let error = "";
 	let dataSource = {};
@@ -70,6 +68,8 @@ const mapStateToProps = (state, ownProps) => {
 		default:
 			break;
 	}
+
+	delete dataSource[null];
 
 	return {
 		errorText: error,

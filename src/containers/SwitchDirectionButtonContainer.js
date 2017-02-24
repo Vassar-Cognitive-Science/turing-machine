@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import SwitchDirectionButton from '../components/SwitchDirectionButton';
 import { switchRowDirectionAction } from '../actions/index';
+import { getRowData, FIELD_TYPES } from '../components/DynamicRuleTable';
 
 
 const switchDirection = (dispatch, ownProps) => {
@@ -8,6 +9,7 @@ const switchDirection = (dispatch, ownProps) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
+	console.log(state)
 	return {
 		value: state[ownProps.parent].isLeft
 	};
