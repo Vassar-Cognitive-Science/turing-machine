@@ -33,6 +33,13 @@ export function appendCellAfterTailAction(val=null) {
 	};
 }
 
+export function setAnchorCellAction(direction) {
+	return {
+		type: actionTypes.SET_ANCHOR_CELL,
+		direction: direction
+	}
+}
+
 export function initializeTape(tapeSize) {
 	return {
 		type: actionTypes.INITIALIZAE_TAPE,
@@ -67,6 +74,13 @@ export function setInternalStateAction(state) {
 		type: actionTypes.SET_INTERNAL_STATE,
 		state: state
 	};
+}
+
+export function switchHeadModeAction(tapeHeadEditable) {
+	return {
+		type: actionTypes.SWITCH_HEAD_MODE,
+		tapeHeadEditable: tapeHeadEditable
+	}
 }
 
 export function moveLeftAction() {

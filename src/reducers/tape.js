@@ -132,6 +132,18 @@ const writeAndMoveHelper = (state, direction, val) => {
 
 /* Reducer functions */
 
+export const setAnchorCell = (state, action) => {
+	return Object.assign({}, state, {
+		anchorCell: (action.direction === LEFT) ? state.anchorCell - 1 : state.anchorCell + 1
+	})
+}
+
+export const switchHeadMode = (state, action) => {
+	return Object.assign({}, state, {
+		tapeHeadEditable: action.tapeHeadEditable
+	})
+}
+
 export const appendAfterTail = (state, action) => {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
@@ -194,14 +206,15 @@ export const writeIntoTape = (state, action) => {
 
 export const fillTape = (state, action) => {
 	var new_state = Object.assign({}, state);
-	new_state[standardizeCellId(action.position)] = fillHelper(state, action.position, action.val);
-
+	var position = action.position + state.anchorCell;
+	new_state[standardizeCellId(position)] = fillHelper(state, position, action.val);
 	return new_state;
 }
 
 export const moveTapeRight = (state, action) => {
 	var new_state;
-	if (action.position + 1 >= state.tapeTail) {
+	var position = action.position + state.anchorCell;
+	if (position + 1 >= state.tapeTail) {
 		new_state = appendAfterTail(state, {val: null});
 	}
 	else 
@@ -212,7 +225,8 @@ export const moveTapeRight = (state, action) => {
 
 export const moveTapeLeft = (state, action) => {
 	var new_state;
-	if (action.position - 1 <= state.tapeHead) {
+	var position = action.position + state.anchorCell;
+	if (position -1 <= state.tapeHead) {
 		new_state = insertBeforeHead(state, {val: null});
 	}
 	else 

@@ -15,8 +15,6 @@ class Square extends React.Component {
   	// this.props.read[this.props.order] = "";
     return (
       <input className="square" 
-      onChange={this.props.onChange} 
-      onFocus={this.props.onFocus}
       onKeyDown={this.props.onKeyDown}
       value={(this.props.val)?this.props.val:""}
       id={this.props.id}

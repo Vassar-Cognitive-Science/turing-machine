@@ -7,6 +7,8 @@ import * as table from './table';
 export const initialState = {
 
 	/* Tape and Head */
+	anchorCell: 0,
+	tapeHeadEditable: false,
 	tapeHead: 0,
 	tapeTail: 0,
 	tapePointer: 0,
@@ -44,6 +46,10 @@ export default function(state=initialState, action) {
 		/* Machine actions */
 
 		/* Tape actions */
+		case actionTypes.SET_ANCHOR_CELL:
+			return tape.setAnchorCell(state, action);
+		case actionTypes.SWITCH_HEAD_MODE:
+			return tape.switchHeadMode(state, action);
 		case actionTypes.MOVE_TAPE_RIGHT:
 			return tape.moveTapeRight(state, action);
 		case actionTypes.MOVE_TAPE_LEFT:

@@ -15,6 +15,7 @@
 }
 
 .tape-row:after {
+  width: 80%;
   clear: both;
   content: "";
   display: table-cell;
@@ -57,7 +58,6 @@
 }
 
 
-
 .hair {
   width: 30px;
   height: 5px;
@@ -71,7 +71,7 @@
   border: 1px solid black;
   font-size: 18px;
   font-weight: bold;
-  height: 30px;
+  height: auto;
   width: 30px;
   position: relative;
   text-align: center;

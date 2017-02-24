@@ -13,9 +13,7 @@ class App extends React.Component {
   				<AppToolBar />
 	    		<Tape />
 	  			<DynamicRuleTable />
-	  			<footer className='footer'>
-
-	  			</footer>
+	  			<footer className='footer'></footer>
   			</div>
   		);
 	}

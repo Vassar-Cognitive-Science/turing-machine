@@ -16,14 +16,12 @@ class Head extends React.Component {
         onStart={this.props.handleStart}
         onDrag={this.props.handleDrag}
         onStop={this.props.handleStop}>
-        <div  className="header">
+        <div  onFocus={this.props.onFocus} className="header">
           <div className="hair"></div>
-          <input 
-            className="head" 
-            value={(this.props.value)?this.props.value:""} 
-            disabled={!this.props.editable} 
-            onChange={this.props.onChange} >
-          </input>
+          {(!this.props.editable) ? 
+            (<button className="head" onClick={this.props.onDoubleClick} >{this.props.label}</button>) :
+            (<input className="head" value={this.props.label} onBlur={this.props.onBlur} onChange={this.props.onChange} ></input>)
+          }
           <div className="neck"></div>
           <div className="shoulder"></div>
         </div>
@@ -33,11 +31,13 @@ class Head extends React.Component {
 }
 
 Head.PropTypes = {
+  in_state: PropTypes.string.isRequired,
   handleStart: PropTypes.func.isRequired,
   handleDrag: PropTypes.func.isRequired,
   handleStop: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired
+  onDoubleClick: PropTypes.func.isRequired,
+  pointer: PropTypes.number.isRequired
 }
 
 export default Head;

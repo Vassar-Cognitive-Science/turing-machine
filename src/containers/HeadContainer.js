@@ -1,74 +1,67 @@
 import { connect } from 'react-redux';
-import { moveLeftAction, moveRightAction } from '../actions/index';
+import { moveLeftAction, moveRightAction, switchHeadModeAction, setInternalStateAction } from '../actions/index';
 import { N_CELLS } from '../constants/index';
 import Head from '../components/Head';
 import { standardizeTapeCellId } from '../components/Square';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
 
-let OLD_MOUSE_X = 0 // mouse horizontal position
-let POSITION = Math.floor(N_CELLS / 2);
-let START_DRAG = 0;
+let OLD_X = 499; 
+
+const calcPosition = () => ((OLD_X-9)/49);
 
 const focusOnCorresCell = () => {
-    document.getElementById(standardizeTapeCellId(POSITION)).focus();
+    document.getElementById(standardizeTapeCellId(calcPosition())).focus();
 }
 
 const blurOnCorresCell = () => {
-    document.getElementById(standardizeTapeCellId(POSITION)).blur();
+    document.getElementById(standardizeTapeCellId(calcPosition())).blur();
 }
 
-const setOld_Mouse_X = (x) => {
-    OLD_MOUSE_X = x;
+const setOldX = (ui) => {
+    if ((ui.x >= 9) && (ui.x <= 989) && ((ui.x-9)%49 === 0)) OLD_X = ui.x;
 }
 
-const headOnStart = (e, ui) => {
-    setOld_Mouse_X(e.pageX);
-    START_DRAG = 1;
+const headOnStart = (e, ui, dispatch) => {
+    setOldX(ui);
 }
 
-const headOnStop = (e, ui) => {
-    setOld_Mouse_X(e.pageX);
-    START_DRAG = 0;
+const headOnStop = (e, ui, dispatch) => {
+    dispatch(switchHeadModeAction(true));
     blurOnCorresCell();
 }
 
 const headOnDrag = (e, ui, dispatch) => {
-    focusOnCorresCell();
-
-    if (e.pageX < OLD_MOUSE_X && START_DRAG) { // Left
+    if (ui.x < OLD_X) { // Left
         dispatch(moveLeftAction());
-        if (POSITION !== 0) {
-            POSITION--;
-        } else {
-            rollTapeToRight(dispatch);
-        }
-    } else if (e.pageX > OLD_MOUSE_X && START_DRAG) {
+        if (calcPosition() === 0)
+            rollTapeToRight(dispatch, true);
+    } else if (ui.x > OLD_X) {
         dispatch(moveRightAction());
-        if (POSITION !== N_CELLS-1) {
-            POSITION++;
-        } else {
-            rollTapeToLeft(dispatch);
-        }
+        if (calcPosition() === N_CELLS - 1)
+            rollTapeToLeft(dispatch, true);
     }
-
+    setOldX(ui);
     focusOnCorresCell();
-    setOld_Mouse_X(e.pageX);
 }
 
 
-const mapStateToProps = (state) => {
+const onChange = (e, dispatch) => {
+    dispatch(setInternalStateAction(e.target.value))
+}
+
+const mapStateToProps = (state, ownProps) => {
+    console.log(state.tapePointer)
     return {
-	   in_state: state.tapeInternalState
+	   value: state.tapeInternalState,
+       editable: state.tapeHeadEditable
     };
 }
 
-const mapDispatchToProps = (dispatch) => ({
-	handleStart: (e, ui) => { headOnStart(e, ui) },
+const mapDispatchToProps = (dispatch, ownProps) => ({
+	handleStart: (e, ui) => { headOnStart(e, ui, dispatch) },
 	handleDrag: (e, ui) => { headOnDrag(e, ui, dispatch) },
-    handleStop: (e, ui) => { headOnStop(e, ui) },
-    // onFocus: () => {  document.getElementById(standardizeTapeCellId(POSITION)).focus(); },
-    onFocus: (e) => {  },
-    onDoubleClick: () => { console.log(1) }
+    handleStop: (e, ui) => { headOnStop(e, ui, dispatch) },
+    onChange: (e) => { onChange(e, dispatch) }
 })
 
 
