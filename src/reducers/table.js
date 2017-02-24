@@ -51,16 +51,6 @@ export const deleteRow = (state, action) => {
 // 	return new_state;
 // }
 
-export const switchRowDirection = (state, action) => {
-	var new_state = Object.assign({}, state);
-	var oldRow = state[action.id];
-	new_state[action.id] = createRow(oldRow.in_state, 
-									oldRow.read, 
-									oldRow.write, 
-									!oldRow.isLeft,
-									oldRow.new_state);
-	return new_state;
-}
 
 export const setRow = (state, action) => {
 	let in_state_error = "";
@@ -95,4 +85,16 @@ export const setRow = (state, action) => {
 									write_error,
 									new_state_error);
 	return new_state;
+}
+
+export const switchRowDirection = (state, action) => {
+	var new_state = Object.assign({}, state);
+	var oldRow = state[action.id];
+
+	return setRow(state, {id: action.id, 
+						  in_state: oldRow.in_state, 
+						  read: oldRow.read, 
+						  write: oldRow.write, 
+						  isLeft: !oldRow.isLeft,
+						  new_state: oldRow.new_state});
 }
