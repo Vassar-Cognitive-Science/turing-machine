@@ -24,15 +24,17 @@ class Head extends React.Component {
           <div className="hair" style={(this.props.hair_styles)?(this.props.hair_styles):INIT_HAIR_STYLES} ></div>
           <MuiThemeProvider>
             <AutoComplete 
-              inputStyle={{"textAlign":"center"}}
               className="head"
+              inputStyle={{"textAlign":"center"}}
+              filter={(searchText, key) => (searchText === "" || key.startsWith(searchText))}
               id={HEAD_INPUT_ID}
               underlineStyle={{display: 'none'}}
-              searchText={this.props.searchText}
+              searchText={(this.props.searchText)?this.props.searchText:""}
               dataSource={this.props.dataSource} 
               textFieldStyle={(this.props.head_styles)?(this.props.head_styles):INIT_HEAD_STYLES}
               disabled={(this.props.editable)?!this.props.editable:false} 
-              onUpdateInput={this.props.onUpdateInput} >
+              onUpdateInput={this.props.onUpdateInput}
+              >
             </AutoComplete>
           </MuiThemeProvider>
           <div className="neck"></div>
