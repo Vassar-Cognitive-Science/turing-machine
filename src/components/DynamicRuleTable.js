@@ -87,7 +87,7 @@ class DynamicRuleTable extends React.Component {
                     </TableRowColumn>
 
                     <TableRowColumn>
-                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} styles={{width:180}} id={standardizeCurrentStateFieldId(id)} />
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} openOnFocus={true} styles={{width:180}} id={standardizeCurrentStateFieldId(id)} />
                     </TableRowColumn>
                       
                     <TableRowColumn>
@@ -103,7 +103,7 @@ class DynamicRuleTable extends React.Component {
                     </TableRowColumn>
                       
                     <TableRowColumn>
-                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} styles={{width:180}} id={standardizeNewStateFieldId(id)} />
+                        <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} openOnFocus={true} styles={{width:180}} id={standardizeNewStateFieldId(id)} />
                     </TableRowColumn>
                 </TableRow>
                 ))}

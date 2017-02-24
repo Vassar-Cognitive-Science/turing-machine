@@ -44,7 +44,7 @@ const getAllInputs = (state) => {
 const mapStateToProps = (state, ownProps) => {
 	let thisRow = state[ownProps.parent];
 	console.log(thisRow)
-	let filter = (searchText, key) => (searchText !== "" && key.startsWith(searchText));
+	let filter = (searchText, key) => (searchText === "" || key.startsWith(searchText));
 	let error = "";
 	let dataSource = {};
 	switch(ownProps.fieldType) {

@@ -3,3 +3,6 @@
 2. Implement Head taking input.
 3. Limit Read and Write fields or table to one character input.
 4. Head expands with label size.
+
+2017/2/23
+1. Head expands with label size.
