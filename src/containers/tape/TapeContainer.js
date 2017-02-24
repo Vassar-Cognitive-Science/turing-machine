@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import { N_CELLS } from '../constants/index';
-import Tape from '../components/Tape';
-import { standardizeTapeCellId } from '../components/Square';
+import { N_CELLS } from '../../constants/index';
+import Tape from '../../components/tape/Tape';
+import { standardizeTapeCellId } from '../../components/tape/Square';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
 
 const FIRST_CELL_ID = standardizeTapeCellId(0);

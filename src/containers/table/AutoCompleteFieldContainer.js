@@ -1,7 +1,16 @@
-import { connect } from 'react-redux';
-import AutoCompleteField from '../components/AutoCompleteField';
-import { setRowInStateAction, setRowReadAction, setRowWriteAction, setRowNewStateAction } from '../actions/index';
-import { FIELD_TYPES } from '../components/DynamicRuleTable';
+import {
+	connect
+} from 'react-redux';
+import AutoCompleteField from '../../components/table/AutoCompleteField';
+import {
+	setRowInStateAction,
+	setRowReadAction,
+	setRowWriteAction,
+	setRowNewStateAction
+} from '../../actions/index';
+import {
+	FIELD_TYPES
+} from '../../components/table/DynamicRuleTable';
 
 
 const onUpdateInput = (searchText, dispatch, ownProps) => {

@@ -3,10 +3,10 @@ import FlatButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import {Card, CardActions } from 'material-ui/Card';
-import DeleteRowButton from '../containers/DeleteRowButtonContainer';
-import SwitchDirectionButton from '../containers/SwitchDirectionButtonContainer';
-import AutoCompleteField from '../containers/AutoCompleteFieldContainer';
-import { LEFT, RIGHT } from '../constants/ReservedWords';
+import DeleteRowButton from '../../containers/table/DeleteRowButtonContainer';
+import SwitchDirectionButton from '../../containers/table/SwitchDirectionButtonContainer';
+import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer';
+import { LEFT, RIGHT } from '../../constants/ReservedWords';
 
 export const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
 

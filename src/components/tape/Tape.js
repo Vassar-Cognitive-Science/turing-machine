@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import { standardizeTapeCellId } from './Square';
-import { N_CELLS } from '../constants/index';
-import Square from '../containers/SquareContainer';
-import Head from '../containers/HeadContainer';
+import { N_CELLS } from '../../constants/index';
+import Square from '../../containers/tape/SquareContainer';
+import Head from '../../containers/tape/HeadContainer';
 import IconButton from 'material-ui/IconButton';
 import RollRight from 'material-ui/svg-icons/av/fast-forward';
 import RollLeft from 'material-ui/svg-icons/av/fast-rewind';

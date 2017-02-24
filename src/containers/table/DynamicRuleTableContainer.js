@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { addRowAction } from '../actions/index';
-import DynamicRuleTable from '../components/DynamicRuleTable';
+import { addRowAction } from '../../actions/index';
+import DynamicRuleTable from '../../components/table/DynamicRuleTable';
 
 var ROW_ID = 0;
 const ROW_ID_PREFIX = "TABLE-ROW-";

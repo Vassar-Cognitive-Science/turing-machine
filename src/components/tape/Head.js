@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Draggable from 'react-draggable';
 import AutoComplete from 'material-ui/AutoComplete';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { INIT_HAIR_STYLES, INIT_HEAD_STYLES } from '../constants/index';
+import { INIT_HAIR_STYLES, INIT_HEAD_STYLES } from '../../constants/index';
 
 export const HEAD_INPUT_ID = 'HEAD_INPUT_1';
 

@@ -173,33 +173,3 @@ export function adjustHeadWidthAction(text) {
 		text: text
 	}
 }
-
-// export function addRuleAction(in_state, read, write, direction, new_state) {
-// 	return {
-// 		type: actionTypes.ADD_RULE,
-// 		in_state: in_state,
-// 		read: read, 
-// 		write: write,
-// 		direction: direction,
-// 		new_state: new_state
-// 	};
-// }
-
-// export function setRuleAction(in_state, read, write, direction, new_state) {
-// 	return {
-// 		type: actionTypes.SET_RULE,
-// 		in_state: in_state,
-// 		read: read, 
-// 		write: write,
-// 		direction: direction,
-// 		new_state: new_state
-// 	};
-// }
-
-// export function deleteRuleAction(in_state, read) {
-// 	return {
-// 		type: actionTypes.DELETE_RULE,
-// 		in_state: in_state,
-// 		read: read, 
-// 	};
-// }

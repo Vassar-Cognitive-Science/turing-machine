@@ -1,10 +1,27 @@
-import { connect } from 'react-redux';
-import { moveLeftAction, moveRightAction, switchHeadModeAction, setInternalStateAction, adjustHeadWidthAction } from '../actions/index';
-import { N_CELLS } from '../constants/index';
-import Head from '../components/Head';
-import { standardizeTapeCellId } from '../components/Square';
-import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
-import { getAllStates } from './AutoCompleteFieldContainer';
+import {
+    connect
+} from 'react-redux';
+import {
+    moveLeftAction,
+    moveRightAction,
+    switchHeadModeAction,
+    setInternalStateAction,
+    adjustHeadWidthAction
+} from '../../actions/index';
+import {
+    N_CELLS
+} from '../../constants/index';
+import Head from '../../components/tape/Head';
+import {
+    standardizeTapeCellId
+} from '../../components/tape/Square';
+import {
+    rollTapeToRight,
+    rollTapeToLeft
+} from './SquareContainer';
+import {
+    getAllStates
+} from '../table/AutoCompleteFieldContainer';
 
 let OLD_X = 499; 
 

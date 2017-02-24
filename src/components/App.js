@@ -1,7 +1,7 @@
 import React from 'react';
 import AppToolBar from '../containers/AppToolBarContainer';
-import Tape from '../containers/TapeContainer';
-import DynamicRuleTable from '../containers/DynamicRuleTableContainer';
+import Tape from '../containers/tape/TapeContainer';
+import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
 
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // import Paper from 'material-ui/Paper';
@@ -14,7 +14,6 @@ class App extends React.Component {
   				<AppToolBar />
 	    		<Tape />
 	  			<DynamicRuleTable />
-	  			<footer className='footer'></footer>
   			</div>
   		);
 	}

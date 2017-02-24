@@ -1,9 +1,26 @@
-import { connect } from 'react-redux';
-import { standardizeCellId } from '../reducers/tape';
-import { moveTapeRightAction, moveTapeLeftAction, fillTapeAction, setAnchorCellAction } from '../actions/index';
-import { LEFT, RIGHT } from '../constants/ReservedWords';
-import { N_CELLS } from '../constants/index';
-import Square, { standardizeTapeCellId, getTapeCellNumber } from '../components/Square';
+import {
+  connect
+} from 'react-redux';
+import {
+  standardizeCellId
+} from '../../reducers/tape';
+import {
+  moveTapeRightAction,
+  moveTapeLeftAction,
+  fillTapeAction,
+  setAnchorCellAction
+} from '../../actions/index';
+import {
+  LEFT,
+  RIGHT
+} from '../../constants/ReservedWords';
+import {
+  N_CELLS
+} from '../../constants/index';
+import Square, {
+  standardizeTapeCellId,
+  getTapeCellNumber
+} from '../../components/tape/Square';
 
 
 const isNowLastCell = () => standardizeTapeCellId(N_CELLS-1) === document.activeElement.id;
