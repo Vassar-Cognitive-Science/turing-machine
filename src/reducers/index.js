@@ -80,14 +80,6 @@ export default function(state=initialState, action) {
 		/* Tape actions */
 
 		/* Rule actions */
-		// case actionTypes.ADD_RULE:
-		// 	return rules.addRule(state, action);
-		// case actionTypes.SET_RULE:
-		// 	return rules.setRule(state, action);
-		// case actionTypes.DELETE_RULE:
-		// 	return rules.deleteRule(state, action);
-
-
 		case actionTypes.ADD_ROW:
 			return table.addRow(state, action);
 		case actionTypes.DELETE_ROW:

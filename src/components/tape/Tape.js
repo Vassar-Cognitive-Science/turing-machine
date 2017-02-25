@@ -61,26 +61,3 @@ Tape.PropTypes = {
 }
 
 export default Tape;
-
-// class Tape extends React.Component {
-//   render() {
-//     return (
-//       <div>
-//       <div className='tape'>
-//         <div className="head-row">
-//         <Head />
-//         </div>
-//         <div className="tape-with-button">
-//         <div className="roll-left"><button>LEFT</button></div>
-//           <div className="tape-row">
-//             {populatedSquares(N_CELLS).map((i) => (
-//               <Square key={standardizeTapeCellId(i)} read={i} id={standardizeTapeCellId(i)} />
-//               ))}
-//           </div>
-//         <div className="roll-right"><button>RIGHT</button></div>
-//         </div>
-//       </div>
-//       </div>
-//     );
-//   }
-// }
