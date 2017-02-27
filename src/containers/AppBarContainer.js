@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import AppToolBar from '../components/AppToolBar';
+import AppToolBar from '../components/AppBar';
 
 
 const mapStateToProps = (state) => {

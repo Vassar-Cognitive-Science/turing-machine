@@ -1,5 +1,5 @@
 import React from 'react';
-import AppToolBar from '../containers/AppToolBarContainer';
+import AppBar from '../containers/AppBarContainer';
 import Tape from '../containers/tape/TapeContainer';
 import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
 
@@ -10,8 +10,8 @@ import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
 class App extends React.Component {
 	render() {
 		return (
-  			<div>
-  				<AppToolBar />
+  			<div className="app-container">
+  				<AppBar />
 	    		<Tape />
 	  			<DynamicRuleTable />
   			</div>
