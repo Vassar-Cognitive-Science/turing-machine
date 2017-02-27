@@ -1,6 +1,8 @@
 
 /* GUI info */
 export const ADJUST_HEAD_WIDTH = 'ADJUST_HEAD_WIDTH';
+export const SET_PLAY_STATE = "SET_PLAY_STATE";
+export const SET_ANIMATION_SPEED = 'SET_ANIMATION_SPEED';
 /* GUI info */
 
 /* Actions for Head */

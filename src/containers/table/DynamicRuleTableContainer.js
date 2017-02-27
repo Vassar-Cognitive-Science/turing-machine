@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { addRowAction } from '../../actions/index';
+import { addRowAction } from '../../actions/tableActions';
 import DynamicRuleTable from '../../components/table/DynamicRuleTable';
 
 var ROW_ID = 0;

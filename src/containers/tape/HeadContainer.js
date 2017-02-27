@@ -1,27 +1,11 @@
-import {
-    connect
-} from 'react-redux';
-import {
-    moveLeftAction,
-    moveRightAction,
-    switchHeadModeAction,
-    setInternalStateAction,
-    adjustHeadWidthAction
-} from '../../actions/index';
-import {
-    N_CELLS
-} from '../../constants/index';
+import { connect } from 'react-redux';
+import { moveLeftAction, moveRightAction, setInternalStateAction } from '../../actions/tapeActions';
+import { adjustHeadWidthAction } from '../../actions/guiActions';
+import { N_CELLS } from '../../constants/GUISettings';
 import Head from '../../components/tape/Head';
-import {
-    standardizeTapeCellId
-} from '../../components/tape/Square';
-import {
-    rollTapeToRight,
-    rollTapeToLeft
-} from './SquareContainer';
-import {
-    getAllStates
-} from '../table/AutoCompleteFieldContainer';
+import { standardizeTapeCellId } from '../../components/tape/Square';
+import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
+import { getAllStates } from '../table/AutoCompleteFieldContainer';
 
 let OLD_X = 499; 
 
@@ -45,7 +29,6 @@ const headOnStart = (e, ui, dispatch) => {
 }
 
 const headOnStop = (e, ui, dispatch) => {
-    dispatch(switchHeadModeAction(true));
     blurOnCorresCell();
 }
 
@@ -76,7 +59,7 @@ const mapStateToProps = (state, ownProps) => {
     delete dataSource[null];
 
     return {
-	   // searchText: state.tapeInternalState,
+	   internalState: state.tapeInternalState,
        editable: state.tapeHeadEditable,
        dataSource: Object.keys(dataSource),
        filter: filter,

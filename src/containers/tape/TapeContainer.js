@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { N_CELLS } from '../../constants/index';
+import { N_CELLS } from '../../constants/GUISettings';
 import Tape from '../../components/tape/Tape';
 import { standardizeTapeCellId } from '../../components/tape/Square';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';

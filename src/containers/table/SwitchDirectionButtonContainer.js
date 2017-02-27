@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import SwitchDirectionButton from '../../components/table/SwitchDirectionButton';
-import { switchRowDirectionAction } from '../../actions/index';
+import { switchRowDirectionAction } from '../../actions/tableActions';
 
 
 const switchDirection = (dispatch, ownProps) => {

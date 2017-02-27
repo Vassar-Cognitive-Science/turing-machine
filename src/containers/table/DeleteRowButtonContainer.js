@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import DeleteRowButton from '../../components/table/DeleteRowButton';
-import { deleteRowAction } from '../../actions/index';
+import { deleteRowAction } from '../../actions/tableActions';
 
 const deleteRow = (dispatch, ownProps) => {
 	dispatch(deleteRowAction(ownProps.parent));

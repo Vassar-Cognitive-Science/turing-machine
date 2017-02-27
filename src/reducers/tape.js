@@ -1,8 +1,4 @@
-import {
-	LEFT,
-	RIGHT,
-	BLANK
-} from '../constants/ReservedWords';
+import { LEFT, RIGHT, BLANK } from '../constants/ReservedWords';
 
 
 /*
@@ -135,12 +131,6 @@ const writeAndMoveHelper = (state, direction, val) => {
 export const setAnchorCell = (state, action) => {
 	return Object.assign({}, state, {
 		anchorCell: (action.direction === LEFT) ? state.anchorCell - 1 : state.anchorCell + 1
-	})
-}
-
-export const switchHeadMode = (state, action) => {
-	return Object.assign({}, state, {
-		tapeHeadEditable: action.tapeHeadEditable
 	})
 }
 

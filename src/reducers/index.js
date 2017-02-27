@@ -3,14 +3,16 @@ import * as reservedWords from '../constants/ReservedWords';
 import * as actionTypes from '../constants/ActionTypes';
 import * as table from './table';
 import * as gui from './gui';
-import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET } from '../constants/index';
+import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET } from '../constants/GUISettings';
 
 export const initialState = {
 	/* GUI info */
 	headWidth: INIT_HEAD_WIDTH,
 	headHeight: INIT_HEAD_HEIGHT,
 	headLeftOffset : INIT_HEAD_LEFT_OFFSET,
-	tapeHeadEditable: false,
+
+	isPaused: false,
+	animationSpeed: 1, // 100% of default speed
 	/* GUI info */
 
 	/* Tape and Head */
@@ -28,7 +30,8 @@ export const initialState = {
 };
 
 const initializeMachine = (state, action) => {
-	return initialState;
+	let new_state = initialState;
+	return tape.initializeTape(new_state, action);
 }
 
 const step = (state, action) => {
@@ -50,13 +53,15 @@ export default function(state=initialState, action) {
 		/* GUI info */
 		case actionTypes.ADJUST_HEAD_WIDTH:
 			return gui.adjustHeadWidth(state, action);
+		case actionTypes.SET_PLAY_STATE:
+			return gui.setPlayState(state, action);
+		case actionTypes.SET_ANIMATION_SPEED:
+			return gui.setAnimationSpeed(state, action);
 		/* GUI info */
 
 		/* Tape actions */
 		case actionTypes.SET_ANCHOR_CELL:
 			return tape.setAnchorCell(state, action);
-		case actionTypes.SWITCH_HEAD_MODE:
-			return tape.switchHeadMode(state, action);
 		case actionTypes.MOVE_TAPE_RIGHT:
 			return tape.moveTapeRight(state, action);
 		case actionTypes.MOVE_TAPE_LEFT:

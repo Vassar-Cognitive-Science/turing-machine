@@ -7,7 +7,7 @@ import {
 	setRowReadAction,
 	setRowWriteAction,
 	setRowNewStateAction
-} from '../../actions/index';
+} from '../../actions/tableActions';
 import {
 	FIELD_TYPES
 } from '../../components/table/DynamicRuleTable';

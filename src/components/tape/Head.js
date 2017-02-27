@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Draggable from 'react-draggable';
 import AutoComplete from 'material-ui/AutoComplete';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { INIT_HAIR_STYLES, INIT_HEAD_STYLES } from '../../constants/index';
+import { INIT_HAIR_STYLES, INIT_HEAD_STYLES } from '../../constants/GUISettings';
 
 export const HEAD_INPUT_ID = 'HEAD_INPUT_1';
 
@@ -29,10 +29,9 @@ class Head extends React.Component {
               filter={(searchText, key) => (searchText === "" || key.startsWith(searchText))}
               id={HEAD_INPUT_ID}
               underlineStyle={{display: 'none'}}
-              searchText={(this.props.searchText)?this.props.searchText:""}
+              searchText={(this.props.internalState)?this.props.internalState:""}
               dataSource={this.props.dataSource} 
               textFieldStyle={(this.props.head_styles)?(this.props.head_styles):INIT_HEAD_STYLES}
-              disabled={(this.props.editable)?!this.props.editable:false} 
               onUpdateInput={this.props.onUpdateInput}
               >
             </AutoComplete>
@@ -49,8 +48,10 @@ Head.PropTypes = {
   handleStart: PropTypes.func.isRequired,
   handleDrag: PropTypes.func.isRequired,
   handleStop: PropTypes.func.isRequired,
-  styles: PropTypes.object.isRequired,
   onFocus: PropTypes.func.isRequired,
+  hair_styles: PropTypes.object.isRequired,
+  head_styles: PropTypes.object.isRequired,
+  internalState: PropTypes.string.isRequired,
 }
 
 export default Head;
