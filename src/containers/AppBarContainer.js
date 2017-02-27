@@ -14,10 +14,6 @@ const handlePause = (dispatch, ownProps) => {
 	dispatch(setPlayStateAction(false));
 }
 
-const handleStop = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
-}
-
 const handleLast = (dispatch, ownProps) => {
 	dispatch(setPlayStateAction(false));
 }
@@ -65,7 +61,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => ({
 	handlePlay: () => { handlePlay(dispatch, ownProps) },
 	handlePause: () => { handlePause(dispatch, ownProps) },
-	handleStop: () => { handleStop(dispatch, ownProps) },
 	handleLast: () => { handleLast(dispatch, ownProps) },
 	handleNext: () => { handleNext(dispatch, ownProps) },
 	handleRestore: () => { handleRestore(dispatch, ownProps) },

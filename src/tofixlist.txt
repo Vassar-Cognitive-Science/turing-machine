@@ -6,3 +6,8 @@
 
 2017/2/23
 1. Head expands with label size. Done
+
+2017/2/26
+1. Replace Material-Ui table with pure css properties.
+2. Replace arbitrary properties of elements with calculated ones, DOM manipuations with changing of css properties, and based on these, implement animation.
+3. Optimaize performances based on above changes.

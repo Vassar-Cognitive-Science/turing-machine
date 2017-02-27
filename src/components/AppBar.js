@@ -11,7 +11,6 @@ import Play from 'material-ui/svg-icons/av/play-arrow';
 import Next from 'material-ui/svg-icons/av/skip-next';
 import Last from 'material-ui/svg-icons/av/skip-previous';
 import Pause from 'material-ui/svg-icons/av/pause';
-import Stop from 'material-ui/svg-icons/av/stop';
 import Redo from 'material-ui/svg-icons/content/redo';
 import Undo from 'material-ui/svg-icons/content/undo';
 import Test from 'material-ui/svg-icons/action/bug-report';
@@ -45,8 +44,6 @@ class AppToolBar extends React.Component {
 					<MuiThemeProvider>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
-								<IconButton tooltip="Stop" touch={true} tooltipPosition="bottom-right" 
-									onTouchTap={this.props.handleStop}><Stop /></IconButton>
 
 								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
 									onTouchTap={this.props.handleLast}><Last /></IconButton>
@@ -113,7 +110,6 @@ AppToolBar.PropTypes = {
 
 	handlePlay: PropTypes.func.isRequired,
 	handlePause: PropTypes.func.isRequired,
-	handleStop: PropTypes.func.isRequired,
 	handleLast: PropTypes.func.isRequired,
 	handleNext: PropTypes.func.isRequired,
 	handleRestore: PropTypes.func.isRequired,
