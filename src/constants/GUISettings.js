@@ -2,6 +2,7 @@ export const N_CELLS = 21;
 export const INIT_HEAD_WIDTH = 30;
 export const INIT_HEAD_HEIGHT = 30;
 export const INIT_HEAD_LEFT_OFFSET = 0;
+export const ANIMATION_SPEED = 100; // 100ms
 
 export const INIT_HAIR_STYLES = {
   width: INIT_HEAD_WIDTH,

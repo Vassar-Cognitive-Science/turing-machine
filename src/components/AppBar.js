@@ -31,8 +31,7 @@ class AppToolBar extends React.Component {
 						<AppBar title={"Turing Machine Simulator"} 
 						iconElementLeft={
 							<IconMenu
-					          iconButtonElement={<IconButton ><Menu color={grey50} /></IconButton>}
-					        openDirection="bottom-right" >
+					          iconButtonElement={<IconButton ><Menu color={grey50} /></IconButton>}>
 					          <MenuItem value="1" primaryText="Import" />
 					          <MenuItem value="2" primaryText="Export" />
 					          <Divider />

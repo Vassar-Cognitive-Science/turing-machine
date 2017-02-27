@@ -3,17 +3,18 @@ import * as reservedWords from '../constants/ReservedWords';
 import * as actionTypes from '../constants/ActionTypes';
 import * as table from './table';
 import * as gui from './gui';
-import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET } from '../constants/GUISettings';
+import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
 
 export const initialState = {
-	/* GUI info */
+	/* GUI settings */
 	headWidth: INIT_HEAD_WIDTH,
 	headHeight: INIT_HEAD_HEIGHT,
 	headLeftOffset : INIT_HEAD_LEFT_OFFSET,
 
 	isPaused: false,
-	animationSpeed: 1, // 100% of default speed
-	/* GUI info */
+	animationSpeedFactor: 1, // 100% of default speed
+	animationSpeed: ANIMATION_SPEED,
+	/* GUI settings */
 
 	/* Tape and Head */
 	anchorCell: 0,
@@ -21,7 +22,7 @@ export const initialState = {
 	tapeTail: 0,
 	tapePointer: 0,
 	tapeCellsById: [],
-	tapeInternalState: null,
+	tapeInternalState: "",
 	/* Tape and Head */
 
 	/* Rules */

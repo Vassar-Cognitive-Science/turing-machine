@@ -57,8 +57,8 @@ const handleSpeedChange = (newValue, dispatch) => {
 const mapStateToProps = (state, ownProps) => {
     return {
     	isPaused: state.isPaused,
-    	animationSpeed: state.animationSpeed,
-    	animationSpeedLabel: standardizeAnimationSpeedLabel(state.animationSpeed),
+    	animationSpeedFactor: state.animationSpeedFactor,
+    	animationSpeedLabel: standardizeAnimationSpeedLabel(state.animationSpeedFactor),
     };
 }
 

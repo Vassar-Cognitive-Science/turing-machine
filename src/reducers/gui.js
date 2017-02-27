@@ -1,4 +1,4 @@
-import { INIT_HEAD_WIDTH, INIT_HEAD_LEFT_OFFSET } from '../constants/GUISettings';
+import { INIT_HEAD_WIDTH, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
 
 export const adjustHeadWidth = (state, action) => {
 	let textLength = (action.text) ? action.text.length : 0;
@@ -29,6 +29,7 @@ export const setPlayState = (state, action) => {
 
 export const setAnimationSpeed = (state, action) => {
 	return Object.assign({}, state, {
-		animationSpeed: action.percentage
+		animationSpeedFactor: action.percentage,
+		animationSpeed: ANIMATION_SPEED * action.percentage
 	});
 }
