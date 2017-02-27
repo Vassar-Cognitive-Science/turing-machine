@@ -1,5 +1,5 @@
 {
-  "name": "turing-machine-simulator",
+  "name": "web-based-turing-machine-simulator",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
