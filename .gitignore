@@ -37,4 +37,4 @@ jspm_packages
 .node_repl_history
 
 # test and modules
-"test and raw_models"
+test_and_raw_models
