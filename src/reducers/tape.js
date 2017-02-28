@@ -101,16 +101,10 @@ const fillHelper = (state, position, val = null) => {
 }
 
 const moveLeftHelper = (state) => {
-	var prev = findCell(state, state.tapePointer - 1);
-	if (prev === null)
-		insertBeforeHeadHelper(state);
 	state.tapePointer--;
 }
 
 const moveRightHelper = (state) => {
-	var next = findCell(state, state.tapePointer + 1);
-	if (next === null)
-		appendAfterTailHelper(state);
 	state.tapePointer++;
 }
 
@@ -226,19 +220,15 @@ export const moveTapeLeft = (state, action) => {
 }
 
 export const moveLeft = (state, action) => {
-	var new_state = Object.assign({}, state, {
-		tapeCellsById: state.tapeCellsById.slice()
+	return Object.assign({}, state, {
+		tapePointer: state.tapePointer - 1
 	});
-	moveLeftHelper(new_state);
-	return new_state;
 }
 
 export const moveRight = (state, action) => {
-	var new_state = Object.assign({}, state, {
-		tapeCellsById: state.tapeCellsById.slice()
+	return Object.assign({}, state, {
+		tapePointer: state.tapePointer + 1
 	});
-	moveRightHelper(new_state);
-	return new_state;
 }
 
 export const writeAndMove = (state, action) => {

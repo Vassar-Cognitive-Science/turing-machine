@@ -3,13 +3,14 @@ import * as reservedWords from '../constants/ReservedWords';
 import * as actionTypes from '../constants/ActionTypes';
 import * as table from './table';
 import * as gui from './gui';
-import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
+import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED, HEAD_X } from '../constants/GUISettings';
 
 export const initialState = {
 	/* GUI settings */
 	headWidth: INIT_HEAD_WIDTH,
 	headHeight: INIT_HEAD_HEIGHT,
 	headLeftOffset : INIT_HEAD_LEFT_OFFSET,
+	headX: HEAD_X,
 
 	isPaused: false,
 	animationSpeedFactor: 1, // 100% of default speed
@@ -39,6 +40,28 @@ const step = (state, action) => {
 	if (state.tapeInternalState === reservedWords.HALT)
 		return state;
 	
+	/* Find rule by internal state, and val of tape cell*/
+	let keyS = state.tapeInternalState, keyV = tape.read(state);
+	let rule = null;
+	for (var i = 0; i < state.rowsById.length; i++) {
+		let row = state[state.rowsById[i]];
+		if (row.in_state === keyS && row.read === keyV) {
+			rule = row;
+			break;
+		}
+	}
+
+	let new_state = tape.writeIntoTape(state, {val: rule.write});
+	new_state = tape.setInternalState(new_state, {state: rule.new_state});
+	if (rule.isLeft){
+		new_state = tape.moveLeft(new_state);
+		new_state = gui.moveHead(new_state, {moveLeft: true});
+	} else {
+		new_state = tape.moveRight(new_state);
+		new_state = gui.moveHead(new_state, {moveLeft: false});
+	}
+
+	return new_state;
 }
 
 export default function(state=initialState, action) {
@@ -58,6 +81,8 @@ export default function(state=initialState, action) {
 			return gui.setPlayState(state, action);
 		case actionTypes.SET_ANIMATION_SPEED:
 			return gui.setAnimationSpeed(state, action);
+		case actionTypes.MOVE_HEAD:
+			return gui.moveHead(state, action);
 		/* GUI info */
 
 		/* Tape actions */

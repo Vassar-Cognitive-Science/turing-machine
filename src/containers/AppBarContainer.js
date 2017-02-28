@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import AppToolBar from '../components/AppBar';
 import { setPlayStateAction, setAnimationSpeedAction } from '../actions/guiActions';
+import { stepAction } from '../actions/index';
 import { initMachineAction } from '../actions/index';
 import { N_CELLS } from '../constants/GUISettings';
 
@@ -16,10 +17,13 @@ const handlePause = (dispatch, ownProps) => {
 
 const handleLast = (dispatch, ownProps) => {
 	dispatch(setPlayStateAction(false));
+	// dispatch(moveHeadAction(true)) // true: left
+	// dispatch(moveHeadAction(false)) // false: Right
 }
 
 const handleNext = (dispatch, ownProps) => {
 	dispatch(setPlayStateAction(false));
+	dispatch(stepAction());
 }
 
 const handleRestore = (dispatch, ownProps) => {

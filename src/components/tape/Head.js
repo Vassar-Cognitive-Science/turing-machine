@@ -6,14 +6,14 @@ import { INIT_HAIR_STYLES, INIT_HEAD_STYLES } from '../../constants/GUISettings'
 
 export const HEAD_INPUT_ID = 'HEAD_INPUT_1';
 
+
 class Head extends React.Component {
   render() {
     return (
       <Draggable
         axis="x"
         handle=".header"
-        defaultPosition={{x: 499, y: 0}}
-        position={null}
+        position={{x: this.props.head_position, y: 0}}
         grid={[49, 0]}
         zIndex={100}
         bounds={{left: 9, top: 0, right: 989, bottom: 0}} 

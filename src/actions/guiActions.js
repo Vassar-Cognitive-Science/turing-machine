@@ -22,3 +22,10 @@ export function setAnimationSpeedAction(percentage) {
 		percentage: percentage
 	};
 }
+
+export function moveHeadAction(moveLeft) { // moveLeft: boolean
+	return {
+		type: actionTypes.MOVE_HEAD,
+		moveLeft: moveLeft
+	}
+}
