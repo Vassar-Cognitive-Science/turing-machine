@@ -70,7 +70,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  onKeyDown: (e) => { onKeyDown(e, dispatch) }
+  onKeyDown: (e) => { onKeyDown(e, dispatch) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Square);

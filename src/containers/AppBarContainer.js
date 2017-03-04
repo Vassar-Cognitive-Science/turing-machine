@@ -1,60 +1,71 @@
 import { connect } from 'react-redux';
 import AppToolBar from '../components/AppBar';
 import { setPlayStateAction, setAnimationSpeedAction } from '../actions/guiActions';
-import { stepAction } from '../actions/index';
-import { initMachineAction, runMachineThunkActionCreater, recordIntervalAction, clearIntervalAction } from '../actions/index';
+import { setCorrespondingCellHighlightAction } from '../actions/tapeActions';
+import {
+	stepAction, 
+	stopAction,
+	initMachineAction,
+	runMachineThunkActionCreator,
+} from '../actions/index';
 import { N_CELLS } from '../constants/GUISettings';
 
 const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFixed(1));
 
 
 function handleRun(dispatch) {
+	dispatch(setCorrespondingCellHighlightAction(true));
 	dispatch(setPlayStateAction(true));
-	dispatch(runMachineThunkActionCreater());
+	dispatch(runMachineThunkActionCreator());
 }
 
 const handlePause = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
 }
 
 const handleLast = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
 }
 
 const handleNext = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
+	dispatch(setCorrespondingCellHighlightAction(true));
 	dispatch(stepAction());
 }
 
 const handleRestore = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
 }
 
 const handleRedo = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
 }
 
 const handleUndo = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
 }
 
 const handleTest = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
 }
 
 const handleSave = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
 }
 
 const handleClear = (dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
+	dispatch(stopAction());
 	dispatch(initMachineAction(N_CELLS));
 }
 
 const handleSpeedChange = (newValue, dispatch, ownProps) => {
-	dispatch(setPlayStateAction(false));
-	dispatch(setAnimationSpeedAction(newValue));
-	handleRun(dispatch, ownProps);
+	dispatch(function(dispatch, getState){
+		dispatch(setAnimationSpeedAction(newValue));
+		if (getState().isRunning) {
+			dispatch(stopAction());
+			handleRun(dispatch, ownProps);
+		}
+	})
 }
 
 const mapStateToProps = (state, ownProps) => {

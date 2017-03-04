@@ -13,12 +13,6 @@ export function stepAction() {
 	};
 }
 
-export function playAction() {
-	return {
-		type: actionTypes.PLAY
-	}
-}
-
 export function recordIntervalAction(interval) {
 	return {
 		type:actionTypes.RECORD_INTERVAL,
@@ -32,7 +26,7 @@ export function clearIntervalAction() {
 	}
 }
 
-export function runMachineThunkActionCreater() {
+export function runMachineThunkActionCreator() {
 	return (dispatch, getState) => {
 		let interval = setInterval(() => {
 			if (getState().isRunning) {
@@ -41,5 +35,19 @@ export function runMachineThunkActionCreater() {
 			}
 		}, getState().animationSpeed);
 		dispatch(recordIntervalAction(interval));
+	}
+}
+
+export function stopAction(message="", flag=false) {
+	return {
+		type: actionTypes.STOP,
+		message: message,
+		flag: flag, //show error message
+	}
+}
+
+export function clearReportedErrorAction() {
+	return {
+		type: actionTypes.CLEAR_REPORTED_ERROR
 	}
 }

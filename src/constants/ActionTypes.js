@@ -1,3 +1,12 @@
+/* Actions for Turing Machine */
+export const INITIALIZAE_MACHINE = 'INITIALIZAE_MACHINE';
+export const STEP_FORWARD = 'STEP_FORWARD';
+export const RECORD_INTERVAL = "RECORD_INTERVAL";
+export const CLEAR_INTERVAL = 'CLEAR_INTERVAL';
+export const STOP = "STOP";
+export const CLEAR_REPORTED_ERROR = "CLEAR_REPORTED_ERROR";
+/* Actions for Turing Machine */
+
 
 /* GUI info */
 export const ADJUST_HEAD_WIDTH = 'ADJUST_HEAD_WIDTH';
@@ -38,10 +47,3 @@ export const SET_ROW_READ = 'SET_ROW_READ';
 export const SET_ROW_WRITE = 'SET_ROW_WRITE';
 export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';
 /* Actions for Transition Graph */
-
-/* Actions for Turing Machine */
-export const INITIALIZAE_MACHINE = 'INITIALIZAE_MACHINE';
-export const STEP_FORWARD = 'STEP_FORWARD';
-export const RECORD_INTERVAL = "RECORD_INTERVAL";
-export const CLEAR_INTERVAL = 'CLEAR_INTERVAL'
-/* Actions for Turing Machine */

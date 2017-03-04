@@ -28,6 +28,8 @@ const rollRight = (dispatch) => {
 }
 
 const mapStateToProps = (state) => ({
+	showReportedError: state.showReportedError,
+	machineReportError: state.machineReportError,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -1,48 +1,49 @@
 import { LEFT, RIGHT } from '../constants/ReservedWords';
+import { DUPLICATED_RULE_ERROR, REQUIRED_FIELD_ERROR } from '../constants/ErrorMessages';
+
 
 /*
-A row is a plain object that holds information for inputed rule and how it is presented
-{
-	in_state: in_state, // rule infomation 
-	read: read, // rule infomation
-	write: write, // rule infomation
-	direction: ((isLeft) ? LEFT : RIGHT), // rule infomation
-	new_state: new_state, // rule infomation
+const initialStateForTable = {
+	rowsById: [],
 
-	isLeft: isLeft, // presentational information 
-	in_state_error: in_state_error, // presentational information
-	read_error: read_error, // presentational information
-	write_error: write_error, // presentational information
-	new_state_error: new_state_error, // presentational information
+	
+	A row is a plain object that holds information for inputed rule and how it is presented
+	{
+		in_state: in_state, // rule infomation 
+		read: read, // rule infomation
+		write: write, // rule infomation
+		direction: ((isLeft) ? LEFT : RIGHT), // rule infomation
+		new_state: new_state, // rule infomation
+
+		isLeft: isLeft, // presentational information 
+		in_state_error: in_state_error, // presentational information
+		read_error: read_error, // presentational information
+		write_error: write_error, // presentational information
+		new_state_error: new_state_error, // presentational information
+	}
+
+	
 }
-
 */
 
-export const DUPLICATED_RULE_ERROR = "Rule already exists.";
-export const REQUIRED_FIELD_ERROR = "This field is required.";
 
-export const getRowById = (state, id) => {
-	var row = state[id];
-	if (!row)
-		return null;
-	return row;
+function createRow(in_state = "", read = "", write = "", isLeft = false, new_state = "",
+					in_state_error = "", read_error = "", write_error = "", new_state_error = "") {
+	return {
+		in_state: in_state,
+		read: read,
+		write: write,
+		direction: ((isLeft) ? LEFT : RIGHT),
+		new_state: new_state,
+		isLeft: isLeft,
+		in_state_error: in_state_error,
+		read_error: read_error,
+		write_error: write_error,
+		new_state_error: new_state_error
+	}
 }
 
-const createRow = (in_state="", read="", write="", isLeft=false, new_state="", 
-				   in_state_error="", read_error="", write_error="", new_state_error="") => ({
-	in_state: in_state,
-	read: read,
-	write: write,
-	direction: ((isLeft) ? LEFT : RIGHT),
-	new_state: new_state,
-	isLeft: isLeft,
-	in_state_error: in_state_error,
-	read_error: read_error,
-	write_error: write_error,
-	new_state_error: new_state_error
-})
-
-export const addRow = (state, action) => {
+export function addRow(state, action) {
 	var new_state = Object.assign({}, state, {
 		rowsById: state.rowsById.slice(),
 	})
@@ -53,7 +54,7 @@ export const addRow = (state, action) => {
 	return new_state;
 }
 
-export const deleteRow = (state, action) => {	
+export function deleteRow(state, action) {	
 	var new_state = Object.assign({}, state, {
 		rowsById: state.rowsById.filter(rid => rid !== action.id)
 	});
@@ -62,15 +63,7 @@ export const deleteRow = (state, action) => {
 	return new_state;
 }
 
-// export const switchRowMode = (state, action) => {
-// 	var new_state = Object.assign({}, state);
-// 	var oldRow = state[action.id];
-// 	new_state[action.id] = createRow(!oldRow.editable, oldRow.isLeft);
-// 	return new_state;
-// }
-
-
-export const setRow = (state, action) => {
+export function setRow(state, action) {
 	let in_state_error = "";
 	let read_error = "";
 	let write_error = "";
@@ -105,7 +98,7 @@ export const setRow = (state, action) => {
 	return new_state;
 }
 
-export const setRowInState = (state, action) => {
+export function setRowInState(state, action) {
 	var oldRow = state[action.id];
 	return setRow(state, {id: action.id, 
 						  in_state: action.in_state, 
@@ -115,7 +108,7 @@ export const setRowInState = (state, action) => {
 						  new_state: oldRow.new_state});
 }
 
-export const setRowNewState = (state, action) => {
+export function setRowNewState(state, action) {
 	var oldRow = state[action.id];
 	return setRow(state, {id: action.id, 
 						  in_state: oldRow.in_state, 
@@ -125,7 +118,7 @@ export const setRowNewState = (state, action) => {
 						  new_state: action.new_state});
 }
 
-export const setRowRead = (state, action) => {
+export function setRowRead(state, action) {
 	var oldRow = state[action.id];
 	return setRow(state, {id: action.id, 
 						  in_state: oldRow.in_state, 
@@ -135,7 +128,7 @@ export const setRowRead = (state, action) => {
 						  new_state: oldRow.new_state});
 }
 
-export const setRowWrite = (state, action) => {
+export function setRowWrite(state, action) {
 	var oldRow = state[action.id];
 	return setRow(state, {id: action.id, 
 						  in_state: oldRow.in_state, 
@@ -146,7 +139,7 @@ export const setRowWrite = (state, action) => {
 }
 
 
-export const switchRowDirection = (state, action) => {
+export function switchRowDirection(state, action) {
 	var oldRow = state[action.id];
 	return setRow(state, {id: action.id, 
 						  in_state: oldRow.in_state, 
@@ -155,3 +148,4 @@ export const switchRowDirection = (state, action) => {
 						  isLeft: !oldRow.isLeft,
 						  new_state: oldRow.new_state});
 }
+

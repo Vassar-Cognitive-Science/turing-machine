@@ -6,10 +6,13 @@ import {
   	HEAD_LEFT_BOUNDARY,
   	head_right_boundary,
 } from '../constants/GUISettings';
-
 import { moveLeft, moveRight } from './tape';
 
-export const adjustHeadWidth = (state, action) => {
+export default function(state, action) {
+
+}
+
+export function adjustHeadWidth(state, action) {
 	let textLength = (action.text) ? action.text.length : 0;
 	let newWidth, newLeftOffset;
 	let defaultTextLength = INIT_HEAD_WIDTH / 10;
@@ -33,9 +36,10 @@ export const adjustHeadWidth = (state, action) => {
 /* IF THE MACHINE IS RUNNING AND WANTED TO BE STOPPED,
 	clearInterval, WILL BE CALLED	
 */
-export const setPlayState = (state, action) => {
-	if (!action.flag && state.interval)
+export function setPlayState(state, action) {
+	if (!action.flag && state.interval) {
 		clearInterval(state.interval); 
+	}
 
 	return Object.assign({}, state, {
 		isRunning: action.flag
@@ -45,7 +49,7 @@ export const setPlayState = (state, action) => {
 /*
 	Handles speed changes
 */
-export const setAnimationSpeed = (state, action) => {
+export function setAnimationSpeed(state, action) {
 	return Object.assign({}, state, {
 		animationSpeedFactor: action.percentage,
 		animationSpeed: ANIMATION_SPEED / action.percentage 
@@ -56,7 +60,7 @@ export const setAnimationSpeed = (state, action) => {
 	WRAPPER FUNCTION:
 	Handles model changes and view changes
 */
-export const moveHead = (state, action) => {
+export function moveHead(state, action) {
 	let new_head_x, new_state;
 
 	// model changes

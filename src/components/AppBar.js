@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-import { connect } from 'react-redux';
 import AppBar from 'material-ui/AppBar';
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
 import Divider from 'material-ui/Divider';
@@ -21,9 +20,6 @@ import Clear from 'material-ui/svg-icons/content/delete-sweep';
 import Menu from 'material-ui/svg-icons/navigation/menu';
 import { grey50, grey900 } from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-import { setPlayStateAction } from '../actions/guiActions';
-import { stepAction } from '../actions/index';
 
 class AppToolBar extends Component {
 

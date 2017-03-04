@@ -37,6 +37,9 @@ class Tape extends React.Component {
       <div className="card-of-tape">
          <MuiThemeProvider>
           <Card>
+            <div className="machine-reported-error" style={{visibility:(this.props.showReportedError)?"visible":"hidden"}}>
+            {this.props.machineReportError}
+            </div>
             <div className="tape-with-button">
               <div className="roll-left"><IconButton tooltip="Roll Left" onTouchTap={this.props.rollLeft} touch={true} style={styles.style} iconStyle={styles.mediumIcon} tooltipPosition="bottom-left"><RollLeft /></IconButton></div>
               <div>
@@ -58,7 +61,9 @@ class Tape extends React.Component {
 
 Tape.PropTypes = {
   rollLeft: PropTypes.func.isRequired,
-  rollRight: PropTypes.func.isRequired
+  rollRight: PropTypes.func.isRequired,
+  showReportedError: PropTypes.bool.isRequired,
+  machineReportError: PropTypes.string.isRequired,
 }
 
 export default Tape;

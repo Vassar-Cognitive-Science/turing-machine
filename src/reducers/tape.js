@@ -1,25 +1,31 @@
 import { LEFT, BLANK } from '../constants/ReservedWords';
 
+/**** Constants ****/
 
 /*
-A cell is an plain object, similar to linked list Node structure
-{ 
-	val: val, // value
-	prev: prev, // id to prev cell 
-	next: next, // id to next cell
-	highlight: flag, // boolean indicates whether the cell is highlighted
+const initialStateForTape = {
+	tapeHead: 0, // Tape head, see linked list structure 
+	tapeTail: 0, // Tape tail, see linked list structure
+	tapePointer: 0, // Tells where is the Tape Head in Tape
+	tapeCellsById: [], // array of virtual cells' ids
+	tapeInternalState: "0", // Tape Head state
+
+	
+	A cell is an plain object, similar to linked list Node structure
+	{ 
+		val: val, // value
+		prev: prev, // id to prev cell 
+		next: next, // id to next cell
+		highlight: flag, // boolean indicates whether the cell is highlighted
+	}
+	
 }
 */
 
-
-/* Constants */
-
 const CELL_ID_PREFIX = "TAPE-CELL ";
+/**** Constants ****/
 
-/* Constants */
-
-
-/* Helper functions */
+/**** Exported Helper functions ****/
 
 export const standardizeCellId = (id) => {
 	if (id == null) return null;
@@ -27,27 +33,35 @@ export const standardizeCellId = (id) => {
 	return CELL_ID_PREFIX + id;
 }
 
-
-/**** Exported Helper functions ****/
-
-export const tapeSize = (state) => {
+export function tapeSize(state) {
 	return state.tapeCellsById.length;
 }
 
-export const isTapeEmpty = (state) => {
+export function isTapeEmpty(state) {
 	return tapeSize(state) === 0;
 }
 
-export const findCell = (state, id) => {
+export function findCell(state, id) {
 	var cell = state[standardizeCellId(id)];
 	if (cell !== undefined)
 		return cell;
 	return null;
 }
 
+
+export function read(state) {
+	var cur = findCell(state, state.tapePointer);
+	if (cur == null)
+		return null;
+	return cur.val;
+}
+
 /**** Exported Helper functions ****/
 
-const createCell = (cur, prev = null, next = null, val = null, highlight=false) => {
+
+/**** Helper functions ****/
+
+function createCell(cur, prev = null, next = null, val = null, highlight=false) {
 	return {
 		cur: cur,
 		val: val,
@@ -57,7 +71,7 @@ const createCell = (cur, prev = null, next = null, val = null, highlight=false) 
 	};
 }
 
-const appendAfterTailHelper = (state, val = null) => {
+function appendAfterTailHelper(state, val = null) {
 	if (isTapeEmpty(state)) {
 		state.tapeHead--;
 	}
@@ -70,7 +84,7 @@ const appendAfterTailHelper = (state, val = null) => {
 	state.tapeTail++;
 }
 
-const insertBeforeHeadHelper = (state, val = null) => {
+function insertBeforeHeadHelper(state, val = null) {
 	if (isTapeEmpty(state)) {
 		state.tapeTail++;
 	}
@@ -83,25 +97,24 @@ const insertBeforeHeadHelper = (state, val = null) => {
 	state.tapeHead--;
 }
 
-const expandBeforeHeadHelper = (state, n = 1) => {
+function expandBeforeHeadHelper(state, n = 1) {
 	while (n--)
 		insertBeforeHeadHelper(state);
 }
 
+/**** Helper functions ****/
 
-/* Helper functions */
 
+/**** Reducer functions ****/
 
-/* Reducer functions */
-
-export const setAnchorCell = (state, action) => {
+export function setAnchorCell(state, action) {
 	return Object.assign({}, state, {
 		anchorCell: (action.direction === LEFT) ? state.anchorCell - 1 : state.anchorCell + 1,
 		tapePointer: (action.direction === LEFT) ? state.tapePointer + 1 : state.tapePointer - 1
 	})
 }
 
-export const appendAfterTail = (state, action) => {
+export function appendAfterTail(state, action) {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -109,7 +122,7 @@ export const appendAfterTail = (state, action) => {
 	return new_state;
 }
 
-export const insertBeforeHead = (state, action) => {
+export function insertBeforeHead(state, action) {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -117,13 +130,13 @@ export const insertBeforeHead = (state, action) => {
 	return new_state;
 }
 
-export const expandAfterTailHelper = (state, n = 1) => {
+export function expandAfterTailHelper(state, n = 1) {
 	while (n--) {
 		appendAfterTailHelper(state);
 	}
 }
 
-export const expandAfterTail = (state, action) => {
+export function expandAfterTail(state, action) {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -131,7 +144,7 @@ export const expandAfterTail = (state, action) => {
 	return new_state;
 }
 
-export const expandBeforeHead = (state, action) => {
+export function expandBeforeHead(state, action) {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
@@ -139,7 +152,7 @@ export const expandBeforeHead = (state, action) => {
 	return new_state;
 }
 
-export const initializeTape = (state, action) => {
+export function initializeTape(state, action) {
 	var new_state = Object.assign({}, state, {
 		tapeHead: 0,
 		tapeTail: 0,
@@ -154,7 +167,7 @@ export const initializeTape = (state, action) => {
 	return new_state;
 }
 
-export const writeIntoTape = (state, action) => {
+export function writeIntoTape(state, action) {
 	let new_state = Object.assign({}, state);
 	let target = findCell(new_state, new_state.tapePointer);
 	let val = action.val;
@@ -165,7 +178,7 @@ export const writeIntoTape = (state, action) => {
 	return new_state;
 }
 
-export const fillTape = (state, action) => {
+export function fillTape(state, action) {
 	let new_state = Object.assign({}, state);
 	let position = action.position + state.anchorCell;
 	let target = findCell(state, position);
@@ -177,7 +190,7 @@ export const fillTape = (state, action) => {
 	return new_state;
 }
 
-export const moveTapeRight = (state, action) => {
+export function moveTapeRight(state, action) {
 	let new_state = Object.assign({}, state, {
 		anchorCell: state.anchorCell + 1,
 		tapePointer: state.tapePointer + 1
@@ -187,10 +200,10 @@ export const moveTapeRight = (state, action) => {
 		appendAfterTailHelper(new_state, null);
 	}
 
-	return new_state;
+	return setCorrespondingCellHighlight(new_state, {flag: false});
 }
 
-export const moveTapeLeft = (state, action) => {
+export function moveTapeLeft(state, action) {
 	let new_state = Object.assign({}, state, {
 		anchorCell: state.anchorCell - 1,
 		tapePointer: state.tapePointer - 1
@@ -200,10 +213,10 @@ export const moveTapeLeft = (state, action) => {
 		insertBeforeHeadHelper(new_state, null);
 	}
 
-	return new_state;
+	return setCorrespondingCellHighlight(new_state, {flag: false});
 }
 
-export const moveLeft = (state, action) => {
+export function moveLeft(state, action) {
 	let new_state = Object.assign({}, state, {
 		tapePointer: state.tapePointer - 1
 	});
@@ -221,7 +234,7 @@ export const moveLeft = (state, action) => {
 	return new_state;
 }
 
-export const moveRight = (state, action) => {
+export function moveRight(state, action) {
 	var new_state = Object.assign({}, state, {
 		tapePointer: state.tapePointer + 1
 	});
@@ -241,7 +254,7 @@ export const moveRight = (state, action) => {
 	return new_state;
 }
 
-export const setCorrespondingCellHighlight = (state, action) => {
+export function setCorrespondingCellHighlight(state, action) {
 	var new_state = Object.assign({}, state);
 
 	let target = findCell(new_state, new_state.tapePointer) // current
@@ -250,25 +263,11 @@ export const setCorrespondingCellHighlight = (state, action) => {
 	return new_state;
 }
 
-export const switchHeadMode = (state, action) => {
-	return Object.assign({}, state, {
-		tapeHeadEditable: action.tapeHeadEditable
-	})
-}
-
-export const read = (state) => {
-	var cur = findCell(state, state.tapePointer);
-	if (cur == null)
-		return null;
-	return cur.val;
-}
-
-export const setInternalState = (state, action) => {
+export function setInternalState(state, action) {
 	return Object.assign({}, state, {
 		tapeInternalState: action.state
 	});
 }
 
-/* Reducer functions */
-
+/**** Reducer functions ****/
 

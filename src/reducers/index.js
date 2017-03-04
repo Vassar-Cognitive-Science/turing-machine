@@ -1,24 +1,34 @@
-import * as tape from './tape';
-import * as reservedWords from '../constants/ReservedWords';
 import * as actionTypes from '../constants/ActionTypes';
+import * as tape from './tape';
 import * as table from './table';
 import * as gui from './gui';
+import * as machine from './machine';
 import { N_CELLS, INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED, head_x } from '../constants/GUISettings';
 
 export const initialState = {
 	/* GUI settings */
+
+	/* TAPE GUI settings */
 	cellNum: N_CELLS, // number of presented cells
 	anchorCell: 0, // serves to help mapping presented cells to virtual cells in tape
+	/* TAPE GUI settings */
 
+	/* HEAD GUI settings */
 	headWidth: INIT_HEAD_WIDTH, // control Tape Head width
 	headHeight: INIT_HEAD_HEIGHT, // control Tape Head height
 	headLeftOffset: INIT_HEAD_LEFT_OFFSET, // control Tape Head input box position 
 	headX: head_x(), // x coordinate of Tape Head
+	/* HEAD GUI settings */
 
+	/* MACHINE GUI settings */
 	isRunning: false, // is the machine running
 	interval: null, // Animation interval function, returned by setInterval(callback, timeout)
 	animationSpeedFactor: 1.0, // 100% of default speed
 	animationSpeed: ANIMATION_SPEED, // calculated speed, not necessary but make things convenient 
+	machineReportError: "",
+	showReportedError: false,
+	/* MACHINE GUI settings */
+
 	/* GUI settings */
 
 	/* Tape and Head */
@@ -71,121 +81,152 @@ export const initialState = {
 	}
 };
 
-const initializeMachine = (state, action) => {
+export default function(state=initialState, action) {
+	let s1, s2, s3, s4;
+
+	s1 = ruleReducer(state, action);
+	s2 = tapeReducer(s1, action);
+	s3 = guiReducer(s2, action);
+	s4 = machineReducer(s3, action);
+
+	return s4;
+}
+
+function clearReportedError(state, action) {
+	return Object.assign({}, state, {
+		machineReportError: "",
+		showReportedError: false,
+	})
+}
+
+function initializeMachine(state, action) {
 	let new_state = initialState;
 	return tape.initializeTape(new_state, action);
 }
 
-const step = (state, action) => {
-	if (state.tapeInternalState === reservedWords.HALT)
-		return state;
-	
-	/* Find rule by internal state, and val of tape cell*/
-	let keyS = state.tapeInternalState, keyV = tape.read(state);
-	let rule = null;
-	for (var i = 0; i < state.rowsById.length; i++) {
-		let row = state[state.rowsById[i]];
-		if (row.in_state === keyS && row.read === keyV) {
-			rule = row;
+function machineReducer(state, action) {
+	let new_state = state;
+	switch (action.type) {
+		case actionTypes.INITIALIZAE_MACHINE:
+			new_state = initializeMachine(state, action);
 			break;
-		}
-	}
 
-	let new_state = tape.writeIntoTape(state, {val: rule.write});
-	new_state = tape.setInternalState(new_state, {state: rule.new_state});
-	if (rule.isLeft){
-		new_state = gui.moveHead(new_state, {moveLeft: true});
-	} else {
-		new_state = gui.moveHead(new_state, {moveLeft: false});
+			/* Machine actions */
+		case actionTypes.STEP_FORWARD:
+			new_state = machine.step(state, action);
+			break;
+		case actionTypes.RECORD_INTERVAL:
+			new_state = machine.recordInterval(state, action);
+			break;
+		case actionTypes.CLEAR_INTERVAL:
+			new_state = machine.clear_Interval(state, action);
+			break;
+		case actionTypes.STOP:
+			new_state = machine.stop(state, action);
+			break;
+			/* Machine actions */
+		default:
+			break;
 	}
 
 	return new_state;
 }
 
-const recordInterval = (state, action) => {
-	return Object.assign({}, state, {
-		interval: action.interval
-	});
-}
-
-/* SIDE EFFECT HERE!*/
-const clear_Interval = (state, action) => { // special
-	if (state.interval)
-		clearInterval(state.interval);
-	return state;
-}
-
-export default function(state=initialState, action) {
+function guiReducer(state, action) {
+	let new_state = state, changed = true;
 	switch (action.type) {
-
-		/* Machine actions */
-		case actionTypes.INITIALIZAE_MACHINE:
-			return initializeMachine(state, action);
-		case actionTypes.STEP_FORWARD:
-			return step(state, action);
-		case actionTypes.RECORD_INTERVAL:
-			return recordInterval(state, action);
-		case actionTypes.CLEAR_INTERVAL:
-			return clear_Interval(state, action);
-		/* Machine actions */
-
 		/* GUI info */
 		case actionTypes.ADJUST_HEAD_WIDTH:
-			return gui.adjustHeadWidth(state, action);
+			new_state = gui.adjustHeadWidth(state, action);
+			break;
 		case actionTypes.SET_PLAY_STATE:
-			return gui.setPlayState(state, action);
+			new_state = gui.setPlayState(state, action);
+			break;
 		case actionTypes.SET_ANIMATION_SPEED:
-			return gui.setAnimationSpeed(state, action);
+			new_state = gui.setAnimationSpeed(state, action);
+			break;
 		case actionTypes.MOVE_HEAD:
-			return gui.moveHead(state, action);
+			new_state = gui.moveHead(state, action);
+			break;
 		/* GUI info */
+		default:
+			changed = false;
+	}
 
+	return ((changed) ? clearReportedError(new_state) : state);
+}
+
+function tapeReducer(state, action) {
+	let new_state = state, changed = true;
+	switch (action.type) {
 		/* Tape actions */
 		case actionTypes.SET_CORRES_CELL_HEIGHT:
-			return tape.setCorrespondingCellHighlight(state, action); 
+			new_state = tape.setCorrespondingCellHighlight(state, action); 
+			break;
 		case actionTypes.MOVE_TAPE_RIGHT:
-			return tape.moveTapeRight(state, action);
+			new_state = tape.moveTapeRight(state, action);
+			break;
 		case actionTypes.MOVE_TAPE_LEFT:
-			return tape.moveTapeLeft(state, action);
+			new_state = tape.moveTapeLeft(state, action);
+			break;
 		case actionTypes.FILL_TAPE:
-			return tape.fillTape(state, action);
-		case actionTypes.INSERT_CELL_BEFORE_HEAD:
-			return tape.insertCellBeforeHead(state, action);
-		case actionTypes.APPEND_CELL_AFTER_TAIL:
-			return tape.appendCellAfterTail(state, action);
+			new_state = tape.fillTape(state, action);
+			break;
 		case actionTypes.WRITE_INTO_TAPE:
-			return tape.writeIntoTape(state, action);
+			new_state = tape.writeIntoTape(state, action);
+			break;
 		case actionTypes.INITIALIZAE_TAPE:
-			return tape.initializeTape(state, action);
+			new_state = tape.initializeTape(state, action);
+			break;
 		case actionTypes.SET_INTERNAL_STATE:
-			return tape.setInternalState(state, action);
+			new_state = tape.setInternalState(state, action);
+			break;
 		case actionTypes.SHIFT_TAPE_POINTER_LEFT:
-			return tape.moveLeft(state, action);
+			new_state = tape.moveLeft(state, action);
+			break;
 		case actionTypes.SHIFT_TAPE_POINTER_RIGHT:
-			return tape.moveRight(state, action);
+			new_state = tape.moveRight(state, action);
+			break;
 		/* Tape actions */
+		default:
+			changed = false;
+	}
 
+	return ((changed) ? clearReportedError(new_state) : state);
+}
+
+function ruleReducer(state, action) {
+	let new_state = state, changed = true;
+	switch (action.type) {
 		/* Rule actions */
 		case actionTypes.ADD_ROW:
-			return table.addRow(state, action);
+			new_state = table.addRow(state, action);
+			break;
 		case actionTypes.DELETE_ROW:
-			return table.deleteRow(state, action);
+			new_state = table.deleteRow(state, action);
+			break;
 		case actionTypes.SET_ROW:
-			return table.setRow(state, action);
+			new_state = table.setRow(state, action);
+			break;
 		case actionTypes.SWITCH_ROW_DIRECTION:
-			return table.switchRowDirection(state, action);
+			new_state = table.switchRowDirection(state, action);
+			break;
 		case actionTypes.SET_ROW_IN_STATE:
-			return table.setRowInState(state, action);
+			new_state = table.setRowInState(state, action);
+			break;
 		case actionTypes.SET_ROW_READ:
-			return table.setRowRead(state, action);
+			new_state = table.setRowRead(state, action);
+			break;
 		case actionTypes.SET_ROW_WRITE:
-			return table.setRowWrite(state, action);
+			new_state = table.setRowWrite(state, action);
+			break;
 		case actionTypes.SET_ROW_NEW_STATE:
-			return table.setRowNewState(state, action);
+			new_state = table.setRowNewState(state, action);
+			break;
 		/* Rule actions */
-
-
 		default:
-			return state;
+			changed = false;
 	}
+
+	return ((changed) ? clearReportedError(new_state) : state);
 }
