@@ -30,23 +30,36 @@ export const adjustHeadWidth = (state, action) => {
 }
 
 /* SIDE EFFECT HERE!*/
+/* IF THE MACHINE IS RUNNING AND WANTED TO BE STOPPED,
+	clearInterval, WILL BE CALLED	
+*/
 export const setPlayState = (state, action) => {
 	if (!action.flag && state.interval)
-		clearInterval(state.interval);
+		clearInterval(state.interval); 
+
 	return Object.assign({}, state, {
 		isRunning: action.flag
 	});
 }
 
+/*
+	Handles speed changes
+*/
 export const setAnimationSpeed = (state, action) => {
 	return Object.assign({}, state, {
 		animationSpeedFactor: action.percentage,
-		animationSpeed: ANIMATION_SPEED / action.percentage
+		animationSpeed: ANIMATION_SPEED / action.percentage 
 	});
 }
 
+/*
+	WRAPPER FUNCTION:
+	Handles model changes and view changes
+*/
 export const moveHead = (state, action) => {
 	let new_head_x, new_state;
+
+	// model changes
 	if (action.moveLeft) {
 		new_head_x = state.headX - head_move_interval();
 		new_state = moveLeft(state);
@@ -55,6 +68,7 @@ export const moveHead = (state, action) => {
 		new_state = moveRight(state);
 	}
 
+	// view changes
 	return Object.assign({}, new_state, {
 		headX: (new_head_x <= head_right_boundary() && 
 				new_head_x >= HEAD_LEFT_BOUNDARY) ? new_head_x : state.headX

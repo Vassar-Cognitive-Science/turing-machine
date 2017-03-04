@@ -5,7 +5,7 @@ export const N_CELLS = 21;
 export const INIT_HEAD_WIDTH = 0.02149 * window.innerWidth;
 export const INIT_HEAD_HEIGHT = 30;
 export const INIT_HEAD_LEFT_OFFSET = 0;
-export const ANIMATION_SPEED = 1000.0; // 500ms
+export const ANIMATION_SPEED = 800.0; // 800ms
 
 
 export const HEAD_MOVE_INTERVAL = 0.0351;

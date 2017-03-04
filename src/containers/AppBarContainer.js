@@ -51,10 +51,10 @@ const handleClear = (dispatch, ownProps) => {
 	dispatch(initMachineAction(N_CELLS));
 }
 
-const handleSpeedChange = (newValue, dispatch) => {
+const handleSpeedChange = (newValue, dispatch, ownProps) => {
 	dispatch(setPlayStateAction(false));
 	dispatch(setAnimationSpeedAction(newValue));
-	dispatch(runMachineThunkActionCreater());
+	handleRun(dispatch, ownProps);
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -76,7 +76,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleTest: () => { handleTest(dispatch, ownProps) },
 	handleSave: () => { handleSave(dispatch, ownProps) },
 	handleClear: () => { handleClear(dispatch, ownProps) },
-	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch) },
+	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch, ownProps) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar);
