@@ -2,10 +2,16 @@ import React, { PropTypes } from 'react';
 import Draggable from 'react-draggable';
 import AutoComplete from 'material-ui/AutoComplete';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { INIT_HAIR_STYLES, INIT_HEAD_STYLES } from '../../constants/GUISettings';
-
+import {
+  INIT_HAIR_STYLES,
+  INIT_HEAD_STYLES,
+  head_move_interval,
+  HEAD_LEFT_BOUNDARY,
+  head_right_boundary,
+  head_x,
+  AUTO_COMPLETE_MAX_LENGTH
+} from '../../constants/GUISettings';
 export const HEAD_INPUT_ID = 'HEAD_INPUT_1';
-
 
 class Head extends React.Component {
   render() {
@@ -13,10 +19,10 @@ class Head extends React.Component {
       <Draggable
         axis="x"
         handle=".header"
-        position={{x: this.props.head_position, y: 0}}
-        grid={[49, 0]}
+        position={{x: (this.props.head_position)?this.props.head_position:head_x(), y: 0}}
+        grid={[head_move_interval(), 0]}
         zIndex={100}
-        bounds={{left: 9, top: 0, right: 989, bottom: 0}} 
+        bounds={{left: HEAD_LEFT_BOUNDARY, top: 0, right: head_right_boundary(), bottom: 0}} 
         onStart={this.props.handleStart}
         onDrag={this.props.handleDrag}
         onStop={this.props.handleStop}>
@@ -29,10 +35,11 @@ class Head extends React.Component {
               filter={(searchText, key) => (searchText === "" || key.startsWith(searchText))}
               id={HEAD_INPUT_ID}
               underlineStyle={{display: 'none'}}
-              searchText={(this.props.internalState)?this.props.internalState:""}
+              searchText={this.props.internalState}
               dataSource={this.props.dataSource} 
               textFieldStyle={(this.props.head_styles)?(this.props.head_styles):INIT_HEAD_STYLES}
               onUpdateInput={this.props.onUpdateInput}
+              maxLength={AUTO_COMPLETE_MAX_LENGTH}
               >
             </AutoComplete>
           </MuiThemeProvider>

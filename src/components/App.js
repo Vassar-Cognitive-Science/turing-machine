@@ -8,6 +8,7 @@ import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
 // import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 
 class App extends React.Component {
+
 	render() {
 		return (
   			<div className="app-container">

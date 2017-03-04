@@ -2,13 +2,15 @@ import { connect } from 'react-redux';
 import AppToolBar from '../components/AppBar';
 import { setPlayStateAction, setAnimationSpeedAction } from '../actions/guiActions';
 import { stepAction } from '../actions/index';
-import { initMachineAction } from '../actions/index';
+import { initMachineAction, runMachineThunkActionCreater, recordIntervalAction, clearIntervalAction } from '../actions/index';
 import { N_CELLS } from '../constants/GUISettings';
 
 const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFixed(1));
 
-const handlePlay = (dispatch, ownProps) => {
+
+function handleRun(dispatch) {
 	dispatch(setPlayStateAction(true));
+	dispatch(runMachineThunkActionCreater());
 }
 
 const handlePause = (dispatch, ownProps) => {
@@ -17,8 +19,6 @@ const handlePause = (dispatch, ownProps) => {
 
 const handleLast = (dispatch, ownProps) => {
 	dispatch(setPlayStateAction(false));
-	// dispatch(moveHeadAction(true)) // true: left
-	// dispatch(moveHeadAction(false)) // false: Right
 }
 
 const handleNext = (dispatch, ownProps) => {
@@ -47,23 +47,26 @@ const handleSave = (dispatch, ownProps) => {
 }
 
 const handleClear = (dispatch, ownProps) => {
+	dispatch(setPlayStateAction(false));
 	dispatch(initMachineAction(N_CELLS));
 }
 
 const handleSpeedChange = (newValue, dispatch) => {
+	dispatch(setPlayStateAction(false));
 	dispatch(setAnimationSpeedAction(newValue));
+	dispatch(runMachineThunkActionCreater());
 }
 
 const mapStateToProps = (state, ownProps) => {
     return {
-    	isPaused: state.isPaused,
+    	isRunning: state.isRunning,
     	animationSpeedFactor: state.animationSpeedFactor,
     	animationSpeedLabel: standardizeAnimationSpeedLabel(state.animationSpeedFactor),
     };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	handlePlay: () => { handlePlay(dispatch, ownProps) },
+	handleRun: () => { handleRun(dispatch, ownProps) },
 	handlePause: () => { handlePause(dispatch, ownProps) },
 	handleLast: () => { handleLast(dispatch, ownProps) },
 	handleNext: () => { handleNext(dispatch, ownProps) },
@@ -73,7 +76,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleTest: () => { handleTest(dispatch, ownProps) },
 	handleSave: () => { handleSave(dispatch, ownProps) },
 	handleClear: () => { handleClear(dispatch, ownProps) },
-	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch) }
+	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar);

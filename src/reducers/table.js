@@ -1,5 +1,23 @@
 import { LEFT, RIGHT } from '../constants/ReservedWords';
 
+/*
+A row is a plain object that holds information for inputed rule and how it is presented
+{
+	in_state: in_state, // rule infomation 
+	read: read, // rule infomation
+	write: write, // rule infomation
+	direction: ((isLeft) ? LEFT : RIGHT), // rule infomation
+	new_state: new_state, // rule infomation
+
+	isLeft: isLeft, // presentational information 
+	in_state_error: in_state_error, // presentational information
+	read_error: read_error, // presentational information
+	write_error: write_error, // presentational information
+	new_state_error: new_state_error, // presentational information
+}
+
+*/
+
 export const DUPLICATED_RULE_ERROR = "Rule already exists.";
 export const REQUIRED_FIELD_ERROR = "This field is required.";
 
@@ -10,7 +28,7 @@ export const getRowById = (state, id) => {
 	return row;
 }
 
-const createRow = (in_state="", read="", write="", isLeft=true, new_state="", 
+const createRow = (in_state="", read="", write="", isLeft=false, new_state="", 
 				   in_state_error="", read_error="", write_error="", new_state_error="") => ({
 	in_state: in_state,
 	read: read,

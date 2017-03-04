@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { standardizeCellId } from '../../reducers/tape';
-import { moveTapeRightAction, moveTapeLeftAction, fillTapeAction, setAnchorCellAction } from '../../actions/tapeActions';
-import { LEFT, RIGHT } from '../../constants/ReservedWords';
+import { moveTapeRightAction, moveTapeLeftAction, fillTapeAction } from '../../actions/tapeActions';
 import { N_CELLS } from '../../constants/GUISettings';
 import Square, { standardizeTapeCellId, getTapeCellNumber } from '../../components/tape/Square';
 
@@ -23,7 +22,6 @@ const activeId = () => (getTapeCellNumber(document.activeElement.id));
 
 export const rollTapeToRight = (dispatch, passedFlag=false) => {
   if (isNowFirstCell() || passedFlag) {
-      dispatch(setAnchorCellAction(LEFT));
       dispatch(moveTapeLeftAction(0));
     } else {
       focusOnPrev();
@@ -32,7 +30,6 @@ export const rollTapeToRight = (dispatch, passedFlag=false) => {
 
 export const rollTapeToLeft = (dispatch, passedFlag=false) => {
   if (isNowLastCell() || passedFlag) {
-      dispatch(setAnchorCellAction(RIGHT));
       dispatch(moveTapeRightAction(N_CELLS-1));
     } else {
       focusOnNext();
@@ -67,7 +64,8 @@ const mapStateToProps = (state, ownProps) => {
   var val = (tar !== undefined && tar !== null) ? tar.val : "";
 
   return {
-    val: val
+    val: val,
+    isHighlighted: tar.highlight
   };
 }
 

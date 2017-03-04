@@ -27,11 +27,12 @@ const rollRight = (dispatch) => {
     // document.getElementById(LAST_CELL_ID).blur();
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
 	rollLeft: () => { rollLeft(dispatch) },
-  	rollRight: () => { rollRight(dispatch) }
+  	rollRight: () => { rollRight(dispatch) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tape);

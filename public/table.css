@@ -7,9 +7,8 @@
 .rule-table {
 	padding-bottom: 30px;
 	margin: 0 auto;
-	min-height: 340px;
-	max-height: 340px;
+	min-height: 360px;
+	max-height: 360px;
 	width: 90%;
 	height: 90%;
-	overflow: auto;
 }

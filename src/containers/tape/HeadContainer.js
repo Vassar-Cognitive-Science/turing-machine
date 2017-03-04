@@ -1,53 +1,43 @@
 import { connect } from 'react-redux';
-import { moveLeftAction, moveRightAction, setInternalStateAction } from '../../actions/tapeActions';
+import { setInternalStateAction, setCorrespondingCellHighlightAction } from '../../actions/tapeActions';
 import { moveHeadAction } from '../../actions/guiActions';
 import { adjustHeadWidthAction } from '../../actions/guiActions';
-import { N_CELLS } from '../../constants/GUISettings';
 import Head from '../../components/tape/Head';
-import { standardizeTapeCellId } from '../../components/tape/Square';
-import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
 import { getAllStates } from '../table/AutoCompleteFieldContainer';
+import {
+  HEAD_LEFT_BOUNDARY,
+  head_right_boundary,
+  head_x,
+  head_move_interval,
+} from '../../constants/GUISettings';
 
-let OLD_X = 499; 
+let OLD_X = head_x(); 
 
-const calcPosition = () => ((OLD_X - 9) / 49);
-
-const focusOnCorresCell = () => {
-    document.getElementById(standardizeTapeCellId(calcPosition())).focus();
-}
-
-const blurOnCorresCell = () => {
-    document.getElementById(standardizeTapeCellId(calcPosition())).blur();
-}
 
 const setOldX = (ui) => {
-    if ((ui.x >= 9) && (ui.x <= 989) && ((ui.x - 9) % 49 === 0)) 
+    if ((ui.x >= HEAD_LEFT_BOUNDARY) && (ui.x <= 989)) 
         OLD_X = ui.x;
 }
 
 const headOnStart = (e, ui, dispatch) => {
     setOldX(ui);
+    dispatch(setCorrespondingCellHighlightAction(true));
+    window.getSelection().removeAllRanges()
 }
 
 const headOnStop = (e, ui, dispatch) => {
-    blurOnCorresCell();
+    dispatch(setCorrespondingCellHighlightAction(false));
 }
 
 const headOnDrag = (e, ui, dispatch) => {
-    if (ui.x < OLD_X && ui.x >= -40 && ui.x <= 989) { // Left
-        dispatch(moveLeftAction());
+    window.getSelection().removeAllRanges()
+    if (ui.x < OLD_X && ui.x >= (HEAD_LEFT_BOUNDARY-head_move_interval()) && ui.x <= head_right_boundary()) { // Left
         dispatch(moveHeadAction(true)); // left
-        if (calcPosition() === 0)
-            rollTapeToRight(dispatch, true);
+
         setOldX(ui);
-        focusOnCorresCell();
-    } else if (ui.x > OLD_X && ui.x <= 1038 && ui.x >= 9) {
-        dispatch(moveRightAction());
-        dispatch(moveHeadAction(false))
-        if (calcPosition() === N_CELLS - 1)
-            rollTapeToLeft(dispatch, true); // right
+    } else if (ui.x > OLD_X && ui.x <= head_right_boundary()+head_move_interval() && ui.x >= 9) {
+        dispatch(moveHeadAction(false)) // right
         setOldX(ui);
-        focusOnCorresCell();
     }
 }
 

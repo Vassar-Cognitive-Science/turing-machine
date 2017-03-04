@@ -12,6 +12,7 @@ export const WRITE_AND_MOVE = 'WRITE_AND_MOVE';
 export const SHIFT_TAPE_POINTER_LEFT = 'SHIFT_TAPE_POINTER_LEFT';
 export const SHIFT_TAPE_POINTER_RIGHT = 'SHIFT_TAPE_POINTER_RIGHT';
 export const SET_INTERNAL_STATE = 'SET_STATE';
+export const SET_CORRES_CELL_HEIGHT = 'SET_CORRES_CELL_HEIGHT';
 /* Actions for Head */
 
 /* Actions for Tape */
@@ -41,4 +42,6 @@ export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';
 /* Actions for Turing Machine */
 export const INITIALIZAE_MACHINE = 'INITIALIZAE_MACHINE';
 export const STEP_FORWARD = 'STEP_FORWARD';
+export const RECORD_INTERVAL = "RECORD_INTERVAL";
+export const CLEAR_INTERVAL = 'CLEAR_INTERVAL'
 /* Actions for Turing Machine */

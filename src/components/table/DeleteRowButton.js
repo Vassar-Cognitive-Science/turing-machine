@@ -4,6 +4,9 @@ import Delete from 'material-ui/svg-icons/action/delete-forever';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class DeleteRowButton extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
+  }
 	render() {
     return (
     	<MuiThemeProvider>

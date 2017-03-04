@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
+import { connect } from 'react-redux';
 import AppBar from 'material-ui/AppBar';
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
 import Divider from 'material-ui/Divider';
@@ -21,7 +22,11 @@ import Menu from 'material-ui/svg-icons/navigation/menu';
 import { grey50, grey900 } from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-class AppToolBar extends React.Component {
+import { setPlayStateAction } from '../actions/guiActions';
+import { stepAction } from '../actions/index';
+
+class AppToolBar extends Component {
+
 	render() {
 		return (
 			<div className='app-bar'>
@@ -48,11 +53,11 @@ class AppToolBar extends React.Component {
 								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
 									onTouchTap={this.props.handleLast}><Last /></IconButton>
 
-								{(this.props.isPaused)?
+								{(this.props.isRunning)?
 									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
 										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
 									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
-										onTouchTap={this.props.handlePlay}><Play /></IconButton>}
+										onTouchTap={this.props.handleRun}><Play /></IconButton>}
 
 								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
 									onTouchTap={this.props.handleNext}><Next /></IconButton>
@@ -108,7 +113,7 @@ AppToolBar.PropTypes = {
 	animationSpeedLabel: PropTypes.string.isRequired,
 	animationSpeed: PropTypes.number.isRequired,
 
-	handlePlay: PropTypes.func.isRequired,
+	handleRun: PropTypes.func.isRequired,
 	handlePause: PropTypes.func.isRequired,
 	handleLast: PropTypes.func.isRequired,
 	handleNext: PropTypes.func.isRequired,

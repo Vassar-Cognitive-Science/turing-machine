@@ -14,7 +14,8 @@ class Square extends React.Component {
   render() {
   	// this.props.read[this.props.order] = "";
     return (
-      <input className="square" 
+      <input className="square"
+      style={(this.props.isHighlighted)?{"backgroundColor": "#87dbff"}:{"backgroundColor": "#fff"}}
       onKeyDown={this.props.onKeyDown}
       value={(this.props.val)?this.props.val:""}
       id={this.props.id}

@@ -11,3 +11,13 @@
 1. Replace Material-Ui table with pure css properties.
 2. Replace arbitrary properties of elements with calculated ones, DOM manipuations with changing of css properties, and based on these, implement animation.
 3. Optimaize performances based on above changes.
+
+2017/2/28
+1. make sure that the GUI scales for mobile devices
+2. merge the two app bars together into a single bar
+
+2017/3/1
+1. default state 0 for Head
+2. HALT always an option
+3. filter function for Head autocomplete 
+ 

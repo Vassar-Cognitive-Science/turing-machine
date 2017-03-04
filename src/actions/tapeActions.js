@@ -82,3 +82,10 @@ export function moveRightAction() {
 		type: actionTypes.SHIFT_TAPE_POINTER_RIGHT
 	};
 }
+
+export function setCorrespondingCellHighlightAction(flag) {
+	return {
+		type: actionTypes.SET_CORRES_CELL_HEIGHT,
+		flag: flag
+	}
+}

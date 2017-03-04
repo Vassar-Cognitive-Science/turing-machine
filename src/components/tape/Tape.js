@@ -39,7 +39,7 @@ class Tape extends React.Component {
           <Card>
             <div className="tape-with-button">
               <div className="roll-left"><IconButton tooltip="Roll Left" onTouchTap={this.props.rollLeft} touch={true} style={styles.style} iconStyle={styles.mediumIcon} tooltipPosition="bottom-left"><RollLeft /></IconButton></div>
-              <div className='tape'>
+              <div>
                 <div className="head-row"><Head /></div>
                 <div className="tape-row">
                   {populatedSquares(N_CELLS).map((i) => (

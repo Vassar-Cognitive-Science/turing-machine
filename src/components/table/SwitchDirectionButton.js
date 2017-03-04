@@ -3,6 +3,9 @@ import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class SwitchDirectionButton extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.value !== nextProps.value;
+  }
 	render() {
     return (
     	<MuiThemeProvider>

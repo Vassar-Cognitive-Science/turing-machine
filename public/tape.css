@@ -1,5 +1,6 @@
 .card-of-tape {
   padding-bottom: 20px;
+  height: 30%;
   width: 90%;
   margin: 0 auto; 
 }
@@ -10,20 +11,11 @@
   margin: 0 auto; 
 }
 
-.tape {
-  display: table-cell;
-}
-
-.tape-row:after {
-  width: 80%;
-  clear: both;
-  content: "";
+.tape-row {
   display: table-cell;
 }
 
 .head-row:after {
-  clear: both;
-  content: "";
   display: table-cell;
 }
 
@@ -41,22 +33,6 @@
   height:145px;
   padding-left: 1.5px;
 }
-
-.roll-left-button {
-  height: 50.7px;
-  width: 30px;
-}
-
-.roll-right-button {
-  height: 50.7px;
-  width: 30px;
-  border: 1px solid black;
-}
-.roll-right-button:after {
-  content: ">";
-  text-align: right; 
-}
-
 
 
 .hair {
@@ -103,8 +79,10 @@
   float: left;
   font-size: 24px;
   font-weight: bold;
-  height: 50px;
-  width: 50px;
+  height: 3.58127vw;
+  width: 3.58127vw;
+/*  height: 50px;
+  width: 50px;*/
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
@@ -120,5 +98,17 @@
 }
 
 .square-highlight {
-  background-color: #f1fc7e;
+  background-color: #87dbff;
+  border: 1px solid ;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  height: 3.58127vw;
+  width: 3.58127vw;
+/*  height: 50px;
+  width: 50px;*/
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
 }
