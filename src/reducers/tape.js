@@ -1,4 +1,5 @@
 import { LEFT, BLANK } from '../constants/ReservedWords';
+import { initialState } from './index';
 
 /**** Constants ****/
 
@@ -156,9 +157,14 @@ export function initializeTape(state, action) {
 	var new_state = Object.assign({}, state, {
 		tapeHead: 0,
 		tapeTail: 0,
-		tapePointer: Math.floor(action.tapeSize / 2),
 		tapeCellsById: [],
-		tapeInternalState: "0"
+
+		tapePointer: Math.floor(action.tapeSize / 2),
+		headWidth: initialState.headWidth, 
+		headHeight: initialState.headHeight, 
+		headLeftOffset: initialState.headLeftOffset, 
+		headX: initialState.headX, 
+		
 	});
 	for (let i = 0; i < state.tapeCellsById.length; i++) {
 		delete new_state[state.tapeCellsById[i]];

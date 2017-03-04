@@ -1,12 +1,14 @@
 import { connect } from 'react-redux';
 import AppToolBar from '../components/AppBar';
 import { setPlayStateAction, setAnimationSpeedAction } from '../actions/guiActions';
-import { setCorrespondingCellHighlightAction } from '../actions/tapeActions';
+import { setCorrespondingCellHighlightAction, initializeTapeAction } from '../actions/tapeActions';
 import {
 	stepAction, 
 	stopAction,
 	initMachineAction,
 	runMachineThunkActionCreator,
+	stepBackAction,
+	restoreAction,
 } from '../actions/index';
 import { N_CELLS } from '../constants/GUISettings';
 
@@ -25,16 +27,17 @@ const handlePause = (dispatch, ownProps) => {
 
 const handleLast = (dispatch, ownProps) => {
 	dispatch(stopAction());
+	dispatch(stepBackAction());
 }
 
 const handleNext = (dispatch, ownProps) => {
 	dispatch(stopAction());
-	dispatch(setCorrespondingCellHighlightAction(true));
 	dispatch(stepAction());
 }
 
 const handleRestore = (dispatch, ownProps) => {
 	dispatch(stopAction());
+	dispatch(restoreAction());
 }
 
 const handleRedo = (dispatch, ownProps) => {
@@ -53,9 +56,14 @@ const handleSave = (dispatch, ownProps) => {
 	dispatch(stopAction());
 }
 
-const handleClear = (dispatch, ownProps) => {
+const handleClearMachine = (dispatch, ownProps) => {
 	dispatch(stopAction());
 	dispatch(initMachineAction(N_CELLS));
+}
+
+const handleClearTape = (dispatch, ownProps) => {
+	dispatch(stopAction());
+	dispatch(initializeTapeAction(N_CELLS));
 }
 
 const handleSpeedChange = (newValue, dispatch, ownProps) => {
@@ -86,7 +94,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleRedo: () => { handleRedo(dispatch, ownProps) },
 	handleTest: () => { handleTest(dispatch, ownProps) },
 	handleSave: () => { handleSave(dispatch, ownProps) },
-	handleClear: () => { handleClear(dispatch, ownProps) },
+	handleClearMachine: () => { handleClearMachine(dispatch, ownProps) },
+	handleClearTape: () => { handleClearTape(dispatch, ownProps) },
 	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch, ownProps) },
 })
 

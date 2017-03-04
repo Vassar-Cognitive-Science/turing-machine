@@ -51,3 +51,15 @@ export function clearReportedErrorAction() {
 		type: actionTypes.CLEAR_REPORTED_ERROR
 	}
 }
+
+export function stepBackAction() {
+	return {
+		type: actionTypes.STEP_BACK
+	}
+}
+
+export function restoreAction() {
+	return {
+		type: actionTypes.RESTORE
+	}
+}

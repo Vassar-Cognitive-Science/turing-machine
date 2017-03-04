@@ -27,6 +27,10 @@ export const initialState = {
 	animationSpeed: ANIMATION_SPEED, // calculated speed, not necessary but make things convenient 
 	machineReportError: "",
 	showReportedError: false,
+
+	runHistory: [0],
+	runCount: 0,
+	lastRun: null,
 	/* MACHINE GUI settings */
 
 	/* GUI settings */
@@ -52,7 +56,7 @@ export const initialState = {
 	*/
 
 	/* Rules */
-	rowsById: ["row-1"], // array of rules' id's
+	rowsById: [], // array of rules' id's
 	/* Rules */
 
 	/*
@@ -72,13 +76,30 @@ export const initialState = {
 	}
 	*/
 
+	/*For test
+	rowsById: ["row-1", "row-2", "row-3"],
 	"row-1": {
 		in_state: "0",
 		read: "1",
-		write: "1",
+		write: "2",
 		isLeft: false,
 		new_state: "0"
+	},
+	"row-2": {
+		in_state: "0",
+		read: "2",
+		write: "1",
+		isLeft: true,
+		new_state: "1"
+	},
+	"row-3": {
+		in_state: "1",
+		read: "1",
+		write: "2",
+		isLeft: true,
+		new_state: "1"
 	}
+	*/
 };
 
 export default function(state=initialState, action) {
@@ -125,6 +146,13 @@ function machineReducer(state, action) {
 			new_state = machine.stop(state, action);
 			break;
 			/* Machine actions */
+
+		case actionTypes.STEP_BACK:
+			new_state = machine.stepBack(state, action);
+			break;
+		case actionTypes.RESTORE:
+			new_state = machine.restore(state, action);
+			break;
 		default:
 			break;
 	}

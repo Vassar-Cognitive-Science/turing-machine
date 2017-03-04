@@ -6,6 +6,7 @@ import Slider from 'material-ui/Slider';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
+import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import Play from 'material-ui/svg-icons/av/play-arrow';
 import Next from 'material-ui/svg-icons/av/skip-next';
@@ -17,11 +18,34 @@ import Test from 'material-ui/svg-icons/action/bug-report';
 import Restore from 'material-ui/svg-icons/action/restore';
 import Save from 'material-ui/svg-icons/content/save';
 import Clear from 'material-ui/svg-icons/content/delete-sweep';
-import Menu from 'material-ui/svg-icons/navigation/menu';
+import Popover from 'material-ui/Popover';
+import Hamburger from 'material-ui/svg-icons/navigation/menu';
 import { grey50, grey900 } from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class AppToolBar extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+      		open: false,
+    	};
+
+		this.handleTouchTap = (event) => {
+			// This prevents ghost click.
+			event.preventDefault();
+
+			this.setState({
+				open: true,
+				anchorEl: event.currentTarget,
+			});
+		};
+		this.handleRequestClose = () => {
+			this.setState({
+				open: false,
+			});
+		};
+	}
 
 	render() {
 		return (
@@ -31,7 +55,7 @@ class AppToolBar extends Component {
 						<AppBar title={"Turing Machine Simulator"} 
 						iconElementLeft={
 							<IconMenu
-					          iconButtonElement={<IconButton ><Menu color={grey50} /></IconButton>}>
+					          iconButtonElement={<IconButton ><Hamburger color={grey50} /></IconButton>}>
 					          <MenuItem value="1" primaryText="Import" />
 					          <MenuItem value="2" primaryText="Export" />
 					          <Divider />
@@ -92,8 +116,21 @@ class AppToolBar extends Component {
 
 							<ToolbarGroup lastChild={true}>
 
-								<IconButton tooltip="Clear Machine" touch={true} tooltipPosition="bottom-left"
-									onTouchTap={this.props.handleClear}><Clear /></IconButton>
+								<IconButton  touch={true} tooltipPosition="bottom-left"
+									onTouchTap={this.handleTouchTap}><Clear /></IconButton>
+								<Popover
+						          open={this.state.open}
+						          anchorEl={this.state.anchorEl}
+						          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+          						  targetOrigin={{horizontal: 'left', vertical: 'top'}}
+						          onRequestClose={this.handleRequestClose}
+						        >
+						       <Menu>
+					            <MenuItem primaryText="Clear Tape" onTouchTap={this.props.handleClearTape}/>
+					            <Divider />
+					            <MenuItem primaryText="Clear Machine" onTouchTap={this.props.handleClearMachine}/>
+					          </Menu>
+								</Popover>
 
 							</ToolbarGroup>
 					    </Toolbar>
@@ -118,7 +155,8 @@ AppToolBar.PropTypes = {
 	handleRedo: PropTypes.func.isRequired,
 	handleTest: PropTypes.func.isRequired,
 	handleSave: PropTypes.func.isRequired,
-	handleClear: PropTypes.func.isRequired,
+	handleClearMachine: PropTypes.func.isRequired,
+	handleClearTape: PropTypes.func.isRequired,
 };
 
 export default AppToolBar;
