@@ -61,14 +61,6 @@ export const initialState = {
 		new_state_error: new_state_error, // presentational information
 	}
 	*/
-
-	"row-1": {
-		in_state: "0",
-		read: "1",
-		write: "1",
-		isLeft: false,
-		new_state: "0"
-	}
 };
 
 const initializeMachine = (state, action) => {
