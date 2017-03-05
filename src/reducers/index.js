@@ -10,7 +10,7 @@ export const initialState = {
 
 	/* TAPE GUI settings */
 	cellNum: N_CELLS, // number of presented cells
-	anchorCell: 0, // serves to help mapping presented cells to virtual cells in tape
+
 	/* TAPE GUI settings */
 
 	/* HEAD GUI settings */
@@ -28,19 +28,21 @@ export const initialState = {
 	machineReportError: "",
 	showReportedError: false,
 
-	runHistory: [0],
-	runCount: 0,
-	lastRun: null,
+	runHistory: [],
+	undoEditHistory: [],
+	redoEditHistory: [],
 	/* MACHINE GUI settings */
 
 	/* GUI settings */
 
 	/* Tape and Head */
+	anchorCell: 0, // serves to help mapping presented cells to virtual cells in tape
 	tapeHead: 0, // Tape head, see linked list structure 
 	tapeTail: 0, // Tape tail, see linked list structure
 	tapePointer: 0, // Tells where is the Tape Head in Tape
 	tapeCellsById: [], // array of virtual cells' ids
 	tapeInternalState: "0", // Tape Head state
+	highlightedCellOrder: -1,
 	/* Tape and Head */
 
 	/*
@@ -56,7 +58,8 @@ export const initialState = {
 	*/
 
 	/* Rules */
-	rowsById: [], // array of rules' id's
+	// rowsById: [], // array of rules' id's
+	highlightedRow: null,
 	/* Rules */
 
 	/*
@@ -76,7 +79,8 @@ export const initialState = {
 	}
 	*/
 
-	/*For test
+	
+	//For test
 	rowsById: ["row-1", "row-2", "row-3"],
 	"row-1": {
 		in_state: "0",
@@ -99,30 +103,124 @@ export const initialState = {
 		isLeft: true,
 		new_state: "1"
 	}
-	*/
+	
 };
 
-export default function(state=initialState, action) {
-	let s1, s2, s3, s4;
+export default rootReducer;
 
-	s1 = ruleReducer(state, action);
+function rootReducer (state=initialState, action) {
+	let s1, s2, s3, s4;
+	let cache = createEditHistoryCache(state, action);
+	let new_state = state;
+	if (cache) {
+		new_state = Object.assign({}, state, {
+			undoEditHistory: state.undoEditHistory.slice(),
+		});
+		new_state.undoEditHistory.push(cache);
+	}
+
+	s1 = ruleReducer(new_state, action);
 	s2 = tapeReducer(s1, action);
 	s3 = guiReducer(s2, action);
 	s4 = machineReducer(s3, action);
 
-	return s4;
-}
-
-function clearReportedError(state, action) {
-	return Object.assign({}, state, {
-		machineReportError: "",
-		showReportedError: false,
-	})
+	switch(action.type) {
+		case actionTypes.UNDO:
+			return cleanSideEffects(undo(s4, action));
+		case actionTypes.REDO:
+			return cleanSideEffects(redo(s4, action));
+		default:
+			return s4;
+	}
 }
 
 function initializeMachine(state, action) {
 	let new_state = initialState;
 	return tape.initializeTape(new_state, action);
+}
+
+function cleanSideEffects(state, action) {
+	return Object.assign({}, state, {
+		machineReportError: "",
+		showReportedError: false,
+		highlightedRow: null,
+	})
+}
+
+
+function redo(state, action) {
+	if (state.redoEditHistory.length === 0)
+		return state;
+	
+	let redoAction = state.redoEditHistory[state.redoEditHistory.length-1];
+	let new_state = Object.assign({}, state, {
+		redoEditHistory: state.redoEditHistory.slice(0, state.redoEditHistory.length-1)
+	});
+
+	return rootReducer(new_state, redoAction);
+}
+
+function undo(state, action) {
+	if (state.undoEditHistory.length === 0)
+		return state;
+
+	let cache = state.undoEditHistory[state.undoEditHistory.length-1];
+	let undoAction = cache.undo;
+	let new_state;
+	
+	switch (undoAction.type) {
+		case actionTypes.FILL_TAPE:
+			new_state = tape.fillTape(state, undoAction);
+			break;
+		case actionTypes.INITIALIZAE_TAPE:
+			new_state = Object.assign({}, state, {
+				anchorCell: undoAction.anchorCell,
+				tapeHead: undoAction.tapeHead, 
+				tapeTail: undoAction.tapeTail, 
+				tapePointer: undoAction.tapePointer, 
+				tapeCellsById: undoAction.tapeCellsById,
+			});
+
+			for (var i = 0; i < state.tapeCellsById.length; i++) {
+				let id = state.tapeCellsById[i];
+				delete new_state[id];
+			}
+
+			for (var i = 0; i < undoAction.tapeCellsById.length; i++) {
+				let id = undoAction.tapeCellsById[i];
+				new_state[id] = tape.cloneCell(undoAction[id]);
+			}
+			break;
+		case actionTypes.SET_INTERNAL_STATE:
+			new_state = gui.adjustHeadWidth(tape.setInternalState(state, undoAction), { text: undoAction.state });
+			break;
+		case actionTypes.ADD_ROW:
+			new_state = table.deleteRow(state, undoAction);
+			break;
+		case actionTypes.DELETE_ROW:
+			new_state = Object.assign({}, state, {
+				rowsById: undoAction.rowsById,
+			})
+			new_state[undoAction.rowId] = table.cloneRow(undoAction.row);
+			break;
+		case actionTypes.SWITCH_ROW_DIRECTION:
+		case actionTypes.SET_ROW_IN_STATE:
+		case actionTypes.SET_ROW_READ:
+		case actionTypes.SET_ROW_WRITE:
+		case actionTypes.SET_ROW_NEW_STATE:
+			new_state = ruleReducer(state, undoAction);
+			break;
+		default:
+			return state;
+	}
+
+	let newRedoHistory = new_state.redoEditHistory.slice();
+	newRedoHistory.push(cache.redo);
+
+	return Object.assign({}, new_state, {
+		undoEditHistory: new_state.undoEditHistory.slice(0, new_state.undoEditHistory.length-1),
+		redoEditHistory: newRedoHistory
+	});
 }
 
 function machineReducer(state, action) {
@@ -181,26 +279,29 @@ function guiReducer(state, action) {
 			changed = false;
 	}
 
-	return ((changed) ? clearReportedError(new_state) : state);
+	return ((changed) ? cleanSideEffects(new_state) : state);
 }
 
 function tapeReducer(state, action) {
-	let new_state = state, changed = true;
+	let new_state = state, changed = true, edited = true;
 	switch (action.type) {
 		/* Tape actions */
 		case actionTypes.SET_CORRES_CELL_HEIGHT:
-			new_state = tape.setCorrespondingCellHighlight(state, action); 
+			new_state = tape.highlightCorrespondingCell(state, action); 
 			break;
 		case actionTypes.MOVE_TAPE_RIGHT:
+			edited = false;
 			new_state = tape.moveTapeRight(state, action);
 			break;
 		case actionTypes.MOVE_TAPE_LEFT:
+			edited = false;
 			new_state = tape.moveTapeLeft(state, action);
 			break;
 		case actionTypes.FILL_TAPE:
 			new_state = tape.fillTape(state, action);
 			break;
 		case actionTypes.WRITE_INTO_TAPE:
+			edited = false;
 			new_state = tape.writeIntoTape(state, action);
 			break;
 		case actionTypes.INITIALIZAE_TAPE:
@@ -210,18 +311,22 @@ function tapeReducer(state, action) {
 			new_state = tape.setInternalState(state, action);
 			break;
 		case actionTypes.SHIFT_TAPE_POINTER_LEFT:
+			edited = false;
 			new_state = tape.moveLeft(state, action);
 			break;
 		case actionTypes.SHIFT_TAPE_POINTER_RIGHT:
+			edited = false;
 			new_state = tape.moveRight(state, action);
 			break;
 		/* Tape actions */
 		default:
+			edited = false;
 			changed = false;
 	}
 
-	return ((changed) ? clearReportedError(new_state) : state);
+	return ((changed) ? cleanSideEffects(new_state) : state);
 }
+
 
 function ruleReducer(state, action) {
 	let new_state = state, changed = true;
@@ -232,9 +337,6 @@ function ruleReducer(state, action) {
 			break;
 		case actionTypes.DELETE_ROW:
 			new_state = table.deleteRow(state, action);
-			break;
-		case actionTypes.SET_ROW:
-			new_state = table.setRow(state, action);
 			break;
 		case actionTypes.SWITCH_ROW_DIRECTION:
 			new_state = table.switchRowDirection(state, action);
@@ -256,5 +358,64 @@ function ruleReducer(state, action) {
 			changed = false;
 	}
 
-	return ((changed) ? clearReportedError(new_state) : state);
+	return ((changed) ? cleanSideEffects(new_state) : state);
 }
+
+function createEditHistoryCache(state, action) {
+	let cache = {
+		undo: null,
+		redo: action,
+	}
+	switch (action.type) {
+		case actionTypes.FILL_TAPE:
+			let id = tape.standardizeCellId(action.position + state.anchorCell);
+			cache.undo = {
+				val: state[id].val,
+				position: action.position
+			};
+			break;
+		case actionTypes.INITIALIZAE_TAPE:
+			cache.undo = {
+				anchorCell: state.anchorCell,
+				tapeHead: state.tapeHead, 
+				tapeTail: state.tapeTail, 
+				tapePointer: state.tapePointer, 
+				tapeCellsById: state.tapeCellsById,
+			};
+			for (var i = 0; i < cache.tapeCellsById.length; i++) {
+				let id = cache.tapeCellsById[i];
+				cache[id] = tape.cloneCell(state[id]);
+			}
+			break;
+		case actionTypes.SET_INTERNAL_STATE:
+			cache.undo = { state: state.tapeInternalState };
+			break;
+		case actionTypes.ADD_ROW:
+			cache.undo = { rowsById: state.rowsById, row: action.id };
+			break;
+		case actionTypes.DELETE_ROW:
+			cache.undo = { rowsById: state.rowsById, row: state[action.id], rowId: action.id };
+			break;
+		case actionTypes.SWITCH_ROW_DIRECTION:
+			cache.undo = { id: action.id };
+			break;
+		case actionTypes.SET_ROW_IN_STATE:
+			cache.undo = { in_state: state[action.id].in_state, id: action.id };
+			break;
+		case actionTypes.SET_ROW_READ:
+			cache.undo = { read: state[action.id].read, id: action.id };
+			break;
+		case actionTypes.SET_ROW_WRITE:
+			cache.undo = { write: state[action.id].write, id: action.id };
+			break;
+		case actionTypes.SET_ROW_NEW_STATE:
+			cache.undo = { new_state: state[action.id].new_state, id: action.id };
+			break;
+		default:
+			return null;
+	}
+
+	cache.undo.type = action.type;
+	return cache;
+}
+

@@ -98,10 +98,10 @@ class AppToolBar extends Component {
 								<ToolbarSeparator />
 
 								<IconButton tooltip="Undo" touch={true} tooltipPosition="bottom-right"
-									onTouchTap={this.props.handleUndo}><Undo /></IconButton>
+									onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}><Undo /></IconButton>
 
 								<IconButton tooltip="Redo" touch={true} tooltipPosition="bottom-right"
-									onTouchTap={this.props.handleRedo}><Redo /></IconButton>
+									onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}><Redo /></IconButton>
 
 								<ToolbarSeparator />
 

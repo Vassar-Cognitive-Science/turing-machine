@@ -65,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     val: val,
-    isHighlighted: tar.highlight
+    highlightedCellOrder: state.highlightedCellOrder,
   };
 }
 

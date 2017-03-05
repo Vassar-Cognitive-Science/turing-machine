@@ -30,6 +30,7 @@ const rollRight = (dispatch) => {
 const mapStateToProps = (state) => ({
 	showReportedError: state.showReportedError,
 	machineReportError: state.machineReportError,
+	isRunning: state.isRunning,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

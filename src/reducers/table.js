@@ -1,4 +1,3 @@
-import { LEFT, RIGHT } from '../constants/ReservedWords';
 import { DUPLICATED_RULE_ERROR, REQUIRED_FIELD_ERROR } from '../constants/ErrorMessages';
 
 
@@ -33,7 +32,6 @@ function createRow(in_state = "", read = "", write = "", isLeft = false, new_sta
 		in_state: in_state,
 		read: read,
 		write: write,
-		direction: ((isLeft) ? LEFT : RIGHT),
 		new_state: new_state,
 		isLeft: isLeft,
 		in_state_error: in_state_error,
@@ -41,6 +39,11 @@ function createRow(in_state = "", read = "", write = "", isLeft = false, new_sta
 		write_error: write_error,
 		new_state_error: new_state_error
 	}
+}
+
+export function cloneRow(row) {
+	return createRow(row.in_state, row.read, row.write, row.isLeft, row.new_state, row.in_state_error, 
+					row.read_error, row.write_error, row.new_state_error);
 }
 
 export function addRow(state, action) {

@@ -23,7 +23,7 @@ class DeleteRowButton extends React.Component {
 DeleteRowButton.PropTypes = {
 	deleteRow: PropTypes.func.isRequired,
 	parent: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
 }
 
 export default DeleteRowButton;

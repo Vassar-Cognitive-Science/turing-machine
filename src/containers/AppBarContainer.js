@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import AppToolBar from '../components/AppBar';
 import { setPlayStateAction, setAnimationSpeedAction } from '../actions/guiActions';
-import { setCorrespondingCellHighlightAction, initializeTapeAction } from '../actions/tapeActions';
+import { highlightCorrespondingCellAction, initializeTapeAction } from '../actions/tapeActions';
 import {
 	stepAction, 
 	stopAction,
@@ -9,6 +9,8 @@ import {
 	runMachineThunkActionCreator,
 	stepBackAction,
 	restoreAction,
+	undoAction,
+	redoAction
 } from '../actions/index';
 import { N_CELLS } from '../constants/GUISettings';
 
@@ -16,8 +18,8 @@ const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFi
 
 
 function handleRun(dispatch) {
-	dispatch(setCorrespondingCellHighlightAction(true));
 	dispatch(setPlayStateAction(true));
+	dispatch(highlightCorrespondingCellAction(true));
 	dispatch(runMachineThunkActionCreator());
 }
 
@@ -42,10 +44,12 @@ const handleRestore = (dispatch, ownProps) => {
 
 const handleRedo = (dispatch, ownProps) => {
 	dispatch(stopAction());
+	dispatch(redoAction());
 }
 
 const handleUndo = (dispatch, ownProps) => {
 	dispatch(stopAction());
+	dispatch(undoAction());
 }
 
 const handleTest = (dispatch, ownProps) => {
@@ -81,6 +85,8 @@ const mapStateToProps = (state, ownProps) => {
     	isRunning: state.isRunning,
     	animationSpeedFactor: state.animationSpeedFactor,
     	animationSpeedLabel: standardizeAnimationSpeedLabel(state.animationSpeedFactor),
+    	redoAble: state.redoEditHistory.length > 0,
+    	undoAble: state.undoEditHistory.length > 0
     };
 }
 

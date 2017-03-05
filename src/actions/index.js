@@ -63,3 +63,15 @@ export function restoreAction() {
 		type: actionTypes.RESTORE
 	}
 }
+
+export function redoAction() {
+	return {
+		type: actionTypes.REDO
+	}
+}
+
+export function undoAction() {
+	return {
+		type: actionTypes.UNDO
+	}
+}

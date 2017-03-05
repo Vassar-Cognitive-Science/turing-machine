@@ -98,7 +98,7 @@ const mapStateToProps = (state, ownProps) => {
 		searchText: value,
 		errorText: error,
 		dataSource: Object.keys(dataSource),
-		filter: filter
+		filter: filter,
 	};
 }
 

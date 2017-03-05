@@ -57,18 +57,28 @@ export function read(state) {
 	return cur.val;
 }
 
+export function cloneCellById(state, id) {
+	let tar = findCell(state, id);
+	if (tar === null) return null;
+	return createCell(tar.cur, tar.prev, tar.next, tar.val);
+}
+
+export function cloneCell(tar) {
+	return createCell(tar.cur, tar.prev, tar.next, tar.val);
+}
+
+
 /**** Exported Helper functions ****/
 
 
 /**** Helper functions ****/
 
-function createCell(cur, prev = null, next = null, val = null, highlight=false) {
+function createCell(cur, prev = null, next = null, val = null) {
 	return {
 		cur: cur,
 		val: val,
 		prev: standardizeCellId(prev),
-		next: standardizeCellId(next),
-		highlight: highlight
+		next: standardizeCellId(next)
 	};
 }
 
@@ -206,7 +216,7 @@ export function moveTapeRight(state, action) {
 		appendAfterTailHelper(new_state, null);
 	}
 
-	return setCorrespondingCellHighlight(new_state, {flag: false});
+	return new_state;
 }
 
 export function moveTapeLeft(state, action) {
@@ -219,7 +229,7 @@ export function moveTapeLeft(state, action) {
 		insertBeforeHeadHelper(new_state, null);
 	}
 
-	return setCorrespondingCellHighlight(new_state, {flag: false});
+	return new_state;
 }
 
 export function moveLeft(state, action) {
@@ -232,12 +242,7 @@ export function moveLeft(state, action) {
 			insertBeforeHeadHelper(new_state, null)
 	}
 
-	let target = findCell(new_state, new_state.tapePointer) // current
-	new_state[standardizeCellId(new_state.tapePointer)] = createCell(target.cur, target.prev, target.next, target.val, true);
-	target = findCell(new_state, new_state.tapePointer+1) // last
-	new_state[standardizeCellId(new_state.tapePointer+1)] = createCell(target.cur, target.prev, target.next, target.val, false);
-	
-	return new_state;
+	return highlightCorrespondingCell(new_state, {target: new_state.tapePointer, flag: true});
 }
 
 export function moveRight(state, action) {
@@ -252,20 +257,14 @@ export function moveRight(state, action) {
 		}
 	} 
 
-	let target = findCell(new_state, new_state.tapePointer) // current
-	new_state[standardizeCellId(new_state.tapePointer)] = createCell(target.cur, target.prev, target.next, target.val, true);
-	target = findCell(new_state, new_state.tapePointer-1) // last
-	new_state[standardizeCellId(new_state.tapePointer-1)] = createCell(target.cur, target.prev, target.next, target.val, false);
-
-	return new_state;
+	return highlightCorrespondingCell(new_state, {target: new_state.tapePointer, flag: true});
 }
 
-export function setCorrespondingCellHighlight(state, action) {
-	var new_state = Object.assign({}, state);
+export function highlightCorrespondingCell(state, action) {
+	var new_state = Object.assign({}, state, {
+		highlightedCellOrder: (action.flag) ? state.tapePointer - state.anchorCell : -1
+	});
 
-	let target = findCell(new_state, new_state.tapePointer) // current
-	new_state[standardizeCellId(new_state.tapePointer)] = createCell(target.cur, target.prev, target.next, target.val, action.flag);
-	
 	return new_state;
 }
 
@@ -274,6 +273,7 @@ export function setInternalState(state, action) {
 		tapeInternalState: action.state
 	});
 }
+
 
 /**** Reducer functions ****/
 

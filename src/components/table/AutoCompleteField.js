@@ -4,7 +4,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class AutoCompleteField extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
-    	return this.props.searchText !== nextProps.searchText || this.props.errorText !== nextProps.errorText;
+    	return this.props.searchText !== nextProps.searchText ||
+    		   this.props.errorText !== nextProps.errorText;
   	}
 	render() {
 		return (

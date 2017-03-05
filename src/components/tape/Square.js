@@ -44,7 +44,7 @@ class Square extends React.Component {
   	// this.props.read[this.props.order] = "";
     return (
       <input className="square"
-      style={(this.props.isHighlighted)?{"backgroundColor": "#87dbff"}: this.state.style}
+      style={(this.props.id === standardizeTapeCellId(this.props.highlightedCellOrder))?{"backgroundColor": "#87dbff"}: this.state.style}
       onKeyDown={this.props.onKeyDown}
       value={(this.props.val)?this.props.val:""}
       id={this.props.id}
@@ -61,7 +61,7 @@ class Square extends React.Component {
 Square.PropTypes = {
   onKeyDown: PropTypes.func.isRequired,
   order: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
 }
 
 

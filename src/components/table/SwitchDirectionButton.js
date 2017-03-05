@@ -23,7 +23,7 @@ SwitchDirectionButton.PropTypes = {
 	switchDirection: PropTypes.func.isRequired,
 	parent: PropTypes.string.isRequired,
 	value: PropTypes.bool.isRequired,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
 }
 
 export default SwitchDirectionButton;

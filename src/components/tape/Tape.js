@@ -41,7 +41,9 @@ class Tape extends React.Component {
             {this.props.machineReportError}
             </div>
             <div className="tape-with-button">
-              <div className="roll-left"><IconButton tooltip="Roll Left" onTouchTap={this.props.rollLeft} touch={true} style={styles.style} iconStyle={styles.mediumIcon} tooltipPosition="bottom-left"><RollLeft /></IconButton></div>
+              <div className="roll-left"><IconButton tooltip="Roll Left" 
+                onTouchTap={this.props.rollLeft} touch={true} style={styles.style} 
+                iconStyle={styles.mediumIcon} tooltipPosition="bottom-left" disabled={this.props.isRunning}><RollLeft /></IconButton></div>
               <div>
                 <div className="head-row"><Head /></div>
                 <div className="tape-row">
@@ -50,7 +52,9 @@ class Tape extends React.Component {
                     ))}
                 </div>
               </div>
-              <div className="roll-right"><IconButton tooltip="Roll Right" onTouchTap={this.props.rollRight} touch={true} style={styles.style} iconStyle={styles.mediumIcon} tooltipPosition="bottom-right"><RollRight /></IconButton></div>
+              <div className="roll-right"><IconButton tooltip="Roll Right" 
+                onTouchTap={this.props.rollRight} touch={true} style={styles.style} 
+                iconStyle={styles.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}><RollRight /></IconButton></div>
             </div>
           </Card>
         </MuiThemeProvider>

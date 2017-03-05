@@ -7,27 +7,6 @@ export function writeIntoTapeAction(val = null) {
 	}
 }
 
-export function insertCellBeforeHeadAction(val=null) {
-	return {
-		type: actionTypes.INSERT_CELL_BEFORE_HEAD,
-		val: val
-	};
-}
-
-export function appendCellAfterTailAction(val=null) {
-	return {
-		type: actionTypes.APPEND_CELL_AFTER_TAIL,
-		val: val
-	};
-}
-
-export function setAnchorCellAction(direction) {
-	return {
-		type: actionTypes.SET_ANCHOR_CELL,
-		direction: direction
-	}
-}
-
 export function initializeTapeAction(tapeSize) {
 	return {
 		type: actionTypes.INITIALIZAE_TAPE,
@@ -83,7 +62,7 @@ export function moveRightAction() {
 	};
 }
 
-export function setCorrespondingCellHighlightAction(flag) {
+export function highlightCorrespondingCellAction(flag) {
 	return {
 		type: actionTypes.SET_CORRES_CELL_HEIGHT,
 		flag: flag

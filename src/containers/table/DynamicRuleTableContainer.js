@@ -13,7 +13,8 @@ const addRow = (dispatch, ownProps) => {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		rowsById: state.rowsById
+		rowsById: state.rowsById,
+		highlightedRow: state.highlightedRow,
 	}
 }
 

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setInternalStateAction, setCorrespondingCellHighlightAction } from '../../actions/tapeActions';
+import { setInternalStateAction, highlightCorrespondingCellAction } from '../../actions/tapeActions';
 import { moveHeadAction } from '../../actions/guiActions';
 import { adjustHeadWidthAction } from '../../actions/guiActions';
 import Head from '../../components/tape/Head';
@@ -21,12 +21,12 @@ const setOldX = (ui) => {
 
 const headOnStart = (e, ui, dispatch) => {
     setOldX(ui);
-    dispatch(setCorrespondingCellHighlightAction(true));
+    dispatch(highlightCorrespondingCellAction(true));
     window.getSelection().removeAllRanges()
 }
 
 const headOnStop = (e, ui, dispatch) => {
-    dispatch(setCorrespondingCellHighlightAction(false));
+    dispatch(highlightCorrespondingCellAction(false));
 }
 
 const headOnDrag = (e, ui, dispatch) => {
@@ -47,32 +47,42 @@ const onUpdateInput = (searchText, dispatch) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    let filter = (searchText, key) => (searchText === "" || key.startsWith(searchText));
-    let dataSource = getAllStates(state);
-    delete dataSource[null];
+  let filter = (searchText, key) => (searchText === "" || key.startsWith(searchText));
+  let dataSource = getAllStates(state);
+  delete dataSource[null];
 
-    return {
-	   internalState: state.tapeInternalState,
-       head_position: state.headX, 
-       dataSource: Object.keys(dataSource),
-       filter: filter,
-       hair_styles: {
-        width: state.headWidth,
-        left: state.headLeftOffset,
-       },
-       head_styles: {
-        height: state.headHeight,
-        width: state.headWidth,
-        left: state.headLeftOffset,
-       }
-    };
+  return {
+    internalState: state.tapeInternalState,
+    head_position: state.headX,
+    dataSource: Object.keys(dataSource),
+    filter: filter,
+    isRunning: state.isRunning,
+
+    hair_styles: {
+      width: state.headWidth,
+      left: state.headLeftOffset,
+    },
+    head_styles: {
+      height: state.headHeight,
+      width: state.headWidth,
+      left: state.headLeftOffset,
+    }
+  };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	handleStart: (e, ui) => { headOnStart(e, ui, dispatch) },
-	handleDrag: (e, ui) => { headOnDrag(e, ui, dispatch) },
-    handleStop: (e, ui) => { headOnStop(e, ui, dispatch) },
-    onUpdateInput: (searchText) => { onUpdateInput(searchText, dispatch) }
+  handleStart: (e, ui) => {
+    headOnStart(e, ui, dispatch)
+  },
+  handleDrag: (e, ui) => {
+    headOnDrag(e, ui, dispatch)
+  },
+  handleStop: (e, ui) => {
+    headOnStop(e, ui, dispatch)
+  },
+  onUpdateInput: (searchText) => {
+    onUpdateInput(searchText, dispatch)
+  }
 })
 
 

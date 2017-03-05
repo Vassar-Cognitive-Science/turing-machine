@@ -41,9 +41,27 @@ export const translateDirectionValue = (flag) => ( (flag === 'true') ? LEFT : RI
 
 
 class DynamicRuleTable extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      rowHighlighted: false,
+    };
+
+    this.onFocus = () => {
+      this.setState({rowHighlighted: true});
+    }
+    this.onBlur = () => {
+      this.setState({rowHighlighted: false});
+    }
+
+  }
   shouldComponentUpdate(nextProps) {
-    if (this.props.rowsById.length !== nextProps.rowsById.length)
+    if (this.props.rowsById.length !== nextProps.rowsById.length ||
+        this.props.highlightedRow !== nextProps.highlightedRow) {
       return true;
+    }
+
 
     for (var i = 0; i < this.props.rowsById.length; i++) {
       let thisRow = this.props.rowsById[i], nextRow = nextProps.rowsById[i];
@@ -51,7 +69,7 @@ class DynamicRuleTable extends React.Component {
           thisRow.read !== nextRow.read ||
           thisRow.write !== nextRow.write ||
           thisRow.new_state !== nextRow.new_state ||
-          thisRow.direction !== nextRow.direction) {
+          thisRow.isLeft !== nextRow.isLeft) {
         return true;
       }
     }
@@ -65,7 +83,7 @@ class DynamicRuleTable extends React.Component {
       <Card>
           <CardActions>
             <MuiThemeProvider>
-              <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow} />
+              <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow}/>
             </MuiThemeProvider>  
            </CardActions>   
           <div className="rule-table"> 
@@ -85,7 +103,10 @@ class DynamicRuleTable extends React.Component {
 
                   {this.props.rowsById.map((id) => (
 
-                    <TableRow striped={true} key={id} id={id} selectable={false}>
+                    <TableRow striped={true} key={id} id={id} selectable={false} 
+                      onFocus={this.onFocus}
+                      onBlur={this.onBlur}
+                      style={(this.props.highlightedRow === id)?{backgroundColor: "#87dbff"}:{backgroundColor: "#fff"}}>
                       <TableRowColumn style={{width:TABLE_ROW_DELETE_WIDTH}}>
                         <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />  
                       </TableRowColumn>
@@ -125,7 +146,8 @@ class DynamicRuleTable extends React.Component {
 
 DynamicRuleTable.PropTypes = {
   addRow: PropTypes.func.isRequired,
-  rowsById: PropTypes.array.isRequired
+  rowsById: PropTypes.array.isRequired,
+  highlightedRow: PropTypes.string.isRequired
 }
 
 export default DynamicRuleTable;

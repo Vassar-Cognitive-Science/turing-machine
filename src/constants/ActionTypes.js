@@ -1,3 +1,8 @@
+/* General */
+export const UNDO = "UNDO";
+export const REDO = "REDO";
+/* General */
+
 /* Actions for Turing Machine */
 export const INITIALIZAE_MACHINE = 'INITIALIZAE_MACHINE';
 export const STEP_FORWARD = 'STEP_FORWARD';
@@ -8,7 +13,6 @@ export const CLEAR_REPORTED_ERROR = "CLEAR_REPORTED_ERROR";
 export const STEP_BACK = "STEP_BACK";
 export const RESTORE = "RESTORE";
 /* Actions for Turing Machine */
-
 
 /* GUI info */
 export const ADJUST_HEAD_WIDTH = 'ADJUST_HEAD_WIDTH';
