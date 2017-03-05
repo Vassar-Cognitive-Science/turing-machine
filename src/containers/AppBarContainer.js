@@ -5,7 +5,6 @@ import { highlightCorrespondingCellAction, initializeTapeAction } from '../actio
 import {
 	stepAction, 
 	stopAction,
-	initMachineAction,
 	runMachineThunkActionCreator,
 	stepBackAction,
 	restoreAction,
@@ -60,11 +59,6 @@ const handleSave = (dispatch, ownProps) => {
 	dispatch(stopAction());
 }
 
-const handleClearMachine = (dispatch, ownProps) => {
-	dispatch(stopAction());
-	dispatch(initMachineAction(N_CELLS));
-}
-
 const handleClearTape = (dispatch, ownProps) => {
 	dispatch(stopAction());
 	dispatch(initializeTapeAction(N_CELLS));
@@ -100,7 +94,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleRedo: () => { handleRedo(dispatch, ownProps) },
 	handleTest: () => { handleTest(dispatch, ownProps) },
 	handleSave: () => { handleSave(dispatch, ownProps) },
-	handleClearMachine: () => { handleClearMachine(dispatch, ownProps) },
 	handleClearTape: () => { handleClearTape(dispatch, ownProps) },
 	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch, ownProps) },
 })

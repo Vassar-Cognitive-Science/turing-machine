@@ -139,8 +139,8 @@ export function restore(state, action) {
 			i--;
 		}
 
-		for (var i = 0; i < state.rowsById.length; i++) {
-			let row = state.rowsById[i];
+		for (var index = 0; index < state.rowsById.length; index++) {
+			let row = state.rowsById[index];
 			new_state[row] = state[row];
 		}
 

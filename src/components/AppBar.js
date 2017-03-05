@@ -116,22 +116,8 @@ class AppToolBar extends Component {
 
 							<ToolbarGroup lastChild={true}>
 
-								<IconButton  touch={true} tooltipPosition="bottom-left"
-									onTouchTap={this.handleTouchTap}><Clear /></IconButton>
-								<Popover
-						          open={this.state.open}
-						          anchorEl={this.state.anchorEl}
-						          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-          						  targetOrigin={{horizontal: 'left', vertical: 'top'}}
-						          onRequestClose={this.handleRequestClose}
-						        >
-						       <Menu>
-					            <MenuItem primaryText="Clear Tape" onTouchTap={this.props.handleClearTape}/>
-					            <Divider />
-					            <MenuItem primaryText="Clear Machine" onTouchTap={this.props.handleClearMachine}/>
-					          </Menu>
-								</Popover>
-
+								<IconButton  touch={true} tooltip="Clear Tape" tooltipPosition="bottom-left"
+									onTouchTap={this.props.handleClearTape}><Clear /></IconButton>
 							</ToolbarGroup>
 					    </Toolbar>
 				    </MuiThemeProvider>
@@ -155,7 +141,6 @@ AppToolBar.PropTypes = {
 	handleRedo: PropTypes.func.isRequired,
 	handleTest: PropTypes.func.isRequired,
 	handleSave: PropTypes.func.isRequired,
-	handleClearMachine: PropTypes.func.isRequired,
 	handleClearTape: PropTypes.func.isRequired,
 };
 
