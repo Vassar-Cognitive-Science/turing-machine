@@ -158,7 +158,7 @@ function redo(state, action) {
 		redoEditHistory: state.redoEditHistory.slice(0, state.redoEditHistory.length-1)
 	});
 
-	return rootReducer(new_state, redoAction);
+	return ruleReducer(tapeReducer(new_state, redoAction, false), redoAction, false);
 }
 
 function undo(state, action) {
@@ -286,7 +286,7 @@ function guiReducer(state, action) {
 	return ((changed) ? cleanSideEffects(new_state) : state);
 }
 
-function tapeReducer(state, action) {
+function tapeReducer(state, action, clearRedo) {
 	let new_state = state, changed = true;
 	switch (action.type) {
 		/* Tape actions */
@@ -322,11 +322,11 @@ function tapeReducer(state, action) {
 			changed = false;
 	}
 
-	return ((changed) ? cleanSideEffects(new_state) : state);
+	return ((changed) ? cleanSideEffects(new_state, clearRedo) : state);
 }
 
 
-function ruleReducer(state, action) {
+function ruleReducer(state, action, clearRedo) {
 	let new_state = state, changed = true;
 	switch (action.type) {
 		/* Rule actions */
@@ -356,7 +356,7 @@ function ruleReducer(state, action) {
 			changed = false;
 	}
 
-	return ((changed) ? cleanSideEffects(new_state) : state);
+	return ((changed) ? cleanSideEffects(new_state, clearRedo) : state);
 }
 
 function createEditHistoryCache(state, action) {
