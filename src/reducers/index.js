@@ -108,6 +108,13 @@ export const initialState = {
 
 export default rootReducer;
 
+/*
+Root reducer
+Logic:
+	first, call createEditHistoryCache, record relevant data if user edits something
+	second, call reducers for machine, gui, tape, rule, order does not matter
+	finally, add in undo/redo reducers
+*/
 function rootReducer (state=initialState, action, clearRedo) {
 	let s1, s2, s3, s4;
 	let cache = createEditHistoryCache(state, action);
@@ -134,16 +141,26 @@ function rootReducer (state=initialState, action, clearRedo) {
 	}
 }
 
+
+/*
+Initialize the machine
+*/
 function initializeMachine(state, action) {
 	let new_state = initialState;
 	return tape.initializeTape(new_state, action);
 }
 
+/*
+Clear error message, and other side effects once some change is made in the app
+
+clearRedo: decide if redoEditHistory shall be cleared
+*/
 function cleanSideEffects(state, clearRedo=true) {
 	return Object.assign({}, state, {
 		machineReportError: "",
 		showReportedError: false,
 		highlightedRow: null,
+
 		redoEditHistory: (clearRedo) ? [] : state.redoEditHistory
 	})
 }
@@ -161,6 +178,28 @@ function redo(state, action) {
 	return rootReducer(new_state, redoAction, false);
 }
 
+/*
+Undo Reducer:
+UndoAction: take from cache (by createEditHistoryCache), represent the old state before action dispatched
+logic:
+	Fill tape:
+		write into a tape cell the old value it had
+	Initialize tape:
+		update anchorCell, tapeHead, tapeTail, tapePointer, tapeCellsById with old values (recorded in undoAction)
+		delete existing tape cells, 
+		add in back old tape cells
+	Set internal State:
+		first set internal state with old value (recorded in undoAction), then adjust Head width
+	Add row:
+		Delete added row
+	Delete row:
+	 	Add deleted row
+	Set row:
+		set row with old value (recorded in undoAction)
+		Here uses ruleReducer to reduce code length, 
+		MUST ADD "clearRedo = false" as a parameter to ruleReducer so that
+		changes here in UNDO logic will and should not affect the redoEditHistory Array  
+*/
 function undo(state, action) {
 	if (state.undoEditHistory.length === 0)
 		return state;
@@ -170,9 +209,6 @@ function undo(state, action) {
 	let new_state;
 
 	switch (undoAction.type) {
-		case actionTypes.INITIALIZAE_MACHINE:
-			new_state = Object.assign({}, undoAction.lastState);
-			break;
 		case actionTypes.FILL_TAPE:
 			new_state = Object.assign({}, state);
 			new_state[undoAction.actualId] = tape.cloneCell(state[undoAction.actualId]);
@@ -229,6 +265,7 @@ function undo(state, action) {
 	});
 }
 
+/*Grouped Reducers for Machine*/
 function machineReducer(state, action) {
 	let new_state = state;
 	switch (action.type) {
@@ -264,6 +301,11 @@ function machineReducer(state, action) {
 	return new_state;
 }
 
+/*
+Grouped Reducers for GUI, 
+
+the clearSideEffect() will be called if there is action dispatched to change gui
+*/
 function guiReducer(state, action) {
 	let new_state = state, changed = true;
 	switch (action.type) {
@@ -288,6 +330,16 @@ function guiReducer(state, action) {
 	return ((changed) ? cleanSideEffects(new_state) : state);
 }
 
+
+/*
+Grouped Reducers for Tape, 
+
+the clearSideEffect() will be called if there is action dispatched to change tape
+
+Extra Argument explanation:
+clearRedo: boolean, if true, it means that we want to clear the redo history, the change is made by user
+					if false, it the change is made by undo/redo mechanism 
+*/
 function tapeReducer(state, action, clearRedo) {
 	let new_state = state, changed = true;
 	switch (action.type) {
@@ -327,7 +379,15 @@ function tapeReducer(state, action, clearRedo) {
 	return ((changed) ? cleanSideEffects(new_state, clearRedo) : state);
 }
 
+/*
+Grouped Reducers for Rule, 
 
+the clearSideEffect() will be called if there is action dispatched to change tape
+
+Extra Argument explanation:
+clearRedo: boolean, if true, it means that we want to clear the redo history, the change is made by user
+					if false, it the change is made by undo/redo mechanism 
+*/
 function ruleReducer(state, action, clearRedo) {
 	let new_state = state, changed = true;
 	switch (action.type) {
@@ -361,6 +421,29 @@ function ruleReducer(state, action, clearRedo) {
 	return ((changed) ? cleanSideEffects(new_state, clearRedo) : state);
 }
 
+
+/*
+Create object that holds necessary information for furture undo and redo actions.
+Redo logic:
+	Simply record the passed in action, which will be later dispatched.
+
+Undo logic:
+	Fill tape:
+		record old value, and changed cell Id
+	Initialize tape:
+		record old [anchorCell, tapeHead, tapeTail, tapePointer, tapeCellsById] values 
+		record all tape cells
+	Set internal State:
+		record old internal state,
+		In fact, it is the result setTapeInternalStateAction(oldStateValue)
+	Add row:
+		Record added row id, 
+		In fact, it is the result deleteRowAction(id)
+	Delete row:
+	 	Record deleted row id, and its data
+	Set row:
+		record relevent data
+*/
 function createEditHistoryCache(state, action) {
 	let cache = {
 		undo: null,
