@@ -203,7 +203,7 @@ function undo(state, action) {
 			break;
 		case actionTypes.DELETE_ROW:
 			new_state = Object.assign({}, state, {
-				rowsById: undoAction.rowsById,
+				rowsById: undoAction.rowsById.slice(),
 			})
 			new_state[undoAction.rowId] = table.cloneRow(undoAction.row);
 			break;
@@ -389,7 +389,7 @@ function createEditHistoryCache(state, action) {
 			cache.undo = { state: state.tapeInternalState };
 			break;
 		case actionTypes.ADD_ROW:
-			cache.undo = { rowsById: state.rowsById, row: action.id };
+			cache.undo = { id: action.id };
 			break;
 		case actionTypes.DELETE_ROW:
 			cache.undo = { rowsById: state.rowsById, row: state[action.id], rowId: action.id };
