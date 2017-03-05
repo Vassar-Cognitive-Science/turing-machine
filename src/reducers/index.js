@@ -108,7 +108,7 @@ export const initialState = {
 
 export default rootReducer;
 
-function rootReducer (state=initialState, action) {
+function rootReducer (state=initialState, action, clearRedo) {
 	let s1, s2, s3, s4;
 	let cache = createEditHistoryCache(state, action);
 	let new_state = state;
@@ -119,8 +119,8 @@ function rootReducer (state=initialState, action) {
 		new_state.undoEditHistory.push(cache);
 	}
 
-	s1 = ruleReducer(new_state, action);
-	s2 = tapeReducer(s1, action);
+	s1 = ruleReducer(new_state, action, clearRedo);
+	s2 = tapeReducer(s1, action, clearRedo);
 	s3 = guiReducer(s2, action);
 	s4 = machineReducer(s3, action);
 
@@ -158,7 +158,7 @@ function redo(state, action) {
 		redoEditHistory: state.redoEditHistory.slice(0, state.redoEditHistory.length-1)
 	});
 
-	return ruleReducer(tapeReducer(new_state, redoAction, false), redoAction, false);
+	return rootReducer(new_state, redoAction, false);
 }
 
 function undo(state, action) {
