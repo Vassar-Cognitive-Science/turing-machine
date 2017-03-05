@@ -214,7 +214,7 @@ function undo(state, action) {
 		case actionTypes.SET_ROW_READ:
 		case actionTypes.SET_ROW_WRITE:
 		case actionTypes.SET_ROW_NEW_STATE:
-			new_state = ruleReducer(state, undoAction);
+			new_state = ruleReducer(state, undoAction, false);
 			break;
 		default:
 			return state;
