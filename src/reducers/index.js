@@ -174,7 +174,9 @@ function undo(state, action) {
 			new_state = Object.assign({}, undoAction.lastState);
 			break;
 		case actionTypes.FILL_TAPE:
-			new_state = tape.fillTape(state, undoAction);
+			new_state = Object.assign({}, state);
+			new_state[undoAction.actualId] = tape.cloneCell(state[undoAction.actualId]);
+			new_state[undoAction.actualId].val = undoAction.val;
 			break;
 		case actionTypes.INITIALIZAE_TAPE:
 			new_state = Object.assign({}, state, {
@@ -369,7 +371,8 @@ function createEditHistoryCache(state, action) {
 			let id = tape.standardizeCellId(action.position + state.anchorCell);
 			cache.undo = {
 				val: state[id].val,
-				position: action.position
+				position: action.position,
+				actualId: id,
 			};
 			break;
 		case actionTypes.INITIALIZAE_TAPE:

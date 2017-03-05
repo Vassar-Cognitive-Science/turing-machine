@@ -22,6 +22,6 @@
 3. filter function for Head autocomplete 
 
 2017/3/4
-1. initializeTape, initializeMachine, restore, stepBack (while running should make input disabled), in question
+1. initializeTape, initializeMachine, restore, stepBack (while running should make input disabled), in question -Solved.
 
  
