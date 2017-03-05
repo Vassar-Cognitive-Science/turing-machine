@@ -196,13 +196,20 @@ export function writeIntoTape(state, action) {
 
 export function fillTape(state, action) {
 	let new_state = Object.assign({}, state);
-	let position = action.position + state.anchorCell;
-	let target = findCell(state, position);
 	let val = action.val;
 	if (val === BLANK)
 		val = "";
 
-	new_state[standardizeCellId(position)] = createCell(target.cur, target.prev, target.next, val);
+	let target;
+	if (action.id) {
+		target = state[action.id];
+		new_state[action.id] = createCell(target.cur, target.prev, target.next, val);
+	} else {
+		let position = action.position + state.anchorCell;
+		target = findCell(state, position);
+		new_state[standardizeCellId(position)] = createCell(target.cur, target.prev, target.next, val);
+	}
+		
 	return new_state;
 }
 

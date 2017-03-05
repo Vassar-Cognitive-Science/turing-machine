@@ -70,17 +70,17 @@ export function recordInterval(state, action) {
 	});
 }
 
-/* SIDE EFFECT HERE!*/
-export function clear_Interval(state, action) { // special
-	if (state.interval)
-		clearInterval(state.interval);
-	return state;
-}
+/*
+Handles what happends when paused
 
+handles clearInterval
+cancel highlight on corresponding cell
+add possible error message
+*/
 export function stop(state, action) {
-	let new_state = gui.setPlayState(state, {flag: false});
-	new_state = tape.highlightCorrespondingCell(new_state, {flag: false});
-	return reportErrorMessage(new_state, action);
+	let new_state = gui.setPlayState(state, {flag: false}); 
+	new_state = tape.highlightCorrespondingCell(new_state, {flag: false}); 
+	return reportErrorMessage(new_state, action); 
 }
 
 export function stepBack(state, action) {

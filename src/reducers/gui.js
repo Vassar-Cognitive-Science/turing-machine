@@ -34,7 +34,7 @@ export function adjustHeadWidth(state, action) {
 
 /* SIDE EFFECT HERE!*/
 /* IF THE MACHINE IS RUNNING AND WANTED TO BE STOPPED,
-	clearInterval, WILL BE CALLED	
+	clearInterval WILL BE CALLED	
 */
 export function setPlayState(state, action) {
 	if (!action.flag && state.interval) {

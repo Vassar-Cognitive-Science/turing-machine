@@ -68,8 +68,8 @@ const handleSpeedChange = (newValue, dispatch, ownProps) => {
 	dispatch(function(dispatch, getState){
 		dispatch(setAnimationSpeedAction(newValue));
 		if (getState().isRunning) {
-			dispatch(stopAction());
-			handleRun(dispatch, ownProps);
+			clearInterval(getState().interval);
+			dispatch(runMachineThunkActionCreator());
 		}
 	})
 }

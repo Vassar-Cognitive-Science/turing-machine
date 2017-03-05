@@ -169,7 +169,7 @@ function cleanSideEffects(state, clearRedo=true) {
 function redo(state, action) {
 	if (state.redoEditHistory.length === 0)
 		return state;
-	
+
 	let redoAction = state.redoEditHistory[state.redoEditHistory.length-1];
 	let new_state = Object.assign({}, state, {
 		redoEditHistory: state.redoEditHistory.slice(0, state.redoEditHistory.length-1)
@@ -348,9 +348,11 @@ function tapeReducer(state, action, clearRedo) {
 			new_state = tape.highlightCorrespondingCell(state, action); 
 			break;
 		case actionTypes.MOVE_TAPE_RIGHT:
+			clearRedo = false;
 			new_state = tape.moveTapeRight(state, action);
 			break;
 		case actionTypes.MOVE_TAPE_LEFT:
+			clearRedo = false;
 			new_state = tape.moveTapeLeft(state, action);
 			break;
 		case actionTypes.FILL_TAPE:
@@ -366,9 +368,11 @@ function tapeReducer(state, action, clearRedo) {
 			new_state = tape.setInternalState(state, action);
 			break;
 		case actionTypes.SHIFT_TAPE_POINTER_LEFT:
+			clearRedo = false;
 			new_state = tape.moveLeft(state, action);
 			break;
 		case actionTypes.SHIFT_TAPE_POINTER_RIGHT:
+			clearRedo = false;
 			new_state = tape.moveRight(state, action);
 			break;
 		/* Tape actions */
@@ -442,21 +446,27 @@ Undo logic:
 	Delete row:
 	 	Record deleted row id, and its data
 	Set row:
-		record relevent data
+		record relevant data
 */
 function createEditHistoryCache(state, action) {
 	let cache = {
 		undo: null,
-		redo: action,
+		redo: Object.assign({}, action),
 	}
+
 	switch (action.type) {
 		case actionTypes.FILL_TAPE:
-			let id = tape.standardizeCellId(action.position + state.anchorCell);
+			let id;
+			if (cache.redo.id) 
+				id = cache.redo.id;
+			else
+				id = tape.standardizeCellId(action.position + state.anchorCell);
+			
 			cache.undo = {
 				val: state[id].val,
-				position: action.position,
 				actualId: id,
 			};
+			cache.redo.id = id;
 			break;
 		case actionTypes.INITIALIZAE_TAPE:
 			cache.undo = {
@@ -464,7 +474,7 @@ function createEditHistoryCache(state, action) {
 				tapeHead: state.tapeHead, 
 				tapeTail: state.tapeTail, 
 				tapePointer: state.tapePointer, 
-				tapeCellsById: state.tapeCellsById,
+				tapeCellsById: state.tapeCellsById.slice(),
 			};
 			for (var i = 0; i < cache.undo.tapeCellsById.length; i++) {
 				let id = cache.undo.tapeCellsById[i];
@@ -478,7 +488,7 @@ function createEditHistoryCache(state, action) {
 			cache.undo = { id: action.id };
 			break;
 		case actionTypes.DELETE_ROW:
-			cache.undo = { rowsById: state.rowsById, row: state[action.id], rowId: action.id };
+			cache.undo = { rowsById: state.rowsById.slice(), row: state[action.id], rowId: action.id };
 			break;
 		case actionTypes.SWITCH_ROW_DIRECTION:
 			cache.undo = { id: action.id };
