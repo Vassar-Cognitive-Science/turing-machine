@@ -274,6 +274,9 @@ function machineReducer(state, action) {
 			break;
 
 			/* Machine actions */
+		case actionTypes.PRE_STEP_FORWARD:
+			new_state = machine.preStep(state, action);
+			break;
 		case actionTypes.STEP_FORWARD:
 			new_state = machine.step(state, action);
 			break;

@@ -13,11 +13,12 @@ export default function(state, action) {
 }
 
 export function adjustHeadWidth(state, action) {
-	let textLength = (action.text) ? action.text.length : 0;
+	let text = (action.text) ? action.text : state.tapeInternalState.toString();
+	let textLength = text.length + 2;
 	let newWidth, newLeftOffset;
 	let defaultTextLength = INIT_HEAD_WIDTH / 10;
 
-	if (textLength <= defaultTextLength) {
+	if (textLength <= defaultTextLength - 2) {
 		newWidth = INIT_HEAD_WIDTH;
 		newLeftOffset = INIT_HEAD_LEFT_OFFSET;
 	} else {

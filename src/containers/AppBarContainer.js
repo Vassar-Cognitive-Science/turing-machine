@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
 import AppToolBar from '../components/AppBar';
-import { setPlayStateAction, setAnimationSpeedAction } from '../actions/guiActions';
-import { highlightCorrespondingCellAction, initializeTapeAction } from '../actions/tapeActions';
+import { setAnimationSpeedAction } from '../actions/guiActions';
+import { initializeTapeAction } from '../actions/tapeActions';
 import {
+	preStepAction,
 	stepAction, 
 	stopAction,
 	runMachineThunkActionCreator,
@@ -17,8 +18,7 @@ const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFi
 
 
 function handleRun(dispatch) {
-	dispatch(setPlayStateAction(true));
-	dispatch(highlightCorrespondingCellAction(true));
+	dispatch(preStepAction());
 	dispatch(runMachineThunkActionCreator());
 }
 
@@ -33,6 +33,7 @@ const handleLast = (dispatch, ownProps) => {
 
 const handleNext = (dispatch, ownProps) => {
 	dispatch(stopAction());
+	dispatch(preStepAction());
 	dispatch(stepAction());
 }
 
@@ -80,7 +81,8 @@ const mapStateToProps = (state, ownProps) => {
     	animationSpeedFactor: state.animationSpeedFactor,
     	animationSpeedLabel: standardizeAnimationSpeedLabel(state.animationSpeedFactor),
     	redoAble: state.redoEditHistory.length > 0,
-    	undoAble: state.undoEditHistory.length > 0
+    	undoAble: state.undoEditHistory.length > 0,
+    	lastStepAble: state.runHistory.length > 0,
     };
 }
 

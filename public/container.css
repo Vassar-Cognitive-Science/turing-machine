@@ -1,8 +1,10 @@
 .app-container {
 	background-color: #FAFAFA;
+	overflow-x: hidden;
 }
 
 .app-bar {
+	width: 100%;
 	padding-top: 0px;
 	padding-bottom: 10px;
 }

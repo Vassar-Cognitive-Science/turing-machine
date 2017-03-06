@@ -7,6 +7,12 @@ export function initMachineAction(tapeSize) {
 	};
 } 
 
+export function preStepAction() {
+	return {
+		type: actionTypes.PRE_STEP_FORWARD
+	};
+}
+
 export function stepAction() {
 	return {
 		type: actionTypes.STEP_FORWARD
