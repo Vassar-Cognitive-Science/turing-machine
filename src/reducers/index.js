@@ -180,7 +180,8 @@ function redo(state, action) {
 
 /*
 Undo Reducer:
-UndoAction: take from cache (by createEditHistoryCache), represent the old state before action dispatched
+Also see the createEditHistoryCache function down below
+UndoAction: take from cache.undo (returned by createEditHistoryCache), it represents the old state before action dispatched
 logic:
 	Fill tape:
 		write into a tape cell the old value it had
@@ -197,8 +198,9 @@ logic:
 	Set row:
 		set row with old value (recorded in undoAction)
 		Here uses ruleReducer to reduce code length, 
-		MUST ADD "clearRedo = false" as a parameter to ruleReducer so that
-		changes here in UNDO logic will and should not affect the redoEditHistory Array  
+		
+MUST ADD "clearRedo = false" as a parameter to ruleReducer so that
+changes here in UNDO logic will and should not affect the redoEditHistory Array  
 */
 function undo(state, action) {
 	if (state.undoEditHistory.length === 0)
@@ -282,9 +284,6 @@ function machineReducer(state, action) {
 			break;
 		case actionTypes.RECORD_INTERVAL:
 			new_state = machine.recordInterval(state, action);
-			break;
-		case actionTypes.CLEAR_INTERVAL:
-			new_state = machine.clear_Interval(state, action);
 			break;
 		case actionTypes.STOP:
 			new_state = machine.stop(state, action);

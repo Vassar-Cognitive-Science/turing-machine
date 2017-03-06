@@ -1,4 +1,5 @@
-import * as actionTypes from '../constants/ActionTypes.js';
+import * as actionTypes from '../constants/ActionTypes';
+import { setAnimationSpeedAction } from './guiActions';
 
 export function initMachineAction(tapeSize) {
 	return {
@@ -26,21 +27,24 @@ export function recordIntervalAction(interval) {
 	}
 }
 
-export function clearIntervalAction() {
-	return {
-		type: actionTypes.CLEAR_INTERVAL
-	}
-}
-
 export function runMachineThunkActionCreator() {
 	return (dispatch, getState) => {
 		let interval = setInterval(() => {
 			if (getState().isRunning) {
 				dispatch(stepAction());
-				// console.log();
 			}
 		}, getState().animationSpeed);
 		dispatch(recordIntervalAction(interval));
+	}
+}
+
+export function setMachineSpeedThunkActionCreator(newValue) {
+	return (dispatch, getState) => {
+		dispatch(setAnimationSpeedAction(newValue));
+		if (getState().isRunning) {
+			clearInterval(getState().interval);
+			dispatch(runMachineThunkActionCreator());
+		}
 	}
 }
 

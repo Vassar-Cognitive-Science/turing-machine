@@ -41,32 +41,7 @@ function createRow(in_state = "", read = "", write = "", isLeft = false, new_sta
 	}
 }
 
-export function cloneRow(row) {
-	return createRow(row.in_state, row.read, row.write, row.isLeft, row.new_state, row.in_state_error, 
-					row.read_error, row.write_error, row.new_state_error);
-}
-
-export function addRow(state, action) {
-	var new_state = Object.assign({}, state, {
-		rowsById: state.rowsById.slice(),
-	})
-
-	new_state[action.id] = createRow();
-	new_state.rowsById.push(action.id);
-
-	return new_state;
-}
-
-export function deleteRow(state, action) {	
-	var new_state = Object.assign({}, state, {
-		rowsById: state.rowsById.filter(rid => rid !== action.id)
-	});
-	delete new_state[action.id];
-
-	return new_state;
-}
-
-export function setRow(state, action) {
+function setRow(state, action) {
 	let in_state_error = "";
 	let read_error = "";
 	let write_error = "";
@@ -98,6 +73,31 @@ export function setRow(state, action) {
 									read_error,
 									write_error,
 									new_state_error);
+	return new_state;
+}
+
+export function cloneRow(row) {
+	return createRow(row.in_state, row.read, row.write, row.isLeft, row.new_state, row.in_state_error, 
+					row.read_error, row.write_error, row.new_state_error);
+}
+
+export function addRow(state, action) {
+	var new_state = Object.assign({}, state, {
+		rowsById: state.rowsById.slice(),
+	})
+
+	new_state[action.id] = createRow();
+	new_state.rowsById.push(action.id);
+
+	return new_state;
+}
+
+export function deleteRow(state, action) {	
+	var new_state = Object.assign({}, state, {
+		rowsById: state.rowsById.filter(rid => rid !== action.id)
+	});
+	delete new_state[action.id];
+
 	return new_state;
 }
 

@@ -8,7 +8,6 @@ export const INITIALIZAE_MACHINE = 'INITIALIZAE_MACHINE';
 export const PRE_STEP_FORWARD = "PRE_STEP_FORWARD";
 export const STEP_FORWARD = 'STEP_FORWARD';
 export const RECORD_INTERVAL = "RECORD_INTERVAL";
-export const CLEAR_INTERVAL = 'CLEAR_INTERVAL';
 export const STOP = "STOP";
 export const CLEAR_REPORTED_ERROR = "CLEAR_REPORTED_ERROR";
 export const STEP_BACK = "STEP_BACK";
@@ -47,7 +46,6 @@ export const EXPAND_CELLS_AFTER_TAIL = 'EXPAND_CELLS_AFTER_TAIL';
 /* Actions for Transition Table */
 export const ADD_ROW = 'ADD_ROW';
 export const DELETE_ROW = 'DELETE_ROW';
-export const SET_ROW = 'SET_ROW';
 export const SET_ROW_IN_STATE = 'SET_ROW_IN_STATE';
 export const SET_ROW_NEW_STATE = 'SET_ROW_NEW_STATE';
 export const SET_ROW_READ = 'SET_ROW_READ';

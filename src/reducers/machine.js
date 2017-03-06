@@ -38,6 +38,9 @@ export function preStep(state, action) {
 	/* Find rule by internal state, and val of tape cell, and highlight it*/
 	new_state = highlightCorrespondingRule(new_state, { flag: true });
 
+	if (new_state.highlightedRow)
+		document.getElementById(new_state.highlightedRow).scrollIntoView(true);
+
 	return new_state;
 }
 
@@ -51,6 +54,8 @@ export function step(state, action) {
 	if (new_state.highlightedRow === null) {
 		return stop(new_state, {message: UNDEFINED_RULE, flag: true});
 	}
+
+	document.getElementById(new_state.highlightedRow).scrollIntoView(true);
 
 	new_state = Object.assign({}, new_state, {
 		runHistory: new_state.runHistory.slice(),

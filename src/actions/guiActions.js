@@ -1,4 +1,4 @@
-import * as actionTypes from '../constants/ActionTypes.js';
+import * as actionTypes from '../constants/ActionTypes';
 
 
 export function adjustHeadWidthAction(text) {
@@ -7,7 +7,6 @@ export function adjustHeadWidthAction(text) {
 		text: text
 	};
 }
-
 
 export function setPlayStateAction(flag) {
 	return {

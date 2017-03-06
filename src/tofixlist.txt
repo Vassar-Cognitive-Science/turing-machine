@@ -24,4 +24,6 @@
 2017/3/4
 1. initializeTape, initializeMachine, restore, stepBack (while running should make input disabled), in question -Solved.
 2. policy for restore, stepBack? Now is record every thing and restore to the very first status.
- 
+
+2017/3/6
+1. Policy on undo/redo, restore/stepback

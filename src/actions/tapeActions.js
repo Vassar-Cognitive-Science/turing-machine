@@ -1,4 +1,4 @@
-import * as actionTypes from '../constants/ActionTypes.js';
+import * as actionTypes from '../constants/ActionTypes';
 
 export function writeIntoTapeAction(val = null) {
 	return {
@@ -41,13 +41,6 @@ export function setInternalStateAction(state) {
 		type: actionTypes.SET_INTERNAL_STATE,
 		state: state
 	};
-}
-
-export function switchHeadModeAction(tapeHeadEditable) {
-	return {
-		type: actionTypes.SWITCH_HEAD_MODE,
-		tapeHeadEditable: tapeHeadEditable
-	}
 }
 
 export function moveLeftAction() {

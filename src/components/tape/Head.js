@@ -25,7 +25,8 @@ class Head extends React.Component {
         bounds={{left: HEAD_LEFT_BOUNDARY, top: 0, right: head_right_boundary(), bottom: 0}} 
         onStart={this.props.handleStart}
         onDrag={this.props.handleDrag}
-        onStop={this.props.handleStop}>
+        onStop={this.props.handleStop}
+        disabled={this.props.isRunning}>
         <div  className="header">
           <div className="hair" style={(this.props.hair_styles)?(this.props.hair_styles):INIT_HAIR_STYLES} ></div>
           <MuiThemeProvider>

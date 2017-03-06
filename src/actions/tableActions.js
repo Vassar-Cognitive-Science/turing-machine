@@ -1,4 +1,4 @@
-import * as actionTypes from '../constants/ActionTypes.js';
+import * as actionTypes from '../constants/ActionTypes';
 
 export function addRowAction(id) {
 	return {
@@ -18,18 +18,6 @@ export function switchRowDirectionAction(id) {
 	return {
 		type: actionTypes.SWITCH_ROW_DIRECTION,
 		id: id
-	};
-}
-
-export function setRowAction(id, in_state, read, write, isLeft, new_state) {
-	return {
-		type: actionTypes.SET_ROW,
-		id: id,
-		in_state: in_state,
-		read: read, 
-		write: write,
-		isLeft: isLeft,
-		new_state: new_state
 	};
 }
 

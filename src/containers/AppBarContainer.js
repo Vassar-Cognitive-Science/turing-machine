@@ -7,6 +7,7 @@ import {
 	stepAction, 
 	stopAction,
 	runMachineThunkActionCreator,
+	setMachineSpeedThunkActionCreator,
 	stepBackAction,
 	restoreAction,
 	undoAction,
@@ -15,7 +16,6 @@ import {
 import { N_CELLS } from '../constants/GUISettings';
 
 const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFixed(1));
-
 
 function handleRun(dispatch) {
 	dispatch(preStepAction());
@@ -66,13 +66,7 @@ const handleClearTape = (dispatch, ownProps) => {
 }
 
 const handleSpeedChange = (newValue, dispatch, ownProps) => {
-	dispatch(function(dispatch, getState){
-		dispatch(setAnimationSpeedAction(newValue));
-		if (getState().isRunning) {
-			clearInterval(getState().interval);
-			dispatch(runMachineThunkActionCreator());
-		}
-	})
+	dispatch(setMachineSpeedThunkActionCreator(newValue));
 }
 
 const mapStateToProps = (state, ownProps) => {
