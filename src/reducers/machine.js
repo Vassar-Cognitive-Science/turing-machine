@@ -3,6 +3,9 @@ import { REACH_HALT, UNDEFINED_RULE, NO_MORE_BACK } from '../constants/ErrorMess
 import * as tape from './tape';
 import * as gui from './gui';
 
+/*
+Helper function that saves relevant data to restore to last step
+*/
 const cachedLastStep = (lastState, lastPointer) => {
 	return {
 		cachedPointer: lastPointer,
@@ -18,6 +21,9 @@ const cachedLastStep = (lastState, lastPointer) => {
 	};
 }
 
+/*
+Helper reducer that handles reporting message to user
+*/
 function reportErrorMessage(state, action) {
 	return Object.assign({}, state, {
 		machineReportError: action.message,
@@ -25,9 +31,15 @@ function reportErrorMessage(state, action) {
 	});
 }
 
-// Prepare for a step forward
+/*
+Prepare for a step forward
+Set play button according to if it is a single step
+Highlight Corresponding Cell
+Highlight Corresponding Rule
+*/
 export function preStep(state, action) {
 	let new_state;
+	console.log(action.singleStep)
 	if (!action.singleStep)
 		new_state = gui.setPlayState(state, { flag: true });
 	else
@@ -44,6 +56,17 @@ export function preStep(state, action) {
 	return new_state;
 }
 
+/*
+Step forward
+Find rule (handled by highlightCorrespondingRule)
+If not find, stop
+
+Push cachedLastStep to runHistory
+Write value into tape
+Set internal state
+Adjust head width
+Move Head according to rule.isLeft 
+*/
 export function step(state, action) {
 	if (state.tapeInternalState === HALT) {
 		return stop(state, {message: REACH_HALT, flag: true});
@@ -76,12 +99,19 @@ export function step(state, action) {
 	return new_state;
 }
 
+/*
+Record interval
+*/
 export function recordInterval(state, action) {
 	return Object.assign({}, state, {
 		interval: action.interval
 	});
 }
 
+
+/*
+Highlight Corresponding Rule
+*/
 export function highlightCorrespondingRule(state, action) {
 	if (action.rule && action.flag) {
 		return Object.assign({}, state, {highlightedRow: action.rule} );
@@ -118,7 +148,12 @@ export function stop(state, action) {
 	return reportErrorMessage(new_state, action); 
 }
 
-
+/*
+Restore to last step
+Data is fetched from runHistory (by pop)
+---Preserve edited rules (if there are changes)
+---More priority here than undo edit
+*/
 export function stepBack(state, action) {
 	if (state.runHistory.length > 0) {
 		let cached = state.runHistory[state.runHistory.length - 1];
@@ -146,6 +181,13 @@ export function stepBack(state, action) {
 	return stop(state, {message: NO_MORE_BACK, flag: true});
 }
 
+
+/*
+Restore to first step
+Data is fetched from runHistory (by pop)
+---Preserve edited rules (if there are changes)
+---More priority here than undo edit
+*/
 export function restore(state, action) {
 	if (state.runHistory.length > 0) {
 		let cached = state.runHistory;

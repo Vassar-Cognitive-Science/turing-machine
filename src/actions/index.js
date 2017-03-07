@@ -8,9 +8,10 @@ export function initMachineAction(tapeSize) {
 	};
 } 
 
-export function preStepAction() {
+export function preStepAction(singleStep) {
 	return {
-		type: actionTypes.PRE_STEP_FORWARD
+		type: actionTypes.PRE_STEP_FORWARD,
+		singleStep: singleStep
 	};
 }
 

@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import AppToolBar from '../components/AppBar';
-import { setAnimationSpeedAction } from '../actions/guiActions';
 import { initializeTapeAction } from '../actions/tapeActions';
 import {
 	preStepAction,
@@ -33,7 +32,7 @@ const handleLast = (dispatch, ownProps) => {
 
 const handleNext = (dispatch, ownProps) => {
 	dispatch(stopAction());
-	dispatch(preStepAction());
+	dispatch(preStepAction(true));
 	dispatch(stepAction());
 }
 
