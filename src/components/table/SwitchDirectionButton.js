@@ -13,7 +13,7 @@ class SwitchDirectionButton extends React.Component {
                       onTouchTap={this.props.switchDirection}
                       id={this.props.id}
                       label={(this.props.value)?"LEFT":"RIGHT"} 
-                      style={{width: "9vw", textAlign: "left"}}
+                      style={{width: "9vw", textAlign: "left", top: 5}}
                       />
       </MuiThemeProvider>
         )

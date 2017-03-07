@@ -39,7 +39,6 @@ Highlight Corresponding Rule
 */
 export function preStep(state, action) {
 	let new_state;
-	console.log(action.singleStep)
 	if (!action.singleStep)
 		new_state = gui.setPlayState(state, { flag: true });
 	else

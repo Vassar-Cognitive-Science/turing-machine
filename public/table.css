@@ -15,19 +15,21 @@
 table thead tr{
     display:block;
 }
+
 th {
   width:14vw;
 }
 th:first-child {
   width:9vw;
 }
+
 tbody td:first-child {
   width:9vw;
 }
 tbody td {
   width:14vw;
 }
-table  tbody{
+table tbody{
   display:block;
   height:300px;
   width: 100%;
