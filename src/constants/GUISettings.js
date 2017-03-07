@@ -25,8 +25,8 @@ export const AUTO_COMPLETE_MAX_LENGTH = 30;
 export const TABLE_HEIGHT = 230;
 export const TABLE_HEAD_BLANK_WIDTH = 50;
 export const TABLE_ROW_DELETE_WIDTH = 90;
-export const TABLE_ROW_STATE_WIDTH = 180;
-export const TABLE_ROW_INPUT_WIDTH = 80;
+export const TABLE_ROW_STATE_WIDTH = "12vw";
+export const TABLE_ROW_INPUT_WIDTH = "5vw";
 
 export const INIT_HAIR_STYLES = {
   width: INIT_HEAD_WIDTH,

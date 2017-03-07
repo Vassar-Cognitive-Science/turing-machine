@@ -11,6 +11,7 @@ import {
   head_x,
   AUTO_COMPLETE_MAX_LENGTH
 } from '../../constants/GUISettings';
+
 export const HEAD_INPUT_ID = 'HEAD_INPUT_1';
 
 class Head extends React.Component {

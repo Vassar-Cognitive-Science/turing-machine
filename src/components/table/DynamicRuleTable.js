@@ -1,16 +1,13 @@
 import React, { PropTypes } from 'react';
 import FlatButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import { Table } from 'react-bootstrap';
 import {Card, CardActions } from 'material-ui/Card';
 import DeleteRowButton from '../../containers/table/DeleteRowButtonContainer';
 import SwitchDirectionButton from '../../containers/table/SwitchDirectionButtonContainer';
 import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer';
 import { LEFT, RIGHT } from '../../constants/ReservedWords';
 import {
-  TABLE_HEIGHT,
-  TABLE_HEAD_BLANK_WIDTH,
-  TABLE_ROW_DELETE_WIDTH,
   TABLE_ROW_INPUT_WIDTH,
   TABLE_ROW_STATE_WIDTH,
   AUTO_COMPLETE_MAX_LENGTH
@@ -86,56 +83,49 @@ class DynamicRuleTable extends React.Component {
               <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow}/>
             </MuiThemeProvider>  
            </CardActions>   
-          <div className="rule-table"> 
-            <MuiThemeProvider>
-              <Table fixedHeader={true} height={TABLE_HEIGHT}>
-                <TableHeader displaySelectAll={false}>
-                  <TableRow>
-                    <TableHeaderColumn style={{width:TABLE_HEAD_BLANK_WIDTH}}></TableHeaderColumn>
-                    <TableHeaderColumn >Current State</TableHeaderColumn>
-                    <TableHeaderColumn >Read</TableHeaderColumn>
-                    <TableHeaderColumn >Write</TableHeaderColumn>
-                    <TableHeaderColumn >Move Direction</TableHeaderColumn>
-                    <TableHeaderColumn >New State</TableHeaderColumn>
-                  </TableRow>
-                </TableHeader>
-                <TableBody displayRowCheckbox={false}>
-
+           <div className="rule-table-container">
+            <Table responsive condensed > 
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Current State</th>
+                  <th>Read</th>
+                  <th>Write</th>
+                  <th>Move Direction</th>
+                  <th>New State</th>
+                </tr>
+              </thead>
+                 <tbody>
                   {this.props.rowsById.map((id) => (
-
-                    <TableRow striped={true} key={id} id={id} selectable={false} 
-                      onFocus={this.onFocus}
-                      onBlur={this.onBlur}
-                      style={(this.props.highlightedRow === id)?{backgroundColor: "#87dbff"}:{backgroundColor: "#fff"}}>
-                      <TableRowColumn style={{width:TABLE_ROW_DELETE_WIDTH}}>
+                    <tr>
+                      <td>
                         <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />  
-                      </TableRowColumn>
+                      </td>
 
-                      <TableRowColumn>
+                      <td>
                           <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} openOnFocus={true} styles={{width:TABLE_ROW_STATE_WIDTH}} maxLength={AUTO_COMPLETE_MAX_LENGTH} id={standardizeCurrentStateFieldId(id)} />
-                      </TableRowColumn>
+                      </td>
                         
-                      <TableRowColumn>
+                      <td>
                           <AutoCompleteField parent={id} fieldType={FIELD_TYPES[1]} openOnFocus={true} styles={{width:TABLE_ROW_INPUT_WIDTH}} maxLength="1" id={standardizeReadFieldId(id)} />
-                      </TableRowColumn>
+                      </td>
                         
-                      <TableRowColumn>
+                      <td>
                           <AutoCompleteField parent={id} fieldType={FIELD_TYPES[2]} openOnFocus={true} styles={{width:TABLE_ROW_INPUT_WIDTH}} maxLength="1" id={standardizeWriteFieldId(id)} />
-                      </TableRowColumn>
+                      </td>
 
-                      <TableRowColumn>
+                      <td>
                           <SwitchDirectionButton parent={id} fieldType={FIELD_TYPES[3]} id={standardizeDirectionFieldId(id)} />
-                      </TableRowColumn>
+                      </td>
                         
-                      <TableRowColumn>
+                      <td>
                           <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} openOnFocus={true} styles={{width:TABLE_ROW_STATE_WIDTH}} maxLength={AUTO_COMPLETE_MAX_LENGTH} id={standardizeNewStateFieldId(id)} />
-                      </TableRowColumn>
-                  </TableRow>
+                      </td>
+                  </tr>
                   ))}
-              </TableBody>
+                </tbody>
               </Table>
-            </MuiThemeProvider>
-        </div>
+            </div>
       </Card>
       </MuiThemeProvider>
       </div>

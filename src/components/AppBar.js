@@ -22,29 +22,6 @@ import { grey50, grey900 } from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class AppToolBar extends Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-      		open: false,
-    	};
-
-		this.handleTouchTap = (event) => {
-			// This prevents ghost click.
-			event.preventDefault();
-
-			this.setState({
-				open: true,
-				anchorEl: event.currentTarget,
-			});
-		};
-		this.handleRequestClose = () => {
-			this.setState({
-				open: false,
-			});
-		};
-	}
-
 	render() {
 		return (
 			<div className='app-bar'>

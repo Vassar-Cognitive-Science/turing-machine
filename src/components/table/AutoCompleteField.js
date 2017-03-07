@@ -19,6 +19,7 @@ class AutoCompleteField extends React.Component {
                               id={this.props.id}
                               maxLength={this.props.maxLength}
                               openOnFocus={this.props.openOnFocus}
+                              style={{width: "13vw"}}
             	/>
             </MuiThemeProvider>
 		)
