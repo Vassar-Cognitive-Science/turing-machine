@@ -9,14 +9,11 @@
   padding-top: 10px;
   display: table;
   margin: 0 auto; 
-}
-
-.tape-row {
-  display: table-cell;
+  overflow-x: auto;
 }
 
 .head-row:after {
-  display: table-cell;
+  display: inline-block;
 }
 
 
@@ -34,6 +31,9 @@
   padding-left: 1.5px;
 }
 
+.header {
+  max-width: 340px;
+}
 
 .hair {
   /*width: 30px;*/
@@ -74,6 +74,7 @@
 }
 
 .square {
+  display: table-cell;
   background: #fff;
   border: 1px solid ;
   float: left;

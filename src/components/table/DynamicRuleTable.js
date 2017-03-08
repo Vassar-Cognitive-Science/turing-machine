@@ -97,7 +97,7 @@ class DynamicRuleTable extends React.Component {
               </thead>
                  <tbody>
                   {this.props.rowsById.map((id) => (
-                    <tr id={id}  style={(this.props.highlightedRow === id)?{backgroundColor: "#87dbff" }:{backgroundColor: "#fff"}}>
+                    <tr id={id} key={id} style={(this.props.highlightedRow === id)?{backgroundColor: "#87dbff" }:{backgroundColor: "#fff"}}>
                       <td>
                         <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />  
                       </td>

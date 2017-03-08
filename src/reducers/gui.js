@@ -8,9 +8,6 @@ import {
 } from '../constants/GUISettings';
 import { moveLeft, moveRight } from './tape';
 
-export default function(state, action) {
-
-}
 
 export function adjustHeadWidth(state, action) {
 	let text = (action.text) ? action.text : state.tapeInternalState.toString();
@@ -24,6 +21,7 @@ export function adjustHeadWidth(state, action) {
 	} else {
 		let diff = textLength - defaultTextLength;
 		newWidth = INIT_HEAD_WIDTH + 10 * diff;
+		console.log(newWidth)
 		newLeftOffset = INIT_HEAD_LEFT_OFFSET - 5 * diff;
 	}
 
@@ -59,7 +57,7 @@ export function setAnimationSpeed(state, action) {
 
 /*
 	WRAPPER FUNCTION:
-	Handles model changes and view changes
+	Handles model changes and view changes for Head
 */
 export function moveHead(state, action) {
 	let new_head_x, new_state;

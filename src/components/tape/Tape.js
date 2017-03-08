@@ -45,7 +45,7 @@ class Tape extends React.Component {
                 onTouchTap={this.props.rollLeft} touch={true} style={styles.style} 
                 iconStyle={styles.mediumIcon} tooltipPosition="bottom-left" disabled={this.props.isRunning}><RollLeft /></IconButton></div>
               <div>
-                <div className="head-row"><Head /></div>
+                <Head />
                 <div className="tape-row">
                   {populatedSquares(N_CELLS).map((i) => (
                     <Square key={standardizeTapeCellId(i)} order={i} id={standardizeTapeCellId(i)} />

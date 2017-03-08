@@ -38,3 +38,5 @@ jspm_packages
 
 # test and modules
 tests\ and\ raw\ models
+
+*.duplicate.*

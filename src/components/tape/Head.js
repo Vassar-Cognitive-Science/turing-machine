@@ -23,7 +23,7 @@ class Head extends React.Component {
         position={{x: (this.props.head_position)?this.props.head_position:head_x(), y: 0}}
         grid={[head_move_interval(), 0]}
         zIndex={100}
-        bounds={{left: HEAD_LEFT_BOUNDARY, top: 0, right: head_right_boundary(), bottom: 0}} 
+        bounds={{left: HEAD_LEFT_BOUNDARY, top: 0, right: head_right_boundary()}} 
         onStart={this.props.handleStart}
         onDrag={this.props.handleDrag}
         onStop={this.props.handleStop}
