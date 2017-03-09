@@ -1,4 +1,4 @@
-import { LEFT, BLANK } from '../constants/ReservedWords';
+import { LEFT, BLANK } from '../constants/index';
 import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/GUISettings';
 import { initialState } from './index';
 
@@ -188,7 +188,7 @@ export function writeIntoTape(state, action) {
 	let target = findCell(new_state, new_state.tapePointer);
 	let val = action.val;
 	if (val === BLANK)
-		val = "";
+		val = ""; // "#"?
 	new_state[standardizeCellId(state.tapePointer)] = createCell(target.cur, target.prev, target.next, val);
 
 	return new_state;
@@ -197,8 +197,6 @@ export function writeIntoTape(state, action) {
 export function fillTape(state, action) {
 	let new_state = Object.assign({}, state);
 	let val = action.val;
-	if (val === BLANK)
-		val = "";
 
 	let target;
 	if (action.id) {

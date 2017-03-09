@@ -1,4 +1,4 @@
-import { HALT } from '../constants/ReservedWords';
+import { HALT } from '../constants/index';
 import { REACH_HALT, UNDEFINED_RULE, NO_MORE_BACK } from '../constants/ErrorMessages';
 import * as tape from './tape';
 import * as gui from './gui';

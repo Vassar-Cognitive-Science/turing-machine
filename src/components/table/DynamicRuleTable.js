@@ -6,7 +6,7 @@ import {Card, CardActions } from 'material-ui/Card';
 import DeleteRowButton from '../../containers/table/DeleteRowButtonContainer';
 import SwitchDirectionButton from '../../containers/table/SwitchDirectionButtonContainer';
 import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer';
-import { LEFT, RIGHT } from '../../constants/ReservedWords';
+import { LEFT, RIGHT } from '../../constants/index';
 import {
   TABLE_ROW_INPUT_WIDTH,
   TABLE_ROW_STATE_WIDTH,

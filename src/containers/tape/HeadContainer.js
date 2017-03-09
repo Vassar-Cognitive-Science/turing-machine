@@ -4,7 +4,7 @@ import { moveHeadAction } from '../../actions/guiActions';
 import { adjustHeadWidthAction } from '../../actions/guiActions';
 import Head from '../../components/tape/Head';
 import { getAllStates } from '../table/AutoCompleteFieldContainer';
-import { HALT, standardFilter } from '../../constants/ReservedWords';
+import { HALT, standardFilter } from '../../constants/index';
 
 let OLD_X = 0; 
 const setOldX = (e) => {

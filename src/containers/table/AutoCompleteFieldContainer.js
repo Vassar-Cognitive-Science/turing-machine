@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import AutoCompleteField from '../../components/table/AutoCompleteField';
 import { setRowInStateAction, setRowReadAction, setRowWriteAction, setRowNewStateAction } from '../../actions/tableActions';
 import { FIELD_TYPES } from '../../components/table/DynamicRuleTable';
-import { HALT } from '../../constants/ReservedWords';
+import { HALT, BLANK } from '../../constants/index';
 
 export const standardFilter = (searchText, key) => (searchText !== "" && key.startsWith(searchText) && key !== searchText);
 
@@ -79,12 +79,14 @@ const mapStateToProps = (state, ownProps) => {
 			error = thisRow.read_error;
 			dataSource = getAllInputs(state);
 			filter = (searchText, key) => (true);
+			fontColor = (value === BLANK) ? "#1976D2" : fontColor; // #FF3D00
 			break;
 		case FIELD_TYPES[2]:
 			value = thisRow.write;
 			error = thisRow.write_error;
 			dataSource = getAllInputs(state);
 			filter = (searchText, key) => (true);
+			fontColor = (value === BLANK) ? "#1976D2" : fontColor; // #FF3D00
 			break;
 		default:
 			break;

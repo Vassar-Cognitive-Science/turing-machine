@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Tape from '../../components/tape/Tape';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
-import { HALT } from '../../constants/ReservedWords'
+import { HALT } from '../../constants/index'
 
 const rollLeft = (dispatch) => {
     rollTapeToRight(dispatch, true)

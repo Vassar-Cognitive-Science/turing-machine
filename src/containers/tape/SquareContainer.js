@@ -48,8 +48,10 @@ const onKeyDown = (e, dispatch, ownProps) => {
   /* backspace, delete */
   else if (key === 8 || key === 46) {
     dispatch(fillTapeAction(activeId(), ""));
-  } else if ((key >= 48 && key <= 90) || (key >= 96 && key <= 105)) {
-    dispatch(fillTapeAction(activeId(), String.fromCharCode(key)));
+  } else if ((key >= 48 && key <= 90) || (key >= 96 && key <= 105) || (key === 51 && e.shiftKey)) {
+    let val;
+    val = (key === 51 && e.shiftKey) ? "#" : String.fromCharCode(key);
+    dispatch(fillTapeAction(activeId(), val));
     rollTapeToLeft(dispatch, ownProps.mark === MARK_LAST, ownProps);
   }
 }
