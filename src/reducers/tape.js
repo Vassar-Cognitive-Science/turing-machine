@@ -166,14 +166,15 @@ export function expandBeforeHead(state, action) {
 
 export function initializeTape(state, action) {
 	var new_state = Object.assign({}, state, {
+		anchorCell: 0,
 		tapeHead: 0,
 		tapeTail: 0,
 		tapeCellsById: [],
 
 		tapePointer: (action.controlled) ? state.tapePointer : Math.floor(state.cellNum / 2),
-		headWidth: initialState.headWidth, 
-		headHeight: initialState.headHeight, 
-		headLeftOffset: initialState.headLeftOffset, 
+		headWidth: initialState.headWidth,
+		headHeight: initialState.headHeight,
+		headLeftOffset: initialState.headLeftOffset,
 		headX: (action.controlled) ? state.headX : HEAD_LEFT_BOUNDARY + HEAD_MOVE_INTERVAL * Math.floor(state.cellNum / 2),
 	});
 	for (let i = 0; i < state.tapeCellsById.length; i++) {
@@ -207,7 +208,7 @@ export function fillTape(state, action) {
 		target = findCell(state, position);
 		new_state[standardizeCellId(position)] = createCell(target.cur, target.prev, target.next, val);
 	}
-		
+
 	return new_state;
 }
 
@@ -221,7 +222,7 @@ export function moveTapeRight(state, action) {
 	if (position + 1 >= state.tapeTail) {
 		appendAfterTailHelper(new_state, null);
 	}
-	document.getElementById(standardizeCellId(state.cellNum-1)).focus()
+	document.getElementById(standardizeCellId(state.cellNum - 1)).focus()
 
 	return new_state;
 }
@@ -233,7 +234,7 @@ export function moveTapeLeft(state, action) {
 		tapePointer: state.tapePointer - 1
 	})
 	let position = action.position + new_state.anchorCell;
-	if (position -1 <= state.tapeHead) {
+	if (position - 1 <= state.tapeHead) {
 		insertBeforeHeadHelper(new_state, null);
 	}
 	document.getElementById(standardizeCellId(0)).focus()
@@ -251,7 +252,10 @@ export function moveLeft(state, action) {
 			insertBeforeHeadHelper(new_state, null)
 	}
 
-	return highlightCorrespondingCell(new_state, {target: new_state.tapePointer, flag: true});
+	return highlightCorrespondingCell(new_state, {
+		target: new_state.tapePointer,
+		flag: true
+	});
 }
 
 export function moveRight(state, action) {
@@ -264,9 +268,12 @@ export function moveRight(state, action) {
 		if (new_state.anchorCell + new_state.cellNum >= state.tapeTail) {
 			appendAfterTailHelper(new_state, null)
 		}
-	} 
+	}
 
-	return highlightCorrespondingCell(new_state, {target: new_state.tapePointer, flag: true});
+	return highlightCorrespondingCell(new_state, {
+		target: new_state.tapePointer,
+		flag: true
+	});
 }
 
 export function highlightCorrespondingCell(state, action) {
@@ -285,4 +292,3 @@ export function setInternalState(state, action) {
 
 
 /**** Reducer functions ****/
-
