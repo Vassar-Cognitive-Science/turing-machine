@@ -6,7 +6,7 @@ import * as machine from './machine';
 import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
 
 export const initialState = {
-	/* GUI settings */
+/* GUI settings */
 
 	/* TAPE GUI settings */
 
@@ -18,14 +18,11 @@ export const initialState = {
 	// tapePointer
 	/*** The above five are initialized by gui.resizeScreenAndTape  ***/
 
-	/* TAPE GUI settings */
-
-	/* HEAD GUI settings */
+	/* HEAD Width settings */
 	headWidth: INIT_HEAD_WIDTH, // control Tape Head width
 	headHeight: INIT_HEAD_HEIGHT, // control Tape Head height
 	headLeftOffset: INIT_HEAD_LEFT_OFFSET, // control Tape Head input box position 
-	
-	/* HEAD GUI settings */
+	/* HEAD Width settings */
 
 	/* MACHINE GUI settings */
 	isRunning: false, // is the machine running
@@ -40,17 +37,17 @@ export const initialState = {
 	redoEditHistory: [],
 	/* MACHINE GUI settings */
 
-	/* GUI settings */
+/* GUI settings */
 
-	/* Tape and Head */
+/* Tape and Head */
 	anchorCell: 0, // serves to help mapping presented cells to virtual cells in tape
 	tapeHead: 0, // Tape head, see linked list structure 
 	tapeTail: 0, // Tape tail, see linked list structure
 	tapePointer: 0, // Tells where is the Tape Head in Tape
 	tapeCellsById: [], // array of virtual cells' ids
-	tapeInternalState: "0", // Tape Head state
+	tapeInternalState: "0", // Tape Head state, default is "0"
 	highlightedCellOrder: -1,
-	/* Tape and Head */
+/* Tape and Head */
 
 	/*
 
@@ -64,10 +61,10 @@ export const initialState = {
 
 	*/
 
-	/* Rules */
+/* Rules */
 	// rowsById: [], // array of rules' id's
 	highlightedRow: null,
-	/* Rules */
+/* Rules */
 
 	/*
 	A row is a plain object that holds information for inputed rule and how it is presented

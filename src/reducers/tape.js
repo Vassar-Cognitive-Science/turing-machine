@@ -50,7 +50,6 @@ export function findCell(state, id) {
 	return null;
 }
 
-
 export function read(state) {
 	var cur = findCell(state, state.tapePointer);
 	if (cur == null)

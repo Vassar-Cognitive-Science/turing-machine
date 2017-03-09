@@ -9,8 +9,6 @@ import { initMachineAction } from './actions/index';
 import reducers from './reducers';
 import App from './components/App';
 
-injectTapEventPlugin();
-
 const store = createStore(reducers, applyMiddleware(thunk));
 
 window.addEventListener('resize', () => {
@@ -19,6 +17,7 @@ window.addEventListener('resize', () => {
 
 store.dispatch(initMachineAction());
 
+injectTapEventPlugin();
 ReactDOM.render(
   <Provider store={store}><App /></Provider>,
   document.getElementById('container')
