@@ -8,14 +8,22 @@
 .tape-with-button {
   padding-top: 10px;
   display: table;
+  width: 91%;
   margin: 0 auto; 
-  overflow-x: auto;
 }
 
-.head-row:after {
-  display: inline-block;
+.square {
+  background: #fff;
+  border: 1px solid ;
+  font-size: 24px;
+  font-weight: bold;
+  height: 50px;
+  width: 50px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
 }
-
 
 .roll-left {
   display: table-cell;
@@ -28,15 +36,17 @@
   display: table-cell;
   vertical-align: middle;
   height:145px;
-  padding-left: 1.5px;
+  padding-left: 0px;
 }
+
+/***  HEAD  ***/
+
 
 .header {
   max-width: 340px;
 }
 
 .hair {
-  /*width: 30px;*/
   height: 5px;
   position: relative;
   border: 2px solid black;
@@ -50,7 +60,6 @@
   font-weight: bold;
   margin: 0 auto; 
   height: auto;
-  /*width: 30px;*/
   position: relative;
   text-align: center;
 }
@@ -72,20 +81,4 @@
   border: 1px solid black;
   background-color: black;
 }
-
-.square {
-  display: table-cell;
-  background: #fff;
-  border: 1px solid ;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-/*  height: 3.58127vw;
-  width: 3.58127vw;*/
-  height: 50px;
-  width: 50px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-}
+/***  HEAD  ***/

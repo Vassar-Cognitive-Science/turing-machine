@@ -1,6 +1,7 @@
 // General
 export const MAX_CELL_NUM = 21;
-export const BREAK_POINT = 1045; // for responsive tape
+export const MIN_CELL_NUM = 5;
+export const BREAK_POINT = 1168; // for responsive tape
 
 // Animation speed
 export const ANIMATION_SPEED = 800.0; // 800ms

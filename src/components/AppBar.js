@@ -30,7 +30,7 @@ class AppToolBar extends Component {
 		};
 	}
 
-	handleTouchTap = (event) => {
+	handlePopoverTouchTap = (event) => {
 		// This prevents ghost click.
 		event.preventDefault();
 
@@ -40,7 +40,7 @@ class AppToolBar extends Component {
 		});
 	};
 
-	handleRequestClose = () => {
+	handlePopoverRequestClose = () => {
 		this.setState({
 			open: false,
 		});
@@ -148,14 +148,14 @@ class AppToolBar extends Component {
 							</ToolbarGroup>
 							<ToolbarGroup lastChild={true}>
 								<IconButton tooltip="More tools" touch={true} tooltipPosition="bottom-left" 
-							          onTouchTap={this.handleTouchTap}
+							          onTouchTap={this.handlePopoverTouchTap}
 							        ><Hamburger /></IconButton>
 							        <Popover
 							          open={this.state.open}
 							          anchorEl={this.state.anchorEl}
 							          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
 							          targetOrigin={{horizontal: 'right', vertical: 'top'}}
-							          onRequestClose={this.handleRequestClose}
+							          onRequestClose={this.handlePopoverRequestClose}
 							        >
 							        <Menu>
 							        	<MenuItem primaryText="Test" leftIcon={<Test />} onTouchTap={this.props.handleTest}/>
@@ -200,14 +200,14 @@ class AppToolBar extends Component {
 							</ToolbarGroup>
 							<ToolbarGroup lastChild={true}>
 								<IconButton tooltip="More tools" touch={true} tooltipPosition="bottom-left" 
-							          onTouchTap={this.handleTouchTap}
+							          onTouchTap={this.handlePopoverTouchTap}
 							        ><Hamburger /></IconButton>
 							        <Popover
 							          open={this.state.open}
 							          anchorEl={this.state.anchorEl}
 							          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
 							          targetOrigin={{horizontal: 'right', vertical: 'top'}}
-							          onRequestClose={this.handleRequestClose}
+							          onRequestClose={this.handlePopoverRequestClose}
 							        >
 							        <Menu>
 							       		<MenuItem primaryText="Undo" leftIcon={<Undo />} onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}/>
@@ -247,14 +247,14 @@ class AppToolBar extends Component {
 							</ToolbarGroup>
 							<ToolbarGroup lastChild={true}>
 								<IconButton tooltip="More tools" touch={true} tooltipPosition="bottom-left" 
-							          onTouchTap={this.handleTouchTap}
+							          onTouchTap={this.handlePopoverTouchTap}
 							        ><Hamburger /></IconButton>
 							        <Popover
 							          open={this.state.open}
 							          anchorEl={this.state.anchorEl}
 							          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
 							          targetOrigin={{horizontal: 'right', vertical: 'top'}}
-							          onRequestClose={this.handleRequestClose}
+							          onRequestClose={this.handlePopoverRequestClose}
 							        >
 							        <Menu>
 							        	<MenuItem primaryText={"SPEED: " + this.props.animationSpeedLabel}

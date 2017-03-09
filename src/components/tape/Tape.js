@@ -25,7 +25,6 @@ const styles = {
     margin: -10
   },
   style: {
-    // background: "#81D4FA", 
     height: 50.7
   }
 
@@ -38,27 +37,25 @@ class Tape extends React.Component {
       <div className="card-of-tape">
          <MuiThemeProvider>
           <Card>
-            <div className="machine-reported-error" style={{visibility:(this.props.showReportedError)?"visible":"hidden", color: this.props.messageColor}}>
-            {this.props.machineReportError}
+            <div className="machine-reported-error" 
+              style={{visibility:(this.props.showReportedError)?"visible":"hidden", color: this.props.messageColor}}>
+              {this.props.machineReportError}
             </div>
             <div className="tape-with-button">
               <div className="roll-left"><IconButton tooltip="Roll Left" 
                 onTouchTap={this.props.rollLeft} touch={true} style={styles.style} 
                 iconStyle={styles.mediumIcon} tooltipPosition="bottom-left" disabled={this.props.isRunning}><RollLeft /></IconButton></div>
-              <div>
-                <Head />
-                <div className="tape-row" id="tape-row" value={this.props.cellNum}>
-                  {populatedSquares(this.props.cellNum).map((i) => {
-                    let mark = i;
-                    if (i === 0) mark = MARK_FIRST;
-                    if (i === this.props.cellNum - 1) mark = MARK_LAST;
-                    return <Square key={standardizeCellId(i)} order={i} mark={mark} id={standardizeCellId(i)} />
-                    })}
-                </div>
-              </div>
+              <Head />
+              {populatedSquares(this.props.cellNum).map((i) => {
+                let mark = i;
+                if (i === 0) mark = MARK_FIRST;
+                if (i === this.props.cellNum - 1) mark = MARK_LAST;
+                return <Square key={standardizeCellId(i)} order={i} mark={mark} id={standardizeCellId(i)} />
+                })}
               <div className="roll-right"><IconButton tooltip="Roll Right" 
                 onTouchTap={this.props.rollRight} touch={true} style={styles.style} 
-                iconStyle={styles.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}><RollRight /></IconButton></div>
+                iconStyle={styles.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}><RollRight /></IconButton>
+              </div>
             </div>
           </Card>
         </MuiThemeProvider>

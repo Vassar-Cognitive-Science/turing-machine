@@ -8,18 +8,18 @@
 1. Head expands with label size. -Done
 
 2017/2/26
-1. Replace Material-Ui table with pure css properties. -Plan DIscarded 
-2. Replace arbitrary properties of elements with calculated ones, DOM manipuations with changing of css properties, and based on these, implement animation. -Done.
-3. Optimaize performances based on above changes. -Done.
+1. Replace Material-Ui table with pure css properties. -Plan Changed, Done
+2. Replace arbitrary properties of elements with calculated ones, DOM manipuations with changing of css properties, and based on these, implement animation. -Done
+3. Optimaize performances based on above changes. -Done
 
 2017/2/28
-1. make sure that the GUI scales for mobile devices
+1. make sure that the GUI scales for mobile devices. -Done
 2. merge the two app bars together into a single bar
 
 2017/3/1
 1. default state 0 for Head. -Done
-2. HALT always an option
-3. filter function for Head autocomplete 
+2. HALT always an option. -Done
+3. filter function for Head autocomplete. -Done
 
 2017/3/4
 1. initializeTape, initializeMachine, restore, stepBack (while running should make input disabled), in question -Solved.
@@ -27,3 +27,6 @@
 
 2017/3/6
 1. Policy on undo/redo, restore/stepback
+
+2017/3/8
+1. Mobile screen disables Head movement, event for mouse does not work
