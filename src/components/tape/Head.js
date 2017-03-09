@@ -5,10 +5,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
   INIT_HAIR_STYLES,
   INIT_HEAD_STYLES,
-  head_move_interval,
   HEAD_LEFT_BOUNDARY,
-  head_right_boundary,
-  head_x,
+  HEAD_MOVE_INTERVAL,
   AUTO_COMPLETE_MAX_LENGTH
 } from '../../constants/GUISettings';
 
@@ -20,10 +18,10 @@ class Head extends React.Component {
       <Draggable
         axis="x"
         handle=".header"
-        position={{x: (this.props.head_position)?this.props.head_position:head_x(), y: 0}}
-        grid={[head_move_interval(), 0]}
+        position={{x: this.props.head_position, y: 0}}
+        grid={[HEAD_MOVE_INTERVAL, 0]}
         zIndex={100}
-        bounds={{left: HEAD_LEFT_BOUNDARY, top: 0, right: head_right_boundary()}} 
+        bounds={{left: HEAD_LEFT_BOUNDARY, top: 0, right: this.props.rightBoundary}} 
         onStart={this.props.handleStart}
         onDrag={this.props.handleDrag}
         onStop={this.props.handleStop}

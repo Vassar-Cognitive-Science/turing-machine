@@ -1,66 +1,62 @@
 import { connect } from 'react-redux';
-import { standardizeCellId } from '../../reducers/tape';
+import { standardizeCellId, CELL_ID_PREFIX } from '../../reducers/tape';
 import { moveTapeRightAction, moveTapeLeftAction, fillTapeAction } from '../../actions/tapeActions';
-import { N_CELLS } from '../../constants/GUISettings';
-import Square, { standardizeTapeCellId, getTapeCellNumber } from '../../components/tape/Square';
+import Square from '../../components/tape/Square';
+import { MARK_LAST, MARK_FIRST } from '../../components/tape/Tape';
 
-const isNowLastCell = () => standardizeTapeCellId(N_CELLS-1) === document.activeElement.id;
-
-const isNowFirstCell = () => standardizeTapeCellId(0) === document.activeElement.id;
+const getTapeCellNumber = (fullId) => parseInt(fullId.slice(CELL_ID_PREFIX.length, fullId.length), 10);
 
 const focusOnPrev = () => {
   var prevId = getTapeCellNumber(document.activeElement.id) - 1;
-  document.getElementById(standardizeTapeCellId(prevId)).focus();
+  document.getElementById(standardizeCellId(prevId)).focus();
 }
 
 const focusOnNext = () => {
   let nextId = getTapeCellNumber(document.activeElement.id) + 1;
-  document.getElementById(standardizeTapeCellId(nextId)).focus();
+  document.getElementById(standardizeCellId(nextId)).focus();
 }
 
 const activeId = () => (getTapeCellNumber(document.activeElement.id));
 
-export const rollTapeToRight = (dispatch, passedFlag=false) => {
-  if (isNowFirstCell() || passedFlag) {
-      dispatch(moveTapeLeftAction(0));
-    } else {
-      focusOnPrev();
-    }
+export const rollTapeToRight = (dispatch, passedFlag = false, ownProps) => {
+  if (passedFlag || ownProps.order === MARK_FIRST) {
+    dispatch(moveTapeLeftAction()); // focus handled in reducer
+  } else {
+    focusOnPrev();
+  }
 }
 
-export const rollTapeToLeft = (dispatch, passedFlag=false) => {
-  if (isNowLastCell() || passedFlag) {
-      dispatch(moveTapeRightAction(N_CELLS-1));
-    } else {
-      focusOnNext();
-    }
+export const rollTapeToLeft = (dispatch, passedFlag = false, ownProps) => {
+  if (passedFlag || ownProps.mark === MARK_LAST) {
+    dispatch(moveTapeRightAction()); // focus handled in reducer
+  } else {
+    focusOnNext();
+  }
 }
 
-const onKeyDown = (e, dispatch) => {
+const onKeyDown = (e, dispatch, ownProps) => {
   var key = e.which;
 
   /* left arrow */
-  if (key === 37) { 
-    rollTapeToRight(dispatch);
+  if (key === 37) {
+    rollTapeToRight(dispatch, false, ownProps);
   }
   /* right arrow */
-  else if (key === 39) { 
-    rollTapeToLeft(dispatch);
+  else if (key === 39) {
+    rollTapeToLeft(dispatch, false, ownProps);
   }
   /* backspace, delete */
-  else if (key === 8 || key === 46) { 
+  else if (key === 8 || key === 46) {
     dispatch(fillTapeAction(activeId(), ""));
-  } 
-
-  else if ((key >= 48 && key <= 90) || (key >= 96 && key <= 105)) {
+  } else if ((key >= 48 && key <= 90) || (key >= 96 && key <= 105)) {
     dispatch(fillTapeAction(activeId(), String.fromCharCode(key)));
-    rollTapeToLeft(dispatch);
+    rollTapeToLeft(dispatch, ownProps.mark === MARK_LAST, ownProps);
   }
 }
 
 
 const mapStateToProps = (state, ownProps) => {
-  var tar = state[standardizeCellId(state.anchorCell+ownProps.order)];
+  var tar = state[standardizeCellId(state.anchorCell + ownProps.order)];
   var val = (tar !== undefined && tar !== null) ? tar.val : "";
 
   return {
@@ -70,7 +66,9 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  onKeyDown: (e) => { onKeyDown(e, dispatch) },
+  onKeyDown: (e) => {
+    onKeyDown(e, dispatch, ownProps)
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Square);

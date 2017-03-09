@@ -7,10 +7,10 @@ export function writeIntoTapeAction(val = null) {
 	}
 }
 
-export function initializeTapeAction(tapeSize) {
+export function initializeTapeAction(controlled) {
 	return {
 		type: actionTypes.INITIALIZAE_TAPE,
-		tapeSize: tapeSize
+		controlled: controlled
 	};
 } 
 
@@ -22,17 +22,15 @@ export function fillTapeAction(position, val=null) {
 	}
 } 
 
-export function moveTapeRightAction(position) {
+export function moveTapeRightAction() {
 	return {
 		type: actionTypes.MOVE_TAPE_RIGHT,
-		position: position
 	}
 }
 
-export function moveTapeLeftAction(position) {
+export function moveTapeLeftAction() {
 	return {
 		type: actionTypes.MOVE_TAPE_LEFT,
-		position: position
 	}
 }
 

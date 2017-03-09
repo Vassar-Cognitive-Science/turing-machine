@@ -3,13 +3,20 @@ import * as tape from './tape';
 import * as table from './table';
 import * as gui from './gui';
 import * as machine from './machine';
-import { N_CELLS, INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED, head_x } from '../constants/GUISettings';
+import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
 
 export const initialState = {
 	/* GUI settings */
 
 	/* TAPE GUI settings */
-	cellNum: N_CELLS, // number of presented cells
+
+	/*** The following five are initialized by gui.resizeScreenAndTape  ***/
+	screenSize: (window) ? window.innerWidth : 1396,
+	cellNum: 0, // number of presented cells
+	rightBoundary: 0, 
+	headX: 0, // x coordinate of Tape Head
+	// tapePointer
+	/*** The above five are initialized by gui.resizeScreenAndTape  ***/
 
 	/* TAPE GUI settings */
 
@@ -17,7 +24,7 @@ export const initialState = {
 	headWidth: INIT_HEAD_WIDTH, // control Tape Head width
 	headHeight: INIT_HEAD_HEIGHT, // control Tape Head height
 	headLeftOffset: INIT_HEAD_LEFT_OFFSET, // control Tape Head input box position 
-	headX: head_x(), // x coordinate of Tape Head
+	
 	/* HEAD GUI settings */
 
 	/* MACHINE GUI settings */
@@ -132,6 +139,8 @@ function rootReducer (state=initialState, action, clearRedo) {
 	s4 = machineReducer(s3, action);
 
 	switch(action.type) {
+		case actionTypes.INITIALIZAE_MACHINE:
+			return initializeMachine(state, action);
 		case actionTypes.UNDO:
 			return cleanSideEffects(undo(s4, action), false);
 		case actionTypes.REDO:
@@ -146,8 +155,8 @@ function rootReducer (state=initialState, action, clearRedo) {
 Initialize the machine
 */
 function initializeMachine(state, action) {
-	let new_state = initialState;
-	return tape.initializeTape(new_state, action);
+	let new_state = gui.resizeScreenAndTape(initialState, {screenWidth: window.innerWidth});
+	return tape.initializeTape(new_state, { controlled: true });
 }
 
 /*
@@ -271,9 +280,6 @@ function undo(state, action) {
 function machineReducer(state, action) {
 	let new_state = state;
 	switch (action.type) {
-		case actionTypes.INITIALIZAE_MACHINE:
-			new_state = initializeMachine(state, action);
-			break;
 
 			/* Machine actions */
 		case actionTypes.PRE_STEP_FORWARD:
@@ -324,12 +330,16 @@ function guiReducer(state, action) {
 		case actionTypes.MOVE_HEAD:
 			new_state = gui.moveHead(state, action);
 			break;
+		case actionTypes.RESIZE_SCREEN_AND_TAPE:
+			changed = false;
+			new_state = gui.resizeScreenAndTape(state, action);
+			break;
 		/* GUI info */
 		default:
 			changed = false;
 	}
 
-	return ((changed) ? cleanSideEffects(new_state) : state);
+	return ((changed) ? cleanSideEffects(new_state) : new_state);
 }
 
 
@@ -382,7 +392,7 @@ function tapeReducer(state, action, clearRedo) {
 			changed = false;
 	}
 
-	return ((changed) ? cleanSideEffects(new_state, clearRedo) : state);
+	return ((changed) ? cleanSideEffects(new_state, clearRedo) : new_state);
 }
 
 /*
@@ -424,7 +434,7 @@ function ruleReducer(state, action, clearRedo) {
 			changed = false;
 	}
 
-	return ((changed) ? cleanSideEffects(new_state, clearRedo) : state);
+	return ((changed) ? cleanSideEffects(new_state, clearRedo) : new_state);
 }
 
 

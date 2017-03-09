@@ -4,23 +4,14 @@ import { moveHeadAction } from '../../actions/guiActions';
 import { adjustHeadWidthAction } from '../../actions/guiActions';
 import Head from '../../components/tape/Head';
 import { getAllStates } from '../table/AutoCompleteFieldContainer';
-import {
-  HEAD_LEFT_BOUNDARY,
-  head_right_boundary,
-  head_x,
-  head_move_interval,
-} from '../../constants/GUISettings';
 
-let OLD_X = head_x(); 
-
-
-const setOldX = (ui) => {
-    if ((ui.x >= HEAD_LEFT_BOUNDARY) && (ui.x <= 989)) 
-        OLD_X = ui.x;
+let OLD_X = 0; 
+const setOldX = (e) => {
+    OLD_X = e.pageX;
 }
 
 const headOnStart = (e, ui, dispatch) => {
-    setOldX(ui);
+    setOldX(e);
     dispatch(highlightCorrespondingCellAction(true));
     window.getSelection().removeAllRanges()
 }
@@ -31,13 +22,13 @@ const headOnStop = (e, ui, dispatch) => {
 
 const headOnDrag = (e, ui, dispatch) => {
     window.getSelection().removeAllRanges()
-    if (ui.x < OLD_X && ui.x >= (HEAD_LEFT_BOUNDARY-head_move_interval()) && ui.x <= head_right_boundary()) { // Left
+    if (e.pageX < OLD_X) { // Left
         dispatch(moveHeadAction(true)); // left
 
-        setOldX(ui);
-    } else if (ui.x > OLD_X && ui.x <= head_right_boundary()+head_move_interval() && ui.x >= 9) {
+        setOldX(e);
+    } else if (e.pageX > OLD_X) {
         dispatch(moveHeadAction(false)) // right
-        setOldX(ui);
+        setOldX(e);
     }
 }
 
@@ -57,6 +48,7 @@ const mapStateToProps = (state, ownProps) => {
     dataSource: Object.keys(dataSource),
     filter: filter,
     isRunning: state.isRunning,
+    rightBoundary: state.rightBoundary,
 
     hair_styles: {
       width: state.headWidth,
@@ -82,7 +74,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   onUpdateInput: (searchText) => {
     onUpdateInput(searchText, dispatch)
-  }
+  },
 })
 
 

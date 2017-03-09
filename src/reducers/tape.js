@@ -1,4 +1,5 @@
 import { LEFT, BLANK } from '../constants/ReservedWords';
+import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/GUISettings';
 import { initialState } from './index';
 
 /**** Constants ****/
@@ -23,7 +24,7 @@ const initialStateForTape = {
 }
 */
 
-const CELL_ID_PREFIX = "TAPE-CELL ";
+export const CELL_ID_PREFIX = "TAPE-CELL ";
 /**** Constants ****/
 
 /**** Exported Helper functions ****/
@@ -169,17 +170,16 @@ export function initializeTape(state, action) {
 		tapeTail: 0,
 		tapeCellsById: [],
 
-		tapePointer: Math.floor(action.tapeSize / 2),
+		tapePointer: (action.controlled) ? state.tapePointer : Math.floor(state.cellNum / 2),
 		headWidth: initialState.headWidth, 
 		headHeight: initialState.headHeight, 
 		headLeftOffset: initialState.headLeftOffset, 
-		headX: initialState.headX, 
-		
+		headX: (action.controlled) ? state.headX : HEAD_LEFT_BOUNDARY + HEAD_MOVE_INTERVAL * Math.floor(state.cellNum / 2),
 	});
 	for (let i = 0; i < state.tapeCellsById.length; i++) {
 		delete new_state[state.tapeCellsById[i]];
 	}
-	expandAfterTailHelper(new_state, action.tapeSize);
+	expandAfterTailHelper(new_state, state.cellNum);
 	return new_state;
 }
 
@@ -213,19 +213,22 @@ export function fillTape(state, action) {
 	return new_state;
 }
 
+// side effect here
 export function moveTapeRight(state, action) {
 	let new_state = Object.assign({}, state, {
 		anchorCell: state.anchorCell + 1,
 		tapePointer: state.tapePointer + 1
 	})
-	let position = action.position + new_state.anchorCell;
+	let position = state.cellNum + new_state.anchorCell;
 	if (position + 1 >= state.tapeTail) {
 		appendAfterTailHelper(new_state, null);
 	}
+	document.getElementById(standardizeCellId(state.cellNum-1)).focus()
 
 	return new_state;
 }
 
+// side effect here
 export function moveTapeLeft(state, action) {
 	let new_state = Object.assign({}, state, {
 		anchorCell: state.anchorCell - 1,
@@ -235,6 +238,7 @@ export function moveTapeLeft(state, action) {
 	if (position -1 <= state.tapeHead) {
 		insertBeforeHeadHelper(new_state, null);
 	}
+	document.getElementById(standardizeCellId(0)).focus()
 
 	return new_state;
 }

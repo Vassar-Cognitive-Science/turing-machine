@@ -12,7 +12,6 @@ import {
 	undoAction,
 	redoAction
 } from '../actions/index';
-import { N_CELLS } from '../constants/GUISettings';
 
 const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFixed(1));
 
@@ -61,7 +60,7 @@ const handleSave = (dispatch, ownProps) => {
 
 const handleClearTape = (dispatch, ownProps) => {
 	dispatch(stopAction());
-	dispatch(initializeTapeAction(N_CELLS));
+	dispatch(initializeTapeAction(false));
 }
 
 const handleSpeedChange = (newValue, dispatch, ownProps) => {

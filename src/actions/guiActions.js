@@ -26,5 +26,12 @@ export function moveHeadAction(moveLeft) { // moveLeft: boolean
 	return {
 		type: actionTypes.MOVE_HEAD,
 		moveLeft: moveLeft
-	}
+	};
+}
+
+export function resizeScreenAndTapeAction(width) {
+	return {
+		type: actionTypes.RESIZE_SCREEN_AND_TAPE,
+		screenWidth: width
+	};
 }

@@ -73,14 +73,14 @@ class AppToolBar extends Component {
 
 								<ToolbarSeparator />
 
-								<label className="ipad-speed-label">
+								<label className="speed-label">
 									SPEED
 								</label>
 								<Slider style={{width: "7.2vw"}} sliderStyle={{bottom: -12}} axis="x"  
 									min={0.1} max={3} step={0.1}
 									defaultValue={1} value={this.props.animationSpeed} 
 									onChange={this.props.handleSpeedChange} />
-								<label className="ipad-speed-label">
+								<label className="speed-label">
 									{this.props.animationSpeedLabel}
 								</label>
 
@@ -131,7 +131,7 @@ class AppToolBar extends Component {
 								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
 										onTouchTap={this.props.handleRestore}><Restore /></IconButton>
 								<ToolbarSeparator />
-								<label className="ipad-speed-label">
+								<label className="speed-label">
 									SPEED: {this.props.animationSpeedLabel}
 								</label>
 								<Slider style={{width: "7.2vw"}} sliderStyle={{bottom: -12}} axis="x"  
@@ -189,7 +189,7 @@ class AppToolBar extends Component {
 								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
 										onTouchTap={this.props.handleRestore}><Restore /></IconButton>
 								<ToolbarSeparator />
-								<label className="ipad-speed-label">
+								<label className="speed-label">
 											SPEED: {this.props.animationSpeedLabel}
 								</label>
 								<Slider style={{width: "7.2vw"}} sliderStyle={{bottom: -12}} axis="x"  

@@ -1,41 +1,28 @@
 import { connect } from 'react-redux';
-import { N_CELLS } from '../../constants/GUISettings';
 import Tape from '../../components/tape/Tape';
-import { standardizeTapeCellId } from '../../components/tape/Square';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
 
-const FIRST_CELL_ID = standardizeTapeCellId(0);
-const LAST_CELL_ID = standardizeTapeCellId(N_CELLS-1);
-
-const prepareHead = () => {
-	document.getElementById(FIRST_CELL_ID).focus();
-}
-
-const prepareTail = () => {
-	document.getElementById(LAST_CELL_ID).focus();
-};
-
 const rollLeft = (dispatch) => {
-	prepareHead();
-    rollTapeToRight(dispatch)
-    // document.getElementById(FIRST_CELL_ID).blur();
+    rollTapeToRight(dispatch, true)
 }
 
 const rollRight = (dispatch) => {
-	prepareTail();
-	rollTapeToLeft(dispatch)
-    // document.getElementById(LAST_CELL_ID).blur();
+	rollTapeToLeft(dispatch, true)
 }
 
-const mapStateToProps = (state) => ({
-	showReportedError: state.showReportedError,
-	machineReportError: state.machineReportError,
-	isRunning: state.isRunning,
-});
+const mapStateToProps = (state) => {
+	return {
+		showReportedError: state.showReportedError,
+		machineReportError: state.machineReportError,
+		isRunning: state.isRunning,
+		cellNum: state.cellNum,
+	}
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
 	rollLeft: () => { rollLeft(dispatch) },
   	rollRight: () => { rollRight(dispatch) },
+  	dispatch: dispatch
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tape);

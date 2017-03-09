@@ -1,14 +1,6 @@
 import React, { PropTypes } from 'react';
+import { standardizeCellId } from '../../reducers/tape';
 
-const TAPE_CELL_ID_PREFIX = "TAPE-CELL-";
-
-export function standardizeTapeCellId(i) {
-  return TAPE_CELL_ID_PREFIX + i;
-}
-
-export function getTapeCellNumber(fullId) {
-  return parseInt(fullId.slice(TAPE_CELL_ID_PREFIX.length, fullId.length), 10);
-}
 
 class Square extends React.Component {
   constructor(props) {
@@ -44,7 +36,7 @@ class Square extends React.Component {
   	// this.props.read[this.props.order] = "";
     return (
       <input className="square"
-      style={(this.props.id === standardizeTapeCellId(this.props.highlightedCellOrder))?{"backgroundColor": "#87dbff"}: this.state.style}
+      style={(this.props.id === standardizeCellId(this.props.highlightedCellOrder))?{"backgroundColor": "#87dbff"}: this.state.style}
       onKeyDown={this.props.onKeyDown}
       value={(this.props.val)?this.props.val:""}
       id={this.props.id}

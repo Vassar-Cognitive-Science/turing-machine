@@ -4,12 +4,12 @@ import RollRight from 'material-ui/svg-icons/av/fast-forward';
 import RollLeft from 'material-ui/svg-icons/av/fast-rewind';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Card } from 'material-ui/Card';
-
-import { standardizeTapeCellId } from './Square';
-import { N_CELLS } from '../../constants/GUISettings';
+import { standardizeCellId } from '../../reducers/tape';
 import Square from '../../containers/tape/SquareContainer';
 import Head from '../../containers/tape/HeadContainer';
 
+export const MARK_FIRST = "first";
+export const MARK_LAST = "last";
 
 function populatedSquares(size) {
   var squares = [];
@@ -31,6 +31,7 @@ const styles = {
 
 }
 
+
 class Tape extends React.Component {
   render() {
     return (
@@ -46,10 +47,13 @@ class Tape extends React.Component {
                 iconStyle={styles.mediumIcon} tooltipPosition="bottom-left" disabled={this.props.isRunning}><RollLeft /></IconButton></div>
               <div>
                 <Head />
-                <div className="tape-row">
-                  {populatedSquares(N_CELLS).map((i) => (
-                    <Square key={standardizeTapeCellId(i)} order={i} id={standardizeTapeCellId(i)} />
-                    ))}
+                <div className="tape-row" id="tape-row" value={this.props.cellNum}>
+                  {populatedSquares(this.props.cellNum).map((i) => {
+                    let mark = i;
+                    if (i === 0) mark = MARK_FIRST;
+                    if (i === this.props.cellNum - 1) mark = MARK_LAST;
+                    return <Square key={standardizeCellId(i)} order={i} mark={mark} id={standardizeCellId(i)} />
+                    })}
                 </div>
               </div>
               <div className="roll-right"><IconButton tooltip="Roll Right" 

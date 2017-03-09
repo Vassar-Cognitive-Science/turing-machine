@@ -1,4 +1,5 @@
 /* General */
+export const RESIZE_SCREEN_AND_TAPE = 'RESIZE_SCREEN_AND_TAPE';
 export const UNDO = "UNDO";
 export const REDO = "REDO";
 /* General */
@@ -15,6 +16,7 @@ export const RESTORE = "RESTORE";
 /* Actions for Turing Machine */
 
 /* GUI info */
+export const FOCUS_ON_CELL = 'FOCUS_ON_CELL'; // side effect
 export const ADJUST_HEAD_WIDTH = 'ADJUST_HEAD_WIDTH';
 export const SET_PLAY_STATE = "SET_PLAY_STATE";
 export const SET_ANIMATION_SPEED = 'SET_ANIMATION_SPEED';
