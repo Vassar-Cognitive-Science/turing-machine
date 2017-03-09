@@ -9,7 +9,9 @@ import {
 } from '../constants/GUISettings';
 import { moveLeft, moveRight } from './tape';
 
-
+/*
+Adjust the Head width according to the length of text in it
+*/
 export function adjustHeadWidth(state, action) {
 	let text = (action.text) ? action.text : state.tapeInternalState.toString();
 	let textLength = text.length + 2;
@@ -78,6 +80,28 @@ export function moveHead(state, action) {
 	});
 }
 
+
+/*
+Resize the screen and tape according to screen size
+newScreenSize * 0.9 - 96; look at tape.css (90% = 0.9 is from class card-of-tape, 96 is the widthes of two buttons)
+always center the Head (and tapePointer) to center of the tape by following calculations:
+
+midPoint = cell numbers // 2 (floor it)
+headX: left boundary + move_interval * midPointer, --- for correctness, see view
+tapePointer: anchor cell + midPointer.  
+--- correctness proof: 
+	since anchor cell always denotes the id of leftmost cell, then anchor cell + midPointer
+	is always the value of the corresponding pointer to the midpoint cell of the tape
+
+General correctness proof:
+	And because this reducer only changes:
+		cellNum,
+		screenSize,
+		headX,
+		tapePointer,
+		rightBoundary,
+	We are assured that it won't affect other properties 
+*/
 export function resizeScreenAndTape(state, action) {
 	let newScreenSize = action.screenWidth;
 	let newTapeSpace = newScreenSize * 0.9 - 96;
@@ -100,6 +124,6 @@ export function resizeScreenAndTape(state, action) {
 	});
 
 	console.log("Cell Num: " + newCellNum + " Anchor: " + new_state.anchorCell + " Pointer: " + new_state.tapePointer);
-
+	console.log(new_state)
 	return new_state;
 }
