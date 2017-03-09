@@ -1,4 +1,4 @@
-import { DUPLICATED_RULE_ERROR, REQUIRED_FIELD_ERROR } from '../constants/ErrorMessages';
+import { DUPLICATED_RULE_ERROR, REQUIRED_FIELD_ERROR } from '../constants/Messages';
 
 
 /*

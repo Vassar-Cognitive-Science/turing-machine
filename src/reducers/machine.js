@@ -1,5 +1,5 @@
 import { HALT } from '../constants/index';
-import { REACH_HALT, UNDEFINED_RULE, NO_MORE_BACK } from '../constants/ErrorMessages';
+import { REACH_HALT, UNDEFINED_RULE, NO_MORE_BACK } from '../constants/Messages';
 import * as tape from './tape';
 import * as gui from './gui';
 
