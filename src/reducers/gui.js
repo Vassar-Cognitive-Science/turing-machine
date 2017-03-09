@@ -106,7 +106,6 @@ General correctness proof:
 export function resizeScreenAndTape(state, action) {
 	let newScreenSize = action.screenWidth;
 	let newTapeSpace = newScreenSize * 0.91 - 96;
-	console.log(newTapeSpace)
 	let newCellNum;
 	let new_state = state;
 
