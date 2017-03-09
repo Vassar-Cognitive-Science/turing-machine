@@ -14,6 +14,7 @@ class AutoCompleteField extends React.Component {
 							  filter={this.props.filter}
 							  searchText={this.props.searchText}
                               onUpdateInput={this.props.onUpdateInput}
+                              inputStyle={{color: this.props.fontColor}}
                               textFieldStyle={this.props.styles}
                            	  errorText={this.props.errorText}
                               id={this.props.id}

@@ -38,7 +38,7 @@ class Tape extends React.Component {
       <div className="card-of-tape">
          <MuiThemeProvider>
           <Card>
-            <div className="machine-reported-error" style={{visibility:(this.props.showReportedError)?"visible":"hidden"}}>
+            <div className="machine-reported-error" style={{visibility:(this.props.showReportedError)?"visible":"hidden", color: this.props.messageColor}}>
             {this.props.machineReportError}
             </div>
             <div className="tape-with-button">

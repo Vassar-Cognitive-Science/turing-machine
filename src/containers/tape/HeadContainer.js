@@ -4,6 +4,7 @@ import { moveHeadAction } from '../../actions/guiActions';
 import { adjustHeadWidthAction } from '../../actions/guiActions';
 import Head from '../../components/tape/Head';
 import { getAllStates } from '../table/AutoCompleteFieldContainer';
+import { HALT, standardFilter } from '../../constants/ReservedWords';
 
 let OLD_X = 0; 
 const setOldX = (e) => {
@@ -38,7 +39,7 @@ const onUpdateInput = (searchText, dispatch) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let filter = (searchText, key) => (searchText === "" || key.startsWith(searchText));
+  let filter = standardFilter;
   let dataSource = getAllStates(state);
   delete dataSource[null];
 
@@ -49,6 +50,8 @@ const mapStateToProps = (state, ownProps) => {
     filter: filter,
     isRunning: state.isRunning,
     rightBoundary: state.rightBoundary,
+    // fontColor: (state.tapeInternalState === HALT) ? "#FF3D00" : "#212121", //#1976D2
+    fontColor: (state.tapeInternalState === HALT) ? "#1976D2" : "#212121", //#FF3D00
 
     hair_styles: {
       width: state.headWidth,

@@ -1,17 +1,10 @@
-import {
-	connect
-} from 'react-redux';
+import { connect } from 'react-redux';
 import AutoCompleteField from '../../components/table/AutoCompleteField';
-import {
-	setRowInStateAction,
-	setRowReadAction,
-	setRowWriteAction,
-	setRowNewStateAction
-} from '../../actions/tableActions';
-import {
-	FIELD_TYPES
-} from '../../components/table/DynamicRuleTable';
+import { setRowInStateAction, setRowReadAction, setRowWriteAction, setRowNewStateAction } from '../../actions/tableActions';
+import { FIELD_TYPES } from '../../components/table/DynamicRuleTable';
+import { HALT } from '../../constants/ReservedWords';
 
+export const standardFilter = (searchText, key) => (searchText !== "" && key.startsWith(searchText) && key !== searchText);
 
 const onUpdateInput = (searchText, dispatch, ownProps) => {
 	switch(ownProps.fieldType) {
@@ -33,7 +26,7 @@ const onUpdateInput = (searchText, dispatch, ownProps) => {
 }
 
 export const getAllStates = (state) => {
-	let dataSource = {};
+	let dataSource = { HALT: 0 };
 	dataSource[state.tapeInternalState] = 0;
 	for (var i = 0; i < state.rowsById.length; i++) {
 		let row = state[state.rowsById[i]];
@@ -61,7 +54,8 @@ const getAllInputs = (state) => {
 
 const mapStateToProps = (state, ownProps) => {
 	let thisRow = state[ownProps.parent];
-	let filter = (searchText, key) => (searchText === "" || key.startsWith(searchText));
+	let filter = standardFilter;
+	let fontColor = "#212121";
 	let error = "";
 	let dataSource = {};
 	let value = "";
@@ -70,11 +64,15 @@ const mapStateToProps = (state, ownProps) => {
 			value = thisRow.in_state;
 			error = thisRow.in_state_error;
 			dataSource = getAllStates(state);
+			// fontColor = (value === HALT) ? "#FF3D00" : fontColor; // #1976D2
+			fontColor = (value === HALT) ? "#1976D2" : fontColor; // #FF3D00
 			break;
 		case FIELD_TYPES[4]:
 			value = thisRow.new_state;
 			error = thisRow.new_state_error;
 			dataSource = getAllStates(state);
+			// fontColor = (value === HALT) ? "#FF3D00" : fontColor; // #1976D2
+			fontColor = (value === HALT) ? "#1976D2" : fontColor; // #FF3D00
 			break;
 		case FIELD_TYPES[1]:
 			value = thisRow.read;
@@ -95,6 +93,7 @@ const mapStateToProps = (state, ownProps) => {
 	delete dataSource[null];
 
 	return {
+		fontColor: fontColor,
 		searchText: value,
 		errorText: error,
 		dataSource: Object.keys(dataSource),

@@ -26,12 +26,12 @@ class Head extends React.Component {
         onDrag={this.props.handleDrag}
         onStop={this.props.handleStop}
         disabled={this.props.isRunning}>
-        <div  className="header">
+        <div className="header">
           <div className="hair" style={(this.props.hair_styles)?(this.props.hair_styles):INIT_HAIR_STYLES} ></div>
           <MuiThemeProvider>
             <AutoComplete 
               className="head"
-              inputStyle={{"textAlign":"center"}}
+              inputStyle={{"textAlign":"center", color: this.props.fontColor}}
               filter={(searchText, key) => (searchText === "" || key.startsWith(searchText))}
               id={HEAD_INPUT_ID}
               underlineStyle={{display: 'none'}}
