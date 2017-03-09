@@ -115,15 +115,11 @@ export function resizeScreenAndTape(state, action) {
 	}
 
 	let midPoint = Math.floor(newCellNum/2);
-	new_state = Object.assign({}, new_state, {
+	return Object.assign({}, new_state, {
 		screenSize: newScreenSize,
 		cellNum: newCellNum,
 		headX: HEAD_LEFT_BOUNDARY + midPoint * HEAD_MOVE_INTERVAL,
 		tapePointer: new_state.anchorCell + midPoint,
 		rightBoundary: HEAD_LEFT_BOUNDARY + (newCellNum-1) * HEAD_MOVE_INTERVAL,
 	});
-
-	console.log("Cell Num: " + newCellNum + " Anchor: " + new_state.anchorCell + " Pointer: " + new_state.tapePointer);
-	console.log(new_state)
-	return new_state;
 }
