@@ -3,12 +3,15 @@ import * as tape from './tape';
 import * as table from './table';
 import * as gui from './gui';
 import * as machine from './machine';
+import * as trial from './trial';
 import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
 
 export const initialState = {
 /* GUI settings */
 
-	/* TAPE GUI settings */
+	/*Trial Drawer GUI settings*/
+
+	/*Trial Drawer GUI settings*/
 
 	/*** The following five are initialized by gui.resizeScreenAndTape  ***/
 	screenSize: (window) ? window.innerWidth : 1396,
@@ -29,9 +32,11 @@ export const initialState = {
 	interval: null, // Animation interval function, returned by setInterval(callback, timeout)
 	animationSpeedFactor: 1.0, // 100% of default speed
 	animationSpeed: ANIMATION_SPEED, // calculated speed, not necessary but make things convenient 
+	animationOn: true,
 	machineReportError: "",
 	showReportedError: false,
 
+	stepCount: 0,
 	runHistory: [],
 	undoEditHistory: [],
 	redoEditHistory: [],
@@ -65,7 +70,7 @@ export const initialState = {
 	// rowsById: [], // array of rules' id's
 	highlightedRow: null,
 /* Rules */
-
+	
 	/*
 	A row is a plain object that holds information for inputed rule and how it is presented
 	{
@@ -83,7 +88,23 @@ export const initialState = {
 	}
 	*/
 
+/* Trials */
+	// testsById: [],
+	runningTrial: null,
+/* Trials */
+
 	
+	testsById: ["Test 1"],
+	"Test 1": {
+		startState: "0",
+		expectedFinalState: "1",
+		startTape: [1,1,1,1,1,1,2],
+		expectedFinalTape: [2,2,2,2,2,2,2],
+
+		startHeadPosition: 0,
+		sourceFile: null
+	},
+
 	//For test
 	rowsById: ["row-1", "row-2", "row-3"],
 	"row-1": {
@@ -96,9 +117,9 @@ export const initialState = {
 	"row-2": {
 		in_state: "0",
 		read: "2",
-		write: "1",
+		write: "2",
 		isLeft: true,
-		new_state: "1"
+		new_state: "0"
 	},
 	"row-3": {
 		in_state: "1",
@@ -120,7 +141,7 @@ Logic:
 	finally, add in undo/redo reducers
 */
 function rootReducer (state=initialState, action, clearRedo) {
-	let s1, s2, s3, s4;
+	let s1, s2, s3, s4, s5;
 	let cache = createEditHistoryCache(state, action);
 	let new_state = state;
 	if (cache) {
@@ -134,16 +155,17 @@ function rootReducer (state=initialState, action, clearRedo) {
 	s2 = tapeReducer(s1, action, clearRedo);
 	s3 = guiReducer(s2, action);
 	s4 = machineReducer(s3, action);
+	s5 = trialReducer(s4, action);
 
 	switch(action.type) {
 		case actionTypes.INITIALIZAE_MACHINE:
 			return initializeMachine(state, action);
 		case actionTypes.UNDO:
-			return cleanSideEffects(undo(s4, action), false);
+			return cleanSideEffects(undo(s5, action), false);
 		case actionTypes.REDO:
-			return cleanSideEffects(redo(s4, action), false);
+			return cleanSideEffects(redo(s5, action), false);
 		default:
-			return s4;
+			return s5;
 	}
 }
 
@@ -331,6 +353,10 @@ function guiReducer(state, action) {
 			changed = false;
 			new_state = gui.resizeScreenAndTape(state, action);
 			break;
+		case actionTypes.ANIMATION_ON:
+			changed = false;
+			new_state = gui.toggleAnimation(state, action);
+			break;
 		/* GUI info */
 		default:
 			changed = false;
@@ -432,6 +458,20 @@ function ruleReducer(state, action, clearRedo) {
 	}
 
 	return ((changed) ? cleanSideEffects(new_state, clearRedo) : new_state);
+}
+
+
+function trialReducer(state, action) {
+	switch(action.type) {
+		case actionTypes.DELETE_TRIAL:
+			return trial.deleteTrial(state, action);
+		case actionTypes.ADD_TRIAL:
+			return trial.addTrial(state, action);
+		case actionTypes.RUN_TRIAL:
+			return trial.runTrial(state, action);
+		default:
+			return state; 
+	}
 }
 
 

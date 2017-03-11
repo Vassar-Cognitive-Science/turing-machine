@@ -35,3 +35,10 @@ export function resizeScreenAndTapeAction(width) {
 		screenWidth: width
 	};
 }
+
+export function toggleAnimationAction(flag=undefined) {
+	return {
+		type: actionTypes.ANIMATION_ON,
+		flag: flag,
+	};
+}

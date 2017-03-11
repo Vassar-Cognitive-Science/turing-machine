@@ -15,9 +15,10 @@ export function preStepAction(singleStep) {
 	};
 }
 
-export function stepAction() {
+export function stepAction(silent=false) {
 	return {
-		type: actionTypes.STEP_FORWARD
+		type: actionTypes.STEP_FORWARD,
+		silent: silent
 	};
 }
 
@@ -30,12 +31,19 @@ export function recordIntervalAction(interval) {
 
 export function runMachineThunkActionCreator() {
 	return (dispatch, getState) => {
-		let interval = setInterval(() => {
-			if (getState().isRunning) {
-				dispatch(stepAction());
+		dispatch(preStepAction());
+		if (getState().animationOn) {
+			let interval = setInterval(() => {
+				if (getState().isRunning) {
+					dispatch(stepAction());
+				}
+			}, getState().animationSpeed);
+			dispatch(recordIntervalAction(interval));
+		} else {
+			while (getState().isRunning) {
+				dispatch(stepAction(true));
 			}
-		}, getState().animationSpeed);
-		dispatch(recordIntervalAction(interval));
+		}
 	}
 }
 

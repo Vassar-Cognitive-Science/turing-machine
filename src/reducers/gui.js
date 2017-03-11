@@ -127,3 +127,17 @@ export function resizeScreenAndTape(state, action) {
 		rightBoundary: HEAD_LEFT_BOUNDARY + (newCellNum-1) * HEAD_MOVE_INTERVAL,
 	});
 }
+
+export function toggleTrialDrawer(state, action) {
+	let flag = (action.flag !== undefined) ? action.flag : !state.trialDrawerToggle; 
+	return Object.assign({}, state, {
+		trialDrawerToggle: flag,
+	});
+}
+
+export function toggleAnimation(state, action) {
+	let flag = (action.flag !== undefined) ? action.flag : !state.animationOn; 
+	return Object.assign({}, state, {
+		animationOn: flag
+	});
+}

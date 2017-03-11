@@ -52,9 +52,11 @@ export function findCell(state, id) {
 
 export function read(state) {
 	var cur = findCell(state, state.tapePointer);
-	if (cur == null)
-		return null;
-	return cur.val;
+	if (cur === null)
+		return undefined;
+	// if (typeof cur.val === 'string')
+	// 	cur.val = cur.val.trim()
+	return (cur.val === null || cur.val === "") ? BLANK : cur.val.toString();
 }
 
 export function cloneCellById(state, id) {
@@ -165,6 +167,7 @@ export function expandBeforeHead(state, action) {
 
 export function initializeTape(state, action) {
 	var new_state = Object.assign({}, state, {
+		stepCount: 0,
 		anchorCell: 0,
 		tapeHead: 0,
 		tapeTail: 0,

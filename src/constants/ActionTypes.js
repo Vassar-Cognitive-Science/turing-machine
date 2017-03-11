@@ -21,6 +21,7 @@ export const ADJUST_HEAD_WIDTH = 'ADJUST_HEAD_WIDTH';
 export const SET_PLAY_STATE = "SET_PLAY_STATE";
 export const SET_ANIMATION_SPEED = 'SET_ANIMATION_SPEED';
 export const MOVE_HEAD = 'MOVE_HEAD';
+export const ANIMATION_ON = 'ANIMATION_ON';
 /* GUI info */
 
 /* Actions for Head */
@@ -54,3 +55,10 @@ export const SET_ROW_READ = 'SET_ROW_READ';
 export const SET_ROW_WRITE = 'SET_ROW_WRITE';
 export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';
 /* Actions for Transition Graph */
+
+
+/* Actions for Trials*/
+export const DELETE_TRIAL = 'DELETE_TRIAL';
+export const ADD_TRIAL = 'ADD_TRIAL';
+export const RUN_TRIAL = 'RUN_TRIAL';
+/* Actions for Trials*/

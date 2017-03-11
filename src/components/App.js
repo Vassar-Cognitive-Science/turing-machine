@@ -1,5 +1,5 @@
 import React from 'react';
-import AppBar from '../containers/AppBarContainer';
+import AppBar from '../containers/appbar/AppBarContainer';
 import Tape from '../containers/tape/TapeContainer';
 import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
 

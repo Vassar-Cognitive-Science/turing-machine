@@ -23,3 +23,12 @@
 	color: #424242; 
 	font-weight: 100;
 }
+
+.test {
+	display:inline-block;
+}
+
+.Test-list {
+	max-height: 60%;
+	overflow-y: auto;
+}

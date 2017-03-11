@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
-import AppToolBar from '../components/AppBar';
-import { initializeTapeAction } from '../actions/tapeActions';
+import AppToolBar from '../../components/appbar/AppBar';
+import { initializeTapeAction } from '../../actions/tapeActions';
+import { toggleAnimationAction } from '../../actions/guiActions';
+import { addTrialAction } from '../../actions/trialActions';
 import {
 	preStepAction,
 	stepAction, 
@@ -10,13 +12,16 @@ import {
 	stepBackAction,
 	restoreAction,
 	undoAction,
-	redoAction
-} from '../actions/index';
+	redoAction,
+} from '../../actions/index';
+
+var TEST_ID = 1;
+const TEST_ID_PREFIX = "Test ";
+export const standardizeTestId = (id) => (TEST_ID_PREFIX + id); 
 
 const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFixed(1));
 
 function handleRun(dispatch) {
-	dispatch(preStepAction());
 	dispatch(runMachineThunkActionCreator());
 }
 
@@ -38,6 +43,10 @@ const handleNext = (dispatch, ownProps) => {
 const handleRestore = (dispatch, ownProps) => {
 	dispatch(stopAction());
 	dispatch(restoreAction());
+}
+
+const handleToggleAnimation = (dispatch, ownProps) => {
+	dispatch(toggleAnimationAction());
 }
 
 const handleRedo = (dispatch, ownProps) => {
@@ -67,14 +76,20 @@ const handleSpeedChange = (newValue, dispatch, ownProps) => {
 	dispatch(setMachineSpeedThunkActionCreator(newValue));
 }
 
+const handleAddTest = (dispatch, ownProps) => {
+	dispatch(addTrialAction(standardizeTestId(TEST_ID++)));
+}
+
 const mapStateToProps = (state, ownProps) => {
     return {
     	isRunning: state.isRunning,
+    	animationOn: state.animationOn,
     	animationSpeedFactor: state.animationSpeedFactor,
     	animationSpeedLabel: standardizeAnimationSpeedLabel(state.animationSpeedFactor),
     	redoAble: state.redoEditHistory.length > 0,
     	undoAble: state.undoEditHistory.length > 0,
     	lastStepAble: state.runHistory.length > 0,
+    	testsById: state.testsById,
     };
 }
 
@@ -90,6 +105,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleSave: () => { handleSave(dispatch, ownProps) },
 	handleClearTape: () => { handleClearTape(dispatch, ownProps) },
 	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch, ownProps) },
+	handleToggleAnimation: () => { handleToggleAnimation(dispatch, ownProps) },
+	handleAddTest: () => { handleAddTest(dispatch, ownProps) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar);

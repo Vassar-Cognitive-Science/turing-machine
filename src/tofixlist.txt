@@ -30,3 +30,9 @@
 
 2017/3/8
 1. Mobile screen disables Head movement, event for mouse does not work
+
+2017/3/9
+1. Handle BLANK
+2. Make Redo/Undo react only to table
+3. Instant run, check for infinite loop
+4. Count steps
