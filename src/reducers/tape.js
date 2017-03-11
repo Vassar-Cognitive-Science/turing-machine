@@ -175,9 +175,6 @@ export function initializeTape(state, action) {
 		tapeCellsById: [],
 
 		tapePointer: (action.controlled) ? state.tapePointer : Math.floor(state.cellNum / 2),
-		headWidth: initialState.headWidth,
-		headHeight: initialState.headHeight,
-		headLeftOffset: initialState.headLeftOffset,
 		headX: (action.controlled) ? state.headX : HEAD_LEFT_BOUNDARY + HEAD_MOVE_INTERVAL * Math.floor(state.cellNum / 2),
 	});
 	for (let i = 0; i < state.tapeCellsById.length; i++) {
