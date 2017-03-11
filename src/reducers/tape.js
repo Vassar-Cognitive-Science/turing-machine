@@ -1,4 +1,4 @@
-import { LEFT, BLANK } from '../constants/index';
+import { LEFT, BLANK, STAR } from '../constants/index';
 import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/GUISettings';
 import { adjustHeadWidth } from './gui';
 
@@ -189,6 +189,9 @@ export function writeIntoTape(state, action) {
 	let val = action.val;
 	if (val === BLANK)
 		val = ""; // "#"?
+	if (val === STAR)
+		val = target.val;
+	
 	new_state[standardizeCellId(state.tapePointer)] = createCell(target.cur, target.prev, target.next, val);
 
 	return new_state;

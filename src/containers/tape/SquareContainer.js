@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { standardizeCellId, CELL_ID_PREFIX } from '../../reducers/tape';
 import { moveTapeRightAction, moveTapeLeftAction, fillTapeAction } from '../../actions/tapeActions';
+import { BLANK } from '../../constants/index';
 import Square from '../../components/tape/Square';
 import { MARK_LAST, MARK_FIRST } from '../../components/tape/Tape';
 
@@ -48,9 +49,10 @@ const onKeyDown = (e, dispatch, ownProps) => {
   /* backspace, delete */
   else if (key === 8 || key === 46) {
     dispatch(fillTapeAction(activeId(), ""));
-  } else if ((key >= 48 && key <= 90) || (key >= 96 && key <= 105) || (key === 51 && e.shiftKey)) {
-    let val;
-    val = (key === 51 && e.shiftKey) ? "#" : String.fromCharCode(key);
+  } else if ((key >= 48 && key <= 90) || (key >= 96 && key <= 105)) {
+    let val = String.fromCharCode(key);
+    if (key === 51 && e.shiftKey) val = BLANK;
+    // if (key === 56 && e.shiftKey) val = STAR;
     dispatch(fillTapeAction(activeId(), val));
     rollTapeToLeft(dispatch, ownProps.mark === MARK_LAST, ownProps);
   }

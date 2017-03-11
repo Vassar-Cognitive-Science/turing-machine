@@ -2,7 +2,7 @@ import * as tape from './tape';
 import * as gui from './gui';
 import { EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE, DIFF_FINAL_TAPE } from '../constants/Messages';
 
-import { HALT, BLANK } from '../constants/index';
+import { HALT, BLANK, STAR } from '../constants/index';
 import { MAX_STEP_LIMIT } from '../constants/GUISettings';
 
 // import { UNDEFINED_RULE, EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
@@ -197,6 +197,9 @@ export function runTrial(state, action) {
 		for (var i = 0; i < state.rowsById.length; i++) {
 			let row = state[state.rowsById[i]];
 			if (row.in_state === keyS && row.read === keyV) {
+				ruleId = state.rowsById[i];
+				break;
+			} else if (row.in_state === keyS && row.read === STAR) {
 				ruleId = state.rowsById[i];
 				break;
 			}

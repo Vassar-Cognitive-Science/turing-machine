@@ -1,4 +1,4 @@
-import { HALT } from '../constants/index';
+import { HALT, STAR } from '../constants/index';
 import { REACH_HALT, UNDEFINED_RULE, NO_MORE_BACK, EXCEED_MAX_STEP_LIMIT } from '../constants/Messages';
 import { MAX_STEP_LIMIT } from '../constants/GUISettings';
 import * as tape from './tape';
@@ -139,17 +139,21 @@ export function highlightCorrespondingRule(state, action) {
 	if (!action.flag) {
 		return Object.assign({}, state, { highlightedRow: null });
 	}
+
 	let keyS = state.tapeInternalState, keyV = tape.read(state);
-	let rule = null;
+	let ruleId = null;
 	for (var i = 0; i < state.rowsById.length; i++) {
 		let row = state[state.rowsById[i]];
 		if (row.in_state === keyS && row.read === keyV) {
-			rule = state.rowsById[i];
-			break;
-		}
+				ruleId = state.rowsById[i];
+				break;
+			} else if (row.in_state === keyS && row.read === STAR) {
+				ruleId = state.rowsById[i];
+				break;
+			}
 	}
 
-	return Object.assign({}, state, { highlightedRow: rule });
+	return Object.assign({}, state, { highlightedRow: ruleId });
 }
 
 /*

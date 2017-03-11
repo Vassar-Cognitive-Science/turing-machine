@@ -123,9 +123,10 @@ export function setRowNewState(state, action) {
 
 export function setRowRead(state, action) {
 	var oldRow = state[action.id];
+	let read = action.read.toString().toUpperCase();
 	return setRow(state, {id: action.id, 
 						  in_state: oldRow.in_state, 
-						  read: action.read, 
+						  read: read, 
 						  write: oldRow.write, 
 						  isLeft: oldRow.isLeft,
 						  new_state: oldRow.new_state});
@@ -133,10 +134,11 @@ export function setRowRead(state, action) {
 
 export function setRowWrite(state, action) {
 	var oldRow = state[action.id];
+	let write = action.write.toString().toUpperCase();
 	return setRow(state, {id: action.id, 
 						  in_state: oldRow.in_state, 
 						  read: oldRow.read, 
-						  write: action.write, 
+						  write: write, 
 						  isLeft: oldRow.isLeft,
 						  new_state: oldRow.new_state});
 }
