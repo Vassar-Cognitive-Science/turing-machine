@@ -65,9 +65,10 @@ const isExpected = (finalSandbox, trial) => {
 	return result;
 }
 
-function createTrial(startState, expectedFinalState, tape=[], expectedFinalTape=[],
+function createTrial(id, startState, expectedFinalState, tape=[], expectedFinalTape=[],
 					tapePointer=0, sourceFile=null) {
 	return {
+		id: id,
 		startState: startState,
 		expectedFinalState: expectedFinalState,
 		startTape: tape,
@@ -75,17 +76,33 @@ function createTrial(startState, expectedFinalState, tape=[], expectedFinalTape=
 
 		tapePointer: tapePointer,
 		sourceFile: sourceFile,
+		testReportId: standardizeTestReportId(id),
 	};
 }
 
-function createTestReport(sourceId, sourceFile, statusCode, feedback, stepCount, fullreport) {
+// function cloneTrial(trial) {
+// 	return {
+// 		id: trial.id,
+// 		startState: trial.startState,
+// 		expectedFinalState: trial.expectedFinalState,
+// 		startTape: trial.tape.slice(),
+// 		expectedFinalTape: trial.expectedFinalTape.slice(),
+
+// 		tapePointer: trial.tapePointer,
+// 		sourceFile: trial.sourceFile,
+// 		testReportId: trial.testReportId,
+// 	};
+// }
+
+function createTestReport(sourceId, sourceFile, statusCode, feedback, stepCount, fullreport, id) {
 	return {
 		sourceId: sourceId,
 		sourceFile: sourceFile,
 		status: statusCode,
 		feedback: feedback,
 		stepCount: stepCount,
-		fullreport: fullreport
+		fullreport: fullreport,
+		id: id
 	}
 }
 
@@ -121,6 +138,7 @@ export function deleteTrial(state, action) {
 		testsById: state.testsById.filter(tid => tid !== action.id)
 	})
 
+	delete new_state[new_state[action.id]].testReportId;
 	delete new_state[action.id];
 
 	return new_state;
@@ -134,7 +152,7 @@ export function addTrial(state, action) {
 	})
 
 	new_state.testsById.push(action.id);
-	let trial = createTrial(action.startState, action.expectedFinalState, 
+	let trial = createTrial(action.id, action.startState, action.expectedFinalState, 
 							action.tape, action.tapePointer, 
 							action.expectedTape, action.sourceFile);
 
@@ -145,9 +163,15 @@ export function addTrial(state, action) {
 
 
 export function preRunTrial(state, action) {
-	return Object.assign({}, state, {
-		runningTrial: action.id
+	let new_state = Object.assign({}, state, {
+		runningTrials: state.runningTrials.slice()
 	});
+
+	new_state.runningTrials.push(action.id);
+	let testReportId = new_state[new_state[action.id].testReportId];
+	delete new_state[testReportId];
+
+	return new_state;
 }
 
 export function runTrial(state, action) {
@@ -214,12 +238,15 @@ export function runTrial(state, action) {
 
 export function reportTestResult(state, action) {
 	let new_state = Object.assign({}, state, {
-		runningTrial: null,
+		runningTrials: state.runningTrials.filter(tid => tid !== action.sourceId),
+		// isRunningTrial: false,
 	});
-	new_state[standardizeTestReportId(action.sourceId)] = createTestReport(
+
+	let id = standardizeTestReportId(action.sourceId);
+	new_state[id] = createTestReport(
 		action.sourceId, action.sourceFile,
 		action.status, action.feedback,
-		action.stepCount, action.fullreport
+		action.stepCount, action.fullreport, id
 	);
 	return new_state;
 }
@@ -257,6 +284,26 @@ export function loadTrial(state, action) {
 	new_state.tapePointer = trial.tapePointer;
 	new_state.anchorCell = anchorCell;
 	new_state.highlightedCellOrder = highlightedCellOrder;
+
+	return new_state;
+}
+
+export function toggleIsRunningTrial(state, action) {
+	let flag = (action.flag !== undefined) ? action.flag : !state.flag;
+
+	return Object.assign({}, state, {
+		isRunningTrial: flag
+	});
+}
+
+
+export function clearTestResults(state, action) {
+	let new_state = Object.assign({}, state);
+	for (let i = 0; i < new_state.testsById.length; i++) {
+		let testReportId = new_state[new_state.testsById[i]].testReportId;
+
+		delete new_state[testReportId];
+	}
 
 	return new_state;
 }

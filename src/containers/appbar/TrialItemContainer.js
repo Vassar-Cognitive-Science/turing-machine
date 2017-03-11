@@ -1,20 +1,18 @@
 import { connect } from 'react-redux';
 import TrialItem from '../../components/appbar/TrialItem';
-import { deleteTrialAction, runTrialAction, loadTrialAction } from '../../actions/trialActions';
+import { deleteTrialAction, runTrialAction, loadTrialAction, preRunTrialAction } from '../../actions/trialActions';
 import { standardizeTestReportId } from '../../reducers/trial';
 
 const deleteTrial = (dispatch, ownProps) => {
 	dispatch(deleteTrialAction(ownProps.id));
 }
 
-const runTrial = (dispatch, ownProps) => {
-	// preRunTrialAction
-	// dispatch(preRunTrialAction(ownProps.id));
-	// dispatch(function(dispatch, getState) {
-	// 	dispatch(runTrialAction(ownProps.id));
-	// });
-
-	dispatch(runTrialAction(ownProps.id));
+export const runTrial = (dispatch, ownProps, timeout=800) => {
+	dispatch(preRunTrialAction(ownProps.id));
+	dispatch(function(dispatch, getState) {
+		// let the loading button show up
+		setTimeout(()=>{dispatch(runTrialAction(ownProps.id));}, timeout);
+	});
 }
 
 const loadTrial = (dispatch, ownProps) => {

@@ -2,7 +2,13 @@ import { connect } from 'react-redux';
 import AppToolBar from '../../components/appbar/AppBar';
 import { initializeTapeAction } from '../../actions/tapeActions';
 import { toggleAnimationAction } from '../../actions/guiActions';
-import { addTrialAction } from '../../actions/trialActions';
+import {
+	addTrialAction,
+	runTrialAction,
+	toggleIsRunningTrialAction,
+	clearTestResultAction,
+	preRunTrialAction
+} from '../../actions/trialActions';
 import {
 	preStepAction,
 	stepAction, 
@@ -16,7 +22,7 @@ import {
 } from '../../actions/index';
 
 var TEST_ID = 1;
-const TEST_ID_PREFIX = "Test ";
+const TEST_ID_PREFIX = "Test Case #";
 export const standardizeTestId = (id) => (TEST_ID_PREFIX + id); 
 
 const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFixed(1));
@@ -80,10 +86,29 @@ const handleAddTest = (dispatch, ownProps) => {
 	dispatch(addTrialAction(standardizeTestId(TEST_ID++)));
 }
 
+const handleRunAllTests = (dispatch, ownProps) => {
+	dispatch(toggleIsRunningTrialAction(true));
+	dispatch(clearTestResultAction());
+	dispatch(function(dispatch, getState) {
+		for (let i = 0; i < getState().testsById.length; i++)
+			dispatch(preRunTrialAction(getState().testsById[i]));
+	});
+
+	setTimeout(() => {
+		dispatch(function(dispatch, getState) {
+			for (let i = 0; i < getState().testsById.length; i++) {
+				dispatch(runTrialAction(getState().testsById[i]));
+			}
+			dispatch(toggleIsRunningTrialAction(false));
+		})
+	}, 800);
+}
+
 const mapStateToProps = (state, ownProps) => {
     return {
-    	runningTrial: state.runningTrial,
+    	runningTrials: state.runningTrials,
     	isRunning: state.isRunning,
+    	isRunningTrial: state.isRunningTrial,
     	animationOn: state.animationOn,
     	animationSpeedFactor: state.animationSpeedFactor,
     	animationSpeedLabel: standardizeAnimationSpeedLabel(state.animationSpeedFactor),
@@ -108,6 +133,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch, ownProps) },
 	handleToggleAnimation: () => { handleToggleAnimation(dispatch, ownProps) },
 	handleAddTest: () => { handleAddTest(dispatch, ownProps) },
+	handleRunAllTests: () => { handleRunAllTests(dispatch, ownProps) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar);

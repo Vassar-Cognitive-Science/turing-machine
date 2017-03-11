@@ -47,6 +47,9 @@ import {
 	teal300 as saveTestsColor
  } from 'material-ui/styles/colors';
 
+const ProgressCircle = () => (
+	<CircularProgress color={testHeaderColor} size={30} thickness={2.5} />
+)
 
 class AppToolBar extends React.Component {
 	constructor(props) {
@@ -96,10 +99,8 @@ class AppToolBar extends React.Component {
 			        <div style={{height: "50%", overflowY: "auto"}}>
 			        <List>
 			        	{this.props.testsById.map((id) => {
-			        		if (id === this.props.runningTrial)  {
-			        			return (<MenuItem primaryText={id} key={id} 
-			        				rightIcon={<CircularProgress color={testHeaderColor} 
-			        				size={30} thickness={2.5} />} />);
+			        		if (this.props.runningTrials.includes(id))  {
+			        			return (<MenuItem primaryText={id} key={id} rightIcon={ProgressCircle()}/>);
 			        		}
 			        		return (<TrialItem id={id} key={id} />)
 			        	})}
@@ -107,8 +108,13 @@ class AppToolBar extends React.Component {
 			        </div>
 			        <div style={{paddingTop: "8%"}}>
 			        <Divider />
-			        <MenuItem primaryText="Run Tests" leftIcon={<RunAllTests color={runAllTrialsColor}/>}/>
-			        <MenuItem primaryText="Add Test" leftIcon={<Add color={addTrialColor} />} onTouchTap={this.props.handleAddTest}/>
+			        {(this.props.isRunningTrial) ?
+						<MenuItem primaryText="Running All Tests..."  leftIcon={ProgressCircle()} /> :
+						<MenuItem primaryText="Run Tests" leftIcon={<RunAllTests color={runAllTrialsColor}/>}
+				 			onTouchTap={this.props.handleRunAllTests}/>}
+
+			        <MenuItem primaryText="Add Test" leftIcon={<Add color={addTrialColor} />}
+			         onTouchTap={this.props.handleAddTest}/>
 			        <Divider />
 			        <MenuItem primaryText="Upload Tests" leftIcon={<UploadTests color={uploadTestsColor} />}/>
 			        <MenuItem primaryText="Save Tests" leftIcon={<SaveTests color={saveTestsColor} />}/>

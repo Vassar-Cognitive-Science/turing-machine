@@ -89,23 +89,45 @@ export const initialState = {
 
 /* Trials */
 	// testsById: [],
-	runningTrial: null,
+	isRunningTrial: false,
+	runningTrials: [], // track all running trial status
 /* Trials */
 
 	
-	testsById: ["Test 0"],
-	"Test 0": {
+	testsById: ["Test Case #0", "Test Case #1", "Test Case #2"],
+	"Test Case #0": {
 		startState: "0",
 		expectedFinalState: "0",
 		startTape: [1,1,1,1,1,1,2],
 		expectedFinalTape: [2,2,2,2,2,2,2],
 
+		tapePointer: 10,
+		sourceFile: null,
+		testReportId: "REPORT-OF-Test Case #0"
+	},
+	"Test Case #1": {
+		startState: "0",
+		expectedFinalState: "0",
+		startTape: [1,1,1,1,1,1,2],
+		expectedFinalTape: [2,2,2,2,2,2,2],
+
+		tapePointer: 10,
+		sourceFile: null,
+		testReportId: "REPORT-OF-Test Case #1"
+	},
+	"Test Case #2": {
+		startState: "0",
+		expectedFinalState: "HALT",
+		startTape: [1,1,1,1,1,1,2],
+		expectedFinalTape: [2,2,2,2,2,2,2],
+
 		tapePointer: 0,
-		sourceFile: null
+		sourceFile: null,
+		testReportId: "REPORT-OF-Test Case #2"
 	},
 
 	//For test
-	rowsById: ["row-1", "row-2", "row-3"],
+	rowsById: ["row-1", "row-2", "row-3", "row-4"],
 	"row-1": {
 		in_state: "0",
 		read: "#",
@@ -118,7 +140,7 @@ export const initialState = {
 		read: "2",
 		write: "2",
 		isLeft: true,
-		new_state: "0"
+		new_state: "HALT"
 	},
 	"row-3": {
 		in_state: "1",
@@ -126,7 +148,14 @@ export const initialState = {
 		write: "2",
 		isLeft: true,
 		new_state: "1"
-	}
+	},
+	"row-4": {
+		in_state: "0",
+		read: "1",
+		write: "2",
+		isLeft: false,
+		new_state: "0"
+	},
 	
 };
 
@@ -451,6 +480,10 @@ function trialReducer(state, action) {
 			return trial.loadTrial(state, action);
 		case actionTypes.PRE_RUN_TRIAL:
 			return trial.preRunTrial(state, action);
+		case actionTypes.TOGGLE_IS_RUNNING_TRIAL:
+			return trial.toggleIsRunningTrial(state, action);
+		case actionTypes.CLEAR_TEST_RESULTS:
+			return trial.clearTestResults(state, action);
 		default:
 			return state; 
 	}
