@@ -82,6 +82,7 @@ const handleAddTest = (dispatch, ownProps) => {
 
 const mapStateToProps = (state, ownProps) => {
     return {
+    	runningTrial: state.runningTrial,
     	isRunning: state.isRunning,
     	animationOn: state.animationOn,
     	animationSpeedFactor: state.animationSpeedFactor,

@@ -8,6 +8,12 @@ const deleteTrial = (dispatch, ownProps) => {
 }
 
 const runTrial = (dispatch, ownProps) => {
+	// preRunTrialAction
+	// dispatch(preRunTrialAction(ownProps.id));
+	// dispatch(function(dispatch, getState) {
+	// 	dispatch(runTrialAction(ownProps.id));
+	// });
+
 	dispatch(runTrialAction(ownProps.id));
 }
 

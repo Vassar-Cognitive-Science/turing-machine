@@ -162,7 +162,7 @@ export function expandBeforeHead(state, action) {
 	var new_state = Object.assign({}, state, {
 		tapeCellsById: state.tapeCellsById.slice()
 	});
-	expandBeforeHeadHelper(new_state);
+	expandBeforeHeadHelper(new_state, action.n);
 	return new_state;
 }
 
@@ -249,10 +249,15 @@ export function moveLeft(state, action) {
 	let new_state = Object.assign({}, state, {
 		tapePointer: state.tapePointer - 1
 	});
+
 	if (new_state.tapePointer < new_state.anchorCell) {
 		new_state.anchorCell--;
 		if (new_state.anchorCell - 1 <= state.tapeHead)
 			insertBeforeHeadHelper(new_state, null)
+	}
+
+	if (read(new_state) === undefined) {
+		insertBeforeHeadHelper(new_state, null)
 	}
 
 	return highlightCorrespondingCell(new_state, {
@@ -271,6 +276,10 @@ export function moveRight(state, action) {
 		if (new_state.anchorCell + new_state.cellNum >= state.tapeTail) {
 			appendAfterTailHelper(new_state, null)
 		}
+	}
+
+	if (read(new_state) === undefined) {
+		appendAfterTailHelper(new_state, null)
 	}
 
 	return highlightCorrespondingCell(new_state, {

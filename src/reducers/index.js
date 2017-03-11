@@ -95,8 +95,8 @@ export const initialState = {
 	
 	testsById: ["Test 0"],
 	"Test 0": {
-		startState: "012312",
-		expectedFinalState: "1",
+		startState: "0",
+		expectedFinalState: "0",
 		startTape: [1,1,1,1,1,1,2],
 		expectedFinalTape: [2,2,2,2,2,2,2],
 
@@ -108,7 +108,7 @@ export const initialState = {
 	rowsById: ["row-1", "row-2", "row-3"],
 	"row-1": {
 		in_state: "0",
-		read: "1",
+		read: "#",
 		write: "2",
 		isLeft: false,
 		new_state: "0"
@@ -449,6 +449,8 @@ function trialReducer(state, action) {
 			return trial.runTrial(state, action);
 		case actionTypes.LOAD_TRIAL:
 			return trial.loadTrial(state, action);
+		case actionTypes.PRE_RUN_TRIAL:
+			return trial.preRunTrial(state, action);
 		default:
 			return state; 
 	}

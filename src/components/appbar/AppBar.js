@@ -10,6 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { List } from 'material-ui/List';
 import Drawer from 'material-ui/Drawer';
 import Subheader from 'material-ui/Subheader';
+import CircularProgress from 'material-ui/CircularProgress';
 
 /*Test Drawer*/
 import Add from 'material-ui/svg-icons/content/add-circle';
@@ -94,9 +95,14 @@ class AppToolBar extends React.Component {
 			        <Divider />
 			        <div style={{height: "50%", overflowY: "auto"}}>
 			        <List>
-			        	{this.props.testsById.map((id) => (
-			        		<TrialItem id={id} key={id} />
-			        	))}
+			        	{this.props.testsById.map((id) => {
+			        		if (id === this.props.runningTrial)  {
+			        			return (<MenuItem primaryText={id} key={id} 
+			        				rightIcon={<CircularProgress color={testHeaderColor} 
+			        				size={30} thickness={2.5} />} />);
+			        		}
+			        		return (<TrialItem id={id} key={id} />)
+			        	})}
 			        </List>
 			        </div>
 			        <div style={{paddingTop: "8%"}}>
@@ -106,6 +112,7 @@ class AppToolBar extends React.Component {
 			        <Divider />
 			        <MenuItem primaryText="Upload Tests" leftIcon={<UploadTests color={uploadTestsColor} />}/>
 			        <MenuItem primaryText="Save Tests" leftIcon={<SaveTests color={saveTestsColor} />}/>
+
 			        </div>
 			        </Drawer>
 		    </MuiThemeProvider>

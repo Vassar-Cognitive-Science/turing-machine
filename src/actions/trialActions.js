@@ -23,6 +23,13 @@ export function addTrialAction(id, startState="", expectedFinalState="", tape=[]
 	}
 }
 
+export function preRunTrialAction(id) {
+	return {
+		type: actionTypes.PRE_RUN_TRIAL,
+		id: id
+	}
+}
+
 export function runTrialAction(sourceId) {
 	return {
 		type: actionTypes.RUN_TRIAL,

@@ -78,13 +78,14 @@ function createTrial(startState, expectedFinalState, tape=[], expectedFinalTape=
 	};
 }
 
-function createTestReport(sourceId, sourceFile, statusCode, feedback, stepCount) {
+function createTestReport(sourceId, sourceFile, statusCode, feedback, stepCount, fullreport) {
 	return {
 		sourceId: sourceId,
 		sourceFile: sourceFile,
 		status: statusCode,
 		feedback: feedback,
-		stepCount: stepCount
+		stepCount: stepCount,
+		fullreport: fullreport
 	}
 }
 
@@ -101,6 +102,15 @@ function createSandbox(trial) {
 	for (let i = 0; i < trial.startTape.length; i++) {
 		let val = trial.startTape[i];
 		sandbox = tape.appendAfterTail(sandbox, { val: val });
+	}
+
+	let expandTo = trial.tapePointer;
+	if (expandTo < 0) {
+		sandbox = tape.expandBeforeHead(sandbox, { n: -expandTo + 5});
+	} else if (expandTo > 0) {
+		expandTo -= trial.startTape.length;
+		if (expandTo > 0)
+			sandbox = tape.expandAfterTail(sandbox, {n: expandTo + 5});
 	}
 
 	return sandbox;
@@ -133,17 +143,26 @@ export function addTrial(state, action) {
 	return new_state;
 }
 
+
+export function preRunTrial(state, action) {
+	return Object.assign({}, state, {
+		runningTrial: action.id
+	});
+}
+
 export function runTrial(state, action) {
 	let trial = state[action.sourceId];
 
 	let sandbox = createSandbox(trial);
 	while (sandbox.tapeInternalState !== HALT) {
+
 		if (sandbox.stepCount > MAX_STEP_LIMIT) {
 			return reportTestResult(state, {
 				sourceId: action.sourceId,
 				sourceFile: trial.sourceFile,
 				status: STATUS_CODE_FAIL,
-				feedback: EXCEED_MAX_STEP_LIMIT + " " + traceFailingStep(sandbox.stepCount),
+				feedback: EXCEED_MAX_STEP_LIMIT,
+				fullreport: EXCEED_MAX_STEP_LIMIT + " " + traceFailingStep(sandbox.stepCount),
 				stepCount: sandbox.stepCount,
 			});
 		}
@@ -178,6 +197,7 @@ export function runTrial(state, action) {
 			sandbox = tape.moveRight(sandbox);
 		}
 		sandbox.stepCount++;
+
 	}
 
 	let result = isExpected(sandbox, trial);
@@ -187,16 +207,19 @@ export function runTrial(state, action) {
 		status: result.status,
 		feedback: (result.status === STATUS_CODE_PASS) ? traceSuccessTrialStep(sandbox.stepCount) : result.feedback,
 		stepCount: sandbox.stepCount,
+		fullreport: result.fullreport
 	});
 }
 
 
 export function reportTestResult(state, action) {
-	let new_state = Object.assign({}, state);
+	let new_state = Object.assign({}, state, {
+		runningTrial: null,
+	});
 	new_state[standardizeTestReportId(action.sourceId)] = createTestReport(
 		action.sourceId, action.sourceFile,
 		action.status, action.feedback,
-		action.stepCount
+		action.stepCount, action.fullreport
 	);
 	return new_state;
 }
