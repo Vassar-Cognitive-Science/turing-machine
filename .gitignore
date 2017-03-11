@@ -27,6 +27,7 @@ coverage
 build/Release
 
 # Dependency directories
+build
 node_modules
 jspm_packages
 
@@ -41,4 +42,3 @@ tests\ and\ raw\ models
 
 *.duplicate.*
 
-build/
