@@ -53,6 +53,7 @@ const onKeyDown = (e, dispatch, ownProps) => {
     let val = String.fromCharCode(key);
     if (key === 51 && e.shiftKey) val = BLANK;
     // if (key === 56 && e.shiftKey) val = STAR;
+    if (key === 52 && e.shiftKey) val = "$";
     dispatch(fillTapeAction(activeId(), val));
     rollTapeToLeft(dispatch, ownProps.mark === MARK_LAST, ownProps);
   }
