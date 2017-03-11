@@ -413,6 +413,9 @@ function tapeReducer(state, action, clearRedo) {
 			clearRedo = false;
 			new_state = tape.moveRight(state, action);
 			break;
+		case actionTypes.HIGHLIGHT_CELL_AT:
+			new_state = tape.highlightCellAt(state, action);
+			break;
 		/* Tape actions */
 
 		// case actionTypes.LOAD_TRIAL:

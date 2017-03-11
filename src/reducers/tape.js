@@ -225,8 +225,8 @@ export function moveTapeRight(state, action) {
 	if (position + 1 >= state.tapeTail) {
 		appendAfterTailHelper(new_state, null);
 	}
-	document.getElementById(standardizeCellId(state.cellNum - 1)).focus()
-
+	// document.getElementById(standardizeCellId(state.cellNum - 1)).focus()
+	// return highlightCellAt(new_state, { order: new_state.cellNum - 1 });
 	return new_state;
 }
 
@@ -240,8 +240,8 @@ export function moveTapeLeft(state, action) {
 	if (position - 1 <= state.tapeHead) {
 		insertBeforeHeadHelper(new_state, null);
 	}
-	document.getElementById(standardizeCellId(0)).focus()
-
+	// document.getElementById(standardizeCellId(0)).focus()
+	// return highlightCellAt(new_state, { order: 0 });
 	return new_state;
 }
 
@@ -294,6 +294,12 @@ export function highlightCorrespondingCell(state, action) {
 	});
 
 	return new_state;
+}
+
+export function highlightCellAt(state, action) {
+	return Object.assign({}, state, {
+		highlightedCellOrder: action.order
+	});
 }
 
 export function setInternalState(state, action) {

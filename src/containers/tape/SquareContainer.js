@@ -71,6 +71,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   onKeyDown: (e) => {
     onKeyDown(e, dispatch, ownProps)
   },
+  dispatch: dispatch
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Square);

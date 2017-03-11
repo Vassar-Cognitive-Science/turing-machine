@@ -57,5 +57,12 @@ export function highlightCorrespondingCellAction(flag) {
 	return {
 		type: actionTypes.SET_CORRES_CELL_HEIGHT,
 		flag: flag
-	}
+	};
+}
+
+export function highlightCellAtAction(order) {
+	return {
+		type: actionTypes.HIGHLIGHT_CELL_AT,
+		order: order
+	};
 }

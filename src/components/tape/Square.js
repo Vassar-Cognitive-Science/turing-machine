@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { standardizeCellId } from '../../reducers/tape';
+import { highlightCellAtAction } from '../../actions/tapeActions';
 
 
 class Square extends React.Component {
@@ -8,10 +9,12 @@ class Square extends React.Component {
     this.state = { style: { backgroundColor: "#fff" }};
 
     this.onFocus = () => {
-      this.setState({style: { backgroundColor: "#87dbff" }});
+      this.props.dispatch(highlightCellAtAction(this.props.order));
+      // this.setState({style: { backgroundColor: "#87dbff" }});
     }
     this.onBlur = () => {
-      this.setState({style: { backgroundColor: "#fff" }});
+      this.props.dispatch(highlightCellAtAction(-1));
+      // this.setState({style: { backgroundColor: "#fff" }});
     }
     this.onMouseEnter = () => {
       let style;

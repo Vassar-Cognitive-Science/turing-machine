@@ -44,6 +44,7 @@ export const INSERT_CELL_BEFORE_HEAD = 'INSERT_CELL_BEFORE_HEAD';
 export const APPEND_CELL_AFTER_TAIL = 'APPEND_CELL_AFTER_TAIL';
 export const EXPAND_CELLS_BEFORE_HEAD = 'EXPAND_CELLS_BEFORE_HEAD';
 export const EXPAND_CELLS_AFTER_TAIL = 'EXPAND_CELLS_AFTER_TAIL';
+export const HIGHLIGHT_CELL_AT = "HIGHLIGHT_CELL_AT";
 /* Actions for Tape */
 
 /* Actions for Transition Table */
