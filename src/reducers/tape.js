@@ -1,6 +1,5 @@
 import { LEFT, BLANK } from '../constants/index';
 import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/GUISettings';
-import { initialState } from './index';
 import { adjustHeadWidth } from './gui';
 
 /**** Constants ****/

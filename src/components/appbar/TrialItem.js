@@ -11,6 +11,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Pass from 'material-ui/svg-icons/action/done';
 import Fail from 'material-ui/svg-icons/content/clear';
 import Load from 'material-ui/svg-icons/content/send';
+import Timeout from 'material-ui/svg-icons/device/access-alarms';
 // import ViewSourceFile from 'material-ui/svg-icons/action/zoom-in';
 import Traceback from 'material-ui/svg-icons/device/gps-fixed';
 import Run from 'material-ui/svg-icons/av/play-circle-outline';
@@ -28,7 +29,7 @@ import {
 	grey900 as tracebackColor,
 } from 'material-ui/styles/colors';
 
-import { STATUS_CODE_WAITING, STATUS_CODE_PASS, STATUS_CODE_FAIL } from '../../reducers/trial';
+import { STATUS_CODE_WAITING, STATUS_CODE_PASS, STATUS_CODE_FAIL, STATUS_CODE_TIMEOUT } from '../../reducers/trial';
 
 const iconButtonSelector = (statusCode, callBack) => {
 	switch(statusCode) {
@@ -38,6 +39,9 @@ const iconButtonSelector = (statusCode, callBack) => {
 		case STATUS_CODE_FAIL:
 			return <IconButton touch={true} tooltip="Wrong" tooltipStyles={{fontSize: 14}} 
 			tooltipPosition="bottom-left" onTouchTap={callBack}><Fail color={failColor} /></IconButton>;
+		case STATUS_CODE_TIMEOUT:
+			return <IconButton touch={true} tooltip="Time Out" tooltipStyles={{fontSize: 14}} 
+			tooltipPosition="bottom-left" onTouchTap={callBack}><Timeout color={failColor} /></IconButton>;
 		case STATUS_CODE_WAITING:
 		default:
 			return <IconButton touch={true} tooltip="Options" tooltipStyles={{fontSize: 14}} 
@@ -80,7 +84,9 @@ class TrialItem extends React.Component {
 			<ListItem 
 				  innerDivStyle={{paddingBottom: 10}}
 				  primaryText={this.props.id}
-				  secondaryText={(this.props.statusCode !== STATUS_CODE_PASS && this.props.statusCode !== STATUS_CODE_FAIL) ? 
+				  secondaryText={(this.props.statusCode !== STATUS_CODE_PASS && 
+				  				  this.props.statusCode !== STATUS_CODE_FAIL &&
+				  				  this.props.statusCode !== STATUS_CODE_TIMEOUT) ? 
 							  	null : 
 							  	processFeedback(this.props.feedback, this.props.statusCode)}
 				  rightIconButton={iconButtonSelector(this.props.statusCode, this.handlePopoverTouchTap)}

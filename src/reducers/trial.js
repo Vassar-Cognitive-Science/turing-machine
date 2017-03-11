@@ -1,6 +1,6 @@
 import * as tape from './tape';
 import * as gui from './gui';
-import { EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
+import { EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE, DIFF_FINAL_TAPE } from '../constants/Messages';
 
 import { HALT, BLANK } from '../constants/index';
 import { MAX_STEP_LIMIT } from '../constants/GUISettings';
@@ -19,10 +19,11 @@ const sandbox = {
 }
 */
 
-export const STATUS = ["WAITING", "PASS", "FAIL"];
+export const STATUS = ["WAITING", "PASS", "FAIL", "TIMEOUT"];
 export const STATUS_CODE_WAITING = 0;
 export const STATUS_CODE_PASS = 1;
 export const STATUS_CODE_FAIL = 2;
+export const STATUS_CODE_TIMEOUT = 3;
 
 export const standardizeTestReportId = (id) => "REPORT-OF-" + id;
 
@@ -54,7 +55,7 @@ const isExpected = (finalSandbox, trial) => {
 		let id = finalSandbox.tapeCellsById[i];
 		if (finalSandbox[id].val !== trial.expectedFinalTape[i].toString()) {
 			result.status = STATUS_CODE_FAIL;
-			result.feedback = DIFF_FINAL_STATE;
+			result.feedback = DIFF_FINAL_TAPE;
 			result.fullreport = DIFF_FINAL_STATE + 
 							" Expected at index " + i + " : " + trial.expectedFinalTape[i] +
 							"; You have: " + finalSandbox[id].val; 
@@ -184,7 +185,7 @@ export function runTrial(state, action) {
 			return reportTestResult(state, {
 				sourceId: action.sourceId,
 				sourceFile: trial.sourceFile,
-				status: STATUS_CODE_FAIL,
+				status: STATUS_CODE_TIMEOUT,
 				feedback: EXCEED_MAX_STEP_LIMIT,
 				fullreport: EXCEED_MAX_STEP_LIMIT + " " + traceFailingStep(sandbox.stepCount),
 				stepCount: sandbox.stepCount,
