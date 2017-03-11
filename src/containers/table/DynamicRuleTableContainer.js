@@ -8,7 +8,12 @@ const ROW_ID_PREFIX = "TABLE-ROW-";
 export const standardizeTableRowId = (id) => (ROW_ID_PREFIX + id); 
 
 const addRow = (dispatch, ownProps) => {
-	dispatch(addRowAction(standardizeTableRowId(ROW_ID++)));
+	dispatch(function(dispatch, getState) {
+		let id = standardizeTableRowId(ROW_ID++);
+		while (getState().rowsById.includes(id))
+			id = standardizeTableRowId(ROW_ID++);
+		dispatch(addRowAction(id));
+	});
 }
 
 const mapStateToProps = (state, ownProps) => {

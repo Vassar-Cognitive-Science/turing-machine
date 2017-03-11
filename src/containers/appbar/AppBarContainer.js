@@ -83,7 +83,12 @@ const handleSpeedChange = (newValue, dispatch, ownProps) => {
 }
 
 const handleAddTest = (dispatch, ownProps) => {
-	dispatch(addTrialAction(standardizeTestId(TEST_ID++)));
+	dispatch(function(dispatch, getState) {
+		let id = standardizeTestId(TEST_ID++);
+		while (getState().testsById.includes(id))
+			id = standardizeTestId(TEST_ID++);
+		dispatch(addTrialAction(id));
+	});
 }
 
 const handleRunAllTests = (dispatch, ownProps) => {
