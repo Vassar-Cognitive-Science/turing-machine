@@ -322,6 +322,9 @@ function machineReducer(state, action) {
 		case actionTypes.RESTORE:
 			new_state = machine.restore(state, action);
 			break;
+		case actionTypes.SILENT_RUN:
+			new_state = machine.silentRun(state, action);
+			break;
 		default:
 			break;
 	}

@@ -22,6 +22,12 @@ export function stepAction(silent=false) {
 	};
 }
 
+export function silentRunAction() {
+	return {
+		type: actionTypes.SILENT_RUN,
+	}
+}
+
 export function recordIntervalAction(interval) {
 	return {
 		type:actionTypes.RECORD_INTERVAL,
@@ -40,9 +46,9 @@ export function runMachineThunkActionCreator() {
 			}, getState().animationSpeed);
 			dispatch(recordIntervalAction(interval));
 		} else {
-			while (getState().isRunning) {
-				dispatch(stepAction(true));
-			}
+			setTimeout(() => {
+				dispatch(silentRunAction());
+			}, 800);
 		}
 	}
 }

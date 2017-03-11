@@ -44,11 +44,12 @@ import {
 	pink500 as addTrialColor,
 	blue600 as runAllTrialsColor,
 	orange500 as uploadTestsColor,
-	teal300 as saveTestsColor
+	teal300 as saveTestsColor,
+	cyan300 as calculationColor
  } from 'material-ui/styles/colors';
 
-const ProgressCircle = () => (
-	<CircularProgress color={testHeaderColor} size={30} thickness={2.5} />
+const ProgressCircle = (size=30, color=testHeaderColor) => (
+	<CircularProgress color={color} size={size} thickness={2.5} />
 )
 
 class AppToolBar extends React.Component {
@@ -133,18 +134,23 @@ class AppToolBar extends React.Component {
 							<ToolbarGroup firstChild={true}>
 
 								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleLast}><Last /></IconButton>
 
 								{(this.props.isRunning)?
+									((this.props.animationOn) ?
 									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
 										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
+										ProgressCircle(36, calculationColor)):
 									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
 										onTouchTap={this.props.handleRun}><Play /></IconButton>}
 
 								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleNext}><Next /></IconButton>
 
 								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleRestore}><Restore /></IconButton>
 
 								<IconButton 
@@ -202,16 +208,21 @@ class AppToolBar extends React.Component {
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
 								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleLast}><Last /></IconButton>
 								{(this.props.isRunning)?
+									((this.props.animationOn) ?
 									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
 										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
+										ProgressCircle(36, calculationColor)):
 									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
 										onTouchTap={this.props.handleRun}><Play /></IconButton>}
 
 								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleNext}><Next /></IconButton>
 								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 										onTouchTap={this.props.handleRestore}><Restore /></IconButton>
 								<IconButton 
 									disabled={this.props.isRunning}
@@ -267,16 +278,21 @@ class AppToolBar extends React.Component {
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
 								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleLast}><Last /></IconButton>
 								{(this.props.isRunning)?
+									((this.props.animationOn) ?
 									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
 										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
+										ProgressCircle(36, calculationColor)):
 									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
 										onTouchTap={this.props.handleRun}><Play /></IconButton>}
 
 								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleNext}><Next /></IconButton>
 								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 										onTouchTap={this.props.handleRestore}><Restore /></IconButton>
 								<IconButton 
 									disabled={this.props.isRunning}
@@ -329,16 +345,21 @@ class AppToolBar extends React.Component {
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
 								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleLast}><Last /></IconButton>
 								{(this.props.isRunning)?
+									((this.props.animationOn) ?
 									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
 										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
+										ProgressCircle(36, calculationColor)):
 									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
 										onTouchTap={this.props.handleRun}><Play /></IconButton>}
 
 								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 									onTouchTap={this.props.handleNext}><Next /></IconButton>
 								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
+									disabled={this.props.isRunning && !this.props.animationOn}
 										onTouchTap={this.props.handleRestore}><Restore /></IconButton>
 								<IconButton 
 									disabled={this.props.isRunning}

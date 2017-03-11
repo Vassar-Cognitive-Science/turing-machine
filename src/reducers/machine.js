@@ -19,7 +19,11 @@ const cachedLastStep = (lastState, lastPointer) => {
 		headWidth: lastState.headWidth,
 		headHeight: lastState.headHeight,
 		headLeftOffset: lastState.headLeftOffset,
-		stepCount: lastState.stepCount
+		stepCount: lastState.stepCount,
+
+		tapeHead: lastState.tapeHead,
+		tapeTail: lastState.tapeTail,
+		tapeCellsById: lastState.tapeCellsById.slice(),
 	};
 }
 
@@ -107,6 +111,13 @@ export function step(state, action) {
 	});
 }
 
+export function silentRun(state, action) {
+	let new_state = state;
+	while (new_state.isRunning)
+		new_state = step(new_state, { silent: true})
+	return new_state;
+}
+
 /*
 Record interval
 */
@@ -178,11 +189,19 @@ export function stepBack(state, action) {
 			headWidth: cached.headWidth,
 			headHeight: cached.headHeight,
 			headLeftOffset: cached.headLeftOffset,
-			stepCount: cached.stepCount
+			stepCount: cached.stepCount,
+
+			tapeHead: cached.tapeHead, // since only step back, restore control tape
+			tapeTail: cached.tapeTail,
+			tapeCellsById: cached.tapeCellsById.slice(),
 		})
 
 		// More priority here than undo edit
 		new_state[tape.standardizeCellId(cached.cachedPointer)] = cached.cachedCell;
+
+		// delete this cell if necessary
+		if (!new_state.tapeCellsById.includes(tape.standardizeCellId(state.tapePointer)))
+			delete new_state[tape.standardizeCellId(state.tapePointer)];
 
 		return new_state;
 	}
@@ -213,16 +232,28 @@ export function restore(state, action) {
 			headWidth: cached[0].headWidth,
 			headHeight: cached[0].headHeight,
 			headLeftOffset: cached[0].headLeftOffset,
-			stepCount: cached[0].stepCount
+			stepCount: cached[0].stepCount,
+
+			tapeHead: cached[0].tapeHead, // since only step back, restore control tape
+			tapeTail: cached[0].tapeTail,
+			tapeCellsById: cached[0].tapeCellsById.slice(),
 		})
 
 		// More priority here than undo edit
 		let i = cached.length - 1, lastStep;
 		while (i >= 0) {
 			lastStep = cached[i];
-			new_state[tape.standardizeCellId(lastStep.cachedPointer)] = lastStep.cachedCell; // already cloned
+			let id = tape.standardizeCellId(lastStep.cachedPointer);
+			if (new_state.tapeCellsById.includes(id))
+				new_state[id] = lastStep.cachedCell; // already cloned
+			else
+				delete new_state[id];
 			i--;
 		}
+
+		// delete this cell if necessary
+		if (!new_state.tapeCellsById.includes(tape.standardizeCellId(state.tapePointer)))  
+			delete new_state[tape.standardizeCellId(state.tapePointer)];
 
 		return new_state;
 	} else {
