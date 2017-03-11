@@ -61,4 +61,5 @@ export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';
 export const DELETE_TRIAL = 'DELETE_TRIAL';
 export const ADD_TRIAL = 'ADD_TRIAL';
 export const RUN_TRIAL = 'RUN_TRIAL';
+export const LOAD_TRIAL = 'LOAD_TRIAL';
 /* Actions for Trials*/

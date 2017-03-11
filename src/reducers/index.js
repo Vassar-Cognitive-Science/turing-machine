@@ -4,7 +4,7 @@ import * as table from './table';
 import * as gui from './gui';
 import * as machine from './machine';
 import * as trial from './trial';
-import { INIT_HEAD_WIDTH, INIT_HEAD_HEIGHT, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
+import { INIT_HEAD_WIDTH, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
 
 export const initialState = {
 /* GUI settings */
@@ -23,7 +23,6 @@ export const initialState = {
 
 	/* HEAD Width settings */
 	headWidth: INIT_HEAD_WIDTH, // control Tape Head width
-	headHeight: INIT_HEAD_HEIGHT, // control Tape Head height
 	headLeftOffset: INIT_HEAD_LEFT_OFFSET, // control Tape Head input box position 
 	/* HEAD Width settings */
 
@@ -94,14 +93,14 @@ export const initialState = {
 /* Trials */
 
 	
-	testsById: ["Test 1"],
-	"Test 1": {
-		startState: "0",
+	testsById: ["Test 0"],
+	"Test 0": {
+		startState: "012312",
 		expectedFinalState: "1",
 		startTape: [1,1,1,1,1,1,2],
 		expectedFinalTape: [2,2,2,2,2,2,2],
 
-		startHeadPosition: 0,
+		tapePointer: 0,
 		sourceFile: null
 	},
 
@@ -239,33 +238,6 @@ function undo(state, action) {
 	let new_state;
 
 	switch (undoAction.type) {
-		case actionTypes.FILL_TAPE:
-			new_state = Object.assign({}, state);
-			new_state[undoAction.actualId] = tape.cloneCell(state[undoAction.actualId]);
-			new_state[undoAction.actualId].val = undoAction.val;
-			break;
-		case actionTypes.INITIALIZAE_TAPE:
-			new_state = Object.assign({}, state, {
-				anchorCell: undoAction.anchorCell,
-				tapeHead: undoAction.tapeHead, 
-				tapeTail: undoAction.tapeTail, 
-				tapePointer: undoAction.tapePointer, 
-				tapeCellsById: undoAction.tapeCellsById,
-			});
-
-			for (let i = 0; i < state.tapeCellsById.length; i++) {
-				let id = state.tapeCellsById[i];
-				delete new_state[id];
-			}
-
-			for (let i = 0; i < undoAction.tapeCellsById.length; i++) {
-				let id = undoAction.tapeCellsById[i];
-				new_state[id] = tape.cloneCell(undoAction[id]);
-			}
-			break;
-		case actionTypes.SET_INTERNAL_STATE:
-			new_state = gui.adjustHeadWidth(tape.setInternalState(state, undoAction), { text: undoAction.state });
-			break;
 		case actionTypes.ADD_ROW:
 			new_state = table.deleteRow(state, undoAction);
 			break;
@@ -376,7 +348,9 @@ clearRedo: boolean, if true, it means that we want to clear the redo history, th
 					if false, it the change is made by undo/redo mechanism 
 */
 function tapeReducer(state, action, clearRedo) {
-	let new_state = state, changed = true;
+	// let new_state = state, changed = true; //Undo reacts on tape version
+
+	let new_state = state, changed = false;
 	switch (action.type) {
 		/* Tape actions */
 		case actionTypes.SET_CORRES_CELL_HEIGHT:
@@ -411,6 +385,10 @@ function tapeReducer(state, action, clearRedo) {
 			new_state = tape.moveRight(state, action);
 			break;
 		/* Tape actions */
+
+		// case actionTypes.LOAD_TRIAL:
+		// 	new_state = trial.loadTrial(state, action);
+		// 	break;
 		default:
 			changed = false;
 	}
@@ -469,6 +447,8 @@ function trialReducer(state, action) {
 			return trial.addTrial(state, action);
 		case actionTypes.RUN_TRIAL:
 			return trial.runTrial(state, action);
+		case actionTypes.LOAD_TRIAL:
+			return trial.loadTrial(state, action);
 		default:
 			return state; 
 	}
@@ -504,35 +484,7 @@ function createEditHistoryCache(state, action) {
 	}
 
 	switch (action.type) {
-		case actionTypes.FILL_TAPE:
-			let id;
-			if (cache.redo.id) 
-				id = cache.redo.id;
-			else
-				id = tape.standardizeCellId(action.position + state.anchorCell);
-			
-			cache.undo = {
-				val: state[id].val,
-				actualId: id,
-			};
-			cache.redo.id = id;
-			break;
-		case actionTypes.INITIALIZAE_TAPE:
-			cache.undo = {
-				anchorCell: state.anchorCell,
-				tapeHead: state.tapeHead, 
-				tapeTail: state.tapeTail, 
-				tapePointer: state.tapePointer, 
-				tapeCellsById: state.tapeCellsById.slice(),
-			};
-			for (var i = 0; i < cache.undo.tapeCellsById.length; i++) {
-				let id = cache.undo.tapeCellsById[i];
-				cache.undo[id] = tape.cloneCell(state[id]);
-			}
-			break;
-		case actionTypes.SET_INTERNAL_STATE:
-			cache.undo = { state: state.tapeInternalState };
-			break;
+		
 		case actionTypes.ADD_ROW:
 			cache.undo = { id: action.id };
 			break;
@@ -565,3 +517,152 @@ function createEditHistoryCache(state, action) {
 	return cache;
 }
 
+
+
+
+
+
+
+
+
+
+/* Undo reacts to tape version
+
+function undo(state, action) {
+	if (state.undoEditHistory.length === 0)
+		return state;
+
+	let cache = state.undoEditHistory[state.undoEditHistory.length-1];
+	let undoAction = cache.undo;
+	let new_state;
+
+	switch (undoAction.type) {
+		case actionTypes.LOAD_TRIAL:
+			new_state = Object.assign({}, state, {
+				anchorCell: undoAction.anchorCell,
+				tapeHead: undoAction.tapeHead, 
+				tapeTail: undoAction.tapeTail, 
+				tapePointer: undoAction.tapePointer, 
+				tapeCellsById: undoAction.tapeCellsById,
+				headX: undoAction.headX,
+				headLeftOffset: undoAction.headLeftOffset,
+				headWidth: undoAction.headWidth,
+				tapeInternalState: undoAction.tapeInternalState,
+			});
+
+			for (let i = 0; i < state.tapeCellsById.length; i++) {
+				let id = state.tapeCellsById[i];
+				delete new_state[id];
+			}
+
+			for (let i = 0; i < undoAction.tapeCellsById.length; i++) {
+				let id = undoAction.tapeCellsById[i];
+				new_state[id] = tape.cloneCell(undoAction[id]);
+			}
+			break;
+		case actionTypes.FILL_TAPE:
+			new_state = Object.assign({}, state);
+			new_state[undoAction.actualId] = tape.cloneCell(state[undoAction.actualId]);
+			new_state[undoAction.actualId].val = undoAction.val;
+			break;
+		case actionTypes.INITIALIZAE_TAPE:
+			new_state = Object.assign({}, state, {
+				anchorCell: undoAction.anchorCell,
+				tapeHead: undoAction.tapeHead, 
+				tapeTail: undoAction.tapeTail, 
+				tapePointer: undoAction.tapePointer, 
+				tapeCellsById: undoAction.tapeCellsById,
+			});
+
+			for (let i = 0; i < state.tapeCellsById.length; i++) {
+				let id = state.tapeCellsById[i];
+				delete new_state[id];
+			}
+
+			for (let i = 0; i < undoAction.tapeCellsById.length; i++) {
+				let id = undoAction.tapeCellsById[i];
+				new_state[id] = tape.cloneCell(undoAction[id]);
+			}
+			break;
+		case actionTypes.SET_INTERNAL_STATE:
+			new_state = gui.adjustHeadWidth(tape.setInternalState(state, undoAction), { text: undoAction.state });
+			break;
+		default:
+			return state;
+	}
+
+	let newRedoHistory = new_state.redoEditHistory.slice();
+	newRedoHistory.push(cache.redo);
+
+	return Object.assign({}, new_state, {
+		undoEditHistory: new_state.undoEditHistory.slice(0, new_state.undoEditHistory.length-1),
+		redoEditHistory: newRedoHistory
+	});
+}
+
+function createEditHistoryCache(state, action) {
+	let cache = {
+		undo: null,
+		redo: Object.assign({}, action),
+	}
+
+	switch (action.type) {
+		case actionTypes.LOAD_TRIAL:
+			cache.undo = {
+				headX: state.headX,
+				anchorCell: state.anchorCell,
+				tapeHead: state.tapeHead, 
+				tapeTail: state.tapeTail, 
+				tapePointer: state.tapePointer, 
+				tapeCellsById: state.tapeCellsById.slice(),
+				headLeftOffset: state.headLeftOffset,
+				headWidth: state.headWidth,
+				tapeInternalState: state.tapeInternalState,
+			};
+			for (var i = 0; i < cache.undo.tapeCellsById.length; i++) {
+				let id = cache.undo.tapeCellsById[i];
+				cache.undo[id] = tape.cloneCell(state[id]);
+			}
+			break;
+		case actionTypes.FILL_TAPE:
+			let id;
+			if (cache.redo.id) 
+				id = cache.redo.id;
+			else
+				id = tape.standardizeCellId(action.position + state.anchorCell);
+			
+			cache.undo = {
+				val: state[id].val,
+				actualId: id,
+			};
+			cache.redo.id = id;
+			break;
+		case actionTypes.INITIALIZAE_TAPE:
+			cache.undo = {
+				anchorCell: state.anchorCell,
+				tapeHead: state.tapeHead, 
+				tapeTail: state.tapeTail, 
+				tapePointer: state.tapePointer, 
+				tapeCellsById: state.tapeCellsById.slice(),
+			};
+			for (var i = 0; i < cache.undo.tapeCellsById.length; i++) {
+				let id = cache.undo.tapeCellsById[i];
+				cache.undo[id] = tape.cloneCell(state[id]);
+			}
+			break;
+		case actionTypes.SET_INTERNAL_STATE:
+			cache.undo = { state: state.tapeInternalState };
+			break;
+		default:
+			return null;
+	}
+
+	cache.undo.type = action.type;
+	return cache;
+}
+
+
+
+
+
+*/

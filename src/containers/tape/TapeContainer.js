@@ -18,6 +18,7 @@ const mapStateToProps = (state) => {
 		isRunning: state.isRunning,
 		cellNum: state.cellNum,
 		messageColor: (state.tapeInternalState === HALT) ? "#1976D2" : "#FF3D00",
+		stepCount: state.stepCount,
 	}
 };
 

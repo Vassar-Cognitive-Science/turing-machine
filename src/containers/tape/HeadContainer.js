@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { setInternalStateAction, highlightCorrespondingCellAction } from '../../actions/tapeActions';
 import { moveHeadAction } from '../../actions/guiActions';
-import { adjustHeadWidthAction } from '../../actions/guiActions';
 import Head from '../../components/tape/Head';
 import { getAllStates } from '../table/AutoCompleteFieldContainer';
 import { HALT, standardFilter } from '../../constants/index';
@@ -34,7 +33,6 @@ const headOnDrag = (e, ui, dispatch) => {
 }
 
 const onUpdateInput = (searchText, dispatch) => {
-    dispatch(adjustHeadWidthAction(searchText));
     dispatch(setInternalStateAction(searchText));
 }
 

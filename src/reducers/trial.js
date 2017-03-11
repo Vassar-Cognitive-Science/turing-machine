@@ -1,8 +1,8 @@
 import * as tape from './tape';
-// import * as gui from './gui';
+import * as gui from './gui';
 import { EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
 
-import { HALT } from '../constants/index';
+import { HALT, BLANK } from '../constants/index';
 import { MAX_STEP_LIMIT } from '../constants/GUISettings';
 
 // import { UNDEFINED_RULE, EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
@@ -39,6 +39,7 @@ const isExpected = (finalSandbox, trial) => {
 		status: STATUS_CODE_PASS,
 		feedback: "",
 		fullreport: "",
+		finalState: finalSandbox,
 	};
 
 	if (finalSandbox.tapeInternalState !== trial.expectedFinalState) {
@@ -65,14 +66,14 @@ const isExpected = (finalSandbox, trial) => {
 }
 
 function createTrial(startState, expectedFinalState, tape=[], expectedFinalTape=[],
-					startHeadPosition=0, sourceFile=null) {
+					tapePointer=0, sourceFile=null) {
 	return {
 		startState: startState,
 		expectedFinalState: expectedFinalState,
 		startTape: tape,
 		expectedFinalTape: expectedFinalTape,
 
-		startHeadPosition: startHeadPosition,
+		tapePointer: tapePointer,
 		sourceFile: sourceFile,
 	};
 }
@@ -94,7 +95,7 @@ function createSandbox(trial) {
 		tapeHead: 0,
 		tapeTail: 0,
 		tapeCellsById: [],
-		tapePointer: trial.startHeadPosition,
+		tapePointer: trial.tapePointer,
 		tapeInternalState: trial.startState
 	};
 	for (let i = 0; i < trial.startTape.length; i++) {
@@ -116,13 +117,15 @@ export function deleteTrial(state, action) {
 }
 
 export function addTrial(state, action) {
+	if (state[action.id] !== undefined) return state;
+
 	let new_state = Object.assign({}, state, {
-		testsById: state.testsById.filter(tid => tid !== action.id)
+		testsById: state.testsById.slice()
 	})
 
 	new_state.testsById.push(action.id);
 	let trial = createTrial(action.startState, action.expectedFinalState, 
-							action.tape, action.startHeadPosition, 
+							action.tape, action.tapePointer, 
 							action.expectedTape, action.sourceFile);
 
 	new_state[action.id] = trial;
@@ -195,5 +198,42 @@ export function reportTestResult(state, action) {
 		action.status, action.feedback,
 		action.stepCount
 	);
+	return new_state;
+}
+
+export function loadTrial(state, action) {
+	let trial = state[action.id];
+
+	let new_state = tape.initializeTape(state, {});
+	new_state = tape.setInternalState(new_state, {state: trial.startState});
+
+	let offset = trial.tapePointer - new_state.tapePointer;
+	let moveLeft;
+	if (offset < 0) {
+		offset = -offset;
+		moveLeft = true; 
+	} else if (offset > 0) {
+		moveLeft = false;
+	}
+
+	while (offset--) {
+		new_state = gui.moveHead(new_state, {moveLeft: moveLeft});
+	}
+	let anchorCell = new_state.anchorCell;
+	let highlightedCellOrder = new_state.highlightedCellOrder;
+
+	new_state.tapePointer = 0;
+	new_state.anchorCell = 0;
+	for (let i = 0; i < trial.startTape.length; i++) {
+		let val = trial.startTape[i].toString();
+		if (val === BLANK)
+			val = "";
+		new_state = tape.writeIntoTape(new_state, { val: val});
+		new_state = tape.moveRight(new_state);
+	}
+	new_state.tapePointer = trial.tapePointer;
+	new_state.anchorCell = anchorCell;
+	new_state.highlightedCellOrder = highlightedCellOrder;
+
 	return new_state;
 }

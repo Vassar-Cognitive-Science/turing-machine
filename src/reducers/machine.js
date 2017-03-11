@@ -94,7 +94,6 @@ export function step(state, action) {
 	let rule = new_state[new_state.highlightedRow];
 	new_state = tape.writeIntoTape(new_state, {val: rule.write});
 	new_state = tape.setInternalState(new_state, {state: rule.new_state});
-	new_state = gui.adjustHeadWidth(new_state, {});
 
 	if (rule.isLeft){
 		new_state = gui.moveHead(new_state, {moveLeft: true});

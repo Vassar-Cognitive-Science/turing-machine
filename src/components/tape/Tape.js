@@ -41,6 +41,9 @@ class Tape extends React.Component {
               style={{visibility:(this.props.showReportedError)?"visible":"hidden", color: this.props.messageColor}}>
               {this.props.machineReportError}
             </div>
+            <div className="step-count">
+              <p>Step: {this.props.stepCount}</p>
+            </div>
             <div className="tape-with-button">
               <div className="roll-left"><IconButton tooltip="Roll Left" 
                 onTouchTap={this.props.rollLeft} touch={true} style={styles.style} 

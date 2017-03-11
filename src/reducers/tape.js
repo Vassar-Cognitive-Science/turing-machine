@@ -1,6 +1,7 @@
 import { LEFT, BLANK } from '../constants/index';
 import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/GUISettings';
 import { initialState } from './index';
+import { adjustHeadWidth } from './gui';
 
 /**** Constants ****/
 
@@ -287,9 +288,9 @@ export function highlightCorrespondingCell(state, action) {
 }
 
 export function setInternalState(state, action) {
-	return Object.assign({}, state, {
+	return adjustHeadWidth(Object.assign({}, state, {
 		tapeInternalState: action.state
-	});
+	}), action.state);
 }
 
 

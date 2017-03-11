@@ -11,7 +11,8 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Pass from 'material-ui/svg-icons/action/done';
 import Fail from 'material-ui/svg-icons/content/clear';
 import Load from 'material-ui/svg-icons/content/send';
-import Traceback from 'material-ui/svg-icons/action/zoom-in';
+// import ViewSourceFile from 'material-ui/svg-icons/action/zoom-in';
+import Traceback from 'material-ui/svg-icons/device/gps-fixed';
 import Run from 'material-ui/svg-icons/av/play-circle-outline';
 import Edit from 'material-ui/svg-icons/content/create';
 
@@ -94,14 +95,14 @@ class TrialItem extends React.Component {
 	          onRequestClose={this.handlePopoverRequestClose}
 	        >
 	          <Menu>
-	            <MenuItem primaryText="Run" leftIcon={<Run color={runButtonColor}/>} onTouchTap={this.props.runTrial} />
-	            <MenuItem primaryText="Edit" leftIcon={<Edit color={editButtonColor}/>} onTouchTap={this.props.editTrial} />
+	            <MenuItem primaryText="Run" leftIcon={<Run color={runButtonColor}/>} onTouchTap={() => {this.props.runTrial(); this.handlePopoverRequestClose();}} />
+	            <MenuItem primaryText="Edit" leftIcon={<Edit color={editButtonColor}/>} onTouchTap={() => {this.props.editTrial(); this.handlePopoverRequestClose();}} />
 	            <Divider />
-	            <MenuItem primaryText="Load" leftIcon={<Load color={loadColor}/>} onTouchTap={this.props.runTrial} />
+	            <MenuItem primaryText="Load" leftIcon={<Load color={loadColor}/>} onTouchTap={() => {this.props.loadTrial(); this.handlePopoverRequestClose();}} />
 	            {(this.props.statusCode === STATUS_CODE_FAIL)?
-	            	<MenuItem primaryText="Traceback" leftIcon={<Traceback color={tracebackColor}/>} onTouchTap={this.props.editTrial} />:null}
+	            	<MenuItem primaryText="Traceback" leftIcon={<Traceback color={tracebackColor}/>} onTouchTap={() => {this.props.traceback(); this.handlePopoverRequestClose();}} />:null}
 	            <Divider />
-	            <MenuItem primaryText="Delete" leftIcon={<Delete color={deleteButtonColor}/>} onTouchTap={this.props.deleteTrial}/>
+	            <MenuItem primaryText="Delete" leftIcon={<Delete color={deleteButtonColor}/>} onTouchTap={() => {this.props.deleteTrial(); this.handlePopoverRequestClose();}}/>
 	          </Menu>
 	        </Popover>
 	        </MuiThemeProvider>

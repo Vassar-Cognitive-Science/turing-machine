@@ -29,3 +29,10 @@ export function runTrialAction(sourceId) {
 		sourceId: sourceId
 	}
 }
+
+export function loadTrialAction(id) {
+	return {
+		type: actionTypes.LOAD_TRIAL,
+		id: id,
+	}
+}
