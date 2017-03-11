@@ -41,4 +41,4 @@ tests\ and\ raw\ models
 
 *.duplicate.*
 
-build
+build/
