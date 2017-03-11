@@ -34,14 +34,14 @@
 .roll-left {
   display: table-cell;
   vertical-align: middle;
-  height:145px;
+  height:135px;
   padding-right: 0px;
 }
 
 .roll-right {
   display: table-cell;
   vertical-align: middle;
-  height:145px;
+  height:135px;
   padding-left: 0px;
 }
 

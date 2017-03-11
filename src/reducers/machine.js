@@ -52,7 +52,7 @@ export function preStep(state, action) {
 	new_state = highlightCorrespondingRule(new_state, { flag: true });
 
 	if (new_state.highlightedRow)
-		document.getElementById(new_state.highlightedRow).scrollIntoView(true);
+		document.getElementById(new_state.highlightedRow).scrollIntoView(false);
 
 	return new_state;
 }
@@ -83,8 +83,9 @@ export function step(state, action) {
 		return stop(new_state, {message: UNDEFINED_RULE, flag: true});
 	}
 
-	if (!action.silent)
-		document.getElementById(new_state.highlightedRow).scrollIntoView(true);
+	if (!action.silent) {
+		document.getElementById(new_state.highlightedRow).scrollIntoView(false);
+	}
 
 	new_state = Object.assign({}, new_state, {
 		runHistory: new_state.runHistory.slice(),
