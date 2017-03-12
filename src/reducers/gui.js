@@ -12,17 +12,26 @@ import { moveLeft, moveRight } from './tape';
 
 /*
 Adjust the Head width according to the length of text in it
+
+*** NOTE ***: It is wrapped in tape.setInternalState
 */
 export function adjustHeadWidth(state, action) {
+	// if there is assigned text, use it, else use tape internal state
 	let text = (action.text) ? action.text : state.tapeInternalState.toString();
+	// leave some white space
 	let textLength = text.length + 2;
+
 	let newWidth, newLeftOffset;
+	// each char is of width 10px
 	let defaultTextLength = INIT_HEAD_WIDTH / 10;
 
+	// if < default text length
+	// set head view to initial head view
 	if (textLength <= defaultTextLength - 2) {
 		newWidth = INIT_HEAD_WIDTH;
 		newLeftOffset = INIT_HEAD_LEFT_OFFSET;
 	} else {
+		// else expand head
 		let diff = textLength - defaultTextLength;
 		newWidth = INIT_HEAD_WIDTH + 10 * diff;
 		newLeftOffset = INIT_HEAD_LEFT_OFFSET - 5 * diff;
@@ -37,6 +46,9 @@ export function adjustHeadWidth(state, action) {
 /* SIDE EFFECT HERE!*/
 /* IF THE MACHINE IS RUNNING AND WANTED TO BE STOPPED,
 	clearInterval WILL BE CALLED	
+
+action.flag: bool, true means the machine is running 
+
 */
 export function setPlayState(state, action) {
 	if (!action.flag && state.interval) {
@@ -44,7 +56,8 @@ export function setPlayState(state, action) {
 	}
 
 	return Object.assign({}, state, {
-		isRunning: action.flag
+		isRunning: action.flag,
+		interval: (action.flag) ? state.interval : null
 	});
 }
 
@@ -53,7 +66,9 @@ export function setPlayState(state, action) {
 */
 export function setAnimationSpeed(state, action) {
 	return Object.assign({}, state, {
+		// update factor
 		animationSpeedFactor: action.percentage,
+		// calculate speed, not necessary, but would be handy to define it
 		animationSpeed: ANIMATION_SPEED / action.percentage 
 	});
 }
@@ -65,16 +80,17 @@ export function setAnimationSpeed(state, action) {
 export function moveHead(state, action) {
 	let new_head_x, new_state;
 
-	// model changes
 	if (action.moveLeft) {
+		// view change
 		new_head_x = state.headX - HEAD_MOVE_INTERVAL;
+		// model change
 		new_state = moveLeft(state);
 	} else {
 		new_head_x = state.headX + HEAD_MOVE_INTERVAL;
 		new_state = moveRight(state);
 	}
 
-	// view changes
+	// if headX exceeds boundary, don't change it!
 	return Object.assign({}, new_state, {
 		headX: (new_head_x <= new_state.rightBoundary && 
 				new_head_x >= HEAD_LEFT_BOUNDARY) ? new_head_x : state.headX

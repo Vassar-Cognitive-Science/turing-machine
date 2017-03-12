@@ -15,16 +15,19 @@ read --- string, (should be from tape.read function
 */
 export function matchRule(state, in_state, read) {
 	let ruleId = null;
+
 	for (var i = 0; i < state.rowsById.length; i++) {
 		let row = state[state.rowsById[i]];
-		if (row.in_state === in_state) {
-			if (row.read === read) {
+		if (row.in_state === in_state) { 
+
+			if (row.read === read) { // match read
 				ruleId = state.rowsById[i];
 				break;
 			} else if (row.read === STAR) { // handles *
 				ruleId = state.rowsById[i];
 				break;
 			}
+
 		}
 	}
 
@@ -90,16 +93,18 @@ Highlight Corresponding Rule
 */
 export function preStep(state, action) {
 	let new_state;
-	if (!action.singleStep)
-		new_state = gui.setPlayState(state, { flag: true });
-	else
+	if (!action.singleStep) // if we want run automatically
+		new_state = gui.setPlayState(state, { flag: true }); 
+	else // if we want only a single step 
 		new_state = state;
 
+	// highlight corresponding cell
 	new_state = tape.highlightCorrespondingCell(new_state, { flag: true });
 
 	/* Find rule by internal state, and val of tape cell, and highlight it*/
 	new_state = highlightCorrespondingRule(new_state, { flag: true });
 
+	// scroll into view
 	if (new_state.highlightedRow)
 		document.getElementById(new_state.highlightedRow).scrollIntoView(false);
 
@@ -130,8 +135,6 @@ export function step(state, action) {
 
 	// highlight corresponding rule, which is sure our target
 	let new_state = highlightCorrespondingRule(state, { flag: true });
-
-	console.log(new_state)
 
 	// is the rule we want defined?
 	if (new_state.highlightedRow === null) {
