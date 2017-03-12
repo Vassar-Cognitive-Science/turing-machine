@@ -557,3 +557,6 @@ function createEditHistoryCache(state, action) {
 	cache.undo.type = action.type;
 	return cache;
 }
+
+
+// Version of undo/redo that can reacts to tape can be found on commit "Enable feature: test machine" on March 10, 2017

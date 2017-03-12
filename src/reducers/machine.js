@@ -131,6 +131,8 @@ export function step(state, action) {
 	// highlight corresponding rule, which is sure our target
 	let new_state = highlightCorrespondingRule(state, { flag: true });
 
+	console.log(new_state)
+
 	// is the rule we want defined?
 	if (new_state.highlightedRow === null) {
 		return stop(new_state, {message: UNDEFINED_RULE, flag: true});
@@ -294,7 +296,7 @@ export function restore(state, action) {
 
 		let new_state = Object.assign({}, state, {
 			// General
-			stepCount: cached.stepCount,
+			stepCount: cached[0].stepCount,
 
 			// run history
 			runHistory: state.runHistory.slice(0, state.runHistory.length - 1),

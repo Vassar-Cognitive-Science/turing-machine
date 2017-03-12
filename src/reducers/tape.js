@@ -214,7 +214,6 @@ export function fillTape(state, action) {
 	return new_state;
 }
 
-// side effect here
 export function moveTapeRight(state, action) {
 	let new_state = Object.assign({}, state, {
 		anchorCell: state.anchorCell + 1,
@@ -229,7 +228,6 @@ export function moveTapeRight(state, action) {
 	return new_state;
 }
 
-// side effect here
 export function moveTapeLeft(state, action) {
 	let new_state = Object.assign({}, state, {
 		anchorCell: state.anchorCell - 1,
