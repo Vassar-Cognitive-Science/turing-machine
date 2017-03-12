@@ -25,7 +25,6 @@ const initialStateForTable = {
 }
 */
 
-
 function createRow(in_state = "", read = "", write = "", isLeft = false, new_state = "",
 					in_state_error = "", read_error = "", write_error = "", new_state_error = "") {
 	return {

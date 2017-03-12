@@ -92,13 +92,18 @@ const handleAddTest = (dispatch, ownProps) => {
 }
 
 const handleRunAllTests = (dispatch, ownProps) => {
+	// update state
 	dispatch(toggleIsRunningTrialAction(true));
+	// clear previous test results
 	dispatch(clearTestResultAction());
+
+	// prepare all tests for running
 	dispatch(function(dispatch, getState) {
 		for (let i = 0; i < getState().testsById.length; i++)
 			dispatch(preRunTrialAction(getState().testsById[i]));
 	});
 
+	// runn tests
 	setTimeout(() => {
 		dispatch(function(dispatch, getState) {
 			for (let i = 0; i < getState().testsById.length; i++) {

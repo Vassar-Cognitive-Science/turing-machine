@@ -5,37 +5,82 @@ import * as tape from './tape';
 import * as gui from './gui';
 
 /*
+Helper function that matches in_state and read to rule, and return its id.
+Parameter:
+state --- a state object from store
+in_state --- string
+read --- string, (should be from tape.read function
+
+**** Responsible for handling special character * Here **** 
+*/
+export function matchRule(state, in_state, read) {
+	let ruleId = null;
+	for (var i = 0; i < state.rowsById.length; i++) {
+		let row = state[state.rowsById[i]];
+		if (row.in_state === in_state) {
+			if (row.read === read) {
+				ruleId = state.rowsById[i];
+				break;
+			} else if (row.read === STAR) { // handles *
+				ruleId = state.rowsById[i];
+				break;
+			}
+		}
+	}
+
+	return ruleId;
+}
+
+/*
 Helper function that saves relevant data to restore to last step
+save the following data
+
+*** MODEL INFO ***
+tapePointer
+tape cell
+tape internal state
+
+tape head
+tape tail
+tape cell id array
+anchor cell
+
+step count
+
+*** GUI INFO ***
+headX, head position
+headWidth
+headLeftOffset
+
+highlighted rule (row) id
+highlighted cell order
+
+
 */
 const cachedLastStep = (lastState, lastPointer) => {
 	return {
-		cachedPointer: lastPointer,
-		cachedCell: tape.cloneCellById(lastState, lastPointer),
-		headX: lastState.headX,
 		highlightedRow: lastState.highlightedRow,
 		highlightedCellOrder: lastState.highlightedCellOrder,
-		tapeInternalState: lastState.tapeInternalState,
-		anchorCell: lastState.anchorCell,
+		
+		headX: lastState.headX,
 		headWidth: lastState.headWidth,
-		headHeight: lastState.headHeight,
 		headLeftOffset: lastState.headLeftOffset,
+
+
 		stepCount: lastState.stepCount,
 
+		tapeInternalState: lastState.tapeInternalState,
+		cachedPointer: lastPointer,
+		cachedCell: tape.cloneCellById(lastState, lastPointer),
+
+		anchorCell: lastState.anchorCell,
 		tapeHead: lastState.tapeHead,
 		tapeTail: lastState.tapeTail,
 		tapeCellsById: lastState.tapeCellsById.slice(),
 	};
 }
 
-/*
-Helper reducer that handles reporting message to user
-*/
-function reportErrorMessage(state, action) {
-	return Object.assign({}, state, {
-		machineReportError: action.message,
-		showReportedError: action.flag,
-	});
-}
+
 
 /*
 Prepare for a step forward
@@ -73,48 +118,63 @@ Adjust head width
 Move Head according to rule.isLeft 
 */
 export function step(state, action) {
+	// is machine halted?
 	if (state.tapeInternalState === HALT) {
 		return stop(state, {message: REACH_HALT, flag: true});
 	}
 
+	// is there too many steps?
 	if (state.stepCount > MAX_STEP_LIMIT) {
 		return stop(state, {message: EXCEED_MAX_STEP_LIMIT, flag: true});
 	}
 
+	// highlight corresponding rule, which is sure our target
 	let new_state = highlightCorrespondingRule(state, { flag: true });
 
+	// is the rule we want defined?
 	if (new_state.highlightedRow === null) {
 		return stop(new_state, {message: UNDEFINED_RULE, flag: true});
 	}
 
+	// are we running without animation?
 	if (!action.silent) {
+		// if with animation, scroll to the highlighted rule
 		document.getElementById(new_state.highlightedRow).scrollIntoView(false);
 	}
 
+	// cache history
 	new_state = Object.assign({}, new_state, {
 		runHistory: new_state.runHistory.slice(),
 	});
 	new_state.runHistory.push(cachedLastStep(new_state, new_state.tapePointer));
 
+	// find the rule data
 	let rule = new_state[new_state.highlightedRow];
+	// write into tape
 	new_state = tape.writeIntoTape(new_state, {val: rule.write});
+	// set state (and new head width, handled in this reducer)
 	new_state = tape.setInternalState(new_state, {state: rule.new_state});
 
+	// move head
 	if (rule.isLeft){
 		new_state = gui.moveHead(new_state, {moveLeft: true});
 	} else {
 		new_state = gui.moveHead(new_state, {moveLeft: false});
 	}
 
-	return Object.assign({}, new_state, {
-		stepCount: new_state.stepCount + 1
-	});
+	// count step
+	new_state.stepCount++;
+	
+	return new_state;
 }
 
+/*
+Run with out animation
+*/
 export function silentRun(state, action) {
 	let new_state = state;
 	while (new_state.isRunning)
-		new_state = step(new_state, { silent: true})
+		new_state = step(new_state, { silent: true });
 	return new_state;
 }
 
@@ -132,29 +192,23 @@ export function recordInterval(state, action) {
 Highlight Corresponding Rule
 */
 export function highlightCorrespondingRule(state, action) {
+	// highlight wanted rule directly
 	if (action.rule && action.flag) {
 		return Object.assign({}, state, {highlightedRow: action.rule} );
 	}
 
+	// cancel highlight
 	if (!action.flag) {
 		return Object.assign({}, state, { highlightedRow: null });
 	}
 
-	let keyS = state.tapeInternalState, keyV = tape.read(state);
-	let ruleId = null;
-	for (var i = 0; i < state.rowsById.length; i++) {
-		let row = state[state.rowsById[i]];
-		if (row.in_state === keyS && row.read === keyV) {
-				ruleId = state.rowsById[i];
-				break;
-			} else if (row.in_state === keyS && row.read === STAR) {
-				ruleId = state.rowsById[i];
-				break;
-			}
-	}
+	// highlight corresponding rule
+	let ruleId = matchRule(state, state.tapeInternalState, tape.read(state));
 
 	return Object.assign({}, state, { highlightedRow: ruleId });
 }
+
+
 
 /*
 Handles what happends when paused
@@ -165,36 +219,49 @@ cancel highlight on corresponding rule
 add possible error message
 */
 export function stop(state, action) {
+	// change pause sign to play
+	// clear time interval, handled by this reducer 
 	let new_state = gui.setPlayState(state, {flag: false}); 
+
+	// cancel highlights
 	new_state = tape.highlightCorrespondingCell(new_state, {flag: false}); 
 	new_state = highlightCorrespondingRule(new_state, { flag: false });
-	return reportErrorMessage(new_state, action); 
+
+	// report error, if there is
+	new_state.machineReportError = action.message;
+	new_state.showReportedError = action.flag
+	return new_state; 
 }
 
 /*
 Restore to last step
-Data is fetched from runHistory (by pop)
----Preserve edited rules (if there are changes)
----More priority here than undo edit
+Data is fetched from runHistory 
 */
 export function stepBack(state, action) {
 	if (state.runHistory.length > 0) {
 		let cached = state.runHistory[state.runHistory.length - 1];
 
+		// restore to last step
 		let new_state = Object.assign({}, state, {
-			runHistory: state.runHistory.slice(0, state.runHistory.length - 1),
-			rowsById: state.rowsById.slice(),
-			highlightedRow: cached.highlightedRow,
-			headX: cached.headX,
-			tapePointer: cached.cachedPointer,
-			highlightedCellOrder: cached.highlightedCellOrder,
-			tapeInternalState: cached.tapeInternalState,
-			anchorCell: cached.anchorCell,
-			headWidth: cached.headWidth,
-			headHeight: cached.headHeight,
-			headLeftOffset: cached.headLeftOffset,
+			// General
 			stepCount: cached.stepCount,
 
+			// run history
+			runHistory: state.runHistory.slice(0, state.runHistory.length - 1),
+
+			// GUI
+			highlightedRow: cached.highlightedRow,
+			highlightedCellOrder: cached.highlightedCellOrder,
+			headX: cached.headX,
+			headWidth: cached.headWidth,
+			headLeftOffset: cached.headLeftOffset,
+
+			// Head
+			tapePointer: cached.cachedPointer,
+			tapeInternalState: cached.tapeInternalState,
+
+			// Tape
+			anchorCell: cached.anchorCell,
 			tapeHead: cached.tapeHead, // since only step back, restore control tape
 			tapeTail: cached.tapeTail,
 			tapeCellsById: cached.tapeCellsById.slice(),
@@ -210,6 +277,7 @@ export function stepBack(state, action) {
 		return new_state;
 	}
 
+	// automatically stop
 	return stop(state, {message: NO_MORE_BACK, flag: true});
 }
 
@@ -221,34 +289,41 @@ Data is fetched from runHistory (by pop)
 ---More priority here than undo edit
 */
 export function restore(state, action) {
-	if (state.runHistory.length > 0) {
+	if (state.runHistory.length > 0) { // if there is some history
 		let cached = state.runHistory;
 
 		let new_state = Object.assign({}, state, {
-			runHistory: [],
-			rowsById: state.rowsById.slice(),
-			headX: cached[0].headX,
-			tapePointer: cached[0].cachedPointer,
+			// General
+			stepCount: cached.stepCount,
+
+			// run history
+			runHistory: state.runHistory.slice(0, state.runHistory.length - 1),
+
+			// GUI
 			highlightedRow: cached[0].highlightedRow,
 			highlightedCellOrder: cached[0].highlightedCellOrder,
-			tapeInternalState: cached[0].tapeInternalState,
-			anchorCell: cached[0].anchorCell,
+			headX: cached[0].headX,
 			headWidth: cached[0].headWidth,
-			headHeight: cached[0].headHeight,
 			headLeftOffset: cached[0].headLeftOffset,
-			stepCount: cached[0].stepCount,
 
+			// Head
+			tapePointer: cached[0].cachedPointer,
+			tapeInternalState: cached[0].tapeInternalState,
+
+			// Tape
+			anchorCell: cached[0].anchorCell,
 			tapeHead: cached[0].tapeHead, // since only step back, restore control tape
 			tapeTail: cached[0].tapeTail,
 			tapeCellsById: cached[0].tapeCellsById.slice(),
 		})
 
-		// More priority here than undo edit
+		// More priority here than undo edit, discarded
+		// restore to the very first point, step by step
 		let i = cached.length - 1, lastStep;
 		while (i >= 0) {
 			lastStep = cached[i];
 			let id = tape.standardizeCellId(lastStep.cachedPointer);
-			if (new_state.tapeCellsById.includes(id))
+			if (new_state.tapeCellsById.includes(id)) // if we need this cell
 				new_state[id] = lastStep.cachedCell; // already cloned
 			else
 				delete new_state[id];

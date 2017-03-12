@@ -120,8 +120,14 @@ class TrialItem extends React.Component {
 
 TrialItem.PropTypes = {
 	id: PropTypes.string.isRequried,
-	status: PropTypes.string.isRequried,
+
 	steps: PropTypes.number.isRequried,
+	statusCode: PropTypes.number.isRequried,
+	feedback: PropTypes.string.isRequried,
+
+	deleteTrial: PropTypes.func.isRequired,
+	runTrial: PropTypes.func.isRequired,
+	loadTrial: PropTypes.func.isRequired,
 }
 
 export default TrialItem;

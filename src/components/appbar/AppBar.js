@@ -412,6 +412,13 @@ AppToolBar.PropTypes = {
 	isRunning: PropTypes.bool.isRequired,
 	animationSpeedLabel: PropTypes.string.isRequired,
 	animationSpeed: PropTypes.number.isRequired,
+	runningTrials: PropTypes.array.isRequired,
+	isRunningTrial: PropTypes.bool.isRequired,
+	animationOn: PropTypes.bool.isRequired,
+	redoAble: PropTypes.bool.isRequired,
+	undoAble: PropTypes.bool.isRequired,
+	lastStepAble: PropTypes.bool.isRequired,
+	testsById: PropTypes.array.isRequired,
 
 	handleRun: PropTypes.func.isRequired,
 	handlePause: PropTypes.func.isRequired,
@@ -424,6 +431,8 @@ AppToolBar.PropTypes = {
 	handleSave: PropTypes.func.isRequired,
 	handleClearTape: PropTypes.func.isRequired,
 	handleToggleAnimation: PropTypes.func.isRequired,
+	handleAddTest: PropTypes.func.isRequired,
+	handleRunAllTests: PropTypes.func.isRequired,
 };
 
 export default AppToolBar;
