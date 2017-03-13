@@ -96,10 +96,11 @@ class DynamicRuleTable extends React.Component {
                 </tr>
               </thead>
                  <tbody>
-                  {this.props.rowsById.map((id) => (
+                  {this.props.rowsById.map((id) => {
+                    return (
                     <tr id={id} key={id} style={(this.props.highlightedRow === id)?{backgroundColor: "#87dbff" }:{backgroundColor: "#fff"}}>
                       <td>
-                        <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />  
+                        <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />
                       </td>
 
                       <td>
@@ -122,7 +123,7 @@ class DynamicRuleTable extends React.Component {
                           <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} openOnFocus={true} styles={{width:TABLE_ROW_STATE_WIDTH}} maxLength={AUTO_COMPLETE_MAX_LENGTH} id={standardizeNewStateFieldId(id)} />
                       </td>
                   </tr>
-                  ))}
+                  )})}
                 </tbody>
               </Table>
             </div>

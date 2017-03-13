@@ -25,6 +25,13 @@ const initialStateForTable = {
 }
 */
 
+export function checkRuleValidity(rule) {
+	return !rule.in_state_error &&
+		   !rule.read_error &&
+		   !rule.write_error &&
+		   !rule.new_state_error
+}
+
 function createRow(in_state = "", read = "", write = "", isLeft = false, new_state = "",
 					in_state_error = "", read_error = "", write_error = "", new_state_error = "") {
 	return {
@@ -72,6 +79,8 @@ function setRow(state, action) {
 									read_error,
 									write_error,
 									new_state_error);
+
+	new_state.machineLocked = !checkRuleValidity(new_state[action.id]);
 	return new_state;
 }
 

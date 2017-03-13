@@ -105,7 +105,8 @@ class TrialItem extends React.Component {
 	            <MenuItem primaryText="Edit" leftIcon={<Edit color={editButtonColor}/>} onTouchTap={() => {this.props.editTrial(); this.handlePopoverRequestClose();}} />
 	            <Divider />
 	            <MenuItem primaryText="Load" leftIcon={<Load color={loadColor}/>} onTouchTap={() => {this.props.loadTrial(); this.handlePopoverRequestClose();}} />
-	            {(this.props.statusCode === STATUS_CODE_FAIL)?
+	            {(this.props.statusCode === STATUS_CODE_FAIL ||
+	            	this.props.statusCode === STATUS_CODE_TIMEOUT)?
 	            	<MenuItem primaryText="Traceback" leftIcon={<Traceback color={tracebackColor}/>} onTouchTap={() => {this.props.traceback(); this.handlePopoverRequestClose();}} />:null}
 	            <Divider />
 	            <MenuItem primaryText="Delete" leftIcon={<Delete color={deleteButtonColor}/>} onTouchTap={() => {this.props.deleteTrial(); this.handlePopoverRequestClose();}}/>

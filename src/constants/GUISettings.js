@@ -1,5 +1,5 @@
 // General
-export const MAX_STEP_LIMIT = 1000;
+export const MAX_STEP_LIMIT = 2000;
 export const MAX_CELL_NUM = 21;
 export const MIN_CELL_NUM = 5;
 export const BREAK_POINT = 1168; // for responsive tape

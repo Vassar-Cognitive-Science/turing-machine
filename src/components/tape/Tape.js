@@ -8,6 +8,9 @@ import { standardizeCellId } from '../../reducers/tape';
 import Square from '../../containers/tape/SquareContainer';
 import Head from '../../containers/tape/HeadContainer';
 
+import Swap from 'material-ui/svg-icons/action/autorenew';
+import FlatButton from 'material-ui/FlatButton';
+
 export const MARK_FIRST = "first";
 export const MARK_LAST = "last";
 
@@ -41,9 +44,18 @@ class Tape extends React.Component {
               style={{visibility:(this.props.showReportedError)?"visible":"hidden", color: this.props.messageColor}}>
               {this.props.machineReportError}
             </div>
+            {(this.props.isEdittingTrial) ? <FlatButton
+                                              label={(this.props.isEdittingExpectedTape) ? "Expected Tape": "Start Tape"}
+                                              labelPosition="after"
+                                              primary={true}
+                                              icon={<Swap />}
+                                            /> :
+                                            null}
             <div className="step-count">
-              <p>Step: {this.props.stepCount}</p>
+              {(!this.props.isEdittingTrial) ? <p>Step: {this.props.stepCount}</p> : 
+                null}
             </div>
+
             <div className="tape-with-button">
               <div className="roll-left"><IconButton tooltip="Roll Left" 
                 onTouchTap={this.props.rollLeft} touch={true} style={styles.style} 
@@ -62,6 +74,8 @@ class Tape extends React.Component {
             </div>
           </Card>
         </MuiThemeProvider>
+
+
       </div>
     );
   }

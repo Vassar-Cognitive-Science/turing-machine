@@ -1,5 +1,5 @@
 import { HALT, STAR } from '../constants/index';
-import { REACH_HALT, UNDEFINED_RULE, NO_MORE_BACK, EXCEED_MAX_STEP_LIMIT } from '../constants/Messages';
+import { REACH_HALT, UNDEFINED_RULE, NO_MORE_BACK, EXCEED_MAX_STEP_LIMIT, RULE_TABLE_ERROR } from '../constants/Messages';
 import { MAX_STEP_LIMIT } from '../constants/GUISettings';
 import * as tape from './tape';
 import * as gui from './gui';
@@ -87,6 +87,7 @@ const cachedLastStep = (lastState, lastPointer) => {
 
 /*
 Prepare for a step forward
+Check all rules validity
 Set play button according to if it is a single step
 Highlight Corresponding Cell
 Highlight Corresponding Rule
@@ -123,6 +124,10 @@ Adjust head width
 Move Head according to rule.isLeft 
 */
 export function step(state, action) {
+	if (state.machineLocked) {
+		return stop(state, {message: RULE_TABLE_ERROR, flag: true});
+	}
+
 	// is machine halted?
 	if (state.tapeInternalState === HALT) {
 		return stop(state, {message: REACH_HALT, flag: true});
@@ -134,37 +139,38 @@ export function step(state, action) {
 	}
 
 	// highlight corresponding rule, which is sure our target
-	let new_state = highlightCorrespondingRule(state, { flag: true });
+	let highlightedRow = matchRule(state, state.tapeInternalState, tape.read(state));
 
 	// is the rule we want defined?
-	if (new_state.highlightedRow === null) {
-		return stop(new_state, {message: UNDEFINED_RULE, flag: true});
+	if (highlightedRow === null) {
+		return stop(state, {message: UNDEFINED_RULE, flag: true});
 	}
 
 	// are we running without animation?
 	if (!action.silent) {
 		// if with animation, scroll to the highlighted rule
-		document.getElementById(new_state.highlightedRow).scrollIntoView(false);
+		document.getElementById(highlightedRow).scrollIntoView(false);
 	}
 
-	// cache history
-	new_state = Object.assign({}, new_state, {
-		runHistory: new_state.runHistory.slice(),
+	// cache history, and highlight rule
+	let new_state = Object.assign({}, state, {
+		runHistory:state.runHistory.slice(),
+		highlightedRow: highlightedRow,
 	});
-	new_state.runHistory.push(cachedLastStep(new_state, new_state.tapePointer));
+	new_state.runHistory.push(cachedLastStep(state, state.tapePointer));
 
 	// find the rule data
 	let rule = new_state[new_state.highlightedRow];
 	// write into tape
-	new_state = tape.writeIntoTape(new_state, {val: rule.write});
+	new_state = tape.writeIntoTapeHelper(new_state, new_state.tapePointer, rule.write);
 	// set state (and new head width, handled in this reducer)
-	new_state = tape.setInternalState(new_state, {state: rule.new_state});
+	new_state = tape.setInternalStateHelper(new_state, rule.new_state);
 
 	// move head
 	if (rule.isLeft){
-		new_state = gui.moveHead(new_state, {moveLeft: true});
+		new_state = gui.moveHeadHelper(new_state, true);
 	} else {
-		new_state = gui.moveHead(new_state, {moveLeft: false});
+		new_state = gui.moveHeadHelper(new_state, false);
 	}
 
 	// count step

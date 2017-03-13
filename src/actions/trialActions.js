@@ -56,3 +56,10 @@ export function clearTestResultAction() {
 		type: actionTypes.CLEAR_TEST_RESULTS,
 	};
 }
+
+export function toggleEditModeAction(flag=undefined) {
+	return {
+		type: actionTypes.TOGGLE_EDIT_MODE,
+		flag: flag
+	}
+}

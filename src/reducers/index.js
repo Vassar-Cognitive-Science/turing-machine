@@ -9,9 +9,14 @@ import { INIT_HEAD_WIDTH, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../cons
 export const initialState = {
 /* GUI settings */
 
-	/*Trial Drawer GUI settings*/
+	/*Editting Trial Mode*/
+	isEdittingTrial: false,
+	isEdittingExpectedTape: false,
 
-	/*Trial Drawer GUI settings*/
+	originalTape: null,
+	edittingStartTape: null,
+	edittingFinalTape: null,
+	/*Editting Trial Mode*/
 
 	/*** The following five are initialized by gui.resizeScreenAndTape  ***/
 	screenSize: (window) ? window.innerWidth : 1396,
@@ -27,6 +32,7 @@ export const initialState = {
 	/* HEAD Width settings */
 
 	/* MACHINE GUI settings */
+	machineLocked: false,
 	isRunning: false, // is the machine running
 	interval: null, // Animation interval function, returned by setInterval(callback, timeout)
 	animationSpeedFactor: 1.0, // 100% of default speed
@@ -490,6 +496,8 @@ function trialReducer(state, action) {
 			return trial.toggleIsRunningTrial(state, action);
 		case actionTypes.CLEAR_TEST_RESULTS:
 			return trial.clearTestResults(state, action);
+		case actionTypes.TOGGLE_EDIT_MODE:
+			return trial.toggleEditMode(state, action);
 		default:
 			return state; 
 	}

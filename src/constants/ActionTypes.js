@@ -67,4 +67,5 @@ export const RUN_TRIAL = 'RUN_TRIAL';
 export const LOAD_TRIAL = 'LOAD_TRIAL';
 export const TOGGLE_IS_RUNNING_TRIAL = 'TOGGLE_IS_RUNNING_TRIAL';
 export const CLEAR_TEST_RESULTS = 'CLEAR_TEST_RESULTS';
+export const TOGGLE_EDIT_MODE = 'TOGGLE_EDIT_MODE';
 /* Actions for Trials*/

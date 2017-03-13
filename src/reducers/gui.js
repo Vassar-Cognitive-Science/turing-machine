@@ -8,16 +8,11 @@ import {
 	HEAD_MOVE_INTERVAL,
   	HEAD_LEFT_BOUNDARY,
 } from '../constants/GUISettings';
-import { moveLeft, moveRight } from './tape';
+import { moveLeftHelper, moveRightHelper } from './tape';
 
-/*
-Adjust the Head width according to the length of text in it
-
-*** NOTE ***: It is wrapped in tape.setInternalState
-*/
-export function adjustHeadWidth(state, action) {
-	// if there is assigned text, use it, else use tape internal state
-	let text = (action.text) ? action.text : state.tapeInternalState.toString();
+// define helper to optimize performance
+export function adjustHeadWidthHelper(state, text) {
+	text = (text) ? text : state.tapeInternalState.toString();
 	// leave some white space
 	let textLength = text.length + 2;
 
@@ -37,10 +32,21 @@ export function adjustHeadWidth(state, action) {
 		newLeftOffset = INIT_HEAD_LEFT_OFFSET - 5 * diff;
 	}
 
-	return Object.assign({}, state, {
-		headWidth: newWidth,
-		headLeftOffset: newLeftOffset
-	});
+	state.headWidth = newWidth;
+	state.headLeftOffset = newLeftOffset;
+
+	return state;
+}
+
+/*
+Adjust the Head width according to the length of text in it
+
+*** NOTE ***: It is wrapped in tape.setInternalState
+*/
+export function adjustHeadWidth(state, action) {
+	let new_state = Object.assign({}, state);
+
+	return adjustHeadWidthHelper(new_state, action.text);
 }
 
 /* SIDE EFFECT HERE!*/
@@ -73,30 +79,35 @@ export function setAnimationSpeed(state, action) {
 	});
 }
 
+export function moveHeadHelper(state, moveLeft) {
+	let new_head_x;
+
+	if (moveLeft) {
+		// view change
+		new_head_x = state.headX - HEAD_MOVE_INTERVAL;
+		// model change
+		state = moveLeftHelper(state);
+	} else {
+		new_head_x = state.headX + HEAD_MOVE_INTERVAL;
+		state = moveRightHelper(state);
+	}
+
+	// if headX exceeds boundary, don't change it!
+	state.headX = (new_head_x <= state.rightBoundary &&
+		new_head_x >= HEAD_LEFT_BOUNDARY) ? new_head_x : state.headX;
+
+	return state;
+}
+
 /*
 	WRAPPER FUNCTION:
 	Handles model changes and view changes for Head
 */
 export function moveHead(state, action) {
-	let new_head_x, new_state;
+	let new_state = Object.assign({}, state);
 
-	if (action.moveLeft) {
-		// view change
-		new_head_x = state.headX - HEAD_MOVE_INTERVAL;
-		// model change
-		new_state = moveLeft(state);
-	} else {
-		new_head_x = state.headX + HEAD_MOVE_INTERVAL;
-		new_state = moveRight(state);
-	}
-
-	// if headX exceeds boundary, don't change it!
-	return Object.assign({}, new_state, {
-		headX: (new_head_x <= new_state.rightBoundary && 
-				new_head_x >= HEAD_LEFT_BOUNDARY) ? new_head_x : state.headX
-	});
+	return moveHeadHelper(new_state, action.moveLeft);
 }
-
 
 /*
 Resize the screen and tape according to screen size

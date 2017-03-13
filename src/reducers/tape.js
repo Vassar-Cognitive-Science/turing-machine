@@ -1,6 +1,6 @@
 import { BLANK, STAR } from '../constants/index';
 import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/GUISettings';
-import { adjustHeadWidth } from './gui';
+import { adjustHeadWidthHelper } from './gui';
 
 /**** Constants ****/
 
@@ -36,12 +36,8 @@ export const standardizeCellId = (id) => {
 	return CELL_ID_PREFIX + id;
 }
 
-export function tapeSize(state) {
-	return state.tapeCellsById.length;
-}
-
 export function isTapeEmpty(state) {
-	return tapeSize(state) === 0;
+	return state.tapeCellsById.length === 0;
 }
 
 export function findCell(state, id) {
@@ -51,14 +47,28 @@ export function findCell(state, id) {
 	return null;
 }
 
+// read from the cell to which the Head points
 export function read(state) {
 	var cur = findCell(state, state.tapePointer);
+
+	// if that cell is not created, return undefined
+	// (for sandbox)
 	if (cur === null)
 		return undefined;
-	// if (typeof cur.val === 'string')
-	// 	cur.val = cur.val.trim()
+
+	// treat null and "" as #
 	return (cur.val === null || cur.val === "") ? BLANK : cur.val.toString();
 }
+
+
+export function standardizeInputToTape(val, oldVal) {
+	if (val === BLANK)
+		return "";
+	if (val === STAR)
+		return oldVal;
+
+	return val;
+}	
 
 export function cloneCellById(state, id) {
 	let tar = findCell(state, id);
@@ -70,6 +80,54 @@ export function cloneCell(tar) {
 	return createCell(tar.cur, tar.prev, tar.next, tar.val);
 }
 
+export function extractTape(state) {
+	let tape = {
+		anchorCell: state.anchorCell,
+		tapeHead: state.tapeHead,
+		tapeTail: state.tapeTail,
+		tapeCellsById: state.tapeCellsById.slice(),
+
+		tapeInternalState: state.tapeInternalState,
+		tapePointer: state.tapePointer,
+
+		headX: state.headX,
+		headWidth: state.headWidth,
+		headLeftOffset: state.headLeftOffset,
+
+		highlightedCellOrder: state.highlightedCellOrder
+	};
+
+	for (let i = 0; i < tape.tapeCellsById.length; i++) {
+		let id = tape.tapeCellsById[i];
+		tape[id] = cloneCell(state[id]);
+	}
+
+	return tape;
+}
+
+export function loadTape(state, tape) {
+	let new_state = initializeTape(state);
+	new_state.anchorCell = tape.anchorCell;
+	new_state.tapeHead = tape.tapeHead;
+	new_state.tapeTail = tape.tapeTail;
+	new_state.tapeCellsById = tape.tapeCellsById.slice();
+
+	new_state.tapeInternalState = tape.tapeInternalState;
+	new_state.tapePointer = tape.tapePointer;
+
+	new_state.headX = tape.headX;
+	new_state.headWidth = tape.headWidth;
+	new_state.headLeftOffset = tape.headLeftOffset;
+
+	new_state.highlightedCellOrder = tape.highlightedCellOrder;
+
+	for (let i = 0; i < tape.tapeCellsById.length; i++) {
+		let id = tape.tapeCellsById[i];
+		new_state[id] = cloneCell(tape[id]);
+	}
+
+	return new_state;
+}
 
 /**** Exported Helper functions ****/
 
@@ -115,7 +173,7 @@ Claim: P(n) == this function appends a cell after tail for a tape of length n, f
 Proof:
 	Base: the tape length is 0 and we expand it by 1.
 		  We want (a) a tape cell (0,  -1,   null,    val), and (b) tapeHead = -1, tapeTail = 1
-							   cur prev  next  value
+							       cur prev  next  value
 
 		  The function satisfies above by following operations
 		  
@@ -269,23 +327,23 @@ export function initializeTape(state, action) {
 	return new_state;
 }
 
+export function writeIntoTapeHelper(state, pointer, val) {
+	let target = findCell(state, pointer);
+	let value = standardizeInputToTape(val, target.val);
+	state[standardizeCellId(pointer)] = createCell(target.cur, target.prev, target.next, value);
+	return state;
+}
+
 /*
 action parameter:
 
 val: string, the value 
 */
+
 export function writeIntoTape(state, action) {
 	let new_state = Object.assign({}, state);
-	let target = findCell(new_state, new_state.tapePointer);
-	let val = action.val;
-	if (val === BLANK)
-		val = ""; // "#"?
-	if (val === STAR)
-		val = target.val;
-	
-	new_state[standardizeCellId(state.tapePointer)] = createCell(target.cur, target.prev, target.next, val);
 
-	return new_state;
+	return writeIntoTapeHelper(new_state, new_state.tapePointer, action.val);
 }
 
 /*
@@ -359,6 +417,28 @@ export function moveTapeLeft(state, action) {
 	return new_state;
 }
 
+export function moveLeftHelper(state) {
+	state.tapePointer--;
+	if (state.tapePointer < state.anchorCell) {
+		state.anchorCell--;
+
+		// because tapeHead is sentinel, it implies
+		// when anchorCell == tapeHead, the head is pointing to 
+		// an undefined cell, so we need to insert a cell
+		if (state.anchorCell === state.tapeHead)
+			insertBeforeHeadHelper(state, null)
+	}
+
+	// specially defined for running trials (for memory efficiency)
+	if (read(state) === undefined) {
+		insertBeforeHeadHelper(state, null)
+	}
+
+	state.highlightedCellOrder = state.tapePointer - state.anchorCell;
+	return state;
+}
+
+
 /*
 action parameter:
 
@@ -366,29 +446,33 @@ None
 
 */
 export function moveLeft(state, action) {
-	let new_state = Object.assign({}, state, {
-		tapePointer: state.tapePointer - 1
-	});
+	let new_state = Object.assign({}, state);
 
-	if (new_state.tapePointer < new_state.anchorCell) {
-		new_state.anchorCell--;
+	return moveLeftHelper(new_state);
+}
 
-		// because tapeHead is sentinel, it implies
-		// when anchorCell == tapeHead, the head is pointing to 
-		// an undefined cell, so we need to insert a cell
-		if (new_state.anchorCell === new_state.tapeHead)
-			insertBeforeHeadHelper(new_state, null)
+
+export function moveRightHelper(state) {
+	state.tapePointer++;
+	if (state.tapePointer > state.anchorCell + state.cellNum - 1) {
+		state.anchorCell++;
+
+		// because tapeTail is sentinel, it implies
+		// when anchorCell + cellNum - 1 == tapeTail, the head is pointing to 
+		// an undefined cell, so we need to append a new cell
+		if (state.anchorCell + state.cellNum - 1 === state.tapeTail) {
+			appendAfterTailHelper(state, null)
+		}
 	}
-
 
 	// specially defined for running trials (for memory efficiency)
-	if (read(new_state) === undefined) {
-		insertBeforeHeadHelper(new_state, null)
+	if (read(state) === undefined) {
+		appendAfterTailHelper(state, null)
 	}
 
-	return highlightCorrespondingCell(new_state, {
-		flag: true
-	});
+	state.highlightedCellOrder = state.tapePointer - state.anchorCell;
+
+	return state;
 }
 
 /*
@@ -398,32 +482,8 @@ None
 
 */
 export function moveRight(state, action) {
-	var new_state = Object.assign({}, state, {
-		tapePointer: state.tapePointer + 1
-	});
-
-	// new_state.anchorCell + new_state.cellNum - 1 is the cell id of the rightmost
-	// cell (of presentational tape)
-	if (new_state.tapePointer > new_state.anchorCell + new_state.cellNum - 1) {
-		new_state.anchorCell++;
-
-		// because tapeTail is sentinel, it implies
-		// when anchorCell + cellNum - 1 == tapeTail, the head is pointing to 
-		// an undefined cell, so we need to append a new cell
-		if (new_state.anchorCell + new_state.cellNum - 1 === new_state.tapeTail) {
-			appendAfterTailHelper(new_state, null)
-		}
-	}
-
-
-	// specially defined for running trials (for memory efficiency)
-	if (read(new_state) === undefined) {
-		appendAfterTailHelper(new_state, null)
-	}
-
-	return highlightCorrespondingCell(new_state, {
-		flag: true
-	});
+	var new_state = Object.assign({}, state);
+	return moveRightHelper(new_state);
 }
 
 /*
@@ -452,15 +512,19 @@ export function highlightCellAt(state, action) {
 	});
 }
 
+export function setInternalStateHelper(state, text) {
+	state.tapeInternalState = text;
+	return adjustHeadWidthHelper(state, text);
+}
+
 /*
 action parameter:
 
 state: string, new state
 */
 export function setInternalState(state, action) {
-	return adjustHeadWidth(Object.assign({}, state, {
-		tapeInternalState: action.state
-	}), action.state);
+	let new_state = Object.assign({}, state);
+	return setInternalStateHelper(new_state, action.state);
 }
 
 

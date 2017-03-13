@@ -1,6 +1,6 @@
 import * as tape from './tape';
 import * as gui from './gui';
-import { EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
+import { EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE, DIFF_FINAL_TAPE } from '../constants/Messages';
 
 import { HALT, BLANK } from '../constants/index';
 import { MAX_STEP_LIMIT } from '../constants/GUISettings';
@@ -59,19 +59,19 @@ const isExpected = (finalSandbox, trial) => {
 	// Compare cells
 	// To be determined!
 
-	// for (let i = 0; i < trial.expectedFinalTape.length; i++) {
-	// 	let id = finalSandbox.tapeCellsById[i];
-	// 	let expected = trial.expectedFinalTape[i].toString();
+	for (let i = 0; i < trial.expectedFinalTape.length; i++) {
+		let id = finalSandbox.tapeCellsById[i]; // already sorted when constructed
+		let expected = trial.expectedFinalTape[i].toString();
 
-	// 	if (finalSandbox[id].val !== expected) {
-	// 		result.status = STATUS_CODE_FAIL;
-	// 		result.feedback = DIFF_FINAL_TAPE;
-	// 		result.fullreport = DIFF_FINAL_STATE + 
-	// 						" Expected at index " + i + " : " + trial.expectedFinalTape[i] +
-	// 						"; You have: " + finalSandbox[id].val; 
-	// 		return result;
-	// 	}
-	// }
+		if (finalSandbox[id].val !== expected) {
+			result.status = STATUS_CODE_FAIL;
+			result.feedback = DIFF_FINAL_TAPE;
+			result.fullreport = DIFF_FINAL_STATE + 
+							" Expected at index " + i + " : " + trial.expectedFinalTape[i] +
+							"; You have: " + finalSandbox[id].val; 
+			return result;
+		}
+	}
 
 	return result;
 }
@@ -246,14 +246,14 @@ export function runTrial(state, action) {
 
 		// run
 		// update tape
-		sandbox = tape.writeIntoTape(sandbox, {val: rule.write}); // writeIntoTape will handle special chars
+		sandbox = tape.writeIntoTapeHelper(sandbox, sandbox.tapePointer, rule.write); // writeIntoTape will handle special chars
 		// update head state
 		sandbox.tapeInternalState = rule.new_state; 
 		// move
 		if (rule.isLeft){
-			sandbox = tape.moveLeft(sandbox);
+			sandbox = tape.moveLeftHelper(sandbox);
 		} else {
-			sandbox = tape.moveRight(sandbox);
+			sandbox = tape.moveRightHelper(sandbox);
 		}
 
 		// count step
@@ -311,24 +311,23 @@ export function loadTrial(state, action) {
 	// calculate offset from trial's tapePointer 
 	// and move direction
 	let offset = trial.tapePointer - new_state.tapePointer;
-	let moveLeft;
+	let isLeft;
 	if (offset < 0) {
 		offset = -offset;
-		moveLeft = true; 
+		isLeft = true; 
 	} else if (offset > 0) {
-		moveLeft = false;
+		isLeft = false;
 	}
 
 	// move head to trial's position
 	while (offset--) {
-		new_state = gui.moveHead(new_state, {moveLeft: moveLeft});
+		new_state = gui.moveHead(new_state, {moveLeft: isLeft});
 	}
 
 	// save anchor cell and highlighted cell,
 	// we will alter them in the following operations since we
 	// start filling tape from index 0
 	let anchorCell = new_state.anchorCell;
-	let highlightedCellOrder = new_state.highlightedCellOrder;
 
 	// reset, simulate tape head writes down trial tape data
 	// use writeIntoTape function because it handles special chars already
@@ -336,8 +335,6 @@ export function loadTrial(state, action) {
 	new_state.anchorCell = 0;
 	for (let i = 0; i < trial.startTape.length; i++) {
 		let val = trial.startTape[i].toString();
-		if (val === BLANK)
-			val = "";
 		new_state = tape.writeIntoTape(new_state, { val: val});
 		new_state = tape.moveRight(new_state);
 	}
@@ -345,8 +342,8 @@ export function loadTrial(state, action) {
 	// take back original value
 	new_state.tapePointer = trial.tapePointer;
 	new_state.anchorCell = anchorCell;
-	new_state.highlightedCellOrder = highlightedCellOrder;
 
+	new_state.highlightedCellOrder = -1;
 	return new_state;
 }
 
@@ -373,4 +370,12 @@ export function clearTestResults(state, action) {
 	}
 
 	return new_state;
+}
+
+
+export function toggleEditMode(state, action) {
+	let flag = (action.flag !== undefined) ? action.flag : !state.isEdittingTrial;
+	return Object.assign({}, state, {
+		isEdittingTrial: flag
+	});
 }

@@ -1,6 +1,12 @@
 import { connect } from 'react-redux';
 import TrialItem from '../../components/appbar/TrialItem';
-import { deleteTrialAction, runTrialAction, loadTrialAction, preRunTrialAction } from '../../actions/trialActions';
+import {
+	deleteTrialAction,
+	runTrialAction,
+	loadTrialAction,
+	preRunTrialAction,
+	toggleEditModeAction
+} from '../../actions/trialActions';
 import { standardizeTestReportId } from '../../reducers/trial';
 
 const deleteTrial = (dispatch, ownProps) => {
@@ -19,6 +25,11 @@ const loadTrial = (dispatch, ownProps) => {
 	dispatch(loadTrialAction(ownProps.id));
 }
 
+const editTrial = (dispatch, ownProps) => {
+	dispatch(toggleEditModeAction());
+	
+}
+
 const mapStateToProps = (state, ownProps) => {
 	let testReport = state[standardizeTestReportId(ownProps.id)];
 
@@ -34,6 +45,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	deleteTrial: () => { deleteTrial(dispatch, ownProps) },
 	runTrial: () => { runTrial(dispatch, ownProps) },
 	loadTrial: () => { loadTrial(dispatch, ownProps) },
+	editTrial: () => { editTrial(dispatch, ownProps) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrialItem);

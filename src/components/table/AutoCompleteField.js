@@ -20,6 +20,7 @@ class AutoCompleteField extends React.Component {
                               id={this.props.id}
                               maxLength={this.props.maxLength}
                               openOnFocus={this.props.openOnFocus}
+                              popoverProps={{canAutoPosition: true, overflowY: "auto"}}
                               style={{width: "13vw"}}
             	/>
             </MuiThemeProvider>

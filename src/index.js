@@ -7,7 +7,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import { resizeScreenAndTapeAction } from './actions/guiActions';
 import { initMachineAction } from './actions/index';
 import reducers from './reducers';
-import App from './components/App';
+import App from './containers/AppContainer';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 

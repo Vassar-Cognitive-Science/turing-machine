@@ -19,6 +19,10 @@ const mapStateToProps = (state) => {
 		cellNum: state.cellNum,
 		messageColor: (state.tapeInternalState === HALT) ? "#1976D2" : "#FF3D00",
 		stepCount: state.stepCount,
+
+		isEdittingTrial: state.isEdittingTrial,
+		anchorCell: state.anchorCell,
+		// isEdittingExpectedTape: state.isEdittingExpectedTape,
 	}
 };
 
