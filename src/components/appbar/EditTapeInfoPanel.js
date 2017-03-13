@@ -21,8 +21,8 @@ class EditTapeInfoPanel extends React.Component {
 	               		<ListItem disabled={true} primaryText="Anchor cell:"  />
 	               		<ListItem disabled={true} primaryText={"Tape Cells: " + test}  />
 	               		</List>
-              			<FlatButton label="Save" primary={true} style={{float: "right"}} />
-              			<FlatButton label="Cancel" secondary={true} style={{float: "right"}} />
+              			<FlatButton label="Save" primary={true} style={{float: "right"}} onTouchTap={this.props.saveEdit}/>
+              			<FlatButton label="Cancel" secondary={true} style={{float: "right"}} onTouchTap={this.props.cancelEdit}/>
 					</Card>
 				</MuiThemeProvider>
 			</div>

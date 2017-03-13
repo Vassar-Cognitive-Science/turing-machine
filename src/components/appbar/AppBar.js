@@ -103,7 +103,7 @@ class AppToolBar extends React.Component {
 			        		if (this.props.runningTrials.includes(id))  {
 			        			return (<MenuItem primaryText={id} key={id} rightIcon={ProgressCircle()}/>);
 			        		}
-			        		return (<TrialItem id={id} key={id} />)
+			        		return (<TrialItem id={id} key={id} drawerCloseCallBack={this.handleTrialDrawerClose}/>)
 			        	})}
 			        </List>
 			        </div>

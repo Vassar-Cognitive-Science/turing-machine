@@ -27,12 +27,11 @@ const loadTrial = (dispatch, ownProps) => {
 
 const editTrial = (dispatch, ownProps) => {
 	dispatch(toggleEditModeAction());
-	
+	ownProps.drawerCloseCallBack();
 }
 
 const mapStateToProps = (state, ownProps) => {
 	let testReport = state[standardizeTestReportId(ownProps.id)];
-
 	return {
 		steps: (testReport) ? testReport.stepCount : null,
 		statusCode: (testReport) ? testReport.status : null,
