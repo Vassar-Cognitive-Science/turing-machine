@@ -446,7 +446,9 @@ None
 
 */
 export function moveLeft(state, action) {
-	let new_state = Object.assign({}, state);
+	let new_state = Object.assign({}, state, {
+		tapeCellsById: state.tapeCellsById.slice()
+	});
 
 	return moveLeftHelper(new_state);
 }
@@ -482,7 +484,9 @@ None
 
 */
 export function moveRight(state, action) {
-	var new_state = Object.assign({}, state);
+	var new_state = Object.assign({}, state, {
+		tapeCellsById: state.tapeCellsById.slice()
+	});
 	return moveRightHelper(new_state);
 }
 

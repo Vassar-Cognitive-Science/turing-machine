@@ -123,7 +123,7 @@ Set internal state
 Adjust head width
 Move Head according to rule.isLeft 
 */
-export function step(state, action) {
+export function stepHelper(state, silent) { // optimize performance
 	if (state.machineLocked) {
 		return stop(state, {message: RULE_TABLE_ERROR, flag: true});
 	}
@@ -138,7 +138,6 @@ export function step(state, action) {
 		return stop(state, {message: EXCEED_MAX_STEP_LIMIT, flag: true});
 	}
 
-	// highlight corresponding rule, which is sure our target
 	let highlightedRow = matchRule(state, state.tapeInternalState, tape.read(state));
 
 	// is the rule we want defined?
@@ -147,45 +146,52 @@ export function step(state, action) {
 	}
 
 	// are we running without animation?
-	if (!action.silent) {
+	if (!silent) {
 		// if with animation, scroll to the highlighted rule
 		document.getElementById(highlightedRow).scrollIntoView(false);
 	}
 
 	// cache history, and highlight rule
-	let new_state = Object.assign({}, state, {
-		runHistory:state.runHistory.slice(),
-		highlightedRow: highlightedRow,
-	});
-	new_state.runHistory.push(cachedLastStep(state, state.tapePointer));
+	state.highlightedRow = highlightedRow;
+	state.runHistory.push(cachedLastStep(state, state.tapePointer));
 
 	// find the rule data
-	let rule = new_state[new_state.highlightedRow];
+	let rule = state[state.highlightedRow];
 	// write into tape
-	new_state = tape.writeIntoTapeHelper(new_state, new_state.tapePointer, rule.write);
+	state = tape.writeIntoTapeHelper(state, state.tapePointer, rule.write);
 	// set state (and new head width, handled in this reducer)
-	new_state = tape.setInternalStateHelper(new_state, rule.new_state);
+	state = tape.setInternalStateHelper(state, rule.new_state);
 
 	// move head
 	if (rule.isLeft){
-		new_state = gui.moveHeadHelper(new_state, true);
+		state = gui.moveHeadHelper(state, true);
 	} else {
-		new_state = gui.moveHeadHelper(new_state, false);
+		state = gui.moveHeadHelper(state, false);
 	}
 
 	// count step
-	new_state.stepCount++;
+	state.stepCount++;
 	
-	return new_state;
+	return state;
+}
+
+export function step(state, action) {
+	let new_state = Object.assign({}, state, {
+		runHistory: state.runHistory.slice()
+	})
+	
+	return stepHelper(new_state, action.silent);
 }
 
 /*
 Run with out animation
 */
 export function silentRun(state, action) {
-	let new_state = state;
+	let new_state = Object.assign({}, state, {
+		runHistory: state.runHistory.slice()
+	})
 	while (new_state.isRunning)
-		new_state = step(new_state, { silent: true });
+		new_state = stepHelper(new_state, true);
 	return new_state;
 }
 

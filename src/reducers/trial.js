@@ -1,12 +1,12 @@
 import * as tape from './tape';
 import * as gui from './gui';
-import { EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE, DIFF_FINAL_TAPE } from '../constants/Messages';
+import { EXCEED_MAX_TEST_STEP_LIMIT, DIFF_FINAL_STATE, DIFF_FINAL_TAPE } from '../constants/Messages';
 
 import { HALT, BLANK } from '../constants/index';
-import { MAX_STEP_LIMIT } from '../constants/GUISettings';
+import { MAX_TEST_STEP_LIMIT } from '../constants/GUISettings';
 import { matchRule } from './machine';
 
-// import { UNDEFINED_RULE, EXCEED_MAX_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
+// import { UNDEFINED_RULE, EXCEED_MAX_TEST_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
 
 
 /*
@@ -225,13 +225,13 @@ export function runTrial(state, action) {
 	while (sandbox.tapeInternalState !== HALT) {
 
 		// check for infinite loop, if reach max step limit, generate report
-		if (sandbox.stepCount > MAX_STEP_LIMIT) {
+		if (sandbox.stepCount > MAX_TEST_STEP_LIMIT) {
 			return reportTestResult(state, {
 				sourceId: action.sourceId,
 				sourceFile: trial.sourceFile,
 				status: STATUS_CODE_TIMEOUT,
-				feedback: EXCEED_MAX_STEP_LIMIT,
-				fullreport: EXCEED_MAX_STEP_LIMIT + " " + traceFailingStep(sandbox.stepCount),
+				feedback: EXCEED_MAX_TEST_STEP_LIMIT,
+				fullreport: EXCEED_MAX_TEST_STEP_LIMIT + " " + traceFailingStep(sandbox.stepCount),
 				stepCount: sandbox.stepCount,
 				sandbox: sandbox
 			});
