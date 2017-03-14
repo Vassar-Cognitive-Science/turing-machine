@@ -20,19 +20,12 @@ import SaveTests from 'material-ui/svg-icons/file/cloud-upload';
 /*Test Drawer*/
 
 /*Toolbar*/
-import Play from 'material-ui/svg-icons/av/play-arrow';
-import Next from 'material-ui/svg-icons/av/skip-next';
-import Last from 'material-ui/svg-icons/av/skip-previous';
-import Pause from 'material-ui/svg-icons/av/pause';
 import Redo from 'material-ui/svg-icons/content/redo';
 import Undo from 'material-ui/svg-icons/content/undo';
 import Test from 'material-ui/svg-icons/action/bug-report';
-import Restore from 'material-ui/svg-icons/action/restore';
 import Save from 'material-ui/svg-icons/content/save';
 import Clear from 'material-ui/svg-icons/content/delete-sweep';
 import Hamburger from 'material-ui/svg-icons/navigation/menu';
-import Visibility from 'material-ui/svg-icons/action/visibility';
-import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
 /*Toolbar*/
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -45,8 +38,9 @@ import {
 	blue600 as runAllTrialsColor,
 	orange500 as uploadTestsColor,
 	teal300 as saveTestsColor,
-	cyan300 as calculationColor
  } from 'material-ui/styles/colors';
+
+import { DRAWER_STYLE, APPBAR_STYLES } from '../../constants/GUISettings';
 
 const ProgressCircle = (size=30, color=testHeaderColor) => (
 	<CircularProgress color={color} size={size} thickness={2.5} />
@@ -91,13 +85,13 @@ class AppToolBar extends React.Component {
 			<MuiThemeProvider>
 					<Drawer
 			          docked={false}
-			          style={{minWidth: 140, width: "18%"}}
+			          style={DRAWER_STYLE.style}
 			          open={this.state.trialDrawerToggle}
 			          onRequestChange={(open) => this.setState({trialDrawerToggle: open})}
 			        >
-			        <Subheader style={{fontSize: 24, color: testHeaderColor }}>Tests</Subheader>
+			        <Subheader style={DRAWER_STYLE.subheadStyle}>{DRAWER_STYLE.subheadText}</Subheader>
 			        <Divider />
-			        <div style={{height: "50%", overflowY: "auto"}}>
+			        <div style={DRAWER_STYLE.listStyle}>
 			        <List>
 			        	{this.props.testsById.map((id) => {
 			        		if (this.props.runningTrials.includes(id))  {
@@ -107,7 +101,7 @@ class AppToolBar extends React.Component {
 			        	})}
 			        </List>
 			        </div>
-			        <div style={{paddingTop: "8%"}}>
+			        <div style={DRAWER_STYLE.controlStyle}>
 			        <Divider />
 			        {(this.props.isRunningTrial) ?
 						<MenuItem primaryText="Running All Tests..."  leftIcon={ProgressCircle()} /> :
@@ -126,50 +120,64 @@ class AppToolBar extends React.Component {
 
 
 			<div className='app-bar'> 
-				<MediaQuery minWidth={780}>
+				<MediaQuery minWidth={APPBAR_STYLES.breakPoints.desktop.minWidth}>
 				<AppNavBar />
 					<MuiThemeProvider>
 					<div>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
 
-								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.last.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.last.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleLast}><Last /></IconButton>
+									onTouchTap={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
 
 								{(this.props.isRunning)?
 									((this.props.animationOn) ?
-									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
-										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
-										ProgressCircle(36, calculationColor)):
-									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
-										onTouchTap={this.props.handleRun}><Play /></IconButton>}
+									<IconButton tooltip={APPBAR_STYLES.buttons.pause.tip} 
+										 touch={true} tooltipPosition={APPBAR_STYLES.buttons.pause.tipPosition}
+										onTouchTap={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
+										</IconButton>:
+										ProgressCircle(APPBAR_STYLES.buttons.pause.progressCirlcSize, 
+													   APPBAR_STYLES.buttons.pause.progressCirlcColor)):
+									<IconButton tooltip={APPBAR_STYLES.buttons.play.tip} 
+										touch={true} tooltipPosition={APPBAR_STYLES.buttons.play.tipPosition}
+										onTouchTap={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
 
-								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.next.tip}  touch={true} tooltipPosition={APPBAR_STYLES.buttons.next.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleNext}><Next /></IconButton>
+									onTouchTap={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
 
-								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.restore.tip} touch={true} 
+									tooltipPosition={APPBAR_STYLES.buttons.restore.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleRestore}><Restore /></IconButton>
+									onTouchTap={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
 
 								<IconButton 
 									disabled={this.props.isRunning}
-									tooltip={(this.props.animationOn)?"Animation Turned On":"Animation Turned Off"}
-									touch={true} tooltipPosition="bottom-right"
+									tooltip={(this.props.animationOn)?
+										APPBAR_STYLES.buttons.animationToggle.onTip:
+										APPBAR_STYLES.buttons.animationToggle.offTip}
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.animationToggle.tipPosition}
 									onTouchTap={this.props.handleToggleAnimation}>
-									{(this.props.animationOn)?<Visibility />:<VisibilityOff />}</IconButton>
+									{(this.props.animationOn)?APPBAR_STYLES.buttons.animationToggle.onIcon:
+									APPBAR_STYLES.buttons.animationToggle.offIcon}</IconButton>
 
 								<ToolbarSeparator />
 
-								<label className="speed-label">
-									SPEED
+								<label style={APPBAR_STYLES.buttons.sliderInBar.sliderLabelStyle}>
+									{APPBAR_STYLES.buttons.sliderInBar.label}
 								</label>
-								<Slider style={{width: "7.2vw"}} sliderStyle={{bottom: -12}} axis="x"  
-									min={0.1} max={3} step={0.1}
-									defaultValue={1} value={this.props.animationSpeed} 
+								<Slider style={APPBAR_STYLES.buttons.sliderInBar.style} 
+									sliderStyle={APPBAR_STYLES.buttons.sliderInBar.sliderStyle} 
+									axis={APPBAR_STYLES.buttons.sliderInBar.range.axis}
+									min={APPBAR_STYLES.buttons.sliderInBar.range.min} 
+									max={APPBAR_STYLES.buttons.sliderInBar.range.max}
+									step={APPBAR_STYLES.buttons.sliderInBar.range.step}
+									defaultValue={APPBAR_STYLES.buttons.sliderInBar.range.default} 
+									value={this.props.animationSpeed} 
 									onChange={this.props.handleSpeedChange} />
-								<label className="speed-label">
+								<label style={APPBAR_STYLES.buttons.sliderInBar.sliderLabelStyle}>
 									{this.props.animationSpeedLabel}
 								</label>
 
@@ -201,43 +209,61 @@ class AppToolBar extends React.Component {
 			    	</div>
 					</MuiThemeProvider>
 			    	</MediaQuery>
-			    <MediaQuery maxWidth={780} minWidth={550}>
+			    <MediaQuery maxWidth={APPBAR_STYLES.breakPoints.ipad.maxWidth} 
+			    			minWidth={APPBAR_STYLES.breakPoints.ipad.minWidth}>
 			    <AppNavBar />
 			    <MuiThemeProvider>
 					<div>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
-								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.last.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.last.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleLast}><Last /></IconButton>
+									onTouchTap={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
+
 								{(this.props.isRunning)?
 									((this.props.animationOn) ?
-									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
-										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
-										ProgressCircle(36, calculationColor)):
-									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
-										onTouchTap={this.props.handleRun}><Play /></IconButton>}
+									<IconButton tooltip={APPBAR_STYLES.buttons.pause.tip} 
+										 touch={true} tooltipPosition={APPBAR_STYLES.buttons.pause.tipPosition}
+										onTouchTap={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
+										</IconButton>:
+										ProgressCircle(APPBAR_STYLES.buttons.pause.progressCirlcSize, 
+													   APPBAR_STYLES.buttons.pause.progressCirlcColor)):
+									<IconButton tooltip={APPBAR_STYLES.buttons.play.tip} 
+										touch={true} tooltipPosition={APPBAR_STYLES.buttons.play.tipPosition}
+										onTouchTap={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
 
-								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.next.tip}  touch={true} tooltipPosition={APPBAR_STYLES.buttons.next.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleNext}><Next /></IconButton>
-								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
+									onTouchTap={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
+
+								<IconButton tooltip={APPBAR_STYLES.buttons.restore.tip} touch={true} 
+									tooltipPosition={APPBAR_STYLES.buttons.restore.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-										onTouchTap={this.props.handleRestore}><Restore /></IconButton>
+									onTouchTap={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
+
 								<IconButton 
 									disabled={this.props.isRunning}
-									tooltip={(this.props.animationOn)?"Animation Turned On":"Animation Turned Off"}
-									touch={true} tooltipPosition="bottom-right"
+									tooltip={(this.props.animationOn)?
+										APPBAR_STYLES.buttons.animationToggle.onTip:
+										APPBAR_STYLES.buttons.animationToggle.offTip}
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.animationToggle.tipPosition}
 									onTouchTap={this.props.handleToggleAnimation}>
-									{(this.props.animationOn)?<Visibility />:<VisibilityOff />}</IconButton>
+									{(this.props.animationOn)?APPBAR_STYLES.buttons.animationToggle.onIcon:
+									APPBAR_STYLES.buttons.animationToggle.offIcon}</IconButton>
 
 								<ToolbarSeparator />
-								<label className="speed-label">
-									SPEED: {this.props.animationSpeedLabel}
+								<label style={APPBAR_STYLES.buttons.sliderInBar.sliderLabelStyle}>
+									{APPBAR_STYLES.buttons.sliderInBar.label}: {this.props.animationSpeedLabel}
 								</label>
-								<Slider style={{width: "7.2vw"}} sliderStyle={{bottom: -12}} axis="x"  
-									min={0.1} max={3} step={0.1}
-									defaultValue={1} value={this.props.animationSpeed} 
+								<Slider style={APPBAR_STYLES.buttons.sliderInBar.style} 
+									sliderStyle={APPBAR_STYLES.buttons.sliderInBar.sliderStyle} 
+									axis={APPBAR_STYLES.buttons.sliderInBar.range.axis}
+									min={APPBAR_STYLES.buttons.sliderInBar.range.min} 
+									max={APPBAR_STYLES.buttons.sliderInBar.range.max}
+									step={APPBAR_STYLES.buttons.sliderInBar.range.step}
+									defaultValue={APPBAR_STYLES.buttons.sliderInBar.range.default} 
+									value={this.props.animationSpeed} 
 									onChange={this.props.handleSpeedChange} />
 								<ToolbarSeparator />
 								<IconButton tooltip="Undo" touch={true} tooltipPosition="bottom-right"
@@ -271,43 +297,61 @@ class AppToolBar extends React.Component {
 			    	</div>
 					</MuiThemeProvider>
 			    </MediaQuery>
-			    <MediaQuery maxWidth={550} minWidth={450}>
+			    <MediaQuery maxWidth={APPBAR_STYLES.breakPoints.bigPhone.maxWidth} 
+			    			minWidth={APPBAR_STYLES.breakPoints.bigPhone.minWidth}>
 			    <AppNavBar />
 			    <MuiThemeProvider>
 					<div>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
-								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.last.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.last.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleLast}><Last /></IconButton>
+									onTouchTap={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
+
 								{(this.props.isRunning)?
 									((this.props.animationOn) ?
-									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
-										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
-										ProgressCircle(36, calculationColor)):
-									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
-										onTouchTap={this.props.handleRun}><Play /></IconButton>}
+									<IconButton tooltip={APPBAR_STYLES.buttons.pause.tip} 
+										 touch={true} tooltipPosition={APPBAR_STYLES.buttons.pause.tipPosition}
+										onTouchTap={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
+										</IconButton>:
+										ProgressCircle(APPBAR_STYLES.buttons.pause.progressCirlcSize, 
+													   APPBAR_STYLES.buttons.pause.progressCirlcColor)):
+									<IconButton tooltip={APPBAR_STYLES.buttons.play.tip} 
+										touch={true} tooltipPosition={APPBAR_STYLES.buttons.play.tipPosition}
+										onTouchTap={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
 
-								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.next.tip}  touch={true} tooltipPosition={APPBAR_STYLES.buttons.next.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleNext}><Next /></IconButton>
-								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
+									onTouchTap={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
+
+								<IconButton tooltip={APPBAR_STYLES.buttons.restore.tip} touch={true} 
+									tooltipPosition={APPBAR_STYLES.buttons.restore.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-										onTouchTap={this.props.handleRestore}><Restore /></IconButton>
+									onTouchTap={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
+
 								<IconButton 
 									disabled={this.props.isRunning}
-									tooltip={(this.props.animationOn)?"Animation Turned On":"Animation Turned Off"}
-									touch={true} tooltipPosition="bottom-right"
+									tooltip={(this.props.animationOn)?
+										APPBAR_STYLES.buttons.animationToggle.onTip:
+										APPBAR_STYLES.buttons.animationToggle.offTip}
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.animationToggle.tipPosition}
 									onTouchTap={this.props.handleToggleAnimation}>
-									{(this.props.animationOn)?<Visibility />:<VisibilityOff />}</IconButton>
+									{(this.props.animationOn)?APPBAR_STYLES.buttons.animationToggle.onIcon:
+									APPBAR_STYLES.buttons.animationToggle.offIcon}</IconButton>
 
 								<ToolbarSeparator />
-								<label className="speed-label">
-											SPEED: {this.props.animationSpeedLabel}
+								<label style={APPBAR_STYLES.buttons.sliderInBar.sliderLabelStyle}>
+									{APPBAR_STYLES.buttons.sliderInBar.label}: {this.props.animationSpeedLabel}
 								</label>
-								<Slider style={{width: "7.2vw"}} sliderStyle={{bottom: -12}} axis="x"  
-									min={0.1} max={3} step={0.1}
-									defaultValue={1} value={this.props.animationSpeed} 
+								<Slider style={APPBAR_STYLES.buttons.sliderInBar.style} 
+									sliderStyle={APPBAR_STYLES.buttons.sliderInBar.sliderStyle} 
+									axis={APPBAR_STYLES.buttons.sliderInBar.range.axis}
+									min={APPBAR_STYLES.buttons.sliderInBar.range.min} 
+									max={APPBAR_STYLES.buttons.sliderInBar.range.max}
+									step={APPBAR_STYLES.buttons.sliderInBar.range.step}
+									defaultValue={APPBAR_STYLES.buttons.sliderInBar.range.default} 
+									value={this.props.animationSpeed} 
 									onChange={this.props.handleSpeedChange} />
 								<ToolbarSeparator />
 							</ToolbarGroup>
@@ -338,35 +382,47 @@ class AppToolBar extends React.Component {
 			    	</div>
 					</MuiThemeProvider>
 			    </MediaQuery>
-			    <MediaQuery maxWidth={450}>
-			    <AppNavBar titleStyle={{fontSize: 20}}/>
+			    <MediaQuery maxWidth={APPBAR_STYLES.breakPoints.smallPhone.maxWidth}>
+			    <AppNavBar titleStyle={APPBAR_STYLES.breakPoints.smallPhone.titleStyle}/>
 			    <MuiThemeProvider>
 					<div>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
-								<IconButton tooltip="Last" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.last.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.last.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleLast}><Last /></IconButton>
+									onTouchTap={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
+
 								{(this.props.isRunning)?
 									((this.props.animationOn) ?
-									<IconButton tooltip="Pause" touch={true} tooltipPosition="bottom-right" 
-										onTouchTap={this.props.handlePause}><Pause /></IconButton>:
-										ProgressCircle(36, calculationColor)):
-									<IconButton tooltip="Run" touch={true} tooltipPosition="bottom-right"
-										onTouchTap={this.props.handleRun}><Play /></IconButton>}
+									<IconButton tooltip={APPBAR_STYLES.buttons.pause.tip} 
+										 touch={true} tooltipPosition={APPBAR_STYLES.buttons.pause.tipPosition}
+										onTouchTap={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
+										</IconButton>:
+										ProgressCircle(APPBAR_STYLES.buttons.pause.progressCirlcSize, 
+													   APPBAR_STYLES.buttons.pause.progressCirlcColor)):
+									<IconButton tooltip={APPBAR_STYLES.buttons.play.tip} 
+										touch={true} tooltipPosition={APPBAR_STYLES.buttons.play.tipPosition}
+										onTouchTap={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
 
-								<IconButton tooltip="Next" touch={true} tooltipPosition="bottom-right"
+								<IconButton tooltip={APPBAR_STYLES.buttons.next.tip}  touch={true} tooltipPosition={APPBAR_STYLES.buttons.next.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleNext}><Next /></IconButton>
-								<IconButton tooltip="Restore" touch={true} tooltipPosition="bottom-right"
+									onTouchTap={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
+
+								<IconButton tooltip={APPBAR_STYLES.buttons.restore.tip} touch={true} 
+									tooltipPosition={APPBAR_STYLES.buttons.restore.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-										onTouchTap={this.props.handleRestore}><Restore /></IconButton>
+									onTouchTap={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
+
 								<IconButton 
 									disabled={this.props.isRunning}
-									tooltip={(this.props.animationOn)?"Animation Turned On":"Animation Turned Off"}
-									touch={true} tooltipPosition="bottom-right"
+									tooltip={(this.props.animationOn)?
+										APPBAR_STYLES.buttons.animationToggle.onTip:
+										APPBAR_STYLES.buttons.animationToggle.offTip}
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.animationToggle.tipPosition}
 									onTouchTap={this.props.handleToggleAnimation}>
-									{(this.props.animationOn)?<Visibility />:<VisibilityOff />}</IconButton>
+									{(this.props.animationOn)?APPBAR_STYLES.buttons.animationToggle.onIcon:
+									APPBAR_STYLES.buttons.animationToggle.offIcon}</IconButton>
 								<ToolbarSeparator />
 							</ToolbarGroup>
 							<ToolbarGroup lastChild={true}>

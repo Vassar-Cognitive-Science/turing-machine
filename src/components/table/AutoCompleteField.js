@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+import { TABLE_AUTO_COMPLETE_STYLE } from '../../constants/GUISettings';
+
 class AutoCompleteField extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
     	return this.props.searchText !== nextProps.searchText ||
@@ -20,8 +22,8 @@ class AutoCompleteField extends React.Component {
                               id={this.props.id}
                               maxLength={this.props.maxLength}
                               openOnFocus={this.props.openOnFocus}
-                              popoverProps={{canAutoPosition: true, overflowY: "auto"}}
-                              style={{width: "13vw"}}
+                              popoverProps={TABLE_AUTO_COMPLETE_STYLE.popoverProps}
+                              style={TABLE_AUTO_COMPLETE_STYLE.style}
             	/>
             </MuiThemeProvider>
 		)

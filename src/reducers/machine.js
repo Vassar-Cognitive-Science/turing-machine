@@ -1,5 +1,12 @@
 import { HALT, STAR } from '../constants/index';
-import { REACH_HALT, UNDEFINED_RULE, NO_MORE_BACK, EXCEED_MAX_STEP_LIMIT, RULE_TABLE_ERROR } from '../constants/Messages';
+import {
+	REACH_HALT,
+	UNDEFINED_RULE,
+	NO_MORE_BACK,
+	EXCEED_MAX_STEP_LIMIT,
+	RULE_TABLE_ERROR,
+	IS_IN_EDITTING_ERROR
+} from '../constants/Messages';
 import { MAX_STEP_LIMIT } from '../constants/GUISettings';
 import * as tape from './tape';
 import * as gui from './gui';
@@ -93,17 +100,24 @@ Highlight Corresponding Cell
 Highlight Corresponding Rule
 */
 export function preStep(state, action) {
-	let new_state;
-	if (!action.singleStep) // if we want run automatically
-		new_state = gui.setPlayState(state, { flag: true }); 
-	else // if we want only a single step 
+	if (state.isEdittingTrial)
+		return stop(state, {message: IS_IN_EDITTING_ERROR, flag: true});
+
+	let new_state = Object.assign({}, state);
+	if (!action.singleStep) {// if we want run automatically
+		new_state = gui.setPlayStateHelper(new_state, true); 
+	} else {// if we want only a single step 
 		new_state = state;
+	}
+
+	if (new_state.isAnimationOn)
+		return new_state;
 
 	// highlight corresponding cell
-	new_state = tape.highlightCorrespondingCell(new_state, { flag: true });
+	new_state = tape.highlightCorrespondingCellHelper(new_state, true);
 
 	/* Find rule by internal state, and val of tape cell, and highlight it*/
-	new_state = highlightCorrespondingRule(new_state, { flag: true });
+	new_state = highlightCorrespondingRuleHelper(new_state, true);
 
 	// scroll into view
 	if (new_state.highlightedRow)
@@ -176,6 +190,9 @@ export function stepHelper(state, silent) { // optimize performance
 }
 
 export function step(state, action) {
+	if (state.isEdittingTrial)
+		return stop(state, {message: IS_IN_EDITTING_ERROR, flag: true});
+
 	let new_state = Object.assign({}, state, {
 		runHistory: state.runHistory.slice()
 	})
@@ -187,6 +204,9 @@ export function step(state, action) {
 Run with out animation
 */
 export function silentRun(state, action) {
+	if (state.isEdittingTrial)
+		return stop(state, {message: IS_IN_EDITTING_ERROR, flag: true});
+
 	let new_state = Object.assign({}, state, {
 		runHistory: state.runHistory.slice()
 	})
@@ -205,24 +225,34 @@ export function recordInterval(state, action) {
 }
 
 
-/*
-Highlight Corresponding Rule
-*/
-export function highlightCorrespondingRule(state, action) {
+export function highlightCorrespondingRuleHelper(state, flag, rule) {
 	// highlight wanted rule directly
-	if (action.rule && action.flag) {
-		return Object.assign({}, state, {highlightedRow: action.rule} );
+	if (rule && flag) {
+		state.highlightedRow = rule;
+		return state;
 	}
 
 	// cancel highlight
-	if (!action.flag) {
-		return Object.assign({}, state, { highlightedRow: null });
+	if (!flag) {
+		state.highlightedRow = null;
+		return state;
 	}
 
 	// highlight corresponding rule
 	let ruleId = matchRule(state, state.tapeInternalState, tape.read(state));
 
-	return Object.assign({}, state, { highlightedRow: ruleId });
+	state.highlightedRow = ruleId;
+
+	return state;
+}
+
+/*
+Highlight Corresponding Rule
+*/
+export function highlightCorrespondingRule(state, action) {
+	let new_state = Object.assign({}, state);
+
+	return highlightCorrespondingRuleHelper(new_state, action.flag, action.rule);
 }
 
 
@@ -236,13 +266,15 @@ cancel highlight on corresponding rule
 add possible error message
 */
 export function stop(state, action) {
+	let new_state = Object.assign({}, state);
+
 	// change pause sign to play
-	// clear time interval, handled by this reducer 
-	let new_state = gui.setPlayState(state, {flag: false}); 
+	// clear time interval, handled already in the called reducer helper 
+	new_state = gui.setPlayStateHelper(new_state, false); 
 
 	// cancel highlights
-	new_state = tape.highlightCorrespondingCell(new_state, {flag: false}); 
-	new_state = highlightCorrespondingRule(new_state, { flag: false });
+	new_state = tape.highlightCorrespondingCellHelper(new_state, false); 
+	new_state = highlightCorrespondingRuleHelper(new_state, false);
 
 	// report error, if there is
 	new_state.machineReportError = action.message;
@@ -255,6 +287,9 @@ Restore to last step
 Data is fetched from runHistory 
 */
 export function stepBack(state, action) {
+	if (state.isEdittingTrial)
+		return stop(state, {message: IS_IN_EDITTING_ERROR, flag: true});
+
 	if (state.runHistory.length > 0) {
 		let cached = state.runHistory[state.runHistory.length - 1];
 
@@ -306,6 +341,9 @@ Data is fetched from runHistory (by pop)
 ---More priority here than undo edit
 */
 export function restore(state, action) {
+	if (state.isEdittingTrial)
+		return stop(state, {message: IS_IN_EDITTING_ERROR, flag: true});
+
 	if (state.runHistory.length > 0) { // if there is some history
 		let cached = state.runHistory;
 

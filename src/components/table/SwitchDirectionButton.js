@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+import { DIRECTION_BUTTON_STYLE } from '../../constants/GUISettings';
+
 class SwitchDirectionButton extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.value !== nextProps.value;
@@ -12,8 +14,8 @@ class SwitchDirectionButton extends React.Component {
           <FlatButton value={this.props.value}
                       onTouchTap={this.props.switchDirection}
                       id={this.props.id}
-                      label={(this.props.value)?"LEFT":"RIGHT"} 
-                      style={{width: "9vw", textAlign: "left", top: 5}}
+                      label={(this.props.value)? DIRECTION_BUTTON_STYLE.leftLabel : DIRECTION_BUTTON_STYLE.rightLabel} 
+                      style={DIRECTION_BUTTON_STYLE.style}
                       />
       </MuiThemeProvider>
         )

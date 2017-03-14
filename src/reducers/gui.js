@@ -49,6 +49,17 @@ export function adjustHeadWidth(state, action) {
 	return adjustHeadWidthHelper(new_state, action.text);
 }
 
+export function setPlayStateHelper(state, flag) {
+	if (!flag && state.interval) {
+		clearInterval(state.interval); 
+	}
+
+	state.isRunning = flag;
+	state.interval = (flag) ? state.interval : null;
+
+	return state;
+}
+
 /* SIDE EFFECT HERE!*/
 /* IF THE MACHINE IS RUNNING AND WANTED TO BE STOPPED,
 	clearInterval WILL BE CALLED	
@@ -57,14 +68,9 @@ action.flag: bool, true means the machine is running
 
 */
 export function setPlayState(state, action) {
-	if (!action.flag && state.interval) {
-		clearInterval(state.interval); 
-	}
+	let new_state = Object.assign({}, state);
 
-	return Object.assign({}, state, {
-		isRunning: action.flag,
-		interval: (action.flag) ? state.interval : null
-	});
+	return setPlayStateHelper(new_state, action.flag);
 }
 
 /*

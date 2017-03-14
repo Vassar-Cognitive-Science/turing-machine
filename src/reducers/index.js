@@ -186,7 +186,8 @@ function rootReducer (state=initialState, action, clearRedo) {
 	}
 
 	s1 = ruleReducer(new_state, action, clearRedo);
-	s2 = tapeReducer(s1, action, clearRedo);
+	// s2 = tapeReducer(s1, action, clearRedo);
+	s2 = tapeReducer(s1, action, false);
 	s3 = guiReducer(s2, action);
 	s4 = machineReducer(s3, action);
 	s5 = trialReducer(s4, action);
@@ -388,7 +389,7 @@ clearRedo: boolean, if true, it means that we want to clear the redo history, th
 function tapeReducer(state, action, clearRedo) {
 	// let new_state = state, changed = true; //Undo reacts on tape version
 
-	let new_state = state, changed = false;
+	let new_state = state, changed = true;
 	switch (action.type) {
 		/* Tape actions */
 		case actionTypes.SET_CORRES_CELL_HEIGHT:
@@ -481,26 +482,37 @@ function ruleReducer(state, action, clearRedo) {
 
 
 function trialReducer(state, action) {
+	let new_state = state, changed = true;
 	switch(action.type) {
 		case actionTypes.DELETE_TRIAL:
-			return trial.deleteTrial(state, action);
+			new_state = trial.deleteTrial(state, action);
+			break;
 		case actionTypes.ADD_TRIAL:
-			return trial.addTrial(state, action);
+			new_state = trial.addTrial(state, action);
+			break;
 		case actionTypes.RUN_TRIAL:
-			return trial.runTrial(state, action);
+			new_state = trial.runTrial(state, action);
+			break;
 		case actionTypes.LOAD_TRIAL:
-			return trial.loadTrial(state, action);
+			new_state = trial.loadTrial(state, action);
+			break;
 		case actionTypes.PRE_RUN_TRIAL:
-			return trial.preRunTrial(state, action);
+			new_state = trial.preRunTrial(state, action);
+			break;
 		case actionTypes.TOGGLE_IS_RUNNING_TRIAL:
-			return trial.toggleIsRunningTrial(state, action);
+			new_state = trial.toggleIsRunningTrial(state, action);
+			break;
 		case actionTypes.CLEAR_TEST_RESULTS:
-			return trial.clearTestResults(state, action);
+			new_state = trial.clearTestResults(state, action);
+			break;
 		case actionTypes.TOGGLE_EDIT_MODE:
-			return trial.toggleEditMode(state, action);
+			new_state = trial.toggleEditMode(state, action);
+			break;
 		default:
-			return state; 
+			changed = false;
 	}
+
+	return  ((changed) ? cleanSideEffects(new_state, false) : new_state);
 }
 
 

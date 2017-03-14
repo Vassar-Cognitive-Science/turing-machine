@@ -490,6 +490,11 @@ export function moveRight(state, action) {
 	return moveRightHelper(new_state);
 }
 
+export function highlightCorrespondingCellHelper(state, flag) {
+	state.highlightedCellOrder = (flag) ? state.tapePointer - state.anchorCell : -1;
+	return state
+}
+
 /*
 action parameter:
 
@@ -497,11 +502,9 @@ flag: bool, indicates whether we want to cell that pointed by head currently to
 			be highlighted
 */
 export function highlightCorrespondingCell(state, action) {
-	var new_state = Object.assign({}, state, {
-		highlightedCellOrder: (action.flag) ? state.tapePointer - state.anchorCell : -1
-	});
+	let new_state = Object.assign({}, state);
 
-	return new_state;
+	return highlightCorrespondingCellHelper(new_state, action.flag);
 }
 
 /*

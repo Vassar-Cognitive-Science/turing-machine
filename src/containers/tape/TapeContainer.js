@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Tape from '../../components/tape/Tape';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
-import { HALT } from '../../constants/index'
+import { REACH_HALT, } from '../../constants/Messages';
 
 const rollLeft = (dispatch) => {
     rollTapeToRight(dispatch, true)
@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
 		machineReportError: state.machineReportError,
 		isRunning: state.isRunning,
 		cellNum: state.cellNum,
-		messageColor: (state.tapeInternalState === HALT) ? "#1976D2" : "#FF3D00",
+		messageColor: (state.machineReportError === REACH_HALT) ? "#1976D2" : "#FF3D00",
 		stepCount: state.stepCount,
 
 		isEdittingTrial: state.isEdittingTrial,

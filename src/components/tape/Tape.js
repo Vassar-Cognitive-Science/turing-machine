@@ -3,6 +3,8 @@ import IconButton from 'material-ui/IconButton';
 import RollRight from 'material-ui/svg-icons/av/fast-forward';
 import RollLeft from 'material-ui/svg-icons/av/fast-rewind';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import { TAPE_ICON_STYLES } from '../../constants/GUISettings';
 import { Card } from 'material-ui/Card';
 import { standardizeCellId } from '../../reducers/tape';
 import Square from '../../containers/tape/SquareContainer';
@@ -20,19 +22,6 @@ function populatedSquares(size) {
     squares.push(i);
   return squares;
 }
-
-const styles = {
-  mediumIcon: {
-    width: 36,
-    height: 36,
-    margin: -10
-  },
-  style: {
-    height: 50.7
-  }
-
-}
-
 
 class Tape extends React.Component {
   render() {
@@ -58,8 +47,8 @@ class Tape extends React.Component {
 
             <div className="tape-with-button">
               <div className="roll-left"><IconButton tooltip="Roll Left" 
-                onTouchTap={this.props.rollLeft} touch={true} style={styles.style} 
-                iconStyle={styles.mediumIcon} tooltipPosition="bottom-left" disabled={this.props.isRunning}><RollLeft /></IconButton></div>
+                onTouchTap={this.props.rollLeft} touch={true} style={TAPE_ICON_STYLES.style} 
+                iconStyle={TAPE_ICON_STYLES.mediumIcon} tooltipPosition="bottom-left" disabled={this.props.isRunning}><RollLeft /></IconButton></div>
               <Head />
               {populatedSquares(this.props.cellNum).map((i) => {
                 let mark = i;
@@ -68,8 +57,8 @@ class Tape extends React.Component {
                 return <Square key={standardizeCellId(i)} order={i} mark={mark} id={standardizeCellId(i)} />
                 })}
               <div className="roll-right"><IconButton tooltip="Roll Right" 
-                onTouchTap={this.props.rollRight} touch={true} style={styles.style} 
-                iconStyle={styles.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}><RollRight /></IconButton>
+                onTouchTap={this.props.rollRight} touch={true} style={TAPE_ICON_STYLES.style} 
+                iconStyle={TAPE_ICON_STYLES.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}><RollRight /></IconButton>
               </div>
             </div>
           </Card>

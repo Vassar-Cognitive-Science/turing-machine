@@ -6,21 +6,22 @@ import {Card, CardActions } from 'material-ui/Card';
 import DeleteRowButton from '../../containers/table/DeleteRowButtonContainer';
 import SwitchDirectionButton from '../../containers/table/SwitchDirectionButtonContainer';
 import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer';
-import { LEFT, RIGHT } from '../../constants/index';
 import {
-  TABLE_ROW_INPUT_WIDTH,
-  TABLE_ROW_STATE_WIDTH,
-  AUTO_COMPLETE_MAX_LENGTH
+  TABLE_INPUT_COL_STYLE,
+  TABLE_STATE_COL_STYLE
 } from '../../constants/GUISettings';
 
 export const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
 
-var DELETE_BUTTON_ID_PREFIX = "delete-row-button-of-";
-var CURRENT_STATE_COL_ID_PREFIX = "current_state-of-";
-var READ_COL_ID_PREFIX = "read-of-";
-var WRITE_COL_ID_PREFIX = "write-of-";
-var DIRECTION_COL_ID_PREFIX = "direction-of-";
-var NEW_STATE_COL_ID_PREFIX = "new_state-of-";
+const highlightColor = "#87dbff";
+const normalColor = "#fff";
+
+let DELETE_BUTTON_ID_PREFIX = "delete-row-button-of-";
+let CURRENT_STATE_COL_ID_PREFIX = "current_state-of-";
+let READ_COL_ID_PREFIX = "read-of-";
+let WRITE_COL_ID_PREFIX = "write-of-";
+let DIRECTION_COL_ID_PREFIX = "direction-of-";
+let NEW_STATE_COL_ID_PREFIX = "new_state-of-";
 
 export const standardizeDeleteButtonId = (id) => (DELETE_BUTTON_ID_PREFIX + id);
 
@@ -33,8 +34,6 @@ export const standardizeWriteFieldId = (id) => (WRITE_COL_ID_PREFIX + id);
 export const standardizeDirectionFieldId = (id) => (DIRECTION_COL_ID_PREFIX + id);
 
 export const standardizeNewStateFieldId = (id) => (NEW_STATE_COL_ID_PREFIX + id);
-
-export const translateDirectionValue = (flag) => ( (flag === 'true') ? LEFT : RIGHT ); // true: LEFT, false: RIGHT
 
 
 class DynamicRuleTable extends React.Component {
@@ -98,29 +97,39 @@ class DynamicRuleTable extends React.Component {
                  <tbody>
                   {this.props.rowsById.map((id) => {
                     return (
-                    <tr id={id} key={id} style={(this.props.highlightedRow === id)?{backgroundColor: "#87dbff" }:{backgroundColor: "#fff"}}>
+                    <tr id={id} key={id} style={(this.props.highlightedRow === id)?
+                      {backgroundColor: highlightColor }:{backgroundColor: normalColor}}>
                       <td>
                         <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />
                       </td>
 
                       <td>
-                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} openOnFocus={true} styles={{width:TABLE_ROW_STATE_WIDTH}} maxLength={AUTO_COMPLETE_MAX_LENGTH} id={standardizeCurrentStateFieldId(id)} />
+                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} 
+                          openOnFocus={true} styles={TABLE_STATE_COL_STYLE.style} 
+                          maxLength={TABLE_STATE_COL_STYLE.maxLength} id={standardizeCurrentStateFieldId(id)} />
                       </td>
                         
                       <td>
-                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[1]} openOnFocus={true} styles={{width:TABLE_ROW_INPUT_WIDTH}} maxLength="1" id={standardizeReadFieldId(id)} />
+                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[1]} 
+                          openOnFocus={true} styles={TABLE_INPUT_COL_STYLE.style} maxLength={TABLE_INPUT_COL_STYLE.maxLength}
+                          id={standardizeReadFieldId(id)} />
                       </td>
                         
                       <td>
-                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[2]} openOnFocus={true} styles={{width:TABLE_ROW_INPUT_WIDTH}} maxLength="1" id={standardizeWriteFieldId(id)} />
+                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[2]} 
+                          openOnFocus={true} styles={TABLE_INPUT_COL_STYLE.style} 
+                          maxLength={TABLE_INPUT_COL_STYLE.maxLength} id={standardizeWriteFieldId(id)} />
                       </td>
 
                       <td>
-                          <SwitchDirectionButton parent={id} fieldType={FIELD_TYPES[3]} id={standardizeDirectionFieldId(id)} />
+                          <SwitchDirectionButton parent={id} fieldType={FIELD_TYPES[3]} 
+                          id={standardizeDirectionFieldId(id)} />
                       </td>
                         
                       <td>
-                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} openOnFocus={true} styles={{width:TABLE_ROW_STATE_WIDTH}} maxLength={AUTO_COMPLETE_MAX_LENGTH} id={standardizeNewStateFieldId(id)} />
+                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} 
+                          openOnFocus={true} styles={TABLE_STATE_COL_STYLE.style} 
+                          maxLength={TABLE_STATE_COL_STYLE.maxLength} id={standardizeNewStateFieldId(id)} />
                       </td>
                   </tr>
                   )})}
