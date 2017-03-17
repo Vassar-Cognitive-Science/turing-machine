@@ -16,6 +16,8 @@ class EditTapeInfoPanel extends React.Component {
          		<MuiThemeProvider>
 					<Card>
 						<List>
+						<ListItem disabled={true} primaryText="File Preview:" />
+						<Divider />
 	               		<ListItem disabled={true} primaryText="Head state:" />
 	               		<ListItem disabled={true} primaryText="Tape pointer:"  />
 	               		<ListItem disabled={true} primaryText="Anchor cell:"  />

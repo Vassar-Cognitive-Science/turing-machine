@@ -9,7 +9,7 @@ import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer
 import {
   TABLE_INPUT_COL_STYLE,
   TABLE_STATE_COL_STYLE
-} from '../../constants/GUISettings';
+} from '../../constants/components/Table';
 
 export const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
 

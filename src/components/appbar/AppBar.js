@@ -12,37 +12,16 @@ import Drawer from 'material-ui/Drawer';
 import Subheader from 'material-ui/Subheader';
 import CircularProgress from 'material-ui/CircularProgress';
 
-/*Test Drawer*/
-import Add from 'material-ui/svg-icons/content/add-circle';
-import RunAllTests from 'material-ui/svg-icons/av/play-circle-filled';
-import UploadTests from 'material-ui/svg-icons/file/file-upload';
-import SaveTests from 'material-ui/svg-icons/file/cloud-upload';
-/*Test Drawer*/
-
-/*Toolbar*/
-import Redo from 'material-ui/svg-icons/content/redo';
-import Undo from 'material-ui/svg-icons/content/undo';
-import Test from 'material-ui/svg-icons/action/bug-report';
-import Save from 'material-ui/svg-icons/content/save';
-import Clear from 'material-ui/svg-icons/content/delete-sweep';
-import Hamburger from 'material-ui/svg-icons/navigation/menu';
-/*Toolbar*/
+import { DRAWER_STYLE, APPBAR_STYLES } from '../../constants/components/Appbar';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MediaQuery from 'react-responsive';
 import AppNavBar from './AppNavBar';
 import TrialItem from '../../containers/appbar/TrialItemContainer';
-import {
-	blue400 as testHeaderColor,
-	pink500 as addTrialColor,
-	blue600 as runAllTrialsColor,
-	orange500 as uploadTestsColor,
-	teal300 as saveTestsColor,
- } from 'material-ui/styles/colors';
+import { blue400 as waitingColor } from 'material-ui/styles/colors';
 
-import { DRAWER_STYLE, APPBAR_STYLES } from '../../constants/GUISettings';
 
-const ProgressCircle = (size=30, color=testHeaderColor) => (
+const ProgressCircle = (size=30, color=waitingColor) => (
 	<CircularProgress color={color} size={size} thickness={2.5} />
 )
 
@@ -104,15 +83,15 @@ class AppToolBar extends React.Component {
 			        <div style={DRAWER_STYLE.controlStyle}>
 			        <Divider />
 			        {(this.props.isRunningTrial) ?
-						<MenuItem primaryText="Running All Tests..."  leftIcon={ProgressCircle()} /> :
-						<MenuItem primaryText="Run Tests" leftIcon={<RunAllTests color={runAllTrialsColor}/>}
+						<MenuItem primaryText={DRAWER_STYLE.buttons.runTrial.runningLabel} leftIcon={ProgressCircle()} /> :
+						<MenuItem primaryText={DRAWER_STYLE.buttons.runTrial.label} leftIcon={DRAWER_STYLE.buttons.runTrial.icon}
 				 			onTouchTap={this.props.handleRunAllTests}/>}
 
-			        <MenuItem primaryText="Add Test" leftIcon={<Add color={addTrialColor} />}
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.addTrial.label} leftIcon={DRAWER_STYLE.buttons.addTrial.icon}
 			         onTouchTap={this.props.handleAddTest}/>
 			        <Divider />
-			        <MenuItem primaryText="Upload Tests" leftIcon={<UploadTests color={uploadTestsColor} />}/>
-			        <MenuItem primaryText="Save Tests" leftIcon={<SaveTests color={saveTestsColor} />}/>
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.uploadTests.label} leftIcon={DRAWER_STYLE.buttons.uploadTests.icon}/>
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.saveTests.label} leftIcon={DRAWER_STYLE.buttons.saveTests.icon}/>
 
 			        </div>
 			        </Drawer>
@@ -183,27 +162,32 @@ class AppToolBar extends React.Component {
 
 								<ToolbarSeparator />
 
-								<IconButton tooltip="Undo" touch={true} tooltipPosition="bottom-right"
-									onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}><Undo /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.undo.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.undo.tipPosition}
+									onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}>{APPBAR_STYLES.buttons.undo.icon}</IconButton>
 
-								<IconButton tooltip="Redo" touch={true} tooltipPosition="bottom-right"
-									onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}><Redo /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.redo.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.redo.tipPosition}
+									onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}>{APPBAR_STYLES.buttons.redo.icon}</IconButton>
 
 								<ToolbarSeparator />
 
-								<IconButton tooltip="Test" touch={true} tooltipPosition="bottom-right"
-									onTouchTap={this.handleTrialDrawerToggle}><Test /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.test.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.test.tipPosition}
+									onTouchTap={this.handleTrialDrawerToggle}>{APPBAR_STYLES.buttons.test.icon}</IconButton>
 
-								<IconButton tooltip="Save" touch={true} tooltipPosition="bottom-right"
-									onTouchTap={this.props.handleSave}><Save /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.save.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.save.tipPosition}
+									onTouchTap={this.props.handleSave}>{APPBAR_STYLES.buttons.save.icon}</IconButton>
 
 								<ToolbarSeparator />
 							</ToolbarGroup>
 
 							<ToolbarGroup lastChild={true}>
 
-								<IconButton  touch={true} tooltip="Clear Tape" tooltipPosition="bottom-left"
-									onTouchTap={this.props.handleClearTape}><Clear /></IconButton>
+								<IconButton  tooltip={APPBAR_STYLES.buttons.clearTape.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.clearTape.tipPosition}
+									onTouchTap={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
 							</ToolbarGroup>
 					    </Toolbar>
 			    	</div>
@@ -266,29 +250,45 @@ class AppToolBar extends React.Component {
 									value={this.props.animationSpeed} 
 									onChange={this.props.handleSpeedChange} />
 								<ToolbarSeparator />
-								<IconButton tooltip="Undo" touch={true} tooltipPosition="bottom-right"
-									onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}><Undo /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.undo.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.undo.tipPosition}
+									onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}>{APPBAR_STYLES.buttons.undo.icon}</IconButton>
 
-								<IconButton tooltip="Redo" touch={true} tooltipPosition="bottom-right"
-									onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}><Redo /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.redo.tip} 
+									touch={true} tooltipPosition={APPBAR_STYLES.buttons.redo.tipPosition}
+									onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}>{APPBAR_STYLES.buttons.redo.icon}</IconButton>
+
 								<ToolbarSeparator />
 							</ToolbarGroup>
 							<ToolbarGroup lastChild={true}>
-								<IconButton tooltip="More tools" touch={true} tooltipPosition="bottom-left" 
-							          onTouchTap={this.handlePopoverTouchTap}
-							        ><Hamburger /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.moreTools.tip}  
+											touch={true} tooltipPosition={APPBAR_STYLES.buttons.moreTools.tipPosition}
+							       		    onTouchTap={this.handlePopoverTouchTap}
+							        		>{APPBAR_STYLES.buttons.moreTools.icon}</IconButton>
 							        <Popover
 							          open={this.state.toolHamburger}
 							          anchorEl={this.state.anchorEl}
-							          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-							          targetOrigin={{horizontal: 'right', vertical: 'top'}}
+							          anchorOrigin={APPBAR_STYLES.buttons.moreToolsPopover.anchorOrigin}
+							          targetOrigin={APPBAR_STYLES.buttons.moreToolsPopover.targetOrigin}
 							          onRequestClose={this.handlePopoverRequestClose}
 							        >
 							        <Menu>
-							        	<MenuItem primaryText="Test" leftIcon={<Test />} onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}/>
-							        	<MenuItem primaryText="Save" leftIcon={<Save />} onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
+							        	leftIcon={APPBAR_STYLES.buttons.test.icon} 
+							        	onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}
+							        	/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
+							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
+							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
+							        	/>
 							        	<Divider />
-							        	<MenuItem primaryText="Clear Tape" leftIcon={<Clear/>} onTouchTap={() => { this.props.handleClearTape(); this.handlePopoverRequestClose()}}/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.clearTape.tip} 
+							        	leftIcon={APPBAR_STYLES.buttons.clearTape.icon} 
+							        	onTouchTap={() => { this.props.handleClearTape(); this.handlePopoverRequestClose()}}
+							        	/>
 							        </Menu>
 							        </Popover>
 							</ToolbarGroup>
@@ -356,24 +356,45 @@ class AppToolBar extends React.Component {
 								<ToolbarSeparator />
 							</ToolbarGroup>
 							<ToolbarGroup lastChild={true}>
-								<IconButton tooltip="More tools" touch={true} tooltipPosition="bottom-left" 
-							          onTouchTap={this.handlePopoverTouchTap}
-							        ><Hamburger /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.moreTools.tip}  
+											touch={true} tooltipPosition={APPBAR_STYLES.buttons.moreTools.tipPosition}
+							       		    onTouchTap={this.handlePopoverTouchTap}
+							        		>{APPBAR_STYLES.buttons.moreTools.icon}</IconButton>
 							        <Popover
 							          open={this.state.toolHamburger}
 							          anchorEl={this.state.anchorEl}
-							          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-							          targetOrigin={{horizontal: 'right', vertical: 'top'}}
+							          anchorOrigin={APPBAR_STYLES.buttons.moreToolsPopover.anchorOrigin}
+							          targetOrigin={APPBAR_STYLES.buttons.moreToolsPopover.targetOrigin}
 							          onRequestClose={this.handlePopoverRequestClose}
 							        >
 							        <Menu>
-							       		<MenuItem primaryText="Undo" leftIcon={<Undo />} onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}/>
-							        	<MenuItem primaryText="Redo" leftIcon={<Redo />} onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}/>
+							       		<MenuItem 
+							       		primaryText={APPBAR_STYLES.buttons.undo.tip}  
+							        	leftIcon={APPBAR_STYLES.buttons.undo.icon} 
+							       		onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}
+							       		/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.redo.tip}  
+							        	leftIcon={APPBAR_STYLES.buttons.redo.icon} 
+							        	onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}
+							        	/>
 							        	<Divider />
-							        	<MenuItem primaryText="Test" leftIcon={<Test />} onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}/>
-							        	<MenuItem primaryText="Save" leftIcon={<Save />} onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
+							        	leftIcon={APPBAR_STYLES.buttons.test.icon} 
+							        	onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}
+							        	/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
+							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
+							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
+							        	/>
 							        	<Divider />
-							        	<MenuItem primaryText="Clear Tape" leftIcon={<Clear/>} onTouchTap={() => { this.props.handleClearTape(); this.handlePopoverRequestClose()}}/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.clearTape.tip} 
+							        	leftIcon={APPBAR_STYLES.buttons.clearTape.icon} 
+							        	onTouchTap={() => { this.props.handleClearTape(); this.handlePopoverRequestClose()}}
+							        	/>
 							        </Menu>
 							        </Popover>
 							</ToolbarGroup>
@@ -426,30 +447,57 @@ class AppToolBar extends React.Component {
 								<ToolbarSeparator />
 							</ToolbarGroup>
 							<ToolbarGroup lastChild={true}>
-								<IconButton tooltip="More tools" touch={true} tooltipPosition="bottom-left" 
-							          onTouchTap={this.handlePopoverTouchTap}
-							        ><Hamburger /></IconButton>
+								<IconButton tooltip={APPBAR_STYLES.buttons.moreTools.tip}  
+											touch={true} tooltipPosition={APPBAR_STYLES.buttons.moreTools.tipPosition}
+							       		    onTouchTap={this.handlePopoverTouchTap}
+							        		>{APPBAR_STYLES.buttons.moreTools.icon}</IconButton>
 							        <Popover
 							          open={this.state.toolHamburger}
 							          anchorEl={this.state.anchorEl}
-							          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-							          targetOrigin={{horizontal: 'right', vertical: 'top'}}
+							          anchorOrigin={APPBAR_STYLES.buttons.moreToolsPopover.anchorOrigin}
+							          targetOrigin={APPBAR_STYLES.buttons.moreToolsPopover.targetOrigin}
 							          onRequestClose={this.handlePopoverRequestClose}
 							        >
 							        <Menu>
-							        	<MenuItem primaryText={"SPEED: " + this.props.animationSpeedLabel}
-							        		rightIcon={<Slider style={{width: "50%", paddingBottom:12}} axis="x"  
-											min={0.1} max={3} step={0.1}
-											defaultValue={1} value={this.props.animationSpeed} 
-											onChange={this.props.handleSpeedChange} />} />
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.sliderInMenu.label + this.props.animationSpeedLabel}
+							        		rightIcon={
+							        			<Slider style={APPBAR_STYLES.buttons.sliderInMenu.sliderStyle} 
+							        			axis={APPBAR_STYLES.buttons.sliderInMenu.range.axis}
+												min={APPBAR_STYLES.buttons.sliderInMenu.range.min} 
+												max={APPBAR_STYLES.buttons.sliderInMenu.range.max} 
+												step={APPBAR_STYLES.buttons.sliderInMenu.range.step}
+												defaultValue={APPBAR_STYLES.buttons.sliderInMenu.range.default} 
+												value={this.props.animationSpeed} 
+												onChange={this.props.handleSpeedChange} />} />
 										<Divider />
-							       		<MenuItem primaryText="Undo" leftIcon={<Undo />} onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}/>
-							        	<MenuItem primaryText="Redo" leftIcon={<Redo />} onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}/>
+							       		<MenuItem 
+							       		primaryText={APPBAR_STYLES.buttons.undo.tip}  
+							        	leftIcon={APPBAR_STYLES.buttons.undo.icon} 
+							       		onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}
+							       		/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.redo.tip}  
+							        	leftIcon={APPBAR_STYLES.buttons.redo.icon} 
+							        	onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}
+							        	/>
 							        	<Divider />
-							        	<MenuItem primaryText="Test" leftIcon={<Test />} onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}/>
-							        	<MenuItem primaryText="Save" leftIcon={<Save />} onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
+							        	leftIcon={APPBAR_STYLES.buttons.test.icon} 
+							        	onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}
+							        	/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
+							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
+							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
+							        	/>
 							        	<Divider />
-							        	<MenuItem primaryText="Clear Tape" leftIcon={<Clear/>} onTouchTap={() => { this.props.handleClearTape(); this.handlePopoverRequestClose()}}/>
+							        	<MenuItem 
+							        	primaryText={APPBAR_STYLES.buttons.clearTape.tip} 
+							        	leftIcon={APPBAR_STYLES.buttons.clearTape.icon} 
+							        	onTouchTap={() => { this.props.handleClearTape(); this.handlePopoverRequestClose()}}
+							        	/>
 							        </Menu>
 							        </Popover>
 							</ToolbarGroup>

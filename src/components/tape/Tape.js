@@ -4,7 +4,7 @@ import RollRight from 'material-ui/svg-icons/av/fast-forward';
 import RollLeft from 'material-ui/svg-icons/av/fast-rewind';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { TAPE_ICON_STYLES } from '../../constants/GUISettings';
+import { TAPE_ICON_STYLES } from '../../constants/components/Tape';
 import { Card } from 'material-ui/Card';
 import { standardizeCellId } from '../../reducers/tape';
 import Square from '../../containers/tape/SquareContainer';

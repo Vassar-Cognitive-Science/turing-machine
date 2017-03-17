@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { addRowAction } from '../../actions/tableActions';
 import DynamicRuleTable from '../../components/table/DynamicRuleTable';
 
+
 var ROW_ID = 0;
 const ROW_ID_PREFIX = "TABLE-ROW-";
 

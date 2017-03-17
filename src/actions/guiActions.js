@@ -32,7 +32,7 @@ export function moveHeadAction(moveLeft) { // moveLeft: boolean
 export function resizeScreenAndTapeAction(width) {
 	return {
 		type: actionTypes.RESIZE_SCREEN_AND_TAPE,
-		screenWidth: width
+		screenWidth: width,
 	};
 }
 

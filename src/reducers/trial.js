@@ -2,8 +2,8 @@ import * as tape from './tape';
 import * as gui from './gui';
 import { EXCEED_MAX_TEST_STEP_LIMIT, DIFF_FINAL_STATE, DIFF_FINAL_TAPE } from '../constants/Messages';
 
-import { HALT, BLANK } from '../constants/index';
-import { MAX_TEST_STEP_LIMIT } from '../constants/GUISettings';
+import { HALT } from '../constants/SpecialCharacters';
+import { MAX_TEST_STEP_LIMIT } from '../constants/GeneralAppSettings';
 import { matchRule } from './machine';
 
 // import { UNDEFINED_RULE, EXCEED_MAX_TEST_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
@@ -75,6 +75,23 @@ const isExpected = (finalSandbox, trial) => {
 
 	return result;
 }
+
+/*
+{
+	startState: string,
+	expectedState: string,
+
+	startPointer: number,
+
+	// the anchor cell of start tape is always set to be 0
+	startTape: array,
+	expectedTape: array,
+
+	expectedAnchorCell: number (optional, default is 0), // tells where we start to compare expected to result
+	expectedPointer: number (optional, default is same as expectedAnchorCell)
+}
+*/
+
 
 // create a trial object
 function createTrial(id, startState, expectedFinalState, tape=[], expectedFinalTape=[],
@@ -233,7 +250,7 @@ export function runTrial(state, action) {
 				feedback: EXCEED_MAX_TEST_STEP_LIMIT,
 				fullreport: EXCEED_MAX_TEST_STEP_LIMIT + " " + traceFailingStep(sandbox.stepCount),
 				stepCount: sandbox.stepCount,
-				sandbox: sandbox
+				// sandbox: sandbox
 			});
 		}
 
@@ -271,7 +288,7 @@ export function runTrial(state, action) {
 		feedback: (result.status === STATUS_CODE_PASS) ? traceSuccessTrialStep(sandbox.stepCount) : result.feedback,
 		stepCount: sandbox.stepCount,
 		fullreport: result.fullreport,
-		sandbox: sandbox
+		// sandbox: sandbox
 	});
 }
 

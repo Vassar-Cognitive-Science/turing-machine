@@ -3,7 +3,7 @@ import { setInternalStateAction, highlightCorrespondingCellAction } from '../../
 import { moveHeadAction } from '../../actions/guiActions';
 import Head from '../../components/tape/Head';
 import { getAllStates } from '../table/AutoCompleteFieldContainer';
-import { HALT, standardFilter } from '../../constants/index';
+import { HALT, standardFilter } from '../../constants/SpecialCharacters';
 
 
 const headOnStart = (e, ui, dispatch) => {

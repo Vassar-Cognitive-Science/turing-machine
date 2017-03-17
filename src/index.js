@@ -12,7 +12,7 @@ import App from './containers/AppContainer';
 const store = createStore(reducers, applyMiddleware(thunk));
 
 window.addEventListener('resize', () => {
-    store.dispatch(resizeScreenAndTapeAction(window.innerWidth));
+    store.dispatch(resizeScreenAndTapeAction(window.innerWidth, false));
 });
 
 store.dispatch(initMachineAction());

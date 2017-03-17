@@ -4,24 +4,59 @@ import { grey50 } from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Hamburger from 'material-ui/svg-icons/navigation/menu';
 import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 
 class AppNavBar extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			isPopped: false,
+		};
+	}
+
+	handlePopoverTouchTap = (event) => {
+		// This prevents ghost click.
+		event.preventDefault();
+		this.setState({
+			isPopped: true,
+			anchorEl: event.currentTarget,
+		});
+	};
+
+	handlePopoverRequestClose = () => {
+		this.setState({
+			isPopped: false,
+		});
+	};
+
 	render() {
 		return (
 		<div>
 			<MuiThemeProvider>
-				<AppBar title={"Turing Machine Simulator"} 
+				<AppBar 
+				title={"Turing Machine Simulator"} 
 				iconElementLeft={
-					<IconMenu
-			          iconButtonElement={<IconButton ><Hamburger color={grey50} /></IconButton>}>
-			          <MenuItem value="1" primaryText="Import" />
-			          <MenuItem value="2" primaryText="Export" />
+					<div>
+					<IconButton onTouchTap={this.handlePopoverTouchTap}><Hamburger color={grey50} /></IconButton>				
+					<Popover
+			          open={this.state.isPopped}
+			          anchorEl={this.state.anchorEl}
+			          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+	      			  targetOrigin={{horizontal: 'left', vertical: 'top'}}
+			          onRequestClose={this.handlePopoverRequestClose}
+			        >
+					<Menu>
+			          <MenuItem primaryText="Import" />
+			          <MenuItem primaryText="Export" />
 			          <Divider />
-			          <MenuItem value="3" primaryText="Help" />
-			        </IconMenu>
+			          <MenuItem primaryText="Help" />
+			        </Menu>
+			        </Popover>
+			        </div>
 				}
 				titleStyle={this.props.titleStyle}
 				/>

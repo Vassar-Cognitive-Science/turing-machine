@@ -4,7 +4,8 @@ import * as table from './table';
 import * as gui from './gui';
 import * as machine from './machine';
 import * as trial from './trial';
-import { INIT_HEAD_WIDTH, INIT_HEAD_LEFT_OFFSET, ANIMATION_SPEED } from '../constants/GUISettings';
+import { ANIMATION_SPEED } from '../constants/GeneralAppSettings';
+import { INIT_HEAD_WIDTH, INIT_HEAD_LEFT_OFFSET, } from '../constants/components/Head';
 
 export const initialState = {
 /* GUI settings */

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { TABLE_AUTO_COMPLETE_STYLE } from '../../constants/GUISettings';
+import { TABLE_AUTO_COMPLETE_STYLE } from '../../constants/components/Table';
 
 class AutoCompleteField extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {

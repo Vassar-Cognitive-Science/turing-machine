@@ -1,4 +1,4 @@
-import { MAX_STEP_LIMIT, MAX_TEST_STEP_LIMIT } from './GUISettings';
+import { MAX_STEP_LIMIT, MAX_TEST_STEP_LIMIT } from './GeneralAppSettings';
 
 export const REACH_HALT = "Machine is halted!";
 export const UNDEFINED_RULE = "No rule defined!";

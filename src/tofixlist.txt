@@ -22,17 +22,17 @@
 3. filter function for Head autocomplete. -Done
 
 2017/3/4
-1. initializeTape, initializeMachine, restore, stepBack (while running should make input disabled), in question -Solved.
-2. policy for restore, stepBack? Now is record every thing and restore to the very first status.
+1. initializeTape, initializeMachine, restore, stepBack (while running should make input disabled), in question -Solved
+2. policy for restore, stepBack? Now is record every thing and restore to the very first status. -Done
 
 2017/3/6
-1. Policy on undo/redo, restore/stepback
+1. Policy on undo/redo, restore/stepback. -Done
 
 2017/3/8
-1. Mobile screen disables Head movement, event for mouse does not work
+1. Mobile screen disables Head movement, event for mouse does not work. -Done
 
 2017/3/9
-1. Handle BLANK
-2. Make Redo/Undo react only to table
-3. Instant run, check for infinite loop
-4. Count steps
+1. Handle BLANK. -Done
+2. Make Redo/Undo react only to table. -Done
+3. Instant run, check for infinite loop. -Done
+4. Count steps. -Done

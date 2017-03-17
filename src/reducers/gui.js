@@ -1,13 +1,15 @@
 import {
 	MAX_CELL_NUM,
 	MIN_CELL_NUM,
-	BREAK_POINT,
+	TAPE_BREAK_POINT,
+	ANIMATION_SPEED,
+} from '../constants/GeneralAppSettings';
+import {
 	INIT_HEAD_WIDTH,
 	INIT_HEAD_LEFT_OFFSET,
-	ANIMATION_SPEED,
 	HEAD_MOVE_INTERVAL,
   	HEAD_LEFT_BOUNDARY,
-} from '../constants/GUISettings';
+} from '../constants/components/Head';
 import { moveLeftHelper, moveRightHelper } from './tape';
 
 // define helper to optimize performance
@@ -142,8 +144,8 @@ export function resizeScreenAndTape(state, action) {
 	let newCellNum;
 	let new_state = state;
 
-	if (newTapeSpace < BREAK_POINT) {
-		let diff = Math.ceil((BREAK_POINT-newTapeSpace)/50)
+	if (newTapeSpace < TAPE_BREAK_POINT) {
+		let diff = Math.ceil((TAPE_BREAK_POINT-newTapeSpace)/50)
 		newCellNum = MAX_CELL_NUM - diff;
 		if (newCellNum <= MIN_CELL_NUM) newCellNum = MIN_CELL_NUM;
 	} else {
@@ -152,13 +154,15 @@ export function resizeScreenAndTape(state, action) {
 
 	// console.log(newTapeSpace + " " + newCellNum)
 	let midPoint = Math.floor(newCellNum/2);
-	return Object.assign({}, new_state, {
+	new_state = Object.assign({}, new_state, {
 		screenSize: newScreenSize,
 		cellNum: newCellNum,
 		headX: HEAD_LEFT_BOUNDARY + midPoint * HEAD_MOVE_INTERVAL,
 		tapePointer: new_state.anchorCell + midPoint,
 		rightBoundary: HEAD_LEFT_BOUNDARY + (newCellNum-1) * HEAD_MOVE_INTERVAL,
 	});
+
+	return new_state;
 }
 
 export function toggleTrialDrawer(state, action) {

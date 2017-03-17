@@ -7,8 +7,8 @@ import {
   INIT_HEAD_STYLES,
   HEAD_LEFT_BOUNDARY,
   HEAD_MOVE_INTERVAL,
-  AUTO_COMPLETE_MAX_LENGTH
-} from '../../constants/GUISettings';
+  HEAD_INPUT_MAXLENGTH
+} from '../../constants/components/Head';
 
 export const HEAD_INPUT_ID = 'HEAD_INPUT_1';
 
@@ -39,7 +39,7 @@ class Head extends React.Component {
               dataSource={this.props.dataSource} 
               textFieldStyle={(this.props.head_styles)?(this.props.head_styles):INIT_HEAD_STYLES}
               onUpdateInput={this.props.onUpdateInput}
-              maxLength={AUTO_COMPLETE_MAX_LENGTH}
+              maxLength={HEAD_INPUT_MAXLENGTH}
               disabled={this.props.isRunning}
               >
             </AutoComplete>

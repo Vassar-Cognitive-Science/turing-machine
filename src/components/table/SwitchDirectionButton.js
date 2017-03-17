@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { DIRECTION_BUTTON_STYLE } from '../../constants/GUISettings';
+import { DIRECTION_BUTTON_STYLE } from '../../constants/components/Table';
 
 class SwitchDirectionButton extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {

@@ -1,6 +1,7 @@
-import { BLANK, STAR } from '../constants/index';
-import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/GUISettings';
+import { BLANK, STAR } from '../constants/SpecialCharacters';
+import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/components/Head';
 import { adjustHeadWidthHelper } from './gui';
+
 
 /**** Constants ****/
 

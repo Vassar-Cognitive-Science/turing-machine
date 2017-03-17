@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { standardizeCellId, CELL_ID_PREFIX } from '../../reducers/tape';
 import { moveTapeRightAction, moveTapeLeftAction, fillTapeAction } from '../../actions/tapeActions';
-import { BLANK } from '../../constants/index';
+import { BLANK } from '../../constants/SpecialCharacters';
 import Square from '../../components/tape/Square';
 import { MARK_LAST, MARK_FIRST } from '../../components/tape/Tape';
 

@@ -1,4 +1,4 @@
-import { HALT, STAR } from '../constants/index';
+import { HALT, STAR } from '../constants/SpecialCharacters';
 import {
 	REACH_HALT,
 	UNDEFINED_RULE,
@@ -7,9 +7,10 @@ import {
 	RULE_TABLE_ERROR,
 	IS_IN_EDITTING_ERROR
 } from '../constants/Messages';
-import { MAX_STEP_LIMIT } from '../constants/GUISettings';
+import { MAX_STEP_LIMIT } from '../constants/GeneralAppSettings';
 import * as tape from './tape';
 import * as gui from './gui';
+
 
 /*
 Helper function that matches in_state and read to rule, and return its id.
