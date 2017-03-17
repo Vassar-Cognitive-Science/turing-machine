@@ -5,7 +5,7 @@ import { createStore , applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { resizeScreenAndTapeAction } from './actions/guiActions';
-import { initMachineAction } from './actions/index';
+import { initMachineAction } from './actions/machineActions';
 import reducers from './reducers';
 import App from './containers/AppContainer';
 

@@ -19,7 +19,7 @@ import {
 	restoreAction,
 	undoAction,
 	redoAction,
-} from '../../actions/index';
+} from '../../actions/machineActions';
 
 
 var TEST_ID = 1;
