@@ -141,7 +141,7 @@ export const APPBAR_STYLES = {
 		},
 		moreTools: {
 			tip: "More tools",
-			tipPosition: "bottom-right",
+			tipPosition: "bottom-left",
 			icon: < Hamburger / > ,
 		},
 		sliderInBar: {
