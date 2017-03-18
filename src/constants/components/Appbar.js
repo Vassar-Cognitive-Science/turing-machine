@@ -136,7 +136,7 @@ export const APPBAR_STYLES = {
 		},
 		clearTape: {
 			tip: "Clear Tape",
-			tipPosition: "bottom-right",
+			tipPosition: "bottom-left",
 			icon: < Clear / > ,
 		},
 		moreTools: {
