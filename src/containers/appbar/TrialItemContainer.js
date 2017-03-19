@@ -26,7 +26,7 @@ const loadTrial = (dispatch, ownProps) => {
 }
 
 const editTrial = (dispatch, ownProps) => {
-	dispatch(toggleEditModeAction());
+	dispatch(toggleEditModeAction(ownProps.id));
 	ownProps.drawerCloseCallBack();
 }
 

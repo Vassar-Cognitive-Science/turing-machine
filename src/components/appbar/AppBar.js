@@ -173,10 +173,12 @@ class AppToolBar extends React.Component {
 								<ToolbarSeparator />
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.test.tip} 
+									disabled={this.props.isEdittingTrial}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.test.tipPosition}
 									onTouchTap={this.handleTrialDrawerToggle}>{APPBAR_STYLES.buttons.test.icon}</IconButton>
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.save.tip} 
+									disabled={this.props.isEdittingTrial}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.save.tipPosition}
 									onTouchTap={this.props.handleSave}>{APPBAR_STYLES.buttons.save.icon}</IconButton>
 
@@ -275,12 +277,14 @@ class AppToolBar extends React.Component {
 							        <Menu>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
-							        	leftIcon={APPBAR_STYLES.buttons.test.icon} 
+							        	leftIcon={APPBAR_STYLES.buttons.test.icon}  
+										disabled={this.props.isEdittingTrial}
 							        	onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
+										disabled={this.props.isEdittingTrial}
 							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<Divider />
@@ -382,11 +386,13 @@ class AppToolBar extends React.Component {
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.test.icon} 
+							        	disabled={this.props.isEdittingTrial}
 							        	onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
+							        	disabled={this.props.isEdittingTrial}
 							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<Divider />
@@ -485,11 +491,13 @@ class AppToolBar extends React.Component {
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.test.icon} 
+							        	disabled={this.props.isEdittingTrial}
 							        	onTouchTap={() => { this.handleTrialDrawerToggle(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
+							        	disabled={this.props.isEdittingTrial}
 							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<Divider />

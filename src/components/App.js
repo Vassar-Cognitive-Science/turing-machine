@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from '../containers/appbar/AppBarContainer';
 import Tape from '../containers/tape/TapeContainer';
 import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
-import EditTapeInfoPanel from '../containers/appbar/EditTapeInfoPanelContainer';
+// import EditTapeInfoPanel from '../containers/appbar/EditTapeInfoPanelContainer';
 
 class App extends React.Component {
 
@@ -11,7 +11,7 @@ class App extends React.Component {
   			<div className="app-container">
   				<AppBar />
 	    		<Tape />
-	    		{(this.props.isEdittingTrial) ? <EditTapeInfoPanel /> : <DynamicRuleTable />}
+	    		{(this.props.isEdittingTrial) ? <div className='blank-stuff'></div> : <DynamicRuleTable />}
   			</div>
   		);
 	}

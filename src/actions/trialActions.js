@@ -57,9 +57,15 @@ export function clearTestResultAction() {
 	};
 }
 
-export function toggleEditModeAction(flag=undefined) {
+export function toggleEditModeAction(id=undefined) {
 	return {
 		type: actionTypes.TOGGLE_EDIT_MODE,
-		flag: flag
+		id: id
+	}
+}
+
+export function changeEdittingTargetAction() {
+	return {
+		type: actionTypes.CHANGE_EDITTING_TARGET
 	}
 }

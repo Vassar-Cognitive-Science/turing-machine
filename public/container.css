@@ -9,6 +9,11 @@
 	padding-bottom: 10px;
 }
 
+.blank-stuff {
+	margin: 0 auto;
+	min-height: 180px;
+	max-height: 180px;
+}
 
 .machine-reported-error {
 	margin: 0 auto; 

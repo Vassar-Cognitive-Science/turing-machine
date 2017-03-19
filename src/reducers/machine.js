@@ -68,7 +68,7 @@ highlighted cell order
 
 
 */
-const cachedLastStep = (lastState, lastPointer) => {
+const cachedLastStep = (lastState) => {
 	return {
 		highlightedRow: lastState.highlightedRow,
 		highlightedCellOrder: lastState.highlightedCellOrder,
@@ -81,8 +81,8 @@ const cachedLastStep = (lastState, lastPointer) => {
 		stepCount: lastState.stepCount,
 
 		tapeInternalState: lastState.tapeInternalState,
-		cachedPointer: lastPointer,
-		cachedCell: tape.cloneCellById(lastState, lastPointer),
+		cachedPointer: lastState.tapePointer,
+		cachedCell: tape.cloneCellById(lastState, lastState.tapePointer),
 
 		anchorCell: lastState.anchorCell,
 		tapeHead: lastState.tapeHead,
@@ -168,7 +168,7 @@ export function stepHelper(state, silent) { // optimize performance
 
 	// cache history, and highlight rule
 	state.highlightedRow = highlightedRow;
-	state.runHistory.push(cachedLastStep(state, state.tapePointer));
+	state.runHistory.push(cachedLastStep(state)); // memeroy bottleneck
 
 	// find the rule data
 	let rule = state[state.highlightedRow];
@@ -195,7 +195,8 @@ export function step(state, action) {
 		return stop(state, {message: IS_IN_EDITTING_ERROR, flag: true});
 
 	let new_state = Object.assign({}, state, {
-		runHistory: state.runHistory.slice()
+		runHistory: state.runHistory.slice(),
+		tapeCellsById: state.tapeCellsById.slice()
 	})
 	
 	return stepHelper(new_state, action.silent);
@@ -211,8 +212,9 @@ export function silentRun(state, action) {
 	let new_state = Object.assign({}, state, {
 		runHistory: state.runHistory.slice()
 	})
-	while (new_state.isRunning)
+	while (new_state.isRunning) {
 		new_state = stepHelper(new_state, true);
+	}
 	return new_state;
 }
 

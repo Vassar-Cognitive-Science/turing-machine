@@ -112,7 +112,9 @@ export function moveHeadHelper(state, moveLeft) {
 	Handles model changes and view changes for Head
 */
 export function moveHead(state, action) {
-	let new_state = Object.assign({}, state);
+	let new_state = Object.assign({}, state, {
+		tapeCellsById: state.tapeCellsById.slice()
+	});
 
 	return moveHeadHelper(new_state, action.moveLeft);
 }

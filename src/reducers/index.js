@@ -13,10 +13,11 @@ export const initialState = {
 	/*Editting Trial Mode*/
 	isEdittingTrial: false,
 	isEdittingExpectedTape: false,
+	edittingTrialId: null,
 
 	originalTape: null,
 	edittingStartTape: null,
-	edittingFinalTape: null,
+	edittingExpectedTape: null,
 	/*Editting Trial Mode*/
 
 	/*** The following five are initialized by gui.resizeScreenAndTape  ***/
@@ -104,9 +105,13 @@ export const initialState = {
 	testsById: ["Test Case #0", "Test Case #1", "Test Case #2"],
 	"Test Case #0": {
 		startState: "0",
-		expectedFinalState: "0",
 		startTape: [1,1,1,1,1,1,2],
-		expectedFinalTape: [2,2,2,2,2,2,2],
+		expectedTape: [2,2,2,2,2,2,2],
+
+		expectedState: "HALT",
+
+		startTapeHead: -3,
+		expectedTapeHead: 2,
 
 		tapePointer: 10,
 		sourceFile: null,
@@ -114,9 +119,13 @@ export const initialState = {
 	},
 	"Test Case #1": {
 		startState: "0",
-		expectedFinalState: "0",
 		startTape: [1,1,1,1,1,1,2],
-		expectedFinalTape: [2,2,2,2,2,2,2],
+		expectedTape: [2,2,2,2,2,2,2],
+
+		expectedState: "HALT",
+
+		startTapeHead: -3,
+		expectedTapeHead: 20,
 
 		tapePointer: 10,
 		sourceFile: null,
@@ -124,9 +133,10 @@ export const initialState = {
 	},
 	"Test Case #2": {
 		startState: "0",
-		expectedFinalState: "HALT",
 		startTape: [1,1,1,1,1,1,2],
-		expectedFinalTape: [2,2,2,2,2,2,2],
+		expectedTape: [2,2,2,2,2,2,2],
+
+		expectedState: "HALT",
 
 		tapePointer: 0,
 		sourceFile: null,
@@ -508,6 +518,9 @@ function trialReducer(state, action) {
 			break;
 		case actionTypes.TOGGLE_EDIT_MODE:
 			new_state = trial.toggleEditMode(state, action);
+			break;
+		case actionTypes.CHANGE_EDITTING_TARGET:
+			new_state = trial.changeEdittingTarget(state, action);
 			break;
 		default:
 			changed = false;

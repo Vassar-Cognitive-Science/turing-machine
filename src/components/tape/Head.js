@@ -40,7 +40,7 @@ class Head extends React.Component {
               textFieldStyle={(this.props.head_styles)?(this.props.head_styles):INIT_HEAD_STYLES}
               onUpdateInput={this.props.onUpdateInput}
               maxLength={HEAD_INPUT_MAXLENGTH}
-              disabled={this.props.isRunning}
+              disabled={this.props.isRunning || this.props.isEdittingExpectedTape}
               >
             </AutoComplete>
           </MuiThemeProvider>

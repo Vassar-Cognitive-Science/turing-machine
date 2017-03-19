@@ -12,6 +12,16 @@ import Head from '../../containers/tape/HeadContainer';
 
 import Swap from 'material-ui/svg-icons/action/autorenew';
 import FlatButton from 'material-ui/FlatButton';
+import Divider from 'material-ui/Divider';
+import List from 'material-ui/List';
+import MenuItem from 'material-ui/MenuItem';
+import Subheader from 'material-ui/Subheader';
+
+import {
+  cyan400 as primaryColor,
+  pink400 as secondaryColor,
+  indigo800 as promptColor
+} from 'material-ui/styles/colors';
 
 export const MARK_FIRST = "first";
 export const MARK_LAST = "last";
@@ -26,24 +36,32 @@ function populatedSquares(size) {
 class Tape extends React.Component {
   render() {
     return (
-      <div className="card-of-tape">
+      <div >
          <MuiThemeProvider>
+         <div className="card-of-tape">
           <Card>
             <div className="machine-reported-error" 
               style={{visibility:(this.props.showReportedError)?"visible":"hidden", color: this.props.messageColor}}>
               {this.props.machineReportError}
             </div>
+
             {(this.props.isEdittingTrial) ? <FlatButton
                                               label={(this.props.isEdittingExpectedTape) ? "Expected Tape": "Start Tape"}
                                               labelPosition="after"
-                                              primary={true}
-                                              icon={<Swap />}
+                                              style={{
+                                                color: (this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor
+                                                }
+                                              }
+                                              onTouchTap={this.props.changeEdittingTarget}
+                                              icon={<Swap 
+                                                color={(this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor}/>
+                                              }
                                             /> :
                                             null}
-            <div className="step-count">
-              {(!this.props.isEdittingTrial) ? <p>Step: {this.props.stepCount}</p> : 
-                null}
-            </div>
+
+            {(!this.props.isEdittingTrial) ? 
+              <div className="step-count"><p>Step: {this.props.stepCount}</p></div> : 
+              null}
 
             <div className="tape-with-button">
               <div className="roll-left"><IconButton tooltip="Roll Left" 
@@ -61,10 +79,38 @@ class Tape extends React.Component {
                 iconStyle={TAPE_ICON_STYLES.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}><RollRight /></IconButton>
               </div>
             </div>
+
+            {(this.props.isEdittingTrial) ? 
+              <div className="step-count"><p>Anchor Cell: {this.props.anchorCell}</p></div> : 
+              null}
           </Card>
+          </div>
         </MuiThemeProvider>
-
-
+        <MuiThemeProvider>
+        <div>
+          {(this.props.isEdittingTrial) ?
+            <Card className="editting-mode-card">
+            <Subheader style={{color: promptColor}}>
+              {"Target: " + ((this.props.isEdittingExpectedTape) ? "Expected Tape": "Start Tape")}
+            </Subheader>
+            <List className="editting-mode-button-group">
+            <MenuItem 
+              primaryText="Save" 
+              style={{textAlign: "center", color: primaryColor}}
+              onTouchTap={this.props.handleSave}
+              />
+            <Divider />
+            <MenuItem  
+              primaryText="Exit" 
+              style={{textAlign: "center", color: secondaryColor}}
+              onTouchTap={this.props.handleExit}
+              />
+            </List>
+            </Card>:
+            null
+          }
+        </div>
+        </MuiThemeProvider>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import Tape from '../../components/tape/Tape';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
+import { changeEdittingTargetAction, toggleEditModeAction } from '../../actions/trialActions';
 import { REACH_HALT, } from '../../constants/Messages';
 
 const rollLeft = (dispatch) => {
@@ -9,6 +10,14 @@ const rollLeft = (dispatch) => {
 
 const rollRight = (dispatch) => {
 	rollTapeToLeft(dispatch, true)
+}
+
+const changeEdittingTarget = (dispatch) => {
+	dispatch(changeEdittingTargetAction());
+}
+
+const handleExit = (dispatch) => {
+	dispatch(toggleEditModeAction());
 }
 
 const mapStateToProps = (state) => {
@@ -21,6 +30,7 @@ const mapStateToProps = (state) => {
 		stepCount: state.stepCount,
 
 		isEdittingTrial: state.isEdittingTrial,
+		isEdittingExpectedTape: state.isEdittingExpectedTape,
 		anchorCell: state.anchorCell,
 		// isEdittingExpectedTape: state.isEdittingExpectedTape,
 	}
@@ -29,7 +39,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch, ownProps) => ({
 	rollLeft: () => { rollLeft(dispatch) },
   	rollRight: () => { rollRight(dispatch) },
-  	dispatch: dispatch
+  	changeEdittingTarget: () => { changeEdittingTarget(dispatch) },
+  	handleExit: () => { handleExit(dispatch) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tape);

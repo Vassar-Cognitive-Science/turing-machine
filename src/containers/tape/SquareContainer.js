@@ -61,8 +61,8 @@ const onKeyDown = (e, dispatch, ownProps) => {
 
 
 const mapStateToProps = (state, ownProps) => {
-  var tar = state[standardizeCellId(state.anchorCell + ownProps.order)];
-  var val = (tar !== undefined && tar !== null) ? tar.val : "";
+  let tar = state[standardizeCellId(state.anchorCell + ownProps.order)];
+  let val = (tar !== undefined && tar !== null) ? tar.val : "";
 
   return {
     val: val,

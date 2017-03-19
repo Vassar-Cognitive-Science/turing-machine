@@ -44,6 +44,8 @@ const mapStateToProps = (state, ownProps) => {
     // fontColor: (state.tapeInternalState === HALT) ? "#FF3D00" : "#212121", //#1976D2
     fontColor: (state.tapeInternalState === HALT) ? "#1976D2" : "#212121", //#FF3D00
 
+    isEdittingExpectedTape: state.isEdittingExpectedTape,
+
     hair_styles: {
       width: state.headWidth,
       left: state.headLeftOffset,

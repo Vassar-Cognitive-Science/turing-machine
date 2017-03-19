@@ -88,3 +88,14 @@
   background-color: black;
 }
 /***  HEAD  ***/
+
+.editting-mode-button-group {
+  /*padding-right: 43%;*/
+  margin: 0 auto;
+  width: 45%;
+}
+
+.editting-mode-card {
+  width: 45%;
+  margin: 0 auto;
+}

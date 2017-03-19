@@ -81,6 +81,7 @@ export function cloneCell(tar) {
 	return createCell(tar.cur, tar.prev, tar.next, tar.val);
 }
 
+
 export function extractTape(state) {
 	let tape = {
 		anchorCell: state.anchorCell,
@@ -107,7 +108,7 @@ export function extractTape(state) {
 }
 
 export function loadTape(state, tape) {
-	let new_state = initializeTape(state);
+	let new_state = initializeTape(state, {});
 	new_state.anchorCell = tape.anchorCell;
 	new_state.tapeHead = tape.tapeHead;
 	new_state.tapeTail = tape.tapeTail;
@@ -207,7 +208,7 @@ Proof:
 										  val = val
 			b. increase the tapeTail by 1, as a sentinel
 */
-function appendAfterTailHelper(state, val = null) {
+export function appendAfterTailHelper(state, val = null) {
 	// it is to satisfy tapeHead = -1
 	// after the first addition of cell
 	if (isTapeEmpty(state)) {
@@ -233,7 +234,7 @@ function appendAfterTailHelper(state, val = null) {
 /*
 Correctness proof similar to the above
 */
-function insertBeforeHeadHelper(state, val = null) {
+export function insertBeforeHeadHelper(state, val = null) {
 	// satisfy tapeTail = 1, for the first cell inserted
 	if (isTapeEmpty(state)) {
 		state.tapeTail++;
@@ -457,9 +458,9 @@ export function moveLeft(state, action) {
 
 export function moveRightHelper(state) {
 	state.tapePointer++;
+
 	if (state.tapePointer > state.anchorCell + state.cellNum - 1) {
 		state.anchorCell++;
-
 		// because tapeTail is sentinel, it implies
 		// when anchorCell + cellNum - 1 == tapeTail, the head is pointing to 
 		// an undefined cell, so we need to append a new cell

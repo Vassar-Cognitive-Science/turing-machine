@@ -127,6 +127,7 @@ const mapStateToProps = (state, ownProps) => {
     	undoAble: state.undoEditHistory.length > 0,
     	lastStepAble: state.runHistory.length > 0,
     	testsById: state.testsById,
+    	isEdittingTrial: state.isEdittingTrial
     };
 }
 
