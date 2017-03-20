@@ -23,11 +23,30 @@ export const runTrial = (dispatch, ownProps, timeout=800) => {
 
 const loadTrial = (dispatch, ownProps) => {
 	dispatch(loadTrialAction(ownProps.id));
+	ownProps.drawerCloseCallBack();
 }
 
 const editTrial = (dispatch, ownProps) => {
 	dispatch(toggleEditModeAction(ownProps.id));
 	ownProps.drawerCloseCallBack();
+}
+
+const downloadTrial = (dispatch, ownProps) => {
+	dispatch(function(dispatch, getState) {
+		let state = getState();
+		let trial = state[ownProps.id];
+		trial = Object.assign({}, trial);
+		delete trial.id;
+		delete trial.testReportId;
+
+		let data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trial, null, 4));
+
+		let a = document.createElement('a');
+		a.href = 'data:' + data;
+		a.download = ownProps.id + '.json';
+
+		a.click();
+	});
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -45,6 +64,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	runTrial: () => { runTrial(dispatch, ownProps) },
 	loadTrial: () => { loadTrial(dispatch, ownProps) },
 	editTrial: () => { editTrial(dispatch, ownProps) },
+	downloadTrial: () => { downloadTrial(dispatch, ownProps) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrialItem);

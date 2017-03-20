@@ -38,7 +38,7 @@ export const standardizeCellId = (id) => {
 }
 
 export function isTapeEmpty(state) {
-	return state.tapeCellsById.length === 0;
+	return state.tapeHead === state.tapeTail;
 }
 
 export function findCell(state, id) {
@@ -96,7 +96,7 @@ export function extractTape(state) {
 		headWidth: state.headWidth,
 		headLeftOffset: state.headLeftOffset,
 
-		highlightedCellOrder: state.highlightedCellOrder
+		highlightedCellOrder: -1 // cancel any highlight
 	};
 
 	for (let i = 0; i < tape.tapeCellsById.length; i++) {
@@ -121,7 +121,7 @@ export function loadTape(state, tape) {
 	new_state.headWidth = tape.headWidth;
 	new_state.headLeftOffset = tape.headLeftOffset;
 
-	new_state.highlightedCellOrder = tape.highlightedCellOrder;
+	new_state.highlightedCellOrder = -1; // cancel any highlight
 
 	for (let i = 0; i < tape.tapeCellsById.length; i++) {
 		let id = tape.tapeCellsById[i];
@@ -130,6 +130,41 @@ export function loadTape(state, tape) {
 
 	return new_state;
 }
+
+
+export function tapeToArray(tape) {
+	let res = []
+	if (isTapeEmpty(tape))
+		return res;
+
+	// run throught the linked list
+	let dummy = standardizeCellId(tape.tapeHead+1);
+	let current = tape[dummy];
+	while (current.next !== null) {
+		let val = current.val;
+		if (val === "" || val === null)
+			val = BLANK;
+
+		res.push(val);
+		current = tape[current.next];
+	}
+
+	// process array
+	let lmark = 0, rmark = res.length - 1;
+	while (lmark <= rmark) {
+		if (res[lmark] !== BLANK)
+			break;
+		lmark++;
+	}
+	while (rmark >= lmark) {
+		if (res[rmark] !== BLANK)
+			break;
+		rmark--;
+	}
+
+	return res.slice(lmark, rmark+1);
+}
+
 
 /**** Exported Helper functions ****/
 

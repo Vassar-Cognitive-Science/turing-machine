@@ -11,7 +11,7 @@ import {
 import AddTest from 'material-ui/svg-icons/content/add-circle';
 import RunAllTests from 'material-ui/svg-icons/av/play-circle-filled';
 import UploadTests from 'material-ui/svg-icons/file/file-upload';
-import SaveTests from 'material-ui/svg-icons/file/cloud-upload';
+import ExportTests from 'material-ui/svg-icons/file/cloud-download';
 /*Drawer*/
 
 /*Toolbar*/
@@ -220,8 +220,8 @@ export const DRAWER_STYLE = {
 			icon: <UploadTests color={uploadTestsColor} />
 		},
 		saveTests: {
-			label: "Save Tests",
-			icon: <SaveTests color={saveTestsColor} />
+			label: "Download Tests",
+			icon: <ExportTests color={saveTestsColor} />
 		}
 	}
 };

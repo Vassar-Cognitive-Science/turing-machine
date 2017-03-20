@@ -12,10 +12,9 @@ import Pass from 'material-ui/svg-icons/action/done';
 import Fail from 'material-ui/svg-icons/content/clear';
 import Load from 'material-ui/svg-icons/content/send';
 import Timeout from 'material-ui/svg-icons/device/access-alarms';
-// import ViewSourceFile from 'material-ui/svg-icons/action/zoom-in';
-import Traceback from 'material-ui/svg-icons/device/gps-fixed';
 import Run from 'material-ui/svg-icons/av/play-circle-outline';
 import Edit from 'material-ui/svg-icons/content/create';
+import Download from 'material-ui/svg-icons/file/file-download';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
@@ -26,7 +25,7 @@ import {
 	red900 as deleteButtonColor,
 	grey400 as successFeedbackColor,
 	cyan400 as loadColor,
-	grey900 as tracebackColor,
+	teal300 as downloadColor,
 } from 'material-ui/styles/colors';
 
 import { STATUS_CODE_WAITING, STATUS_CODE_PASS, STATUS_CODE_FAIL, STATUS_CODE_TIMEOUT } from '../../reducers/trial';
@@ -105,9 +104,8 @@ class TrialItem extends React.Component {
 	            <MenuItem primaryText="Edit" leftIcon={<Edit color={editButtonColor}/>} onTouchTap={() => {this.props.editTrial(); this.handlePopoverRequestClose();}} />
 	            <Divider />
 	            <MenuItem primaryText="Load" leftIcon={<Load color={loadColor}/>} onTouchTap={() => {this.props.loadTrial(); this.handlePopoverRequestClose();}} />
-	            {(this.props.statusCode === STATUS_CODE_FAIL ||
-	            	this.props.statusCode === STATUS_CODE_TIMEOUT)?
-	            	<MenuItem primaryText="Traceback" leftIcon={<Traceback color={tracebackColor}/>} onTouchTap={() => {this.props.traceback(); this.handlePopoverRequestClose();}} />:null}
+	            <MenuItem primaryText="Download" leftIcon={<Download color={downloadColor}/>} onTouchTap={() => {this.props.downloadTrial(); this.handlePopoverRequestClose();}} />
+	            
 	            <Divider />
 	            <MenuItem primaryText="Delete" leftIcon={<Delete color={deleteButtonColor}/>} onTouchTap={() => {this.props.deleteTrial(); this.handlePopoverRequestClose();}}/>
 	          </Menu>
@@ -132,3 +130,10 @@ TrialItem.PropTypes = {
 }
 
 export default TrialItem;
+
+
+// import Traceback from 'material-ui/svg-icons/device/gps-fixed';
+// deepOrangeA400 as tracebackColor,
+// {(this.props.statusCode === STATUS_CODE_FAIL ||
+// 	            	this.props.statusCode === STATUS_CODE_TIMEOUT)?
+// 	            	<MenuItem primaryText="Traceback" leftIcon={<Traceback color={tracebackColor}/>} onTouchTap={() => {this.props.traceback(); this.handlePopoverRequestClose();}} />:null}

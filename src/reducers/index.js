@@ -14,6 +14,7 @@ export const initialState = {
 	isEdittingTrial: false,
 	isEdittingExpectedTape: false,
 	edittingTrialId: null,
+	anyChangeInTrial: false,
 
 	originalTape: null,
 	edittingStartTape: null,
@@ -104,6 +105,7 @@ export const initialState = {
 	
 	testsById: ["Test Case #0", "Test Case #1", "Test Case #2"],
 	"Test Case #0": {
+		id: "Test Case #0",
 		startState: "0",
 		startTape: [1,1,1,1,1,1,2],
 		expectedTape: [2,2,2,2,2,2,2],
@@ -111,13 +113,14 @@ export const initialState = {
 		expectedState: "HALT",
 
 		startTapeHead: -3,
-		expectedTapeHead: 2,
+		expectedTapeHead: 22,
 
 		tapePointer: 10,
-		sourceFile: null,
+		sourceFile: "Test Case #0.json",
 		testReportId: "REPORT-OF-Test Case #0"
 	},
 	"Test Case #1": {
+		id: "Test Case #1",
 		startState: "0",
 		startTape: [1,1,1,1,1,1,2],
 		expectedTape: [2,2,2,2,2,2,2],
@@ -128,10 +131,11 @@ export const initialState = {
 		expectedTapeHead: 20,
 
 		tapePointer: 10,
-		sourceFile: null,
+		sourceFile: "Test Case #1.json",
 		testReportId: "REPORT-OF-Test Case #1"
 	},
 	"Test Case #2": {
+		id: "Test Case #2",
 		startState: "0",
 		startTape: [1,1,1,1,1,1,2],
 		expectedTape: [2,2,2,2,2,2,2],
@@ -139,7 +143,7 @@ export const initialState = {
 		expectedState: "HALT",
 
 		tapePointer: 0,
-		sourceFile: null,
+		sourceFile: "Test Case #2.json",
 		testReportId: "REPORT-OF-Test Case #2"
 	},
 
@@ -203,6 +207,8 @@ function rootReducer (state=initialState, action, clearRedo) {
 	s4 = machineReducer(s3, action);
 	s5 = trialReducer(s4, action);
 
+	notifyAnyChangeInEditMode(s5, action);
+
 	switch(action.type) {
 		case actionTypes.INITIALIZAE_MACHINE:
 			return initializeMachine(state, action);
@@ -239,6 +245,24 @@ function cleanSideEffects(state, clearRedo=true) {
 	})
 }
 
+
+/*
+Helper function that notifies any changes to tape in edit mode to the state
+*/
+
+function notifyAnyChangeInEditMode(state, action) {
+	switch(action.type) {
+		case actionTypes.MOVE_HEAD:
+		case actionTypes.WRITE_INTO_TAPE:
+		case actionTypes.INITIALIZAE_TAPE:
+		case actionTypes.SET_INTERNAL_STATE:
+		case actionTypes.FILL_TAPE:
+			state.anyChangeInTrial = state.isEdittingTrial;
+			break;
+		default:
+			break;
+	}
+}
 
 function redo(state, action) {
 	if (state.redoEditHistory.length === 0)
@@ -349,6 +373,7 @@ function machineReducer(state, action) {
 
 	return new_state;
 }
+
 
 /*
 Grouped Reducers for GUI, 
@@ -522,6 +547,9 @@ function trialReducer(state, action) {
 		case actionTypes.CHANGE_EDITTING_TARGET:
 			new_state = trial.changeEdittingTarget(state, action);
 			break;
+		case actionTypes.SAVE_TRIAL:
+			new_state = trial.saveTrial(state, action);
+			break; 
 		default:
 			changed = false;
 	}

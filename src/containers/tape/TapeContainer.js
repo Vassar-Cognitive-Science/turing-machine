@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Tape from '../../components/tape/Tape';
 import { rollTapeToRight, rollTapeToLeft } from './SquareContainer';
-import { changeEdittingTargetAction, toggleEditModeAction } from '../../actions/trialActions';
+import { changeEdittingTargetAction, toggleEditModeAction, saveTrialAction } from '../../actions/trialActions';
 import { REACH_HALT, } from '../../constants/Messages';
 
 const rollLeft = (dispatch) => {
@@ -20,7 +20,13 @@ const handleExit = (dispatch) => {
 	dispatch(toggleEditModeAction());
 }
 
+const handleSave = (dispatch) => {
+	dispatch(saveTrialAction());
+}
+
 const mapStateToProps = (state) => {
+	let file = (state[state.edittingTrialId]) ? state[state.edittingTrialId].sourceFile : null;
+
 	return {
 		showReportedError: state.showReportedError,
 		machineReportError: state.machineReportError,
@@ -31,7 +37,12 @@ const mapStateToProps = (state) => {
 
 		isEdittingTrial: state.isEdittingTrial,
 		isEdittingExpectedTape: state.isEdittingExpectedTape,
-		anchorCell: state.anchorCell,
+
+		tapePointer: state.tapePointer,
+
+		anyChangeInTrial: state.anyChangeInTrial,
+
+		edittingFile: file
 		// isEdittingExpectedTape: state.isEdittingExpectedTape,
 	}
 };
@@ -41,6 +52,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   	rollRight: () => { rollRight(dispatch) },
   	changeEdittingTarget: () => { changeEdittingTarget(dispatch) },
   	handleExit: () => { handleExit(dispatch) },
+  	handleSave: () => { handleSave(dispatch) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tape);

@@ -1,3 +1,5 @@
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 import { connect } from 'react-redux';
 import AppToolBar from '../../components/appbar/AppBar';
 import { initializeTapeAction } from '../../actions/tapeActions';
@@ -115,6 +117,30 @@ const handleRunAllTests = (dispatch, ownProps) => {
 	}, 800);
 }
 
+const downloadAllTests = (dispatch, ownProps) => {
+	dispatch((dispatch, getState) => {
+		let state = getState();
+		let zip = new JSZip();
+		for (let i = 0; i < state.testsById.length; i++) {
+			let id = state.testsById[i];
+			let trial = Object.assign({}, state[id]);
+			delete trial.id;
+			let filename = trial.sourceFile;
+			delete trial.sourceFile;
+			let data = JSON.stringify(trial, null, 4);
+
+			zip.file(filename, data);
+		}
+
+		zip.generateAsync({
+				type: "blob"
+			})
+			.then(function(content) {
+				FileSaver.saveAs(content, "turing_machine_tests.zip");
+			});
+	});
+}
+
 const mapStateToProps = (state, ownProps) => {
     return {
     	runningTrials: state.runningTrials,
@@ -146,6 +172,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleToggleAnimation: () => { handleToggleAnimation(dispatch, ownProps) },
 	handleAddTest: () => { handleAddTest(dispatch, ownProps) },
 	handleRunAllTests: () => { handleRunAllTests(dispatch, ownProps) },
+	downloadAllTests: () => { downloadAllTests(dispatch, ownProps) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar);

@@ -81,7 +81,9 @@ class Tape extends React.Component {
             </div>
 
             {(this.props.isEdittingTrial) ? 
-              <div className="step-count"><p>Anchor Cell: {this.props.anchorCell}</p></div> : 
+              <div className="step-count">
+              <p>Tape Pointer: {this.props.tapePointer}</p>
+              </div> : 
               null}
           </Card>
           </div>
@@ -91,7 +93,9 @@ class Tape extends React.Component {
           {(this.props.isEdittingTrial) ?
             <Card className="editting-mode-card">
             <Subheader style={{color: promptColor}}>
-              {"Target: " + ((this.props.isEdittingExpectedTape) ? "Expected Tape": "Start Tape")}
+              {"Target: " + this.props.edittingFile + " --- " +((this.props.isEdittingExpectedTape) ? 
+                "Expected Tape" + ((this.props.anyChangeInTrial)?"*":""): 
+                "Start Tape" + ((this.props.anyChangeInTrial)?"*":""))}
             </Subheader>
             <List className="editting-mode-button-group">
             <MenuItem 

@@ -69,3 +69,9 @@ export function changeEdittingTargetAction() {
 		type: actionTypes.CHANGE_EDITTING_TARGET
 	}
 }
+
+export function saveTrialAction() {
+	return {
+		type: actionTypes.SAVE_TRIAL
+	}
+}
