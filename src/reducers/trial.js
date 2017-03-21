@@ -6,9 +6,6 @@ import { HALT } from '../constants/SpecialCharacters';
 import { MAX_TEST_STEP_LIMIT } from '../constants/GeneralAppSettings';
 import { matchRule } from './machine';
 
-// import { UNDEFINED_RULE, EXCEED_MAX_TEST_STEP_LIMIT, DIFF_FINAL_STATE } from '../constants/Messages';
-
-
 /*
 const sandbox = {
 	stepCount: 0,
@@ -27,7 +24,7 @@ export const STATUS_CODE_FAIL = 2;
 export const STATUS_CODE_TIMEOUT = 3;
 
 // generate id
-export const standardizeTestReportId = (id) => "REPORT-OF-" + id;
+export const standardizeTestReportId = (id) => "Report-of-" + id;
 
 // generate string that describes step counts
 const traceSuccessTrialStep = (step) => {
@@ -36,156 +33,38 @@ const traceSuccessTrialStep = (step) => {
 	return step + " step";
 }
 
-// generate string that describes failing at which step
-const traceFailingStep = (step) => "Fail at step " + step + ".";
-
 // see if result is as expected
-const isExpected = (finalSandbox, trial) => {
+const isExpected = (sandbox, trial) => {
 	let result = {
 		status: STATUS_CODE_PASS,
 		feedback: "",
-		fullreport: "",
-		finalState: finalSandbox,
 	};
 
-	if (finalSandbox.tapeInternalState !== trial.expectedState) {
+	if (sandbox.tapeInternalState !== trial.expectedState) {
 		result.status = STATUS_CODE_FAIL;
-		result.feedback = DIFF_FINAL_STATE;
-		result.fullreport = DIFF_FINAL_STATE + " Expected: " + trial.expectedState +
-							"; You have: " + finalSandbox.tapeInternalState; 
+		result.feedback = DIFF_FINAL_STATE; 
 		return result;
 	}
 
-	// Compare cells
-	// To be determined!
-
-	for (let i = 0; i < trial.expectedTape.length; i++) {
-		let id = finalSandbox.tapeCellsById[i]; // already sorted when constructed
-		let expected = trial.expectedTape[i].toString();
-
-		if (finalSandbox[id].val !== expected) {
+	let expectedTape = tape.strip(trial.expectedTape);
+	let resultedTape = tape.strip(tape.tapeToArray(sandbox));
+	if (expectedTape.length !== resultedTape.length) {
+		result.status = STATUS_CODE_FAIL;
+		result.feedback = DIFF_FINAL_TAPE;
+		return result;
+	}
+	
+	for (let i = 0; i < expectedTape.length; i++) {
+		if (expectedTape[i].toString() !== resultedTape[i].toString()) {
 			result.status = STATUS_CODE_FAIL;
 			result.feedback = DIFF_FINAL_TAPE;
-			result.fullreport = DIFF_FINAL_STATE + 
-							" Expected at index " + i + " : " + trial.expectedTape[i] +
-							"; You have: " + finalSandbox[id].val; 
 			return result;
 		}
 	}
 
+	result.feedback = traceSuccessTrialStep(sandbox.stepCount);
 	return result;
 }
-
-
-export function createTapeFromTrial(trial, isTargetStartTape = true) {
-	let generatedTape = {
-
-		tapeHead: 0,
-		tapeTail: 0,
-
-		tapeCellsById: [],
-
-		tapeInternalState: (isTargetStartTape) ? trial.startState : trial.expectedState,
-		tapePointer: (isTargetStartTape) ? trial.tapePointer : trial.expectedTapePoiner,
-	};
-
-	let sourceArray = (isTargetStartTape) ? trial.startTape : trial.expectedTape;
-	let sourceHead = (isTargetStartTape) ? trial.startTapeHead : trial.expectedTapeHead;
-
-	let offset = generatedTape.tapeHead - sourceHead;
-	if (offset === 0) {
-		for (let i = 0; i < sourceArray.length; i++) {
-			let val = tape.standardizeInputToTape(sourceArray[i], "");
-			tape.appendAfterTailHelper(generatedTape, val);
-		}
-
-		return generatedTape;
-
-	// we need expand right
-	} else if (offset < 0)  {  
-		// one extra cell as in original tape object, tapeHead is a sentinel, here is not meant to be
-		// here the one extra cell makes it easier for users to locate the start of the tape
-		let size = (-offset) + sourceArray.length + 1; 
-		while (size) {
-			tape.appendAfterTailHelper(generatedTape, null);
-			size--;
-		}	
-
-	// we need expand left
-	} else { 
-		while (offset >= 0) { // one extra cell as in original tape object, tapeHead is a sentinel, here is not meant to be
-							  // here the one extra cell makes it easier for users to locate the start of the tape
-			tape.insertBeforeHeadHelper(generatedTape, null);
-			offset--;
-		}
-		let size = sourceArray.length;
-		while (size) {
-			tape.appendAfterTailHelper(generatedTape, null);
-			size--;
-		}
-
-	}
-
-	let current = generatedTape[tape.standardizeCellId(sourceHead)];
-	for (let i = 0; i < sourceArray.length; i++) {
-		let val = tape.standardizeInputToTape(sourceArray[i], "");
-		current.val = val;
-		current = generatedTape[current.next];
-	}
-
-	return generatedTape;
-}
-
-/*
-Helper function that loads 
-	sourceTape, an object representing tape, returned by createTapeFromTrial
-into the state
-*/
-function loadTrialTapeHelper(state, sourceTape) {
-	// initialize state
-	state = tape.initializeTape(state, {});
-
-	// set new head state
-	state = tape.setInternalStateHelper(state, sourceTape.tapeInternalState);
-
-	// calculate offset from trial's tapePointer 
-	// and move direction
-	let offset = sourceTape.tapePointer - state.tapePointer;
-	let isLeft;
-	if (offset < 0) {
-		offset = -offset;
-		isLeft = true; 
-	} else if (offset > 0) {
-		isLeft = false;
-	}
-
-	// move head to trial's position
-	while (offset--) {
-		state = gui.moveHeadHelper(state, isLeft);
-	}
-	state.highlightedCellOrder = -1; // cancel any highlight
-
-	// expand tape if necessary
-	while (state.tapeHead > sourceTape.tapeHead) {
-		tape.insertBeforeHeadHelper(state, null);
-	}
-	while (state.tapeTail < sourceTape.tapeTail) {
-		tape.appendAfterTailHelper(state, null);
-	}
-
-	// copy values if the source tape is not empty
-	if (!tape.isTapeEmpty(sourceTape)) {
-		let dummy = tape.standardizeCellId(sourceTape.tapeHead + 1);
-		let current = sourceTape[dummy];
-		while (current.next !== null) {
-			state[current.cur].val = current.val;
-			current = sourceTape[current.next];
-		}
-	}
-
-	return state;
-}
-
 
 
 /*
@@ -264,7 +143,7 @@ export function cloneTrial(trial) {
 	};
 }
 
-function createTestReport(sourceId, sourceFile, statusCode, feedback, stepCount, fullreport, id, sandbox) {
+function createTestReport(sourceId, sourceFile, statusCode, feedback, stepCount, id) {
 	return {
 		// trial id
 		sourceId: sourceId,
@@ -276,12 +155,8 @@ function createTestReport(sourceId, sourceFile, statusCode, feedback, stepCount,
 		feedback: feedback,
 		// counts of steps
 		stepCount: stepCount,
-		// full report
-		fullreport: fullreport,
 		// self id
 		id: id,
-		// runned sandbox
-		sandbox: sandbox
 	}
 }
 
@@ -307,11 +182,14 @@ function createSandbox(trial) {
 	// expand to right size
 	let expandTo = trial.tapePointer;
 	if (expandTo < 0) {
-		sandbox = tape.expandBeforeHead(sandbox, { n: -expandTo + 5}); // for extra space, notice N must be greater the expandTo
+		// for extra space, notice N must be greater the expandTo
+		sandbox = tape.expandBeforeHead(sandbox, { n: -expandTo + 5}); 
 	} else if (expandTo > 0) {
 		expandTo -= trial.startTape.length;
-		if (expandTo > 0)
+		if (expandTo > 0) {
+			// for extra space, notice N must be greater the expandTo
 			sandbox = tape.expandAfterTail(sandbox, {n: expandTo + 5});
+		}
 	}
 
 	return sandbox;
@@ -379,6 +257,9 @@ export function preRunTrial(state, action) {
 	return new_state;
 }
 
+/*
+Run the rules in sandbox
+*/
 export function runTrial(state, action) {
 	let trial = state[action.sourceId];
 
@@ -392,9 +273,7 @@ export function runTrial(state, action) {
 				sourceFile: trial.sourceFile,
 				status: STATUS_CODE_TIMEOUT,
 				feedback: EXCEED_MAX_TEST_STEP_LIMIT,
-				fullreport: EXCEED_MAX_TEST_STEP_LIMIT + " " + traceFailingStep(sandbox.stepCount),
 				stepCount: sandbox.stepCount,
-				// sandbox: sandbox
 			});
 		}
 
@@ -429,10 +308,8 @@ export function runTrial(state, action) {
 		sourceId: action.sourceId,
 		sourceFile: trial.sourceFile,
 		status: result.status,
-		feedback: (result.status === STATUS_CODE_PASS) ? traceSuccessTrialStep(sandbox.stepCount) : result.feedback,
+		feedback: result.feedback,
 		stepCount: sandbox.stepCount,
-		fullreport: result.fullreport,
-		// sandbox: sandbox
 	});
 }
 
@@ -445,15 +322,15 @@ export function reportTestResult(state, action) {
 
 	let id = standardizeTestReportId(action.sourceId);
 	new_state[id] = createTestReport(
-		action.sourceId, action.sourceFile,
-		action.status, action.feedback,
-		action.stepCount, action.fullreport, id, action.sandbox
-	);
+									action.sourceId, // trial id
+									action.sourceFile, // trial file
+									action.status,  // statue
+									action.feedback, // feedback
+									action.stepCount, // total steps experienced
+									id // testReport id
+									);
 	return new_state;
 }
-
-
-
 
 /*
 General: 
@@ -497,24 +374,96 @@ export function clearTestResults(state, action) {
 	return new_state;
 }
 
+/*
+Flow chart of entering, and exiting edit mode:
+
+			 (a)						(b0)    (b1) (b2)  			(c)
+Normal mode  ---> Enter edit mode  ---> swap, edit, save tapes  ---> Exit edit mode
+			call 								call 					call
+ createTapeFromTrial 					    loadTrialTapeHelper      tape.extractTape
+ (convert from trial file) 	(further process what we get from trial file)
+ 
+ tape.extractTape							tape.extractTape		 tape.loadTape
+
+(a): The following is handled by toggleEditMode(state, action):
+		 toggle state.isEdittingTrial to true,
+		 record down the selected trial id into state.edittingTrialId
+		 always starts with startTape
+		 
+		 Then, we record the tape from normal mode into state.originalTape
+		 and we create two tapes, startTape and expectedTape from the selected trial
+		 Finally, we load the startTape into the presentation tape
+
+(b): 0. Change editting target, handled by changeEdittingTarget(state, action):
+		 toggle state.isEdittingExpectedTape
+		 if we are editting epectedTape:
+		 	We set target = state.edittingExpectedTape
+		 	We then record the current tape into state.edittingStartTape
+		 	(by tape.extractTape)
+		 	Finally, we load the target into the presentational tape
+		 else
+		    similar process as above
+	
+	1. Edit, handled in reducers/index.js:
+			If any changes are made to the tape, state.anyChangeInTrial will
+			be toggled to true
+
+	2. Save, handled by saveTrial(state, action):
+		if we are editting epectedTape:
+			We need to update state.edittingExpectedTape from the current tape
+		else
+			We need to update state.edittingStartTape from the current tape
+
+		Then, we call saveTrialHelper, which will update the following from
+		state.edittingStartTape and state.edittingExpectedTape:
+		
+		startTapeHead: number,
+		startTape: array,
+		startState: string,
+
+		expectedTapeHead: number,
+		expectedTape: array,
+
+		tapePointer: number,
+		expectedTapePointer: number,
+
+(c): Exit edit mode, handled by toggleEditMode(state, action):
+		toggle state.isEdittingTrial to false,
+		set state.edittingTrialId to null
+
+		Then, we set:
+			state.originalTape = null;
+			state.edittingStartTape = null;
+			state.edittingExpectedTape = null;
+		to allow garbage collection
+
+		Finally we load back state.originalTape into the presentational tape
+*/
+
 
 export function toggleEditMode(state, action) {
 	let isEdittingTrial = !state.isEdittingTrial;
 	let new_state = Object.assign({}, state, {
-		isEdittingTrial: isEdittingTrial,
-		edittingTrialId: (isEdittingTrial) ? action.id : null,
-		isEdittingExpectedTape: false,
+		// toggle isEdittingTrial
+		isEdittingTrial: isEdittingTrial, 
+		// record down the selected trial id
+		edittingTrialId: (isEdittingTrial) ? action.id : null, 
+		// always starts with startTape
+		isEdittingExpectedTape: false, 
 		anyChangeInTrial: false,
 	});
 
 	if (isEdittingTrial) { 
 		let trial = new_state[action.id];
 
-		new_state.originalTape = tape.extractTape(new_state);
+		// we record the tape from normal mode
+		new_state.originalTape = tape.extractTape(new_state); 
+		// we create two tapes, startTape and expectedTape from the selected trial
 		new_state.edittingStartTape = createTapeFromTrial(trial, true);
 		new_state.edittingExpectedTape = createTapeFromTrial(trial, false);
 
-		return loadTrial(new_state, action);
+		// Finally, we load the startTape into the presentation tape
+		return loadTrialTapeHelper(new_state, new_state.edittingStartTape);
 	} else {
 		let originalTape = new_state.originalTape;
 
@@ -538,9 +487,11 @@ export function changeEdittingTarget(state, action) {
 	// editting expected tape
 	if (new_state.isEdittingExpectedTape) {
 		target = new_state.edittingExpectedTape;
+		// update latest changes to expected tape
 		new_state.edittingStartTape = tape.extractTape(new_state);
 	} else { // editting start tape
 		target = new_state.edittingStartTape;
+		// update latest changes to start tape
 		new_state.edittingExpectedTape = tape.extractTape(new_state);
 	}
 
@@ -550,12 +501,16 @@ export function changeEdittingTarget(state, action) {
 export function saveTrialHelper(oldTrial, startTape, expectedTape) {
 	let trial = cloneTrial(oldTrial);
 
-	trial.startTapeHead = startTape.tapeHead + 1; // plus one so that it is no longer sentinel
-	trial.startTape = tape.tapeToArray(startTape);
+	// plus one so that it is no longer sentinel
+	// but points to the actual head id of the start tape
+	trial.startTapeHead = startTape.tapeHead + 1; 
+	trial.startTape = tape.rstrip(tape.tapeToArray(startTape));
 	trial.startState = startTape.tapeInternalState;
 
-	trial.expectedTapeHead = expectedTape.tapeHead + 1; // plus one so that it is no longer sentinel
-	trial.expectedTape = tape.tapeToArray(expectedTape);
+	// plus one so that it is no longer sentinel
+	// but points to the actual head id of the expected tape
+	trial.expectedTapeHead = expectedTape.tapeHead + 1; 
+	trial.expectedTape = tape.rstrip(tape.tapeToArray(expectedTape));
 	trial.expectedState = expectedTape.tapeInternalState;
 
 	trial.tapePointer = startTape.tapePointer;
@@ -573,8 +528,10 @@ export function saveTrial(state, action) {
 	let oldTrial = new_state[id];
 
 	if (new_state.isEdittingExpectedTape) {
+		// update latest changes to expected tape
 		new_state.edittingExpectedTape = tape.extractTape(new_state);
 	} else {
+		// update latest changes to start tape
 		new_state.edittingStartTape = tape.extractTape(new_state);
 	}
 
@@ -582,3 +539,138 @@ export function saveTrial(state, action) {
 
 	return new_state;
 }
+
+/*
+Basically, what this function does is to add a head to an unfinished tape (returned by createTapeFromTrial) 
+so that the resulted tape is eligible to be presented and manipulated by any 
+tape related reducers.
+
+It differs with tape.loadTape in that this helper function calculates the head position but not directly 
+copies. tape.loadTape will need much more information. For more lease see tape.js
+
+It creates a tape with head from 
+	sourceTape, an "mid-point" object that should have the following attributes:
+		{
+		tapePointer: number,
+		tapeHead: number,
+		tapeTail: number,
+		tapeInternalState: string,
+		tapeCellsById: array,
+
+		And corresponding tapeCell objects to tapeCellsById
+		}
+
+*/
+function loadTrialTapeHelper(state, sourceTape) {
+	// initialize a tape with head
+	state = tape.initializeTape(state, {});
+
+	// set new head state
+	state = tape.setInternalStateHelper(state, sourceTape.tapeInternalState);
+
+	// calculate offset from trial's tapePointer 
+	// and move direction
+	let offset = sourceTape.tapePointer - state.tapePointer;
+	let isLeft;
+	if (offset < 0) {
+		offset = -offset;
+		isLeft = true; 
+	} else if (offset > 0) {
+		isLeft = false;
+	}
+
+	// move head to trial's position
+	while (offset--) {
+		state = gui.moveHeadHelper(state, isLeft);
+	}
+	state.highlightedCellOrder = -1; // cancel any highlight
+
+	// expand tape if necessary
+	while (state.tapeHead > sourceTape.tapeHead) {
+		tape.insertBeforeHeadHelper(state, null);
+	}
+	while (state.tapeTail < sourceTape.tapeTail) {
+		tape.appendAfterTailHelper(state, null);
+	}
+
+	// copy values if the source tape is not empty
+	if (!tape.isTapeEmpty(sourceTape)) {
+		let dummy = tape.standardizeCellId(sourceTape.tapeHead + 1);
+		let current = sourceTape[dummy];
+		while (current) {
+			state[current.cur].val = current.val;
+			current = sourceTape[current.next];
+		}
+	}
+
+	return state;
+}
+
+
+/*
+Basically, what this function does is to create a tape without head from trial object.
+The result should be further processed by loadTrialTapeHelper so that it can be loaded
+into the presentational tape, which requires information of both tape and head.
+
+*/
+export function createTapeFromTrial(trial, isTargetStartTape = true) {
+	// This should be passed into loadTrialTapeHelper
+	let generatedTape = {
+
+		tapeHead: 0,
+		tapeTail: 0,
+
+		tapeCellsById: [],
+
+		tapeInternalState: (isTargetStartTape) ? trial.startState : trial.expectedState,
+		tapePointer: (isTargetStartTape) ? trial.tapePointer : trial.expectedTapePoiner,
+	};
+
+	let sourceArray = (isTargetStartTape) ? trial.startTape : trial.expectedTape;
+	let sourceHead = (isTargetStartTape) ? trial.startTapeHead : trial.expectedTapeHead;
+
+	let offset = generatedTape.tapeHead - sourceHead;
+	if (offset === 0) {
+		for (let i = 0; i < sourceArray.length; i++) {
+			let val = tape.standardizeInputToTape(sourceArray[i], "");
+			tape.appendAfterTailHelper(generatedTape, val);
+		}
+
+		return generatedTape;
+
+	// we need expand right
+	} else if (offset < 0)  {  
+		// one extra cell as in original tape object, tapeHead is a sentinel, here is not meant to be
+		// here the one extra cell makes it easier for users to locate the start of the tape
+		let size = (-offset) + sourceArray.length + 1; 
+		while (size) {
+			tape.appendAfterTailHelper(generatedTape, null);
+			size--;
+		}	
+
+	// we need expand left
+	} else { 
+		while (offset >= 0) { // one extra cell as in original tape object, tapeHead is a sentinel, here is not meant to be
+							  // here the one extra cell makes it easier for users to locate the start of the tape
+			tape.insertBeforeHeadHelper(generatedTape, null);
+			offset--;
+		}
+		let size = sourceArray.length;
+		while (size) {
+			tape.appendAfterTailHelper(generatedTape, null);
+			size--;
+		}
+
+	}
+
+	// copy values
+	let current = generatedTape[tape.standardizeCellId(sourceHead)];
+	for (let i = 0; i < sourceArray.length; i++) {
+		let val = tape.standardizeInputToTape(sourceArray[i], "");
+		current.val = val;
+		current = generatedTape[current.next];
+	}
+
+	return generatedTape;
+}
+

@@ -63,6 +63,10 @@ export function read(state) {
 
 
 export function standardizeInputToTape(val, oldVal) {
+	if (val === undefined)
+		return val;
+
+	val = val.toString().trim().slice(0, 1);
 	if (val === BLANK)
 		return "";
 	if (val === STAR)
@@ -70,6 +74,12 @@ export function standardizeInputToTape(val, oldVal) {
 
 	return val;
 }	
+
+export function standardizeReadFromTape(val) {
+	if (val === "" || val === null)
+		return BLANK;
+	return val;
+}
 
 export function cloneCellById(state, id) {
 	let tar = findCell(state, id);
@@ -81,7 +91,9 @@ export function cloneCell(tar) {
 	return createCell(tar.cur, tar.prev, tar.next, tar.val);
 }
 
-
+/*
+Make a deep copy of the current tape and head
+*/
 export function extractTape(state) {
 	let tape = {
 		anchorCell: state.anchorCell,
@@ -107,6 +119,10 @@ export function extractTape(state) {
 	return tape;
 }
 
+/*
+Load back the copyed tape and head.
+What attributes the parameter "tape" needs to have, please see the following
+*/
 export function loadTape(state, tape) {
 	let new_state = initializeTape(state, {});
 	new_state.anchorCell = tape.anchorCell;
@@ -131,6 +147,31 @@ export function loadTape(state, tape) {
 	return new_state;
 }
 
+export function lstrip(arr) {
+	let lmark = 0;
+	while (lmark < arr.length) {
+		let val = standardizeReadFromTape(arr[lmark]);
+		if (val !== BLANK)
+			break;
+		lmark++;
+	}
+	return arr.slice(lmark, arr.length);
+}
+
+export function rstrip(arr) {
+	let rmark = arr.length - 1;
+	while (rmark >= 0) {
+		let val = standardizeReadFromTape(arr[rmark]);
+		if (val !== BLANK)
+			break;
+		rmark--;
+	}
+	return arr.slice(0, rmark+1);
+}
+
+export function strip(arr) {
+	return lstrip(rstrip(arr));
+}
 
 export function tapeToArray(tape) {
 	let res = []
@@ -140,7 +181,7 @@ export function tapeToArray(tape) {
 	// run throught the linked list
 	let dummy = standardizeCellId(tape.tapeHead+1);
 	let current = tape[dummy];
-	while (current.next !== null) {
+	while (current) {
 		let val = current.val;
 		if (val === "" || val === null)
 			val = BLANK;
@@ -149,20 +190,7 @@ export function tapeToArray(tape) {
 		current = tape[current.next];
 	}
 
-	// process array
-	let lmark = 0, rmark = res.length - 1;
-	while (lmark <= rmark) {
-		if (res[lmark] !== BLANK)
-			break;
-		lmark++;
-	}
-	while (rmark >= lmark) {
-		if (res[rmark] !== BLANK)
-			break;
-		rmark--;
-	}
-
-	return res.slice(lmark, rmark+1);
+	return res;
 }
 
 

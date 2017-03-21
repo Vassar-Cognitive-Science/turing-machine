@@ -39,3 +39,6 @@
 
 2017/3/18
 1. Review new added functions in reducers/trial.js
+
+2017/3/20
+1. Policies on Trial files and tapes represented by array (strip "#" or not).

@@ -33,14 +33,16 @@ const editTrial = (dispatch, ownProps) => {
 
 const downloadTrial = (dispatch, ownProps) => {
 	dispatch(function(dispatch, getState) {
-		let state = getState();
-		let trial = state[ownProps.id];
+		let trial = getState()[ownProps.id];
+
+		// make a shallow copy that does not have id and testReportId
 		trial = Object.assign({}, trial);
 		delete trial.id;
 		delete trial.testReportId;
 
+		// encode
 		let data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trial, null, 4));
-
+		// provide download link
 		let a = document.createElement('a');
 		a.href = 'data:' + data;
 		a.download = ownProps.id + '.json';

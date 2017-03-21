@@ -144,9 +144,8 @@ const downloadAllTests = (dispatch, ownProps) => {
 }
 
 function onReaderLoad(event) {
-	//alert(event.target.result);
 	let trial = JSON.parse(event.target.result);
-	let filename = event.target.name;
+
 	event.target.dispatch(function(dispatch, getState) {
 			let id = standardizeTestId(TEST_ID++);
 			while (getState().testsById.includes(id))
@@ -159,7 +158,7 @@ function onReaderLoad(event) {
 				trial.expectedTapePoiner,
 				trial.startTapeHead,
 				trial.expectedTapeHead,
-				filename
+				event.target.name
 			));
 	});
 }

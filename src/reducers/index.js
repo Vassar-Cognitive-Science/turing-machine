@@ -142,6 +142,9 @@ export const initialState = {
 
 		expectedState: "HALT",
 
+		startTapeHead: 0,
+		expectedTapeHead: 0,
+
 		tapePointer: 0,
 		sourceFile: "Test Case #2.json",
 		testReportId: "REPORT-OF-Test Case #2"

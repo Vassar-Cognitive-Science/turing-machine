@@ -50,8 +50,6 @@ class AppNavBar extends Component {
 			          onRequestClose={this.handlePopoverRequestClose}
 			        >
 					<Menu>
-			          <MenuItem primaryText="Import" />
-			          <MenuItem primaryText="Export" />
 			          <Divider />
 			          <MenuItem primaryText="Help" />
 			        </Menu>
