@@ -217,7 +217,17 @@ export const DRAWER_STYLE = {
 		},
 		uploadTests: {
 			label: "Upload Tests",
-			icon: <UploadTests color={uploadTestsColor} />
+			icon: <UploadTests color={uploadTestsColor} />,
+			uploadInput: {
+				cursor: 'pointer',
+				position: 'absolute',
+				top: 0,
+				bottom: 0,
+				right: 0,
+				left: 0,
+				width: '100%',
+				opacity: 0,
+			}
 		},
 		saveTests: {
 			label: "Download Tests",

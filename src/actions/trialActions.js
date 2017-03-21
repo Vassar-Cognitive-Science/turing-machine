@@ -7,19 +7,34 @@ export function deleteTrialAction(id) {
 	};
 }
 
-export function addTrialAction(id, startState="", expectedFinalState="", tape=[], expectedFinalTape=[],
-								startHeadPosition = 0, sourceFile = null, errorMessage = "") {
+export function addTrialAction(id, 
+							   startState,
+							   startTape,
+							   expectedTape,
+							   tapePointer,
+							   expectedTapePoiner,
+							   startTapeHead,
+							   expectedTapeHead,
+							   sourceFile) {
 	return {
 		type: actionTypes.ADD_TRIAL,
 		id: id,
-		startState: startState,
-		expectedFinalState: expectedFinalState,
-		startTape: tape,
-		expectedFinalTape: expectedFinalTape,
 
-		startHeadPosition: startHeadPosition,
+		startState: startState,
+		startTape: startTape,
+		expectedTape: expectedTape,
+
+		// start Head pointer
+		tapePointer: tapePointer,
+		// expected Head pointer
+		expectedTapePoiner: expectedTapePoiner,
+
+		// record name of source file
 		sourceFile: sourceFile,
-		errorMessage: errorMessage,
+
+		// tape head
+		startTapeHead: startTapeHead,
+		expectedTapeHead: expectedTapeHead,
 	};
 }
 

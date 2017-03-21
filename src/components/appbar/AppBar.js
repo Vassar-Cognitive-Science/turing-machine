@@ -90,7 +90,9 @@ class AppToolBar extends React.Component {
 			        <MenuItem primaryText={DRAWER_STYLE.buttons.addTrial.label} leftIcon={DRAWER_STYLE.buttons.addTrial.icon}
 			         onTouchTap={this.props.handleAddTest}/>
 			        <Divider />
-			        <MenuItem primaryText={DRAWER_STYLE.buttons.uploadTests.label} leftIcon={DRAWER_STYLE.buttons.uploadTests.icon}/>
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.uploadTests.label} 
+			        	leftIcon={DRAWER_STYLE.buttons.uploadTests.icon} 
+			        	onTouchTap={this.props.uploadTests} />
 			        <MenuItem primaryText={DRAWER_STYLE.buttons.saveTests.label} leftIcon={DRAWER_STYLE.buttons.saveTests.icon} onTouchTap={this.props.downloadAllTests} />
 
 			        </div>

@@ -93,7 +93,7 @@ class Tape extends React.Component {
           {(this.props.isEdittingTrial) ?
             <Card className="editting-mode-card">
             <Subheader style={{color: promptColor}}>
-              {"Target: " + this.props.edittingFile + " --- " +((this.props.isEdittingExpectedTape) ? 
+              {"Target: \"" + this.props.edittingFile + "\" --- " +((this.props.isEdittingExpectedTape) ? 
                 "Expected Tape" + ((this.props.anyChangeInTrial)?"*":""): 
                 "Start Tape" + ((this.props.anyChangeInTrial)?"*":""))}
             </Subheader>

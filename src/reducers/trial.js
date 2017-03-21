@@ -244,7 +244,7 @@ function createTrial(id,
 	};
 }
 
-function cloneTrial(trial) {
+export function cloneTrial(trial) {
 	return {
 		id: trial.id,
 		startState: trial.startState,
@@ -559,6 +559,7 @@ export function saveTrialHelper(oldTrial, startTape, expectedTape) {
 	trial.expectedState = expectedTape.tapeInternalState;
 
 	trial.tapePointer = startTape.tapePointer;
+	trial.expectedTapePointer = expectedTape.tapePointer;
 
 	return trial;
 }

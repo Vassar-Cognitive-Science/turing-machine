@@ -124,9 +124,11 @@ const downloadAllTests = (dispatch, ownProps) => {
 		for (let i = 0; i < state.testsById.length; i++) {
 			let id = state.testsById[i];
 			let trial = Object.assign({}, state[id]);
+
 			delete trial.id;
 			let filename = trial.sourceFile;
 			delete trial.sourceFile;
+
 			let data = JSON.stringify(trial, null, 4);
 
 			zip.file(filename, data);
@@ -139,6 +141,52 @@ const downloadAllTests = (dispatch, ownProps) => {
 				FileSaver.saveAs(content, "turing_machine_tests.zip");
 			});
 	});
+}
+
+function onReaderLoad(event) {
+	//alert(event.target.result);
+	let trial = JSON.parse(event.target.result);
+	let filename = event.target.name;
+	event.target.dispatch(function(dispatch, getState) {
+			let id = standardizeTestId(TEST_ID++);
+			while (getState().testsById.includes(id))
+				id = standardizeTestId(TEST_ID++);
+			dispatch(addTrialAction(id,
+				trial.startState,
+				trial.startTape,
+				trial.expectedTape,
+				trial.tapePointer,
+				trial.expectedTapePoiner,
+				trial.startTapeHead,
+				trial.expectedTapeHead,
+				filename
+			));
+	});
+}
+
+
+const uploadTests = (dispatch) => {
+	let a = document.createElement('input');
+	a.setAttribute('type', 'file');
+	a.setAttribute('multiple', true);
+	a.setAttribute('accept', '.json');
+	a.onchange = (event) => {
+		let files = event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			let reader = new FileReader();
+			reader.onload = onReaderLoad;
+			if (!files[i].name.endsWith('.json')) {
+				continue;
+			}
+			reader.dispatch = dispatch;
+			reader.name = files[i].name;
+			reader.readAsText(files[i]);
+		}
+
+
+	};
+
+	a.click();
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -173,6 +221,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleAddTest: () => { handleAddTest(dispatch, ownProps) },
 	handleRunAllTests: () => { handleRunAllTests(dispatch, ownProps) },
 	downloadAllTests: () => { downloadAllTests(dispatch, ownProps) },
+	uploadTests: () => { uploadTests(dispatch) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar);
