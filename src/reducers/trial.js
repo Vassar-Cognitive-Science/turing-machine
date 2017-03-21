@@ -90,9 +90,9 @@ function createTrial(id,
 					startTape, 
 					expectedTape,
 					tapePointer, 
-					expectedTapePoiner,
+					expectedTapePoiner, // optional, automatically handled
 					startTapeHead,
-					expectedTapeHead,
+					expectedTapeHead, // optional, automatically handled
 					sourceFile
 					) {
 
@@ -108,7 +108,7 @@ function createTrial(id,
 
 		// start Head pointer
 		tapePointer: pointer,
-		// expected Head pointer
+		// expected Head pointer, not required
 		expectedTapePoiner: (expectedTapePoiner !== undefined && expectedTapePoiner !== null) ? expectedTapePoiner : pointer,
 
 		// record name of source file
@@ -116,6 +116,7 @@ function createTrial(id,
 
 		// tape head
 		startTapeHead: (startTapeHead !== undefined && startTapeHead !== null) ? startTapeHead : 0,
+		// not required
 		expectedTapeHead: (expectedTapeHead !== undefined && expectedTapeHead !== null) ? expectedTapeHead : 0,
 
 		// auto generate corresponding test report id
@@ -382,7 +383,7 @@ Normal mode  ---> Enter edit mode  ---> swap, edit, save tapes  ---> Exit edit m
 			call 								call 					call
  createTapeFromTrial 					    loadTrialTapeHelper      tape.extractTape
  (convert from trial file) 	(further process what we get from trial file)
- 
+
  tape.extractTape							tape.extractTape		 tape.loadTape
 
 (a): The following is handled by toggleEditMode(state, action):

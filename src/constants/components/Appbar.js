@@ -37,6 +37,7 @@ import {
 	blue600 as runAllTrialsColor,
 	orange500 as uploadTestsColor,
 	teal300 as saveTestsColor,
+	pink400 as snackBarContentColor,
  } from 'material-ui/styles/colors';
 
 
@@ -184,6 +185,10 @@ export const APPBAR_STYLES = {
 		moreToolsPopover: {
 			anchorOrigin: {horizontal: 'right', vertical: 'bottom'},
 			targetOrigin: {horizontal: 'right', vertical: 'top'}
+		},
+		snackBar: {
+			timeout: 2000,
+			contentStyle: { textAlign: "center", color: snackBarContentColor, fontWeight: "bold"}
 		}
 	}
 };

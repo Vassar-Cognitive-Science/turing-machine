@@ -88,8 +88,11 @@ const handleSpeedChange = (newValue, dispatch, ownProps) => {
 const handleAddTest = (dispatch, ownProps) => {
 	dispatch(function(dispatch, getState) {
 		let id = standardizeTestId(TEST_ID++);
+		// find suitable id
 		while (getState().testsById.includes(id))
 			id = standardizeTestId(TEST_ID++);
+
+		// add a blank trial
 		dispatch(addTrialAction(id));
 	});
 }
@@ -148,8 +151,11 @@ function onReaderLoad(event) {
 
 	event.target.dispatch(function(dispatch, getState) {
 			let id = standardizeTestId(TEST_ID++);
+			// find suitable id
 			while (getState().testsById.includes(id))
 				id = standardizeTestId(TEST_ID++);
+
+			// add in only these attributes
 			dispatch(addTrialAction(id,
 				trial.startState,
 				trial.startTape,
@@ -177,6 +183,8 @@ const uploadTests = (dispatch) => {
 			if (!files[i].name.endsWith('.json')) {
 				continue;
 			}
+
+			// set callback
 			reader.dispatch = dispatch;
 			reader.name = files[i].name;
 			reader.readAsText(files[i]);

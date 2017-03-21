@@ -16,30 +16,40 @@ export const initialState = {
 	edittingTrialId: null,
 	anyChangeInTrial: false,
 
-	originalTape: null,
-	edittingStartTape: null,
-	edittingExpectedTape: null,
+	// hold the state of original tape before entering edit mode
+	originalTape: null, 
+	// hold the state of editting tape
+	edittingStartTape: null, 
+	// hold the state of editting tape
+	edittingExpectedTape: null, 
 	/*Editting Trial Mode*/
 
-	/*** The following five are initialized by gui.resizeScreenAndTape  ***/
+	/*** The following four are initialized by gui.resizeScreenAndTape  ***/
 	screenSize: (window) ? window.innerWidth : 1396,
-	cellNum: 0, // number of presented cells
+	// number of presented cells
+	cellNum: 0, 
 	rightBoundary: 0, 
-	headX: 0, // x coordinate of Tape Head
-	// tapePointer
-	/*** The above five are initialized by gui.resizeScreenAndTape  ***/
+	// x coordinate of Tape Head
+	headX: 0, 
+	/*** The above four are initialized by gui.resizeScreenAndTape  ***/
 
 	/* HEAD Width settings */
-	headWidth: INIT_HEAD_WIDTH, // control Tape Head width
-	headLeftOffset: INIT_HEAD_LEFT_OFFSET, // control Tape Head input box position 
+	// control Tape Head width
+	headWidth: INIT_HEAD_WIDTH, 
+	// control Tape Head input box position 
+	headLeftOffset: INIT_HEAD_LEFT_OFFSET, 
 	/* HEAD Width settings */
 
 	/* MACHINE GUI settings */
 	machineLocked: false,
-	isRunning: false, // is the machine running
-	interval: null, // Animation interval function, returned by setInterval(callback, timeout)
-	animationSpeedFactor: 1.0, // 100% of default speed
-	animationSpeed: ANIMATION_SPEED, // calculated speed, not necessary but make things convenient 
+	// is the machine running
+	isRunning: false, 
+	// Animation interval function, returned by setInterval(callback, timeout)
+	interval: null, 
+	// 100% of default speed
+	animationSpeedFactor: 1.0, 
+	// calculated speed, not necessary but make things convenient 
+	animationSpeed: ANIMATION_SPEED, 
 	animationOn: true,
 	machineReportError: "",
 	showReportedError: false,
@@ -53,12 +63,18 @@ export const initialState = {
 /* GUI settings */
 
 /* Tape and Head */
-	anchorCell: 0, // serves to help mapping presented cells to virtual cells in tape
-	tapeHead: 0, // Tape head, see linked list structure 
-	tapeTail: 0, // Tape tail, see linked list structure
-	tapePointer: 0, // Tells where is the Tape Head in Tape
-	tapeCellsById: [], // array of virtual cells' ids
-	tapeInternalState: "0", // Tape Head state, default is "0"
+	// serves to help mapping presented cells to virtual cells in tape
+	anchorCell: 0, 
+	// Tape head, see linked list structure 
+	tapeHead: 0, 
+	// Tape tail, see linked list structure
+	tapeTail: 0, 
+	// Tells where is the Tape Head in Tape
+	tapePointer: 0, 
+	// array of virtual cells' ids
+	tapeCellsById: [], 
+	// Tape Head state, default is "0"
+	tapeInternalState: "0", 
 	highlightedCellOrder: -1,
 /* Tape and Head */
 
@@ -75,7 +91,8 @@ export const initialState = {
 	*/
 
 /* Rules */
-	// rowsById: [], // array of rules' id's
+	// array of rules' id's
+	// rowsById: [], 
 	highlightedRow: null,
 /* Rules */
 	
@@ -99,7 +116,8 @@ export const initialState = {
 /* Trials */
 	// testsById: [],
 	isRunningTrial: false,
-	runningTrials: [], // track all running trial status
+	// track all running trial status
+	runningTrials: [], 
 /* Trials */
 
 	

@@ -10,6 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { List } from 'material-ui/List';
 import Drawer from 'material-ui/Drawer';
 import Subheader from 'material-ui/Subheader';
+import Snackbar from 'material-ui/Snackbar';
 import CircularProgress from 'material-ui/CircularProgress';
 
 import { DRAWER_STYLE, APPBAR_STYLES } from '../../constants/components/Appbar';
@@ -32,6 +33,7 @@ class AppToolBar extends React.Component {
 		this.state = {
 			toolHamburger: false,
 			trialDrawerToggle: false,
+			saveMachineResponseOpen: false,
 		};
 	}
 
@@ -55,6 +57,18 @@ class AppToolBar extends React.Component {
 	handlePopoverRequestClose = () => {
 		this.setState({
 			toolHamburger: false,
+		});
+	};
+
+	handleSaveMachineResponseOn = () => {
+		this.setState({
+			saveMachineResponseOpen: true,
+		});
+	};
+
+	handleSaveMachineResponseClose = () => {
+		this.setState({
+			saveMachineResponseOpen: false,
 		});
 	};
 
@@ -99,7 +113,15 @@ class AppToolBar extends React.Component {
 			        </Drawer>
 		    </MuiThemeProvider>
 
-
+		    <MuiThemeProvider>
+		    <Snackbar
+          		open={this.state.saveMachineResponseOpen}
+          		message="Saved Successfully"
+          		contentStyle={APPBAR_STYLES.buttons.snackBar.contentStyle}
+          		autoHideDuration={APPBAR_STYLES.buttons.snackBar.timeout}
+          		onRequestClose={this.handleSaveMachineResponseClose}
+        	/>
+        	</MuiThemeProvider>
 			<div className='app-bar'> 
 				<MediaQuery minWidth={APPBAR_STYLES.breakPoints.desktop.minWidth}>
 				<AppNavBar />
@@ -182,7 +204,8 @@ class AppToolBar extends React.Component {
 								<IconButton tooltip={APPBAR_STYLES.buttons.save.tip} 
 									disabled={this.props.isEdittingTrial}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.save.tipPosition}
-									onTouchTap={this.props.handleSave}>{APPBAR_STYLES.buttons.save.icon}</IconButton>
+									onTouchTap={()=>{this.props.handleSave(); this.handleSaveMachineResponseOn();}}>
+									{APPBAR_STYLES.buttons.save.icon}</IconButton>
 
 								<ToolbarSeparator />
 							</ToolbarGroup>
@@ -287,7 +310,7 @@ class AppToolBar extends React.Component {
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
 										disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
+							        	onTouchTap={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<Divider />
 							        	<MenuItem 
@@ -395,7 +418,7 @@ class AppToolBar extends React.Component {
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
 							        	disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
+							        	onTouchTap={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<Divider />
 							        	<MenuItem 
@@ -500,7 +523,7 @@ class AppToolBar extends React.Component {
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
 							        	disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.handleSave(); this.handlePopoverRequestClose()}}
+							        	onTouchTap={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<Divider />
 							        	<MenuItem 
