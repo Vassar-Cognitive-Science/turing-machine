@@ -439,6 +439,7 @@ Normal mode  ---> Enter edit mode  ---> swap, edit, save tapes  ---> Exit edit m
 		to allow garbage collection
 
 		Finally we load back state.originalTape into the presentational tape
+		and delete former test resport (if there is one).
 */
 
 
@@ -447,14 +448,14 @@ export function toggleEditMode(state, action) {
 	let new_state = Object.assign({}, state, {
 		// toggle isEdittingTrial
 		isEdittingTrial: isEdittingTrial, 
-		// record down the selected trial id
-		edittingTrialId: (isEdittingTrial) ? action.id : null, 
 		// always starts with startTape
 		isEdittingExpectedTape: false, 
 		anyChangeInTrial: false,
 	});
 
 	if (isEdittingTrial) { 
+		// record down the selected trial id
+		new_state.edittingTrialId = action.id;
 		let trial = new_state[action.id];
 
 		// we record the tape from normal mode
@@ -466,6 +467,10 @@ export function toggleEditMode(state, action) {
 		// Finally, we load the startTape into the presentation tape
 		return loadTrialTapeHelper(new_state, new_state.edittingStartTape);
 	} else {
+		let testReportId = new_state[new_state.edittingTrialId].testReportId;
+		// clear
+		new_state.edittingTrialId = null;
+
 		let originalTape = new_state.originalTape;
 
 		// initialize
@@ -474,6 +479,9 @@ export function toggleEditMode(state, action) {
 		new_state.edittingExpectedTape = null;
 
 		new_state = tape.loadTape(new_state, originalTape);
+
+		if (new_state[testReportId])
+			delete new_state[testReportId];
 	}
 
 	return new_state;

@@ -135,7 +135,7 @@ export const initialState = {
 
 		tapePointer: 10,
 		sourceFile: "Test Case #0.json",
-		testReportId: "REPORT-OF-Test Case #0"
+		testReportId: "Report-of-Test Case #0"
 	},
 	"Test Case #1": {
 		id: "Test Case #1",
@@ -150,7 +150,7 @@ export const initialState = {
 
 		tapePointer: 10,
 		sourceFile: "Test Case #1.json",
-		testReportId: "REPORT-OF-Test Case #1"
+		testReportId: "Report-of-Test Case #1"
 	},
 	"Test Case #2": {
 		id: "Test Case #2",
@@ -165,7 +165,7 @@ export const initialState = {
 
 		tapePointer: 0,
 		sourceFile: "Test Case #2.json",
-		testReportId: "REPORT-OF-Test Case #2"
+		testReportId: "Report-of-Test Case #2"
 	},
 
 	//For test

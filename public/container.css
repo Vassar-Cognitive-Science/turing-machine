@@ -21,15 +21,6 @@
 	text-align: center;
 }
 
-.test {
-	display:inline-block;
-}
-
-.Test-list {
-	max-height: 60%;
-	overflow-y: auto;
-}
-
 .card-of-edit-tape-info-pane{
 	margin: 0 auto;
 	min-height: 350px;
