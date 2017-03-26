@@ -42,3 +42,6 @@
 
 2017/3/20
 1. Policies on Trial files and tapes represented by array (strip "#" or not).
+
+2017/3/26
+1. https://community.bitnami.com/t/cannot-connect-to-mongo-db/46110

@@ -16,22 +16,23 @@ class AppNavBar extends Component {
 		this.state = {
 			isPopped: false,
 		};
+
+		this.handlePopoverTouchTap = (event) => {
+			// This prevents ghost click.
+			event.preventDefault();
+			this.setState({
+				isPopped: true,
+				anchorEl: event.currentTarget,
+			});
+		};
+
+		this.handlePopoverRequestClose = () => {
+			this.setState({
+				isPopped: false,
+			});
+		};
 	}
-
-	handlePopoverTouchTap = (event) => {
-		// This prevents ghost click.
-		event.preventDefault();
-		this.setState({
-			isPopped: true,
-			anchorEl: event.currentTarget,
-		});
-	};
-
-	handlePopoverRequestClose = () => {
-		this.setState({
-			isPopped: false,
-		});
-	};
+	
 
 	render() {
 		return (

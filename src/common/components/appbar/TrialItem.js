@@ -59,22 +59,24 @@ class TrialItem extends React.Component {
 		this.state = {
 			optionMenu: false,
 		};
+
+		this.handlePopoverTouchTap = (event) => {
+			// This prevents ghost click.
+			event.preventDefault();
+			this.setState({
+				optionMenu: true,
+				anchorEl: event.currentTarget,
+			});
+		};
+
+		this.handlePopoverRequestClose = () => {
+			this.setState({
+				optionMenu: false,
+			});
+		};
 	}
 
-	handlePopoverTouchTap = (event) => {
-		// This prevents ghost click.
-		event.preventDefault();
-		this.setState({
-			optionMenu: true,
-			anchorEl: event.currentTarget,
-		});
-	};
-
-	handlePopoverRequestClose = () => {
-		this.setState({
-			optionMenu: false,
-		});
-	};
+	
 
 	render() {
 		return (

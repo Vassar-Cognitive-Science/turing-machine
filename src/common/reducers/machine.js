@@ -12,6 +12,8 @@ import * as tape from './tape';
 import * as gui from './gui';
 
 
+// import insertState from '../database';
+
 /*
 Helper function that matches in_state and read to rule, and return its id.
 Parameter:

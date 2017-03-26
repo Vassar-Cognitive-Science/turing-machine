@@ -25,7 +25,7 @@ export const initialState = {
 	/*Editting Trial Mode*/
 
 	/*** The following four are initialized by gui.resizeScreenAndTape  ***/
-	screenSize: (window) ? window.innerWidth : 1396,
+	screenSize: 0,
 	// number of presented cells
 	cellNum: 0, 
 	rightBoundary: 0, 
@@ -92,7 +92,7 @@ export const initialState = {
 
 /* Rules */
 	// array of rules' id's
-	// rowsById: [], 
+	rowsById: [], 
 	highlightedRow: null,
 /* Rules */
 	
@@ -114,91 +114,12 @@ export const initialState = {
 	*/
 
 /* Trials */
-	// testsById: [],
+	testsById: [],
 	isRunningTrial: false,
 	// track all running trial status
 	runningTrials: [], 
 /* Trials */
 
-	
-	testsById: ["Test Case #0", "Test Case #1", "Test Case #2"],
-	"Test Case #0": {
-		id: "Test Case #0",
-		startState: "0",
-		startTape: [1,1,1,1,1,1,2],
-		expectedTape: [2,2,2,2,2,2,2],
-
-		expectedState: "HALT",
-
-		startTapeHead: -3,
-		expectedTapeHead: 22,
-
-		tapePointer: 10,
-		sourceFile: "Test Case #0.json",
-		testReportId: "Report-of-Test Case #0"
-	},
-	"Test Case #1": {
-		id: "Test Case #1",
-		startState: "0",
-		startTape: [1,1,1,1,1,1,2],
-		expectedTape: [2,2,2,2,2,2,2],
-
-		expectedState: "HALT",
-
-		startTapeHead: -3,
-		expectedTapeHead: 20,
-
-		tapePointer: 10,
-		sourceFile: "Test Case #1.json",
-		testReportId: "Report-of-Test Case #1"
-	},
-	"Test Case #2": {
-		id: "Test Case #2",
-		startState: "0",
-		startTape: [1,1,1,1,1,1,2],
-		expectedTape: [2,2,2,2,2,2,2],
-
-		expectedState: "HALT",
-
-		startTapeHead: 0,
-		expectedTapeHead: 0,
-
-		tapePointer: 0,
-		sourceFile: "Test Case #2.json",
-		testReportId: "Report-of-Test Case #2"
-	},
-
-	//For test
-	rowsById: ["row-1", "row-2", "row-3", "row-4"],
-	"row-1": {
-		in_state: "0",
-		read: "#",
-		write: "2",
-		isLeft: false,
-		new_state: "0"
-	},
-	"row-2": {
-		in_state: "0",
-		read: "2",
-		write: "2",
-		isLeft: true,
-		new_state: "HALT"
-	},
-	"row-3": {
-		in_state: "1",
-		read: "1",
-		write: "2",
-		isLeft: true,
-		new_state: "1"
-	},
-	"row-4": {
-		in_state: "0",
-		read: "1",
-		write: "2",
-		isLeft: false,
-		new_state: "0"
-	},
-	
 };
 
 export default rootReducer;
@@ -212,6 +133,7 @@ Logic:
 */
 function rootReducer (state=initialState, action, clearRedo) {
 	let s1, s2, s3, s4, s5;
+	// prepare undo/redo
 	let cache = createEditHistoryCache(state, action);
 	let new_state = state;
 	if (cache) {
@@ -221,18 +143,22 @@ function rootReducer (state=initialState, action, clearRedo) {
 		new_state.undoEditHistory.push(cache);
 	}
 
+	// call all reducers
 	s1 = ruleReducer(new_state, action, clearRedo);
-	// s2 = tapeReducer(s1, action, clearRedo);
 	s2 = tapeReducer(s1, action, false);
 	s3 = guiReducer(s2, action);
 	s4 = machineReducer(s3, action);
 	s5 = trialReducer(s4, action);
 
+	// edit mode enhancer
 	notifyAnyChangeInEditMode(s5, action);
 
+	// undor/redo/clear side effect enhancer
 	switch(action.type) {
 		case actionTypes.INITIALIZAE_MACHINE:
 			return initializeMachine(state, action);
+		case actionTypes.LOAD_MACHINE:
+			return loadMachine(state, action);
 		case actionTypes.UNDO:
 			return cleanSideEffects(undo(s5, action), false);
 		case actionTypes.REDO:
@@ -249,6 +175,10 @@ Initialize the machine
 function initializeMachine(state, action) {
 	let new_state = gui.resizeScreenAndTape(initialState, {screenWidth: window.innerWidth});
 	return tape.initializeTape(new_state, { controlled: true });
+}
+
+function loadMachine(state, action) {
+	return gui.resizeScreenAndTape(action.preloadedState, {screenWidth: window.innerWidth});
 }
 
 /*

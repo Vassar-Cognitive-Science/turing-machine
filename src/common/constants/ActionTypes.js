@@ -6,6 +6,7 @@ export const REDO = "REDO";
 
 /* Actions for Turing Machine */
 export const INITIALIZAE_MACHINE = 'INITIALIZAE_MACHINE';
+export const LOAD_MACHINE = 'LOAD_MACHINE';
 export const PRE_STEP_FORWARD = "PRE_STEP_FORWARD";
 export const STEP_FORWARD = 'STEP_FORWARD';
 export const RECORD_INTERVAL = "RECORD_INTERVAL";

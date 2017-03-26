@@ -35,42 +35,48 @@ class AppToolBar extends React.Component {
 			trialDrawerToggle: false,
 			saveMachineResponseOpen: false,
 		};
+
+		this.handleTrialDrawerToggle = () => {
+			this.setState({
+				trialDrawerToggle: !this.state.trialDrawerToggle
+			});
+		}
+
+		this.handleTrialDrawerClose = () => {
+			this.setState({
+				trialDrawerToggle: false
+			});
+		}
+
+		this.handlePopoverTouchTap = (event) => {
+			// This prevents ghost click.
+			event.preventDefault();
+			this.setState({
+				toolHamburger: true,
+				anchorEl: event.currentTarget,
+			});
+		};
+
+		this.handlePopoverRequestClose = () => {
+			this.setState({
+				toolHamburger: false,
+			});
+		};
+
+		this.handleSaveMachineResponseOn = () => {
+			this.setState({
+				saveMachineResponseOpen: true,
+			});
+		};
+
+		this.handleSaveMachineResponseClose = () => {
+			this.setState({
+				saveMachineResponseOpen: false,
+			});
+		};
 	}
 
-	handleTrialDrawerToggle = () => {
-		this.setState({trialDrawerToggle: !this.state.trialDrawerToggle});
-	}
-
-	handleTrialDrawerClose = () => {
-		this.setState({trialDrawerToggle: false});
-	}
-
-	handlePopoverTouchTap = (event) => {
-		// This prevents ghost click.
-		event.preventDefault();
-		this.setState({
-			toolHamburger: true,
-			anchorEl: event.currentTarget,
-		});
-	};
-
-	handlePopoverRequestClose = () => {
-		this.setState({
-			toolHamburger: false,
-		});
-	};
-
-	handleSaveMachineResponseOn = () => {
-		this.setState({
-			saveMachineResponseOpen: true,
-		});
-	};
-
-	handleSaveMachineResponseClose = () => {
-		this.setState({
-			saveMachineResponseOpen: false,
-		});
-	};
+	
 
 	render() {
 		return (
