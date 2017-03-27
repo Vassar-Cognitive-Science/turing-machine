@@ -15,8 +15,10 @@ import template from '../../public/template';
 import { createIdFromTimeStamp } from './utils';
 
 var MongoClient = require('mongodb').MongoClient;
-var ObjectID = require('mongodb').ObjectID;
-const url = "mongodb://localhost:27017/turingMachine";
+
+const databaseName = 'turingMachine';
+const databaseCollection = 'saves';
+const url = "mongodb://localhost:27017/" + databaseName;
 
 var app = new Express();
 
@@ -30,27 +32,32 @@ app.use(BodyParser.urlencoded({
 app.use(BodyParser.json()); 
 
 app.use(Express.static(path.join(__dirname + '/../../public')));
-app.use('/saves', Express.static(path.join(__dirname + '/../../public')));
+app.use('/error', Express.static(path.join(__dirname + '/../../public')));
 
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + "/../../public/index.html"));
 });
 
-app.get('/saves/:id', function(req, res) {
+
+app.get('/error/404', function(req, res) {
+	res.sendFile(path.join(__dirname + "/../../public/index.html"));
+});
+
+app.get('/:id', function(req, res) {
 	MongoClient.connect(url, function(err, db) {
 		if (err || db === null) {
-			res.redirect('/404');
+			res.redirect('/error/404');
 			return;
 		}
 
-		db.collection('saves').findOne({
+		db.collection(databaseCollection).findOne({
 				id: req.params.id.toString()
 			},
 			function(err, target) {
 				if (target && target.state) {
 					res.send(template(target.state));
 				} else {
-					res.redirect('/404');
+					res.redirect('/error/404');
 				}
 			}
 		);
@@ -58,10 +65,6 @@ app.get('/saves/:id', function(req, res) {
 
 		db.close();
 	});
-});
-
-app.get('/404', function(req, res) {
-	res.sendFile(path.join(__dirname + "/../../public/index.html"));
 });
 
 app.post('/', function(req, res) {
@@ -74,7 +77,7 @@ app.post('/', function(req, res) {
 		}
 
 		var id = createIdFromTimeStamp();
-		db.collection('saves').insert({
+		db.collection(databaseCollection).insert({
 			id: id,
 			state: req.body
 		}, function(err, docsInserted) {
@@ -88,7 +91,7 @@ app.post('/', function(req, res) {
 });
 
 app.all('*', function(req, res) {
-  res.redirect('/404');
+  res.redirect('/error/404');
 });
 
 var server = app.listen(3000, function() {

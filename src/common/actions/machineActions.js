@@ -125,7 +125,7 @@ export function saveMachineActionCreator(ownProps) {
 				throw new Error(response.statusText);
 			}
 		}).then(function(body) {
-			history.pushState(null, null, '/saves/' + body.id);
+			history.pushState(null, null, '/' + body.id);
 			ownProps.snackBarPopUpCallback();
 		}).catch(function(err) {
 			ownProps.setErrorMessageCallback(err);

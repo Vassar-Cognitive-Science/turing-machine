@@ -33,8 +33,8 @@ ReactDOM.render(
   	<Router history={createBrowserHistory()}>
 		<div>
 			<Route exact path="/" component={App} />
-			<Route path="/saves/*" component={App} />
-			<Route path="/404" component={PageNotFound} />
+			<Route exact path="/:id" component={App} />
+			<Route exact path="/error/404" component={PageNotFound} />
 		</div>
   	</Router>
   </Provider>,

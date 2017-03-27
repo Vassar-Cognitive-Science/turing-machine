@@ -154,7 +154,8 @@ export function resizeScreenAndTape(state, action) {
 		newCellNum = MAX_CELL_NUM;
 	}
 
-	// console.log(newTapeSpace + " " + newCellNum)
+	let originalPointer = new_state.tapePointer;
+
 	let midPoint = Math.floor(newCellNum/2);
 	new_state = Object.assign({}, new_state, {
 		screenSize: newScreenSize,
@@ -163,6 +164,22 @@ export function resizeScreenAndTape(state, action) {
 		tapePointer: new_state.anchorCell + midPoint,
 		rightBoundary: HEAD_LEFT_BOUNDARY + (newCellNum-1) * HEAD_MOVE_INTERVAL,
 	});
+
+	let offset = new_state.tapePointer - originalPointer;
+	let moveLeft;
+
+	if (offset === 0) return new_state;
+	if (offset < 0) { // need move right
+		offset = -offset;
+		moveLeft = false;
+	} else { // need move left
+		moveLeft = true;
+	}
+
+	while (offset--) {
+		new_state = moveHeadHelper(new_state, moveLeft);
+	}
+	new_state.highlightedCellOrder = -1; // cancel any highlight from moveHead
 
 	return new_state;
 }

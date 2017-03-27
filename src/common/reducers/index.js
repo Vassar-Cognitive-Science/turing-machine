@@ -178,7 +178,10 @@ function initializeMachine(state, action) {
 }
 
 function loadMachine(state, action) {
-	return gui.resizeScreenAndTape(action.preloadedState, {screenWidth: window.innerWidth});
+	return gui.resizeScreenAndTape(
+		action.preloadedState, 
+		{screenWidth: window.innerWidth}
+	);
 }
 
 /*
