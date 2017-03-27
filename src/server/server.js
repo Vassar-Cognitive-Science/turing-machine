@@ -14,6 +14,7 @@ import { Provider } from 'react-redux';
 import template from '../../public/template';
 
 var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 const url = "mongodb://localhost:27017/turingMachine";
 
 var app = new Express();
@@ -28,25 +29,40 @@ app.use(BodyParser.urlencoded({
 app.use(BodyParser.json()); 
 
 app.use(Express.static(path.join(__dirname + '/../../public')));
+app.use('/saves', Express.static(path.join(__dirname + '/../../public')));
 
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + "/../../public/index.html"));
 });
 
 app.get('/saves/:id', function(req, res) {
-	// res.redirect('/404')
-	// MongoClient.connect(url, function(err, db) {
-	// 	if (err) res.redirect('/404');
 
-	// 	let target = db.collection('saves').findOne({ _id: req.params.id });
+	MongoClient.connect(url, function(err, db) {
+		if (err) res.redirect('/404');
 
-	// 	console.log("234 " + req.params.id);
+		if (req.params.id.toString().length !== 24) {
+			res.redirect('/404');
+			return;
+		}
 
-	// 	// res.send(template({}));
-	// 	db.close();
-	// });
-	
-	res.send(template({}));
+		try {
+			let id = ObjectID(req.params.id);
+			db.collection('saves').findOne({ _id: id },
+				function(err, target) {
+					if (target.state) {
+						res.send(template(target.state));
+					} else {
+						res.redirect('/404');
+					}
+				}
+			);
+		} catch (err) {
+			console.log(err);
+			res.redirect('/404');
+		}
+
+		db.close();
+	});
 });
 
 app.get('/404', function(req, res) {
