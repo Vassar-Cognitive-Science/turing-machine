@@ -122,7 +122,6 @@ export function saveMachineActionCreator(ownProps) {
 			}
 		}).then(function(body) {
 			history.pushState(null, null, '/' + body.id);
-			console.log(body.id);
 			ownProps.snackBarPopUpCallback();
 		}).catch(function(err) {
 			ownProps.setErrorMessageCallback(err);

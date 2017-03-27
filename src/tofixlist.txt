@@ -38,10 +38,10 @@
 4. Count steps. -Done
 
 2017/3/18
-1. Review new added functions in reducers/trial.js
+1. Review new added functions in reducers/trial.js. -Done
 
 2017/3/20
-1. Policies on Trial files and tapes represented by array (strip "#" or not).
+1. Policies on Trial files and tapes represented by array (strip "#" or not). -Done
 
 2017/3/26
 1. https://community.bitnami.com/t/cannot-connect-to-mongo-db/46110

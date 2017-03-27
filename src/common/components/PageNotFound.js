@@ -5,8 +5,8 @@ class PageNotFound extends React.Component {
 
 	render() {
 		return (
-  			<div>
-  				Nothing!
+  			
+  			<div className="page-not-found-image">
   			</div>
   		);
 	}

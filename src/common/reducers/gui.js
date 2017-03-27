@@ -180,7 +180,7 @@ export function resizeScreenAndTape(state, action) {
 		new_state = moveHeadHelper(new_state, moveLeft);
 	}
 	new_state.highlightedCellOrder = -1; // cancel any highlight from moveHead
-
+	console.log(new_state)
 	return new_state;
 }
 
