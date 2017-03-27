@@ -12,6 +12,7 @@ import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 
 import template from '../../public/template';
+import { createIdFromTimeStamp } from './utils';
 
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
@@ -37,18 +38,16 @@ app.get('/', function(req, res) {
 
 app.get('/saves/:id', function(req, res) {
 	MongoClient.connect(url, function(err, db) {
-		if (err || db === null || req.params.id.toString().length !== 24) {
+		if (err || db === null) {
 			res.redirect('/404');
 			return;
 		}
 
-
-		let id = ObjectID(req.params.id);
 		db.collection('saves').findOne({
-				_id: id
+				id: req.params.id.toString()
 			},
 			function(err, target) {
-				if (target.state) {
+				if (target && target.state) {
 					res.send(template(target.state));
 				} else {
 					res.redirect('/404');
@@ -74,10 +73,11 @@ app.post('/', function(req, res) {
 			return;
 		}
 
+		var id = createIdFromTimeStamp();
 		db.collection('saves').insert({
+			id: id,
 			state: req.body
 		}, function(err, docsInserted) {
-			let id = docsInserted.insertedIds[0];
 			res.send({
 				id: id
 			});
