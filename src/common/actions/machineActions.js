@@ -108,10 +108,6 @@ export function undoAction() {
 }
 
 export function saveMachineActionCreator(ownProps) {
-	// return {
-	// 	type: actionTypes.SAVE_MACHINE
-	// };
-
 	return (dispatch, getState) => {
 		var post = {
 			headers: {"content-type": "application/json"},
@@ -126,6 +122,7 @@ export function saveMachineActionCreator(ownProps) {
 			}
 		}).then(function(body) {
 			history.pushState(null, null, '/' + body.id);
+			console.log(body.id);
 			ownProps.snackBarPopUpCallback();
 		}).catch(function(err) {
 			ownProps.setErrorMessageCallback(err);

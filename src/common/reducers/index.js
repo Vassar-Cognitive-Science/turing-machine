@@ -174,7 +174,7 @@ Initialize the machine
 */
 function initializeMachine(state, action) {
 	let new_state = gui.resizeScreenAndTape(initialState, {screenWidth: window.innerWidth});
-	return tape.initializeTape(new_state, { controlled: true });
+	return tape.initializeTape(new_state, { controlled: false });
 }
 
 function loadMachine(state, action) {

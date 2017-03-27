@@ -55,7 +55,7 @@
   },
   "scripts": {
     "start": "node ./src/server/index",
-    "build": "webpack --config ./webpack.config.js",
+    "build": "webpack --config ./webpack.server.config.js",
     "eject": "react-scripts eject",
     "test": "jest",
     "test:watch": "npm test -- --watch"
