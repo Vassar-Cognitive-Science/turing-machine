@@ -28,6 +28,7 @@ build/Release
 
 # Dependency directories
 build
+dist
 node_modules
 jspm_packages
 

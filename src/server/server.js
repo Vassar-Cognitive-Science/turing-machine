@@ -36,30 +36,26 @@ app.get('/', function(req, res) {
 });
 
 app.get('/saves/:id', function(req, res) {
-
 	MongoClient.connect(url, function(err, db) {
-		if (err) res.redirect('/404');
-
-		if (req.params.id.toString().length !== 24) {
+		if (err || db === null || req.params.id.toString().length !== 24) {
 			res.redirect('/404');
 			return;
 		}
 
-		try {
-			let id = ObjectID(req.params.id);
-			db.collection('saves').findOne({ _id: id },
-				function(err, target) {
-					if (target.state) {
-						res.send(template(target.state));
-					} else {
-						res.redirect('/404');
-					}
+
+		let id = ObjectID(req.params.id);
+		db.collection('saves').findOne({
+				_id: id
+			},
+			function(err, target) {
+				if (target.state) {
+					res.send(template(target.state));
+				} else {
+					res.redirect('/404');
 				}
-			);
-		} catch (err) {
-			console.log(err);
-			res.redirect('/404');
-		}
+			}
+		);
+
 
 		db.close();
 	});
@@ -71,11 +67,20 @@ app.get('/404', function(req, res) {
 
 app.post('/', function(req, res) {
 	MongoClient.connect(url, function(err, db) {
-		if (err) res.send({error: err});
+		if (err || db === null) {
+			res.status(403).send({
+				error: "No response"
+			});
+			return;
+		}
 
-		db.collection('saves').insert({ state: req.body }, function(err, docsInserted) {
+		db.collection('saves').insert({
+			state: req.body
+		}, function(err, docsInserted) {
 			let id = docsInserted.insertedIds[0];
-			res.send({id: id});
+			res.send({
+				id: id
+			});
 		});
 
 		db.close();

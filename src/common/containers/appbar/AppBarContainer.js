@@ -21,7 +21,7 @@ import {
 	restoreAction,
 	undoAction,
 	redoAction,
-	saveMachineAction,
+	saveMachineActionCreator,
 } from '../../actions/machineActions';
 
 
@@ -75,7 +75,7 @@ const handleTest = (dispatch, ownProps) => {
 
 const handleSave = (dispatch, ownProps) => {
 	dispatch(stopAction());
-	dispatch(saveMachineAction());
+	dispatch(saveMachineActionCreator(ownProps));
 }
 
 const handleClearTape = (dispatch, ownProps) => {

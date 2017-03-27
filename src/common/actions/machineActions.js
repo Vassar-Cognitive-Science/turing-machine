@@ -107,7 +107,7 @@ export function undoAction() {
 	};
 }
 
-export function saveMachineAction() {
+export function saveMachineActionCreator(ownProps) {
 	// return {
 	// 	type: actionTypes.SAVE_MACHINE
 	// };
@@ -119,9 +119,17 @@ export function saveMachineAction() {
 			body: JSON.stringify(getState())
 		}
 		fetch('/', post).then(function(response) {
-			return response.json();
+			if (response.status === 200) {
+				return response.json();
+			} else {
+				throw new Error(response.statusText);
+			}
 		}).then(function(body) {
 			history.pushState(null, null, '/saves/' + body.id);
+			ownProps.snackBarPopUpCallback();
+		}).catch(function(err) {
+			ownProps.setErrorMessageCallback(err);
+			ownProps.errorMessagePopUpCallback();
 		});
 	}
 }

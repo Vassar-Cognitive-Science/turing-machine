@@ -10,7 +10,6 @@ import MenuItem from 'material-ui/MenuItem';
 import { List } from 'material-ui/List';
 import Drawer from 'material-ui/Drawer';
 import Subheader from 'material-ui/Subheader';
-import Snackbar from 'material-ui/Snackbar';
 import CircularProgress from 'material-ui/CircularProgress';
 
 import { DRAWER_STYLE, APPBAR_STYLES } from '../../constants/components/Appbar';
@@ -26,6 +25,7 @@ const ProgressCircle = (size=30, color=waitingColor) => (
 	<CircularProgress color={color} size={size} thickness={2.5} />
 )
 
+
 class AppToolBar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -33,7 +33,6 @@ class AppToolBar extends React.Component {
 		this.state = {
 			toolHamburger: false,
 			trialDrawerToggle: false,
-			saveMachineResponseOpen: false,
 		};
 
 		this.handleTrialDrawerToggle = () => {
@@ -63,17 +62,6 @@ class AppToolBar extends React.Component {
 			});
 		};
 
-		this.handleSaveMachineResponseOn = () => {
-			this.setState({
-				saveMachineResponseOpen: true,
-			});
-		};
-
-		this.handleSaveMachineResponseClose = () => {
-			this.setState({
-				saveMachineResponseOpen: false,
-			});
-		};
 	}
 
 	
@@ -119,15 +107,6 @@ class AppToolBar extends React.Component {
 			        </Drawer>
 		    </MuiThemeProvider>
 
-		    <MuiThemeProvider>
-		    <Snackbar
-          		open={this.state.saveMachineResponseOpen}
-          		message="Saved Successfully"
-          		contentStyle={APPBAR_STYLES.buttons.snackBar.contentStyle}
-          		autoHideDuration={APPBAR_STYLES.buttons.snackBar.timeout}
-          		onRequestClose={this.handleSaveMachineResponseClose}
-        	/>
-        	</MuiThemeProvider>
 			<div className='app-bar'> 
 				<MediaQuery minWidth={APPBAR_STYLES.breakPoints.desktop.minWidth}>
 				<AppNavBar />
@@ -210,7 +189,7 @@ class AppToolBar extends React.Component {
 								<IconButton tooltip={APPBAR_STYLES.buttons.save.tip} 
 									disabled={this.props.isEdittingTrial}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.save.tipPosition}
-									onTouchTap={()=>{this.props.handleSave(); this.handleSaveMachineResponseOn();}}>
+									onTouchTap={this.props.handleSave}>
 									{APPBAR_STYLES.buttons.save.icon}</IconButton>
 
 								<ToolbarSeparator />
