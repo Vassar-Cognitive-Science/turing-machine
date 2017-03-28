@@ -10,8 +10,8 @@ import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
 import { APPBAR_STYLES } from '../constants/components/Appbar';
 
 const snackBarMessage = {
-	successful: "Saved Successfully",
-	nothingNew: "Nothing really changes"
+	successful: "Saved Successfully!",
+	nothingNew: "Nothing really changes ~"
 };
 
 class App extends React.Component {

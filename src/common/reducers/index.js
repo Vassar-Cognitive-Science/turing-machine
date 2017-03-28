@@ -221,6 +221,7 @@ function notifyAnyChangeInEditMode(state, action) {
 }
 
 function notifyAnyChangeInNormalMode(state, action) {
+
 	switch(action.type) {
 		case actionTypes.MOVE_HEAD:
 		case actionTypes.MOVE_TAPE_RIGHT:
@@ -244,7 +245,15 @@ function notifyAnyChangeInNormalMode(state, action) {
 		case actionTypes.STEP_BACK:
 		case actionTypes.RESTORE:
 		case actionTypes.SILENT_RUN:
+
+		case actionTypes.DELETE_TRIAL:
+		case actionTypes.ADD_TRIAL:
+		case actionTypes.RUN_TRIAL:
 			state.anyChangeInNormal = true;
+			break;
+		case actionTypes.SAVE_TRIAL:
+			state.anyChangeInNormal = state.anyChangeInTrial;
+			break;
 		default:
 			break;
 		}
