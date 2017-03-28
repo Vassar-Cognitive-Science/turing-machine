@@ -37,7 +37,8 @@ import {
 	blue600 as runAllTrialsColor,
 	orange500 as uploadTestsColor,
 	teal300 as saveTestsColor,
-	pink400 as snackBarContentColor,
+	pink400 as snackBarSuccessFulColor,
+	grey50 as snackBarNothingChangeColor,
  } from 'material-ui/styles/colors';
 
 
@@ -188,7 +189,11 @@ export const APPBAR_STYLES = {
 		},
 		snackBar: {
 			timeout: 2000,
-			contentStyle: { textAlign: "center", color: snackBarContentColor, fontWeight: "bold"}
+			contentStyleGenerator: (flag) => ({
+				textAlign: "center",
+				color: (flag) ? snackBarSuccessFulColor : snackBarNothingChangeColor,
+				fontWeight: "bold"
+			})
 		}
 	}
 };

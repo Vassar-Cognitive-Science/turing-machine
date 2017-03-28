@@ -54,6 +54,7 @@ export const initialState = {
 	machineReportError: "",
 	showReportedError: false,
 
+	anyChangeInNormal: false,
 	stepCount: 0,
 	runHistory: [],
 	undoEditHistory: [],
@@ -152,6 +153,7 @@ function rootReducer (state=initialState, action, clearRedo) {
 
 	// edit mode enhancer
 	notifyAnyChangeInEditMode(s5, action);
+	notifyAnyChangeInNormalMode(s5, action);
 
 	// undor/redo/clear side effect enhancer
 	switch(action.type) {
@@ -216,6 +218,36 @@ function notifyAnyChangeInEditMode(state, action) {
 		default:
 			break;
 	}
+}
+
+function notifyAnyChangeInNormalMode(state, action) {
+	switch(action.type) {
+		case actionTypes.MOVE_HEAD:
+		case actionTypes.MOVE_TAPE_RIGHT:
+		case actionTypes.MOVE_TAPE_LEFT:
+		case actionTypes.FILL_TAPE:
+		case actionTypes.WRITE_INTO_TAPE:
+		case actionTypes.INITIALIZAE_TAPE:
+		case actionTypes.SET_INTERNAL_STATE:
+
+		case actionTypes.ADD_ROW:
+		case actionTypes.DELETE_ROW:
+		case actionTypes.SWITCH_ROW_DIRECTION:
+		case actionTypes.SET_ROW_IN_STATE:
+		case actionTypes.SET_ROW_READ:
+		case actionTypes.SET_ROW_WRITE:
+		case actionTypes.SET_ROW_NEW_STATE:
+
+		case actionTypes.PRE_STEP_FORWARD:
+		case actionTypes.STEP_FORWARD:
+		case actionTypes.RECORD_INTERVAL:
+		case actionTypes.STEP_BACK:
+		case actionTypes.RESTORE:
+		case actionTypes.SILENT_RUN:
+			state.anyChangeInNormal = true;
+		default:
+			break;
+		}
 }
 
 function redo(state, action) {
@@ -320,6 +352,10 @@ function machineReducer(state, action) {
 			break;
 		case actionTypes.SILENT_RUN:
 			new_state = machine.silentRun(state, action);
+			break;
+
+		case actionTypes.GOOD_SAVE:
+			new_state = machine.goodMachineSave(state, action);
 			break;
 		default:
 			break;

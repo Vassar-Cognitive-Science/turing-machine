@@ -109,23 +109,37 @@ export function undoAction() {
 
 export function saveMachineActionCreator(ownProps) {
 	return (dispatch, getState) => {
-		var post = {
-			headers: {"content-type": "application/json"},
-			method: 'POST',
-			body: JSON.stringify(getState())
-		}
-		fetch('/', post).then(function(response) {
-			if (response.status === 200) {
-				return response.json();
-			} else {
-				throw new Error(response.statusText);
-			}
-		}).then(function(body) {
-			history.pushState(null, null, '/' + body.id);
+		if (!getState().anyChangeInNormal) {
+			ownProps.snackBarSetAnythingNewCallback(false);
 			ownProps.snackBarPopUpCallback();
-		}).catch(function(err) {
-			ownProps.setErrorMessageCallback(err);
-			ownProps.errorMessagePopUpCallback();
-		});
+		} else {
+			var post = {
+				headers: {"content-type": "application/json"},
+				method: 'POST',
+				body: JSON.stringify(getState())
+			}
+
+			fetch('/', post).then(function(response) {
+				if (response.status === 200) {
+					return response.json();
+				} else {
+					throw new Error(response.statusText);
+				}
+			}).then(function(body) {
+				dispatch(goodMachineSaveAction(body.id));
+				ownProps.snackBarSetAnythingNewCallback(true);
+				ownProps.snackBarPopUpCallback();
+			}).catch(function(err) {
+				ownProps.setErrorMessageCallback(err);
+				ownProps.errorMessagePopUpCallback();
+			});
+		}
 	}
+}
+
+export function goodMachineSaveAction(url) {
+	return {
+		type: actionTypes.GOOD_SAVE,
+		url: url
+	};
 }

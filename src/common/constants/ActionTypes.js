@@ -15,6 +15,7 @@ export const CLEAR_REPORTED_ERROR = "CLEAR_REPORTED_ERROR";
 export const STEP_BACK = "STEP_BACK";
 export const RESTORE = "RESTORE";
 export const SILENT_RUN = "SILENT_RUN";
+export const GOOD_SAVE = "GOOD_SAVE";
 /* Actions for Turing Machine */
 
 /* GUI info */

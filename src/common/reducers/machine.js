@@ -399,3 +399,12 @@ export function restore(state, action) {
 		return state;
 	}
 }
+
+export function goodMachineSave(state, action) {
+	let new_state = Object.assign({}, state);
+
+	new_state.anyChangeInNormal = false;
+	history.pushState(null, null, '/' + action.url);
+
+	return new_state;
+} 

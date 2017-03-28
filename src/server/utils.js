@@ -1,4 +1,6 @@
-const _seed = 179424673; // 10^7 th prime
+const _seeds = [43, 71, 131, 163, 11, 281, 47, 173, 89, 149, 223, 271, 269, 139, 227, 17, 83, 3, 211, 251, 277, 37, 
+197, 61, 19, 13, 167, 97, 73, 233, 239, 257, 191, 29, 7, 137, 151, 2, 241, 107, 113, 53, 101, 5, 157, 23, 109, 31, 
+179, 79, 181, 67, 103, 193, 229, 59, 127, 263, 199, 41]; // suffled first 60 primes
 
 const _base = ['f', '8', 'T', 'z', 'm', 'R', 'w', 'o', 'p', 'A', 'Q', 'V', 'd', 'E', 'q', 'L', 'N', '3', 
 '6', '5', 'M', 'K', 'u', 'c', 'O', 'B', 'J', 'n', '9', 'I', 'x', 'h', 'e', 'j', 'Z', 'g', 's', '2', '4', 'y', 
@@ -9,8 +11,8 @@ const _base = ['f', '8', 'T', 'z', 'm', 'R', 'w', 'o', 'p', 'A', 'Q', 'V', 'd', 
   // 61          = t
 
 
-export function createIdFromTimeStamp(seed=_seed, base=_base) {
-	let x = parseInt(Date.now()) * seed;
+export function createIdFromTimeStamp(seeds=_seeds, base=_base) {
+	let x = parseInt(Date.now()) * seeds[(new Date()).getMilliseconds()%60];
 	return _10_to_62R(x, base);
 }
 
@@ -35,15 +37,8 @@ export function _10_to_62R(x, base=_base) {
 		q = Math.floor(x / p);
 		x -= p * q;
 		
-		s[d] = base[q];
-		d = Math.floor(log62(x));
+		s[d--] = base[q];
 	}
 
 	return s.join("");
-}
-
-export function test(a, f) {
-	for (let i = 0; i < a.length; i++) {
-		console.log(a[i] + " " + f(a[i]));
-	}
 }

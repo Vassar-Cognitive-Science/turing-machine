@@ -9,12 +9,18 @@ import Tape from '../containers/tape/TapeContainer';
 import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
 import { APPBAR_STYLES } from '../constants/components/Appbar';
 
+const snackBarMessage = {
+	successful: "Saved Successfully",
+	nothingNew: "Nothing really changes"
+};
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			saveMachineResponseOpen: false,
+			anythingNewWithMachine: false,
 			dialogOpen: false,
 			errorMessage: "",
 		};
@@ -48,6 +54,12 @@ class App extends React.Component {
 				errorMessage: err.toString()
 			});
 		};
+
+		this.setAnythingNewWithMachine = (flag) => {
+			this.setState({
+				anythingNewWithMachine: flag
+			});
+		}
 	}
 
 	render() {
@@ -66,8 +78,8 @@ class App extends React.Component {
   				<MuiThemeProvider>
 		    	<Snackbar
 	          		open={this.state.saveMachineResponseOpen}
-	          		message="Saved Successfully"
-	          		contentStyle={APPBAR_STYLES.buttons.snackBar.contentStyle}
+	          		message={(this.state.anythingNewWithMachine) ? snackBarMessage.successful : snackBarMessage.nothingNew}
+	          		contentStyle={APPBAR_STYLES.buttons.snackBar.contentStyleGenerator(this.state.anythingNewWithMachine)}
 	          		autoHideDuration={APPBAR_STYLES.buttons.snackBar.timeout}
 	          		onRequestClose={this.handleSaveMachineResponseClose}
 	        	/>
@@ -87,7 +99,8 @@ class App extends React.Component {
 
   				<AppBar snackBarPopUpCallback={this.handleSaveMachineResponseOn} 
   						errorMessagePopUpCallback={this.handleDialogOpen}
-  						setErrorMessageCallback={this.setErrorMessage}/>
+  						setErrorMessageCallback={this.setErrorMessage}
+  						snackBarSetAnythingNewCallback={this.setAnythingNewWithMachine}/>
 	    		<Tape />
 	    		{(this.props.isEdittingTrial) ? <div className='blank-background'></div> : <DynamicRuleTable />}
   			</div>
