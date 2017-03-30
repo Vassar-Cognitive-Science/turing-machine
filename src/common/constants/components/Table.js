@@ -5,6 +5,16 @@ export const TABLE_STATE_COL_MAX_LENGTH = AUTO_COMPLETE_MAX_LENGTH;
 // Table settings
 export const TABLE_HEIGHT = 230;
 
+export const TABLE_ROW_NO_COL_STYLE = {
+	style: {
+		display: 'inline-block',
+		fontSize: "13px",
+		fontWeight: "bold",
+		verticalAlign: "text-bottom",
+		marginBottom: 3
+	}
+}
+
 export const TABLE_STATE_COL_STYLE = {
 	style: {
 		width: "12vw"

@@ -7,7 +7,7 @@ export const MIN_CELL_NUM = 5;
 // Responsive settings
 export const TAPE_BREAK_POINT = 1168; 
 export const DESKTOP_BREAK_POINT = 780;
-export const IPAD_BREAK_POINT = 550;
+export const IPAD_BREAK_POINT = 600;
 export const BIG_PHONE_BREAK_POINT = 450;
 
 // Animation speed

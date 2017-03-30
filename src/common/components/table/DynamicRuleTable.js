@@ -8,7 +8,8 @@ import SwitchDirectionButton from '../../containers/table/SwitchDirectionButtonC
 import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer';
 import {
   TABLE_INPUT_COL_STYLE,
-  TABLE_STATE_COL_STYLE
+  TABLE_STATE_COL_STYLE,
+  TABLE_ROW_NO_COL_STYLE
 } from '../../constants/components/Table';
 
 export const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
@@ -73,6 +74,8 @@ class DynamicRuleTable extends React.Component {
     return false;
   }
   render() {
+    var rowN = 0;
+
     return (
       <div className='card-of-rule-table'>
       <MuiThemeProvider>
@@ -100,6 +103,7 @@ class DynamicRuleTable extends React.Component {
                     <tr id={id} key={id} style={(this.props.highlightedRow === id)?
                       {backgroundColor: highlightColor }:{backgroundColor: normalColor}}>
                       <td>
+                        <p style={TABLE_ROW_NO_COL_STYLE.style}>{(++rowN) +"."}</p>
                         <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />
                       </td>
 

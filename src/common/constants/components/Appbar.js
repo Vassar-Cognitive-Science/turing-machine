@@ -110,8 +110,8 @@ export const APPBAR_STYLES = {
 			icon: < Restore / > ,
 		},
 		animationToggle: {
-			onTip: "Animation Turned On",
-			offTip: "Animation Turned Off",
+			onTip: "Animation On",
+			offTip: "Animation Off",
 			tipPosition: "bottom-right",
 			onIcon: < Visibility />,
 			offIcon: < VisibilityOff />
@@ -138,7 +138,7 @@ export const APPBAR_STYLES = {
 		},
 		clearTape: {
 			tip: "Clear Tape",
-			tipPosition: "bottom-left",
+			tipPosition: "bottom-right",
 			icon: < Clear / > ,
 		},
 		moreTools: {

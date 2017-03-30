@@ -196,6 +196,7 @@ function cleanSideEffects(state, clearRedo=true) {
 		machineReportError: "",
 		showReportedError: false,
 		highlightedRow: null,
+		highlightCorrespondingCell: -1,
 
 		redoEditHistory: (clearRedo) ? [] : state.redoEditHistory
 	})
@@ -239,9 +240,7 @@ function notifyAnyChangeInNormalMode(state, action) {
 		case actionTypes.SET_ROW_WRITE:
 		case actionTypes.SET_ROW_NEW_STATE:
 
-		case actionTypes.PRE_STEP_FORWARD:
 		case actionTypes.STEP_FORWARD:
-		case actionTypes.RECORD_INTERVAL:
 		case actionTypes.STEP_BACK:
 		case actionTypes.RESTORE:
 		case actionTypes.SILENT_RUN:
@@ -249,7 +248,7 @@ function notifyAnyChangeInNormalMode(state, action) {
 		case actionTypes.DELETE_TRIAL:
 		case actionTypes.ADD_TRIAL:
 		case actionTypes.RUN_TRIAL:
-			state.anyChangeInNormal = true;
+			state.anyChangeInNormal = !state.isEdittingTrial;
 			break;
 		case actionTypes.SAVE_TRIAL:
 			state.anyChangeInNormal = state.anyChangeInTrial;
