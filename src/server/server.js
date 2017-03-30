@@ -35,12 +35,14 @@ app.use(Express.static(path.join(__dirname + '/../../public')));
 app.use('/error', Express.static(path.join(__dirname + '/../../public')));
 
 app.get('/', function(req, res) {
-	res.sendFile(path.join(__dirname + "/../../public/index.html"));
+	// res.sendFile(path.join(__dirname + "/../../public/index.html"));
+	res.send(template({}))
 });
 
 
 app.get('/error/404', function(req, res) {
-	res.sendFile(path.join(__dirname + "/../../public/index.html"));
+	// res.sendFile(path.join(__dirname + "/../../public/index.html"));
+	res.send(template({}))
 });
 
 app.get('/:id', function(req, res) {
