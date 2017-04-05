@@ -158,9 +158,9 @@ function rootReducer (state=initialState, action, clearRedo) {
 	// undor/redo/clear side effect enhancer
 	switch(action.type) {
 		case actionTypes.INITIALIZAE_MACHINE:
-			return initializeMachine(state, action);
+			return initializeMachine(s5, action);
 		case actionTypes.LOAD_MACHINE:
-			return loadMachine(state, action);
+			return loadMachine(s5, action);
 		case actionTypes.UNDO:
 			return cleanSideEffects(undo(s5, action), false);
 		case actionTypes.REDO:
