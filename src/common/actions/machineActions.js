@@ -1,5 +1,6 @@
 import * as actionTypes from '../constants/ActionTypes';
 import { setAnimationSpeedAction } from './guiActions';
+import $ from 'jquery';
 
 export function initMachineAction() {
 	return {

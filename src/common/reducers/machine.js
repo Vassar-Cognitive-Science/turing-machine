@@ -23,6 +23,9 @@ read --- string, (should be from tape.read function
 
 **** Responsible for handling special character * Here **** 
 */
+
+// specific first
+
 export function matchRule(state, in_state, read) {
 	let ruleId = null;
 

@@ -15,6 +15,7 @@ export const HEAD_INPUT_ID = 'HEAD_INPUT_1';
 class Head extends React.Component {
   render() {
     return (
+      <div style={{display: "block"}}>
       <Draggable
         axis="x"
         handle=".header"
@@ -31,6 +32,7 @@ class Head extends React.Component {
           <MuiThemeProvider>
             <AutoComplete 
               className="head"
+              style={{textAlign: 'left'}}
               inputStyle={{"textAlign":"center", color: this.props.fontColor}}
               filter={(searchText, key) => (searchText === "" || key.startsWith(searchText))}
               id={HEAD_INPUT_ID}
@@ -48,6 +50,7 @@ class Head extends React.Component {
           <div className="shoulder"></div>
         </div>
       </Draggable>
+      </div>
       );
   }
 }

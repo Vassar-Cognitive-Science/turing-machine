@@ -67,6 +67,7 @@ class Tape extends React.Component {
               <div className="roll-left"><IconButton tooltip="Roll Left" 
                 onTouchTap={this.props.rollLeft} touch={true} style={TAPE_ICON_STYLES.style} 
                 iconStyle={TAPE_ICON_STYLES.mediumIcon} tooltipPosition="bottom-left" disabled={this.props.isRunning}><RollLeft /></IconButton></div>
+              <div style={{textAlign: 'center'}}>
               <Head />
               {populatedSquares(this.props.cellNum).map((i) => {
                 let mark = i;
@@ -74,6 +75,7 @@ class Tape extends React.Component {
                 if (i === this.props.cellNum - 1) mark = MARK_LAST;
                 return <Square key={standardizeCellId(i)} order={i} mark={mark} id={standardizeCellId(i)} />
                 })}
+              </div>
               <div className="roll-right"><IconButton tooltip="Roll Right" 
                 onTouchTap={this.props.rollRight} touch={true} style={TAPE_ICON_STYLES.style} 
                 iconStyle={TAPE_ICON_STYLES.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}><RollRight /></IconButton>

@@ -19,6 +19,7 @@
 }
 
 .square {
+  display: table-cell;
   background: #fff;
   border: 1px solid ;
   font-size: 24px;
@@ -49,7 +50,7 @@
 
 
 .header {
-  max-width: 340px;
+  display: inline-block;
 }
 
 .hair {
@@ -64,7 +65,7 @@
   border: 1px solid black;
   font-size: 18px;
   font-weight: bold;
-  margin: 0 auto; 
+  /*margin: 0 auto;*/
   height: auto;
   position: relative;
   text-align: center;

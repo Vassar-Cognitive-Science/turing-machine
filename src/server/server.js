@@ -16,6 +16,7 @@ import { createIdFromTimeStamp } from './utils';
 
 var MongoClient = require('mongodb').MongoClient;
 
+const POST_DATA_SIZE_LIMIE = '20mb';
 const databaseName = 'turingMachine';
 const databaseCollection = 'saves';
 const url = "mongodb://localhost:27017/" + databaseName;
