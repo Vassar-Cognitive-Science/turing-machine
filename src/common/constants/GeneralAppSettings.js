@@ -2,7 +2,7 @@
 export const MAX_STEP_LIMIT = 10000;
 export const MAX_TEST_STEP_LIMIT = 100000;
 export const MAX_CELL_NUM = 23;
-export const MIN_CELL_NUM = 4;
+export const MIN_CELL_NUM = 3;
 
 // Responsive settings
 export const TAPE_BREAK_POINT = 1168; 
