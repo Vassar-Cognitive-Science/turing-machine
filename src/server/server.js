@@ -16,21 +16,23 @@ import { createIdFromTimeStamp } from './utils';
 
 var MongoClient = require('mongodb').MongoClient;
 
-const POST_DATA_SIZE_LIMIE = '20mb';
+const POST_DATA_SIZE_LIMIE = '50mb';
 const databaseName = 'turingMachine';
 const databaseCollection = 'saves';
 const url = "mongodb://localhost:27017/" + databaseName;
 
 var app = new Express();
+app.use(BodyParser({limit: POST_DATA_SIZE_LIMIE}));
 
 const compiler = webpack(webpackConfig);
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: webpackConfig.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
 
 app.use(BodyParser.urlencoded({
-  extended: true
+  extended: true,
+  limit: POST_DATA_SIZE_LIMIE
 }));
-app.use(BodyParser.json()); 
+app.use(BodyParser.json({limit: POST_DATA_SIZE_LIMIE})); 
 
 app.use(Express.static(path.join(__dirname + '/../../public')));
 app.use('/error', Express.static(path.join(__dirname + '/../../public')));
@@ -97,7 +99,7 @@ app.all('*', function(req, res) {
   res.redirect('/error/404');
 });
 
-var server = app.listen(80, function() {
+var server = app.listen(3000, function() {
 	// var host = server.address().address;
 	var port = server.address().port;
 

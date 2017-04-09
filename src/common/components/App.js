@@ -51,13 +51,15 @@ class App extends React.Component {
 
 		this.setErrorMessage = (err) => {
 			this.setState({
-				errorMessage: err.toString()
+				errorMessage: err.toString(),
+				dialogOpen: true
 			});
 		};
 
 		this.setAnythingNewWithMachine = (flag) => {
 			this.setState({
-				anythingNewWithMachine: flag
+				anythingNewWithMachine: flag,
+				saveMachineResponseOpen: true
 			});
 		}
 	}
