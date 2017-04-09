@@ -13,8 +13,7 @@
 
 .tape-with-button {
   padding-top: 10px;
-  display: table;
-  width: 91%;
+  width: 100%;
   margin: 0 auto; 
 }
 
@@ -35,20 +34,20 @@
 
 .roll-left {
   display: inline-block;
-  height:135px;
+  height:100px;
   padding-right: 0px;
 }
 
 .roll-right {
   display: inline-block;
-  height:135px;
+  height:100px;
   padding-left: 0px;
 }
 
 /***  HEAD  ***/
 
 .header {
-  max-width: 70px;
+  max-width: 150px;
 }
 
 .hair {

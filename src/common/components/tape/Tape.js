@@ -64,7 +64,6 @@ class Tape extends React.Component {
               null}
 
             <div className="tape-with-button">
-              <div>
                 <Head />
                 <div className="roll-left">
                   <IconButton tooltip="Roll Left" 
@@ -85,7 +84,6 @@ class Tape extends React.Component {
                     iconStyle={TAPE_ICON_STYLES.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}>
                     <RollRight />
                   </IconButton>
-                </div>
               </div>
             </div>
 

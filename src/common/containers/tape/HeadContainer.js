@@ -3,8 +3,8 @@ import { setInternalStateAction, highlightCorrespondingCellAction } from '../../
 import { moveHeadAction } from '../../actions/guiActions';
 import Head from '../../components/tape/Head';
 import { getAllStates } from '../table/AutoCompleteFieldContainer';
-import { HALT, standardFilter } from '../../constants/SpecialCharacters';
-
+import { HALT } from '../../constants/SpecialCharacters';
+import { standardFilter } from '../table/AutoCompleteFieldContainer';
 
 const headOnStart = (e, ui, dispatch) => {
     dispatch(highlightCorrespondingCellAction(true));
@@ -25,8 +25,8 @@ const headOnDrag = (e, ui, dispatch) => {
   });
 }
 
-const onUpdateInput = (e, dispatch) => {
-    dispatch(setInternalStateAction(e.target.value));
+const onUpdateInput = (searchText, dispatch) => {
+    dispatch(setInternalStateAction(searchText));
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -41,7 +41,7 @@ const mapStateToProps = (state, ownProps) => {
     filter: filter,
     isRunning: state.isRunning,
     rightBoundary: state.rightBoundary,
-    // fontColor: (state.tapeInternalState === HALT) ? "#FF3D00" : "#212121", //#1976D2
+    fontColor: (state.tapeInternalState === HALT) ? "#1976D2" : "#212121", //#FF3D00
 
     isEdittingExpectedTape: state.isEdittingExpectedTape,
 
@@ -68,8 +68,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleStop: (e, ui) => {
     headOnStop(e, ui, dispatch)
   },
-  onUpdateInput: (e) => {
-    onUpdateInput(e, dispatch)
+  onUpdateInput: (searchText) => {
+    onUpdateInput(searchText, dispatch)
   },
 })
 

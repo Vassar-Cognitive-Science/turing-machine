@@ -47,8 +47,7 @@ class Square extends React.Component {
       onBlur={this.onBlur}
       onMouseEnter={this.onMouseEnter}
       onMouseLeave={this.onMouseLeave}
-      >
-      </input>
+      />
     );
   }
 }

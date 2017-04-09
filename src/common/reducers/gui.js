@@ -30,7 +30,7 @@ export function adjustHeadWidthHelper(state, text) {
 	} else {
 		// else expand head
 		let diff = textLength - defaultTextLength;
-		newWidth = INIT_HEAD_WIDTH + 10 * diff;
+		newWidth = INIT_HEAD_WIDTH + 12 * diff;
 		newLeftOffset = INIT_HEAD_LEFT_OFFSET - 5 * diff;
 	}
 
@@ -142,7 +142,7 @@ General correctness proof:
 */
 export function resizeScreenAndTape(state, action) {
 	let newScreenSize = action.screenWidth;
-	let newTapeSpace = newScreenSize * 0.91 - 96;
+	let newTapeSpace = newScreenSize * 0.92 - 96;
 	let newCellNum;
 	let new_state = state;
 
@@ -153,6 +153,8 @@ export function resizeScreenAndTape(state, action) {
 	} else {
 		newCellNum = MAX_CELL_NUM;
 	}
+
+
 
 	let originalPointer = new_state.tapePointer;
 

@@ -30,15 +30,23 @@ class Head extends React.Component {
         >
         <div className="header">
           <div className="hair" style={(this.props.hair_styles)?(this.props.hair_styles):INIT_HAIR_STYLES} ></div>
-            <input
+          <MuiThemeProvider>
+            <AutoComplete 
               className="head"
-              style={(this.props.head_styles)?(generate_head_style(this.props.head_styles)):generate_head_style()}
+              filter={this.props.filter}
               id={HEAD_INPUT_ID}
-              value={this.props.internalState}
-              onChange={this.props.onUpdateInput}
+              underlineStyle={{display: 'none'}}
+              searchText={this.props.internalState}
+              dataSource={this.props.dataSource} 
+              inputStyle={{textAlign: 'center', color: this.props.fontColor}}
+              style={{width: 150}}
+              textFieldStyle={(this.props.head_styles)?(generate_head_style(this.props.head_styles)):generate_head_style()}
+              onUpdateInput={this.props.onUpdateInput}
               maxLength={HEAD_INPUT_MAXLENGTH}
               disabled={this.props.isRunning || this.props.isEdittingExpectedTape}
-              />
+              >
+            </AutoComplete>
+          </MuiThemeProvider>
           <div className="neck"></div>
           <div className="shoulder"></div>
         </div>

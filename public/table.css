@@ -8,7 +8,7 @@
 	padding-bottom: 30px;
 	margin: 0 auto;
 	min-height: 330px;
-	max-height: 330px;
+	/*max-height: 330px; /*uncomment it to have smaller fixed table size*/*/
 	width: 90%;
 }
 
@@ -31,7 +31,7 @@ tbody td {
 }
 table tbody{
   display:block;
-  height:300px;
+  /*height:300px;  /*uncomment it to have smaller fixed table size*/*/ 
   width: 100%;
   overflow:auto;
 }

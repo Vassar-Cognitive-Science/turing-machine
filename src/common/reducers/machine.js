@@ -126,8 +126,8 @@ export function preStep(state, action) {
 	new_state = highlightCorrespondingRuleHelper(new_state, true);
 
 	// scroll into view
-	if (new_state.highlightedRow)
-		document.getElementById(new_state.highlightedRow).scrollIntoView(false);
+	// if (new_state.highlightedRow)
+	// 	document.getElementById(new_state.highlightedRow).scrollIntoView(false);
 
 	return new_state;
 }
@@ -166,10 +166,10 @@ export function stepHelper(state, silent) { // optimize performance
 	}
 
 	// are we running without animation?
-	if (!silent) {
-		// if with animation, scroll to the highlighted rule
-		document.getElementById(highlightedRow).scrollIntoView(false);
-	}
+	// if (!silent) {
+	// 	// if with animation, scroll to the highlighted rule
+	// 	document.getElementById(highlightedRow).scrollIntoView(false);
+	// }
 
 	// cache history, and highlight rule
 	state.highlightedRow = highlightedRow;

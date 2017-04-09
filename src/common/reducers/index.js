@@ -28,6 +28,7 @@ export const initialState = {
 	screenSize: 0,
 	// number of presented cells
 	cellNum: 0, 
+	leftBoundary: 0,
 	rightBoundary: 0, 
 	// x coordinate of Tape Head
 	headX: 0, 
