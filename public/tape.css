@@ -11,10 +11,15 @@
   padding-top: 5px;
 }
 
-.tape-with-button {
+.whole-tape-wrapper {
   padding-top: 10px;
   width: 100%;
-  margin: 0 auto; 
+  text-align: center;
+}
+
+.whole-tape {
+  margin: 0 auto;
+  display: inline-block;
 }
 
 .square {
@@ -48,6 +53,8 @@
 
 .header {
   max-width: 150px;
+  text-align: left;
+  position: relative;
 }
 
 .hair {

@@ -163,9 +163,11 @@ export function resizeScreenAndTape(state, action) {
 		screenSize: newScreenSize,
 		cellNum: newCellNum,
 		headX: HEAD_LEFT_BOUNDARY + midPoint * HEAD_MOVE_INTERVAL,
+
 		tapePointer: new_state.anchorCell + midPoint,
 		rightBoundary: HEAD_LEFT_BOUNDARY + (newCellNum-1) * HEAD_MOVE_INTERVAL,
 	});
+
 
 	// let offset = new_state.tapePointer - originalPointer;
 	// let moveLeft;

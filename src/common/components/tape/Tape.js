@@ -63,7 +63,8 @@ class Tape extends React.Component {
               <div className="step-count"><p>Step: {this.props.stepCount}</p></div> : 
               null}
 
-            <div className="tape-with-button">
+            <div className="whole-tape-wrapper">
+              <div className="whole-tape">
                 <Head />
                 <div className="roll-left">
                   <IconButton tooltip="Roll Left" 
@@ -85,6 +86,7 @@ class Tape extends React.Component {
                     <RollRight />
                   </IconButton>
               </div>
+             </div>
             </div>
 
             {(this.props.isEdittingTrial) ? 

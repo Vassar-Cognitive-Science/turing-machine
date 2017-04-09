@@ -15,7 +15,7 @@ export const HEAD_INPUT_ID = 'HEAD_INPUT_1';
 class Head extends React.Component {
   render() {
     return (
-      <div className='draggable-head'>
+      <div className='draggable-head' id='draggable-head'>
       <Draggable
         axis="x"
         handle=".header"
