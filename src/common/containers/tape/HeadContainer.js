@@ -25,8 +25,8 @@ const headOnDrag = (e, ui, dispatch) => {
   });
 }
 
-const onUpdateInput = (searchText, dispatch) => {
-    dispatch(setInternalStateAction(searchText));
+const onUpdateInput = (e, dispatch) => {
+    dispatch(setInternalStateAction(e.target.value));
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -42,7 +42,6 @@ const mapStateToProps = (state, ownProps) => {
     isRunning: state.isRunning,
     rightBoundary: state.rightBoundary,
     // fontColor: (state.tapeInternalState === HALT) ? "#FF3D00" : "#212121", //#1976D2
-    fontColor: (state.tapeInternalState === HALT) ? "#1976D2" : "#212121", //#FF3D00
 
     isEdittingExpectedTape: state.isEdittingExpectedTape,
 
@@ -54,6 +53,7 @@ const mapStateToProps = (state, ownProps) => {
       height: state.headHeight,
       width: state.headWidth,
       left: state.headLeftOffset,
+      color: (state.tapeInternalState === HALT) ? "#1976D2" : "#212121", //#FF3D00
     }
   };
 }
@@ -68,8 +68,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleStop: (e, ui) => {
     headOnStop(e, ui, dispatch)
   },
-  onUpdateInput: (searchText) => {
-    onUpdateInput(searchText, dispatch)
+  onUpdateInput: (e) => {
+    onUpdateInput(e, dispatch)
   },
 })
 

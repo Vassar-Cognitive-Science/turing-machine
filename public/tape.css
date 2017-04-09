@@ -19,7 +19,7 @@
 }
 
 .square {
-  display: table-cell;
+  display: inline-block;
   background: #fff;
   border: 1px solid ;
   font-size: 24px;
@@ -30,27 +30,25 @@
   margin-top: -1px;
   padding: 0;
   text-align: center;
+  outline-width: 0;
 }
 
 .roll-left {
-  display: table-cell;
-  vertical-align: middle;
+  display: inline-block;
   height:135px;
   padding-right: 0px;
 }
 
 .roll-right {
-  display: table-cell;
-  vertical-align: middle;
+  display: inline-block;
   height:135px;
   padding-left: 0px;
 }
 
 /***  HEAD  ***/
 
-
 .header {
-  display: inline-block;
+  max-width: 70px;
 }
 
 .hair {
@@ -65,7 +63,6 @@
   border: 1px solid black;
   font-size: 18px;
   font-weight: bold;
-  /*margin: 0 auto;*/
   height: auto;
   position: relative;
   text-align: center;

@@ -38,7 +38,7 @@ export function matchRule(state, in_state, read) {
 				break;
 			} else if (row.read === STAR) { // handles *
 				ruleId = state.rowsById[i];
-				break;
+				continue;
 			}
 
 		}
