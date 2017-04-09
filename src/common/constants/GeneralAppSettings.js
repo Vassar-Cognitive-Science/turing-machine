@@ -1,5 +1,5 @@
 // General
-export const MAX_STEP_LIMIT = 10000;
+export const MAX_STEP_LIMIT = 5000;
 export const MAX_TEST_STEP_LIMIT = 100000;
 export const MAX_CELL_NUM = 23;
 export const MIN_CELL_NUM = 3;
