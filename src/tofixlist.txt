@@ -47,4 +47,5 @@
 1. https://community.bitnami.com/t/cannot-connect-to-mongo-db/46110. -Done
 
 2017/4/9
-1. Tape gap
+1. Tape gap. -Done
+2. Sending huge object to server.
