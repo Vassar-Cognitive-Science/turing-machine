@@ -220,7 +220,6 @@ function cleanSideEffects(state, clearRedo=true) {
 		machineReportError: "",
 		showReportedError: false,
 		highlightedRow: null,
-		highlightedCellOrder: -1,
 
 		redoEditHistory: (clearRedo) ? [] : state.redoEditHistory
 	})
