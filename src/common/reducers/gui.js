@@ -159,6 +159,8 @@ export function resizeScreenAndTape(state, action) {
 		newCellNum = MAX_CELL_NUM;
 	}
 
+	if (newCellNum === state.cellNum) return new_state;
+
 	let originalPointer = new_state.tapePointer;
 
 	let midPoint = Math.floor(newCellNum / 2);
