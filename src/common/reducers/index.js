@@ -149,11 +149,12 @@ function rootReducer (state=initialState, action, clearRedo) {
 	s2 = tapeReducer(s1, action, false);
 	s3 = guiReducer(s2, action);
 	s4 = machineReducer(s3, action);
-	s5 = trialReducer(s4, action);
 
 	// edit mode enhancer
-	notifyAnyChangeInEditMode(s5, action);
-	notifyAnyChangeInNormalMode(s5, action);
+	notifyAnyChangeInEditMode(s4, action);
+	notifyAnyChangeInNormalMode(s4, action);
+
+	s5 = trialReducer(s4, action);
 
 	// undor/redo/clear side effect enhancer
 	switch(action.type) {
@@ -245,7 +246,6 @@ function notifyAnyChangeInEditMode(state, action) {
 }
 
 function notifyAnyChangeInNormalMode(state, action) {
-
 	switch(action.type) {
 		// case actionTypes.MOVE_HEAD:
 		case actionTypes.MOVE_TAPE_RIGHT:
@@ -273,7 +273,8 @@ function notifyAnyChangeInNormalMode(state, action) {
 		case actionTypes.RUN_TRIAL:
 			state.anyChangeInNormal = !state.isEdittingTrial;
 			break;
-		case actionTypes.SAVE_TRIAL:
+		// should be before reducer is called
+		case actionTypes.SAVE_TRIAL: 
 			state.anyChangeInNormal = state.anyChangeInTrial;
 			break;
 		default:
