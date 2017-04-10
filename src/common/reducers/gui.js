@@ -10,7 +10,7 @@ import {
 	HEAD_MOVE_INTERVAL,
   	HEAD_LEFT_BOUNDARY,
 } from '../constants/components/Head';
-import { moveLeftHelper, moveRightHelper } from './tape';
+import { moveLeftHelper, moveRightHelper, appendAfterTailHelper } from './tape';
 
 // define helper to optimize performance
 export function adjustHeadWidthHelper(state, text) {
@@ -154,8 +154,6 @@ export function resizeScreenAndTape(state, action) {
 		newCellNum = MAX_CELL_NUM;
 	}
 
-
-
 	let originalPointer = new_state.tapePointer;
 
 	let midPoint = Math.floor(newCellNum/2);
@@ -169,21 +167,26 @@ export function resizeScreenAndTape(state, action) {
 	});
 
 
-	// let offset = new_state.tapePointer - originalPointer;
-	// let moveLeft;
+	let offset = new_state.tapePointer - originalPointer;
+	let moveLeft;
 
-	// if (offset === 0) return new_state;
-	// if (offset < 0) { // need move right
-	// 	offset = -offset;
-	// 	moveLeft = false;
-	// } else { // need move left
-	// 	moveLeft = true;
-	// }
+	if (offset === 0) return new_state;
+	if (offset < 0) { // need move right
+		offset = -offset;
+		moveLeft = false;
+	} else { // need move left
+		moveLeft = true;
+	}
 
-	// while (offset--) {
-	// 	new_state = moveHeadHelper(new_state, moveLeft);
-	// }
-	// new_state.highlightedCellOrder = -1; // cancel any highlight from moveHead
+	while (offset--) {
+		new_state = moveHeadHelper(new_state, moveLeft);
+	}
+	new_state.highlightedCellOrder = -1; // cancel any highlight from moveHead
+
+	// append new cell if necessary 
+	while (new_state.anchorCell + new_state.cellNum > new_state.tapeTail) {
+		appendAfterTailHelper(new_state);
+	}
 
 	return new_state;
 }
