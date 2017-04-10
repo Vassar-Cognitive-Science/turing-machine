@@ -360,7 +360,7 @@ export function restore(state, action) {
 			stepCount: cached[0].stepCount,
 
 			// run history
-			runHistory: state.runHistory.slice(0, state.runHistory.length - 1),
+			runHistory: [],
 
 			// GUI
 			highlightedRow: cached[0].highlightedRow,
@@ -392,10 +392,6 @@ export function restore(state, action) {
 				delete new_state[id];
 			i--;
 		}
-
-		// delete this cell if necessary
-		if (!new_state.tapeCellsById.includes(tape.standardizeCellId(state.tapePointer)))  
-			delete new_state[tape.standardizeCellId(state.tapePointer)];
 
 		return new_state;
 	} else {

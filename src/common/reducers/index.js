@@ -29,7 +29,6 @@ export const initialState = {
 	// number of presented cells
 	cellNum: 0, 
 	rightBoundary: 0,
-	leftBoundary: 0, 
 	// x coordinate of Tape Head
 	headX: 0, 
 	/*** The above four are initialized by gui.resizeScreenAndTape  ***/
@@ -181,10 +180,34 @@ function initializeMachine(state, action) {
 }
 
 function loadMachine(state, action) {
-	return gui.resizeScreenAndTape(
-		action.preloadedState, 
-		{screenWidth: window.innerWidth}
-	);
+	// new schema where the state before running and to which step we've reached were sent
+	if (action.preloadedState.step !== undefined && action.preloadedState.state !== undefined) {
+		state = gui.resizeScreenAndTape(action.preloadedState.state, {
+			screenWidth: window.innerWidth
+		});
+		let step = action.preloadedState.step;
+		while (step--) {
+			state = machine.stepHelper(state, true);
+		}
+
+	} else { // compatible with old schema where the whole state was sent
+		state = gui.resizeScreenAndTape(
+			action.preloadedState, {
+				screenWidth: window.innerWidth
+			}
+		);
+
+		// not safe
+		// state.headX = action.preloadedState.headX;
+		// state.tapePointer = action.preloadedState.tapePointer;
+	}
+
+
+	// clear side effects
+	state.highlightedRow = null;
+	state.highlightedCellOrder = null;
+
+	return state;
 }
 
 /*
@@ -197,7 +220,7 @@ function cleanSideEffects(state, clearRedo=true) {
 		machineReportError: "",
 		showReportedError: false,
 		highlightedRow: null,
-		highlightCorrespondingCell: -1,
+		highlightedCellOrder: -1,
 
 		redoEditHistory: (clearRedo) ? [] : state.redoEditHistory
 	})
