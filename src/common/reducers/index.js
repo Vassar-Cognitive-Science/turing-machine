@@ -271,6 +271,7 @@ function notifyAnyChangeInNormalMode(state, action) {
 		case actionTypes.DELETE_TRIAL:
 		case actionTypes.ADD_TRIAL:
 		case actionTypes.RUN_TRIAL:
+		case actionTypes.LOAD_TRIAL:
 			state.anyChangeInNormal = !state.isEdittingTrial;
 			break;
 		// should be before reducer is called
