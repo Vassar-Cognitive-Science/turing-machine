@@ -10,7 +10,7 @@ import {
 	HEAD_MOVE_INTERVAL,
   	HEAD_LEFT_BOUNDARY,
 } from '../constants/components/Head';
-import { moveLeftHelper, moveRightHelper, appendAfterTailHelper } from './tape';
+import { moveLeftHelper, moveRightHelper, appendAfterTailHelper, moveTapeRightHelper } from './tape';
 
 // define helper to optimize performance
 export function adjustHeadWidthHelper(state, text) {
@@ -178,9 +178,19 @@ export function resizeScreenAndTape(state, action) {
 		moveLeft = true;
 	}
 
+	let alter = false;
+	if (offset == 1) alter = true;
+
 	while (offset--) {
 		new_state = moveHeadHelper(new_state, moveLeft);
 	}
+
+	// altering between removing cell to the left and to the right 
+	if (alter && new_state.cellNum % 2 == 0) {
+		new_state = moveTapeRightHelper(new_state);
+		new_state = moveHeadHelper(new_state, true);
+	}
+
 	new_state.highlightedCellOrder = -1; // cancel any highlight from moveHead
 
 	// append new cell if necessary 

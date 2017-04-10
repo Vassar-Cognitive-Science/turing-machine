@@ -444,20 +444,24 @@ None
 //
 Called when right handside button of tape is pressed
 */
-export function moveTapeRight(state, action) {
-	let new_state = Object.assign({}, state, {
-		anchorCell: state.anchorCell + 1,
-		tapePointer: state.tapePointer + 1
-	})
+export function moveTapeRightHelper(state, action) {
+	state.anchorCell++;
+	state.tapePointer++;
 
 	// see if we need to append a new cell
-	let position = new_state.cellNum + new_state.anchorCell - 1;
-	if (position >= new_state.tapeTail) {
-		appendAfterTailHelper(new_state, null);
+	let position = state.cellNum + state.anchorCell - 1;
+	if (position >= state.tapeTail) {
+		appendAfterTailHelper(state);
 	}
 
-	// return highlightCellAt(new_state, { order: new_state.cellNum - 1 });
-	return new_state;
+	return state;
+}
+
+
+export function moveTapeRight(state, action) {
+	let new_state = Object.assign({}, state);
+
+	return moveTapeRightHelper(new_state, action);
 }
 
 /*
