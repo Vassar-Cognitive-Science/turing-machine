@@ -470,20 +470,23 @@ action parameter:
 None
 
 */
-export function moveTapeLeft(state, action) {
-	let new_state = Object.assign({}, state, {
-		anchorCell: state.anchorCell - 1,
-		tapePointer: state.tapePointer - 1
-	})
+export function moveTapeLeftHelper(state, action) {
+	state.anchorCell--;
+	state.tapePointer--;
 
 	// see if we need to insert a new cell
-	let position = new_state.anchorCell;
-	if (position <= new_state.tapeHead) {
-		insertBeforeHeadHelper(new_state, null);
+	let position = state.anchorCell;
+	if (position <= state.tapeHead) {
+		insertBeforeHeadHelper(state);
 	}
 
-	// return highlightCellAt(new_state, { order: 0 });
-	return new_state;
+	return state;
+}
+
+export function moveTapeLeft(state, action) {
+	let new_state = Object.assign({}, state);
+
+	return moveTapeLeftHelper(new_state, action);
 }
 
 export function moveLeftHelper(state) {
