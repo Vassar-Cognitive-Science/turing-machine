@@ -142,7 +142,7 @@ General correctness proof:
 */
 export function resizeScreenAndTape(state, action) {
 	let newScreenSize = action.screenWidth;
-	let newTapeSpace = newScreenSize * 0.92 - 96;
+	let newTapeSpace = newScreenSize * 0.9 - 96;
 	let newCellNum;
 	let new_state = state;
 

@@ -67,15 +67,15 @@ export const APPBAR_STYLES = {
 			minWidth: DESKTOP_BREAK_POINT
 		},
 		ipad: {
-			maxWidth: DESKTOP_BREAK_POINT,
+			maxWidth: DESKTOP_BREAK_POINT-0.01,
 			minWidth: IPAD_BREAK_POINT
 		},
 		bigPhone: {
-			maxWidth: IPAD_BREAK_POINT,
+			maxWidth: IPAD_BREAK_POINT-0.01,
 			minWidth: BIG_PHONE_BREAK_POINT
 		},
 		smallPhone: {
-			maxWidth: BIG_PHONE_BREAK_POINT,
+			maxWidth: BIG_PHONE_BREAK_POINT-0.01,
 			titleStyle: {fontSize: 20}
 		}
 
