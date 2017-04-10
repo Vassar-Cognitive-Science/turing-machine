@@ -248,6 +248,9 @@ function notifyAnyChangeInEditMode(state, action) {
 function notifyAnyChangeInNormalMode(state, action) {
 	switch(action.type) {
 		// case actionTypes.MOVE_HEAD:
+		case actionTypes.UNDO:
+		case actionTypes.REDO:
+		
 		case actionTypes.MOVE_TAPE_RIGHT:
 		case actionTypes.MOVE_TAPE_LEFT:
 		case actionTypes.FILL_TAPE:
