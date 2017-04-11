@@ -51,22 +51,21 @@
 
 /***  HEAD  ***/
 
-.draggable-head:hover {
+.header {
+  max-width: 130px;
+  text-align: left;
+  position: relative;
+}
+.header:hover {
   cursor: move;
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
-.draggable-head:active { 
+.header:active { 
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
-}
-
-.header {
-  max-width: 130px;
-  text-align: left;
-  position: relative;
 }
 
 .hair {
