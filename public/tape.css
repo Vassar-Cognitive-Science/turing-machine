@@ -58,14 +58,14 @@
 }
 .header:hover {
   cursor: move;
-  cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
-}
-.header:active { 
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
+}
+.header:active { 
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
 }
 
 .hair {
