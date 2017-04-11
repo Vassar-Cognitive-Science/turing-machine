@@ -6,9 +6,24 @@ import { getAllStates } from '../table/AutoCompleteFieldContainer';
 import { HALT } from '../../constants/SpecialCharacters';
 import { standardFilter } from '../table/AutoCompleteFieldContainer';
 
+function pauseEvent(e){
+    if(e.stopPropagation) e.stopPropagation();
+    if(e.preventDefault) e.preventDefault();
+    e.cancelBubble=true;
+    e.returnValue=false;
+    return false;
+}
+
+function unFocus() {
+  if (document.selection) {
+    document.selection.empty()
+  } else {
+    window.getSelection().removeAllRanges()
+  }
+} 
+
 const headOnStart = (e, ui, dispatch) => {
     dispatch(highlightCorrespondingCellAction(true));
-    window.getSelection().removeAllRanges()
 }
 
 const headOnStop = (e, ui, dispatch) => {
@@ -16,13 +31,14 @@ const headOnStop = (e, ui, dispatch) => {
 }
 
 const headOnDrag = (e, ui, dispatch) => {
-  window.getSelection().removeAllRanges()
   dispatch(function(dispatch, getState) {
     if (ui.x < getState().headX)
       dispatch(moveHeadAction(true)); // left
     else if (ui.x > getState().headX)
       dispatch(moveHeadAction(false)) // right
   });
+  pauseEvent(e);
+  unFocus();
 }
 
 const onUpdateInput = (searchText, dispatch) => {

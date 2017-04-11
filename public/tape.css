@@ -67,11 +67,6 @@
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
-.draggable-head:active { 
-  cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
-}
 
 .hair {
   height: 5px;
@@ -88,6 +83,18 @@
   height: auto;
   position: relative;
   text-align: center;
+}
+.head:hover {
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+.head:active { 
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  pointer-events:none;
 }
 
 .neck {
