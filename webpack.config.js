@@ -15,16 +15,16 @@ module.exports = {
   plugins: [
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        beautify: false,
-        comments: false,
-        compress: {
-          warnings: false,
-          drop_console: true,
-          collapse_vars: true,
-          reduce_vars: true,
-        }
-      })
+      // new webpack.optimize.UglifyJsPlugin({
+      //   beautify: false,
+      //   comments: false,
+      //   compress: {
+      //     warnings: false,
+      //     drop_console: true,
+      //     collapse_vars: true,
+      //     reduce_vars: true,
+      //   }
+      // })
   ],
   module: {
     loaders: [

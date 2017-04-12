@@ -76,6 +76,7 @@
 }
 
 .head {
+  font-family: monospace;
   background: #fff;
   border: 1px solid black;
   font-size: 18px;

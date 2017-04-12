@@ -38,13 +38,11 @@ app.use(Express.static(path.join(__dirname + '/../../public')));
 app.use('/error', Express.static(path.join(__dirname + '/../../public')));
 
 app.get('/', function(req, res) {
-	// res.sendFile(path.join(__dirname + "/../../public/index.html"));
 	res.send(template({}))
 });
 
 
 app.get('/error/404', function(req, res) {
-	// res.sendFile(path.join(__dirname + "/../../public/index.html"));
 	res.send(template({}))
 });
 
@@ -100,7 +98,6 @@ app.all('*', function(req, res) {
 });
 
 var server = app.listen(80, function() {
-	// var host = server.address().address;
 	var port = server.address().port;
 
 	console.log("Example app listening at http://localhost:%s", port);

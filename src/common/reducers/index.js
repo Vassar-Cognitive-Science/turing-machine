@@ -251,6 +251,7 @@ function notifyAnyChangeInNormalMode(state, action) {
 		case actionTypes.UNDO:
 		case actionTypes.REDO:
 		
+		case actionTypes.MOVE_HEAD:
 		case actionTypes.MOVE_TAPE_RIGHT:
 		case actionTypes.MOVE_TAPE_LEFT:
 		case actionTypes.FILL_TAPE:
