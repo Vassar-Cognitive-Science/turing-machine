@@ -29,7 +29,7 @@ export function adjustHeadWidthHelper(state, text) {
 
 	// if < default text length
 	// set head view to initial head view
-	let charSize = 9;
+	let charSize = 10;
 	if (textLength < defaultTextLength) {
 		newWidth = INIT_HEAD_WIDTH;
 		newLeftOffset = INIT_HEAD_LEFT_OFFSET;

@@ -38,7 +38,7 @@ class Head extends React.Component {
               underlineStyle={{display: 'none'}}
               searchText={this.props.internalState}
               dataSource={this.props.dataSource} 
-              inputStyle={{textAlign: 'center', color: this.props.fontColor, fontFamily: "Roboto Mono"}}
+              inputStyle={{textAlign: 'center', color: this.props.fontColor, fontFamily: "Roboto Mono", fontSize: 10}}
               style={{width: 150}}
               textFieldStyle={(this.props.head_styles)?(generate_head_style(this.props.head_styles)):generate_head_style()}
               onUpdateInput={this.props.onUpdateInput}
