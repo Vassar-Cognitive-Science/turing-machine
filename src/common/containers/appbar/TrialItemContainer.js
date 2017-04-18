@@ -36,7 +36,7 @@ const downloadTrial = (dispatch, ownProps) => {
 		let trial = getState()[ownProps.id];
 
 		// make a shallow copy that does not have id and testReportId
-		trial = Object.assign({}, trial);
+		trial = [Object.assign({}, trial)];
 		delete trial.id;
 		delete trial.testReportId;
 

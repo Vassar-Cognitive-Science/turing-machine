@@ -25,7 +25,7 @@ const handleSave = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-	let file = (state[state.edittingTrialId]) ? state[state.edittingTrialId].sourceFile : null;
+	let file = (state[state.edittingTrialId]) ? state[state.edittingTrialId].name : null;
 
 	return {
 		showReportedError: state.showReportedError,

@@ -153,6 +153,7 @@ function rootReducer (state=initialState, action, clearRedo) {
 	// edit mode enhancer
 	notifyAnyChangeInEditMode(s4, action);
 	notifyAnyChangeInNormalMode(s4, action);
+	clearRunHistory(s4, action);
 
 	s5 = trialReducer(s4, action);
 
@@ -230,6 +231,21 @@ function cleanSideEffects(state, clearRedo=true) {
 /*
 Helper function that notifies any changes to tape in edit mode to the state
 */
+
+function clearRunHistory(state, action) {
+	switch(action.type) {
+		case actionTypes.MOVE_HEAD:
+		case actionTypes.FILL_TAPE:
+		case actionTypes.SET_INTERNAL_STATE:
+		case actionTypes.INITIALIZAE_TAPE:
+		case actionTypes.MOVE_TAPE_LEFT:
+		case actionTypes.MOVE_TAPE_RIGHT:
+			state.runHistory = [];
+			state.stepCount = 0;
+		default:
+			break;
+	}
+}
 
 function notifyAnyChangeInEditMode(state, action) {
 	switch(action.type) {

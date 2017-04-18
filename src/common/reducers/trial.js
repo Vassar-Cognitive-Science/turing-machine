@@ -93,7 +93,7 @@ function createTrial(id,
 					expectedTapePoiner, // optional, automatically handled
 					startTapeHead,
 					expectedTapeHead, // optional, automatically handled
-					sourceFile
+					name
 					) {
 
 	let pointer = (tapePointer !== undefined && tapePointer !== null) ? tapePointer : 0;
@@ -111,8 +111,8 @@ function createTrial(id,
 		// expected Head pointer, not required
 		expectedTapePoiner: (expectedTapePoiner !== undefined && expectedTapePoiner !== null) ? expectedTapePoiner : pointer,
 
-		// record name of source file
-		sourceFile: (sourceFile) ? sourceFile : id+'.json',
+		// record name 
+		name: (name) ? name : id,
 
 		// tape head
 		startTapeHead: (startTapeHead !== undefined && startTapeHead !== null) ? startTapeHead : 0,
@@ -135,7 +135,7 @@ export function cloneTrial(trial) {
 		tapePointer: trial.tapePointer,
 		expectedTapePoiner: trial.expectedTapePoiner,
 
-		sourceFile: trial.sourceFile,
+		name: trial.name,
 
 		startTapeHead: trial.startTapeHead,
 		expectedTapeHead: trial.expectedTapeHead,
@@ -144,12 +144,12 @@ export function cloneTrial(trial) {
 	};
 }
 
-function createTestReport(sourceId, sourceFile, statusCode, feedback, stepCount, id) {
+function createTestReport(sourceId, name, statusCode, feedback, stepCount, id) {
 	return {
 		// trial id
 		sourceId: sourceId,
 		// source file
-		sourceFile: sourceFile,
+		name: name,
 		// result 
 		status: statusCode,
 		// short feedback
@@ -234,7 +234,7 @@ export function addTrial(state, action) {
 							action.expectedTapePoiner,
 							action.startTapeHead,
 							action.expectedTapeHead,
-							action.sourceFile);
+							action.name);
 
 	new_state[action.id] = trial;
 
@@ -271,7 +271,7 @@ export function runTrial(state, action) {
 		if (sandbox.stepCount > MAX_TEST_STEP_LIMIT) {
 			return reportTestResult(state, {
 				sourceId: action.sourceId,
-				sourceFile: trial.sourceFile,
+				name: trial.name,
 				status: STATUS_CODE_TIMEOUT,
 				feedback: EXCEED_MAX_TEST_STEP_LIMIT,
 				stepCount: sandbox.stepCount,
@@ -307,7 +307,7 @@ export function runTrial(state, action) {
 	// generate report
 	return reportTestResult(state, {
 		sourceId: action.sourceId,
-		sourceFile: trial.sourceFile,
+		name: trial.name,
 		status: result.status,
 		feedback: result.feedback,
 		stepCount: sandbox.stepCount,
@@ -324,7 +324,7 @@ export function reportTestResult(state, action) {
 	let id = standardizeTestReportId(action.sourceId);
 	new_state[id] = createTestReport(
 									action.sourceId, // trial id
-									action.sourceFile, // trial file
+									action.name, // trial file
 									action.status,  // statue
 									action.feedback, // feedback
 									action.stepCount, // total steps experienced

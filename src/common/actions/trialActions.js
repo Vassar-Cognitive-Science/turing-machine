@@ -15,7 +15,7 @@ export function addTrialAction(id,
 							   expectedTapePoiner,
 							   startTapeHead,
 							   expectedTapeHead,
-							   sourceFile) {
+							   name) {
 	return {
 		type: actionTypes.ADD_TRIAL,
 		id: id,
@@ -30,7 +30,7 @@ export function addTrialAction(id,
 		expectedTapePoiner: expectedTapePoiner,
 
 		// record name of source file
-		sourceFile: sourceFile,
+		name: name,
 
 		// tape head
 		startTapeHead: startTapeHead,
