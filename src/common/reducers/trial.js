@@ -100,6 +100,8 @@ function createTrial(id,
 
 	return {
 		id: id,
+		// record name 
+		name: (name) ? name : id,
 
 		startState: (startState) ? startState : "0",
 		expectedState: HALT,
@@ -111,8 +113,6 @@ function createTrial(id,
 		// expected Head pointer, not required
 		expectedTapePoiner: (expectedTapePoiner !== undefined && expectedTapePoiner !== null) ? expectedTapePoiner : pointer,
 
-		// record name 
-		name: (name) ? name : id,
 
 		// tape head
 		startTapeHead: (startTapeHead !== undefined && startTapeHead !== null) ? startTapeHead : 0,

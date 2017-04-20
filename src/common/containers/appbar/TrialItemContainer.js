@@ -36,9 +36,11 @@ const downloadTrial = (dispatch, ownProps) => {
 		let trial = getState()[ownProps.id];
 
 		// make a shallow copy that does not have id and testReportId
-		trial = [Object.assign({}, trial)];
+		trial = Object.assign({}, trial);
 		delete trial.id;
 		delete trial.testReportId;
+
+		trial = [trial];
 
 		// encode
 		let data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trial, null, 4));
