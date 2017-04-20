@@ -1,5 +1,3 @@
-// import JSZip from 'jszip';
-// import FileSaver from 'file-saver';
 import { connect } from 'react-redux';
 import AppToolBar from '../../components/appbar/AppBar';
 import { initializeTapeAction } from '../../actions/tapeActions';
@@ -147,56 +145,6 @@ const downloadAllTests = (dispatch, ownProps) => {
 	});
 }
 
-
-/* Zip version */
-// const downloadAllTests = (dispatch, ownProps) => {
-// 	dispatch((dispatch, getState) => {
-// 		let state = getState();
-// 		let zip = new JSZip();
-// 		for (let i = 0; i < state.testsById.length; i++) {
-// 			let id = state.testsById[i];
-// 			let trial = Object.assign({}, state[id]);
-
-// 			delete trial.id;
-// 			let filename = trial.name + '.json';
-
-// 			let data = JSON.stringify(trial, null, 4);
-
-// 			zip.file(filename, data);
-// 		}
-
-// 		zip.generateAsync({
-// 				type: "blob"
-// 			})
-// 			.then(function(content) {
-// 				FileSaver.saveAs(content, "turing_machine_tests.zip");
-// 			});
-// 	});
-// }
-
-// function onReaderLoad(event) {
-// 	let trial = JSON.parse(event.target.result);
-
-// 	event.target.dispatch(function(dispatch, getState) {
-// 			let id = standardizeTestId(TEST_ID++);
-// 			// find suitable id
-// 			while (getState().testsById.includes(id))
-// 				id = standardizeTestId(TEST_ID++);
-
-// 			// add in only these attributes
-// 			dispatch(addTrialAction(id,
-// 				trial.startState,
-// 				trial.startTape,
-// 				trial.expectedTape,
-// 				trial.tapePointer,
-// 				trial.expectedTapePoiner,
-// 				trial.startTapeHead,
-// 				trial.expectedTapeHead,
-// 				event.target.name
-// 			));
-// 	});
-// }
-/* Zip version */
 
 function onReaderLoad(event) {
 	let trials = JSON.parse(event.target.result);

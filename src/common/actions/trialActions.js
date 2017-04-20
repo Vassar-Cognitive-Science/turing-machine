@@ -90,3 +90,10 @@ export function saveTrialAction() {
 		type: actionTypes.SAVE_TRIAL
 	}
 }
+
+export function setTrialNameAction(name) {
+	return {
+		type: actionTypes.CHANGE_TRIAL_NAME,
+		name: name
+	}
+}

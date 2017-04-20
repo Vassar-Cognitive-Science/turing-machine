@@ -16,11 +16,13 @@ import Divider from 'material-ui/Divider';
 import List from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
 import Subheader from 'material-ui/Subheader';
+import TextField from 'material-ui/TextField';
 
 import {
-  cyan400 as primaryColor,
+  cyan500 as primaryColor,
   pink400 as secondaryColor,
-  indigo800 as promptColor
+  indigo800 as promptColor,
+  grey400 as disabledColor
 } from 'material-ui/styles/colors';
 
 export const MARK_FIRST = "first";
@@ -88,12 +90,6 @@ class Tape extends React.Component {
               </div>
              </div>
             </div>
-
-            {(this.props.isEdittingTrial) ? 
-              <div className="step-count">
-              <p>Tape Pointer: {this.props.tapePointer}</p>
-              </div> : 
-              null}
           </Card>
           </div>
         </MuiThemeProvider>
@@ -102,15 +98,24 @@ class Tape extends React.Component {
           {(this.props.isEdittingTrial) ?
             <Card className="editting-mode-card">
             <Subheader style={{color: promptColor}}>
-              {"Target: \"" + this.props.edittingFile + "\" --- " +((this.props.isEdittingExpectedTape) ? 
-                "Expected Tape" + ((this.props.anyChangeInTrial)?"*":""): 
-                "Start Tape" + ((this.props.anyChangeInTrial)?"*":""))}
+              { "Editting: " + ((this.props.isEdittingExpectedTape) ? 
+                "Expected Tape": 
+                "Start Tape")}
             </Subheader>
             <List className="editting-mode-button-group">
+            <TextField
+                fullWidth={true}
+                inputStyle={{textAlign: "center"}}
+                defaultValue={this.props.edittingTrial}
+                floatingLabelText="Test Name"
+                floatingLabelStyle={{color: primaryColor}}
+                onChange={this.props.setTrialName}
+              />
             <MenuItem 
               primaryText="Save" 
-              style={{textAlign: "center", color: primaryColor}}
+              style={{textAlign: "center", color: (this.props.anyChangeInTrial) ? primaryColor : disabledColor}}
               onTouchTap={this.props.handleSave}
+              disabled={!this.props.anyChangeInTrial}
               />
             <Divider />
             <MenuItem  

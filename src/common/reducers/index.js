@@ -14,6 +14,7 @@ export const initialState = {
 	isEdittingTrial: false,
 	isEdittingExpectedTape: false,
 	edittingTrialId: null,
+	edittingTrialName: null,
 	anyChangeInTrial: false,
 
 	// hold the state of original tape before entering edit mode
@@ -254,6 +255,7 @@ function notifyAnyChangeInEditMode(state, action) {
 		case actionTypes.INITIALIZAE_TAPE:
 		case actionTypes.SET_INTERNAL_STATE:
 		case actionTypes.FILL_TAPE:
+		case actionTypes.CHANGE_TRIAL_NAME:
 			state.anyChangeInTrial = state.isEdittingTrial;
 			break;
 		default:
@@ -589,6 +591,9 @@ function trialReducer(state, action) {
 			break;
 		case actionTypes.CHANGE_EDITTING_TARGET:
 			new_state = trial.changeEdittingTarget(state, action);
+			break;
+		case actionTypes.CHANGE_TRIAL_NAME:
+			new_state = trial.setTrialName(state, action);
 			break;
 		case actionTypes.SAVE_TRIAL:
 			new_state = trial.saveTrial(state, action);

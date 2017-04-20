@@ -241,6 +241,13 @@ export function addTrial(state, action) {
 	return new_state;
 }
 
+
+export function setTrialName(state, action) {
+	return Object.assign({}, state, {
+		edittingTrialName: action.name
+	})
+}
+
 /*
 Handles what to do before a trial runs
 1. Clear previous test report if this trial is runned
@@ -458,6 +465,8 @@ export function toggleEditMode(state, action) {
 		new_state.edittingTrialId = action.id;
 		let trial = new_state[action.id];
 
+		new_state.edittingTrialName = trial.name;
+
 		// we record the tape from normal mode
 		new_state.originalTape = tape.extractTape(new_state); 
 		// we create two tapes, startTape and expectedTape from the selected trial
@@ -470,6 +479,7 @@ export function toggleEditMode(state, action) {
 		let testReportId = new_state[new_state.edittingTrialId].testReportId;
 		// clear
 		new_state.edittingTrialId = null;
+		new_state.edittingTrialName = null;
 
 		let originalTape = new_state.originalTape;
 
@@ -507,7 +517,7 @@ export function changeEdittingTarget(state, action) {
 	return loadTrialTapeHelper(new_state, target);
 }
 
-export function saveTrialHelper(oldTrial, startTape, expectedTape) {
+export function saveTrialHelper(oldTrial, startTape, expectedTape, newName) {
 	let trial = cloneTrial(oldTrial);
 
 	// plus one so that it is no longer sentinel
@@ -525,6 +535,8 @@ export function saveTrialHelper(oldTrial, startTape, expectedTape) {
 	trial.tapePointer = startTape.tapePointer;
 	trial.expectedTapePointer = expectedTape.tapePointer;
 
+	trial.name = newName;
+
 	return trial;
 }
 
@@ -534,6 +546,7 @@ export function saveTrial(state, action) {
 	});
 
 	let id = new_state.edittingTrialId;
+	let newName = new_state.edittingTrialName;
 	let oldTrial = new_state[id];
 
 	if (new_state.isEdittingExpectedTape) {
@@ -544,7 +557,7 @@ export function saveTrial(state, action) {
 		new_state.edittingStartTape = tape.extractTape(new_state);
 	}
 
-	new_state[id] = saveTrialHelper(oldTrial, new_state.edittingStartTape, new_state.edittingExpectedTape);
+	new_state[id] = saveTrialHelper(oldTrial, new_state.edittingStartTape, new_state.edittingExpectedTape, newName);
 
 	return new_state;
 }

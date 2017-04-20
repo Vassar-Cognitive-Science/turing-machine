@@ -72,4 +72,5 @@ export const CLEAR_TEST_RESULTS = 'CLEAR_TEST_RESULTS';
 export const TOGGLE_EDIT_MODE = 'TOGGLE_EDIT_MODE';
 export const CHANGE_EDITTING_TARGET = 'CHANGE_EDITTING_TARGET';
 export const SAVE_TRIAL = 'SAVE_TRIAL';
+export const CHANGE_TRIAL_NAME = 'CHANGE_TRIAL_NAME';
 /* Actions for Trials*/
