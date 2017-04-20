@@ -127,6 +127,8 @@ function createTrial(id,
 export function cloneTrial(trial) {
 	return {
 		id: trial.id,
+		name: trial.name,
+		
 		startState: trial.startState,
 		expectedState: trial.expectedState,
 		startTape: trial.startTape.slice(),
@@ -135,7 +137,6 @@ export function cloneTrial(trial) {
 		tapePointer: trial.tapePointer,
 		expectedTapePoiner: trial.expectedTapePoiner,
 
-		name: trial.name,
 
 		startTapeHead: trial.startTapeHead,
 		expectedTapeHead: trial.expectedTapeHead,
