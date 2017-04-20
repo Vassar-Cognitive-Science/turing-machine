@@ -39,6 +39,7 @@ import {
 	teal300 as saveTestsColor,
 	pink400 as snackBarSuccessFulColor,
 	grey50 as snackBarNothingChangeColor,
+	deepOrange900 as deleteTestsColor
  } from 'material-ui/styles/colors';
 
 
@@ -242,6 +243,10 @@ export const DRAWER_STYLE = {
 		saveTests: {
 			label: "Download Tests",
 			icon: <ExportTests color={saveTestsColor} />
+		},
+		deleteTests: {
+			label: "Delete All Tests",
+			icon: <Clear color={deleteTestsColor} />
 		}
 	}
 };

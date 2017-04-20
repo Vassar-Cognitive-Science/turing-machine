@@ -7,7 +7,8 @@ import {
 	runTrialAction,
 	toggleIsRunningTrialAction,
 	clearTestResultAction,
-	preRunTrialAction
+	preRunTrialAction,
+	deleteTrialAction
 } from '../../actions/trialActions';
 import {
 	preStepAction,
@@ -95,6 +96,18 @@ const handleAddTest = (dispatch, ownProps) => {
 		// add a blank trial
 		dispatch(addTrialAction(id));
 	});
+}
+
+const handleDeleteTests = (dispatch) => {
+	dispatch(function(dispatch, getState) {
+		let tests = getState().testsById;
+		for (let i = 0; i < tests.length; i++) {
+			dispatch(deleteTrialAction(tests[i]));
+		}
+	});
+
+	// reset
+	TEST_ID = 1;
 }
 
 const handleRunAllTests = (dispatch, ownProps) => {
@@ -236,6 +249,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleRunAllTests: () => { handleRunAllTests(dispatch, ownProps) },
 	downloadAllTests: () => { downloadAllTests(dispatch, ownProps) },
 	uploadTests: () => { uploadTests(dispatch) },
+	handleDeleteTests: () => { handleDeleteTests(dispatch) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar);
