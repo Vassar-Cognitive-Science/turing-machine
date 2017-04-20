@@ -1,6 +1,11 @@
 import * as tape from './tape';
 import * as gui from './gui';
-import { EXCEED_MAX_TEST_STEP_LIMIT, DIFF_FINAL_STATE, DIFF_FINAL_TAPE } from '../constants/Messages';
+import {
+	EXCEED_MAX_TEST_STEP_LIMIT,
+	DIFF_FINAL_STATE,
+	DIFF_FINAL_TAPE,
+	UNDEFINED_RULE
+} from '../constants/Messages';
 
 import { HALT } from '../constants/SpecialCharacters';
 import { MAX_TEST_STEP_LIMIT } from '../constants/GeneralAppSettings';
@@ -289,7 +294,13 @@ export function runTrial(state, action) {
 		// match rule
 		let ruleId = matchRule(state, sandbox.tapeInternalState, tape.read(sandbox))
 		if (ruleId === null) {
-			break;
+			return reportTestResult(state, {
+				sourceId: action.sourceId,
+				name: trial.name,
+				status: STATUS_CODE_FAIL,
+				feedback: UNDEFINED_RULE,
+				stepCount: sandbox.stepCount,
+			});
 		}
 		let rule = state[ruleId];
 
