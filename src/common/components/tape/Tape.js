@@ -64,6 +64,7 @@ class Tape extends React.Component {
                                               }
                                               />
                                               <TextField
+                                                id="test-name-input"
                                                 inputStyle={{fontSize: 16}}
                                                 style={{width:"25%"}}
                                                 defaultValue={this.props.edittingTrial}

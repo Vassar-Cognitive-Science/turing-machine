@@ -21,8 +21,9 @@ const changeEdittingTarget = (dispatch) => {
 	dispatch(changeEdittingTargetAction());
 }
 
-const handleExit = (dispatch) => {
+const handleExit = (dispatch, ownProps) => {
 	dispatch(toggleEditModeAction());
+	ownProps.trialDrawerToggleCallback();
 }
 
 const handleSave = (dispatch) => {
@@ -58,7 +59,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	rollLeft: () => { rollLeft(dispatch) },
   	rollRight: () => { rollRight(dispatch) },
   	changeEdittingTarget: () => { changeEdittingTarget(dispatch) },
-  	handleExit: () => { handleExit(dispatch) },
+  	handleExit: () => { handleExit(dispatch, ownProps) },
   	handleSave: () => { handleSave(dispatch) },
   	setTrialName: (evt, newVal) => { setTrialName(evt, newVal, dispatch) }
 })

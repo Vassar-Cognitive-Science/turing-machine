@@ -2,12 +2,20 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
+import Divider from 'material-ui/Divider';
+import Drawer from 'material-ui/Drawer';
+import Subheader from 'material-ui/Subheader';
+import { List } from 'material-ui/List';
+import IconButton from 'material-ui/IconButton';
+import MenuItem from 'material-ui/MenuItem';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+import { ProgressCircle } from './appbar/AppBar';
 import AppBar from '../containers/appbar/AppBarContainer';
+import TrialItem from '../containers/appbar/TrialItemContainer';
 import Tape from '../containers/tape/TapeContainer';
 import DynamicRuleTable from '../containers/table/DynamicRuleTableContainer';
-import { APPBAR_STYLES } from '../constants/components/Appbar';
+import { DRAWER_STYLE, APPBAR_STYLES } from '../constants/components/Appbar';
 
 const snackBarMessage = {
 	successful: "Saved Successfully!",
@@ -23,7 +31,20 @@ class App extends React.Component {
 			anythingNewWithMachine: false,
 			dialogOpen: false,
 			errorMessage: "",
+			trialDrawerToggle: false,
 		};
+
+		this.handleTrialDrawerToggle = () => {
+			this.setState({
+				trialDrawerToggle: !this.state.trialDrawerToggle
+			});
+		};
+
+		this.handleTrialDrawerClose = () => {
+			this.setState({
+				trialDrawerToggle: false
+			});
+		}
 
 		this.handleSaveMachineResponseOn = () => {
 			this.setState({
@@ -99,11 +120,53 @@ class App extends React.Component {
 		        </Dialog>
         		</MuiThemeProvider>
 
+        		<MuiThemeProvider>
+					<Drawer
+			          docked={false}
+			          style={DRAWER_STYLE.style}
+			          open={this.state.trialDrawerToggle}
+			          onRequestChange={(open) => this.setState({trialDrawerToggle: open})}
+			        >
+			        <Subheader style={DRAWER_STYLE.subheadStyle}>{DRAWER_STYLE.subheadText}</Subheader>
+			        <Divider />
+			        <div style={DRAWER_STYLE.listStyle}>
+			        <List>
+			        	{this.props.testsById.map((obj) => {
+			        		if (this.props.runningTrials.includes(obj.id))  {
+			        			return (<MenuItem primaryText={obj.name} key={obj.id} rightIcon={ProgressCircle()}/>);
+			        		}
+			        		return (<TrialItem id={obj.id} key= {obj.id} name={obj.name} drawerCloseCallBack={this.handleTrialDrawerClose}/>)
+			        	})}
+			        </List>
+			        </div>
+			        <div style={DRAWER_STYLE.controlStyle}>
+			        <Divider />
+			        {(this.props.isRunningTrial) ?
+						<MenuItem primaryText={DRAWER_STYLE.buttons.runTrial.runningLabel} leftIcon={ProgressCircle()} /> :
+						<MenuItem primaryText={DRAWER_STYLE.buttons.runTrial.label} leftIcon={DRAWER_STYLE.buttons.runTrial.icon}
+				 			onTouchTap={this.props.handleRunAllTests}/>}
+
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.addTrial.label} leftIcon={DRAWER_STYLE.buttons.addTrial.icon}
+			         onTouchTap={this.props.handleAddTest}/>
+			        <Divider />
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.uploadTests.label} 
+			        	leftIcon={DRAWER_STYLE.buttons.uploadTests.icon} 
+			        	onTouchTap={this.props.uploadTests} />
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.saveTests.label} leftIcon={DRAWER_STYLE.buttons.saveTests.icon} onTouchTap={this.props.downloadAllTests} />
+
+			        <Divider />
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.deleteTests.label} leftIcon={DRAWER_STYLE.buttons.deleteTests.icon}
+			         onTouchTap={this.props.handleDeleteTests}/>
+			        </div>
+			        </Drawer>
+		    </MuiThemeProvider>
+
   				<AppBar snackBarPopUpCallback={this.handleSaveMachineResponseOn} 
   						errorMessagePopUpCallback={this.handleDialogOpen}
   						setErrorMessageCallback={this.setErrorMessage}
-  						snackBarSetAnythingNewCallback={this.setAnythingNewWithMachine}/>
-	    		<Tape />
+  						snackBarSetAnythingNewCallback={this.setAnythingNewWithMachine}
+  						trialDrawerToggleCallback={this.handleTrialDrawerToggle}/>
+	    		<Tape trialDrawerToggleCallback={this.handleTrialDrawerToggle}/>
 	    		{(this.props.isEdittingTrial) ? <div className='blank-background'></div> : <DynamicRuleTable />}
   			</div>
   		);
