@@ -84,7 +84,7 @@ class TrialItem extends React.Component {
 			<MuiThemeProvider>
 			<ListItem 
 				  innerDivStyle={{paddingBottom: 10}}
-				  primaryText={this.props.id}
+				  primaryText={this.props.name}
 				  secondaryText={(this.props.statusCode !== STATUS_CODE_PASS && 
 				  				  this.props.statusCode !== STATUS_CODE_FAIL &&
 				  				  this.props.statusCode !== STATUS_CODE_TIMEOUT) ? 

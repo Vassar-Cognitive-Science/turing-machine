@@ -47,18 +47,41 @@ class Tape extends React.Component {
               {this.props.machineReportError}
             </div>
 
-            {(this.props.isEdittingTrial) ? <FlatButton
+            {(this.props.isEdittingTrial) ? 
+                                              <MuiThemeProvider>
+                                              <div style={{display: "inline-block"}}>
+                                              <FlatButton
                                               label={(this.props.isEdittingExpectedTape) ? "Expected Tape": "Start Tape"}
                                               labelPosition="after"
+                                              primary={true}
                                               style={{
-                                                color: (this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor
+                                                color: (this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor,
                                                 }
                                               }
                                               onTouchTap={this.props.changeEdittingTarget}
                                               icon={<Swap 
                                                 color={(this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor}/>
                                               }
-                                            /> :
+                                              />
+                                              <TextField
+                                                inputStyle={{fontSize: 16}}
+                                                style={{width:"25%"}}
+                                                defaultValue={this.props.edittingTrial}
+                                                onChange={this.props.setTrialName}
+                                              />                                         
+                                           <FlatButton
+                                            label="Save" 
+                                            primary={true}
+                                            onTouchTap={this.props.handleSave}
+                                            disabled={!this.props.anyChangeInTrial}
+                                            />
+                                            <FlatButton
+                                            label="Exit" 
+                                            secondary={true}
+                                            onTouchTap={this.props.handleExit}
+                                            />
+                                            </div>
+                                           </MuiThemeProvider>:
                                             null}
 
             {(!this.props.isEdittingTrial) ? 
@@ -92,42 +115,6 @@ class Tape extends React.Component {
             </div>
           </Card>
           </div>
-        </MuiThemeProvider>
-        <MuiThemeProvider>
-        <div>
-          {(this.props.isEdittingTrial) ?
-            <Card className="editting-mode-card">
-            <Subheader style={{color: promptColor}}>
-              { "Editting: " + ((this.props.isEdittingExpectedTape) ? 
-                "Expected Tape": 
-                "Start Tape")}
-            </Subheader>
-            <List className="editting-mode-button-group">
-            <TextField
-                fullWidth={true}
-                inputStyle={{textAlign: "center"}}
-                defaultValue={this.props.edittingTrial}
-                floatingLabelText="Test Name"
-                floatingLabelStyle={{color: primaryColor}}
-                onChange={this.props.setTrialName}
-              />
-            <MenuItem 
-              primaryText="Save" 
-              style={{textAlign: "center", color: (this.props.anyChangeInTrial) ? primaryColor : disabledColor}}
-              onTouchTap={this.props.handleSave}
-              disabled={!this.props.anyChangeInTrial}
-              />
-            <Divider />
-            <MenuItem  
-              primaryText="Exit" 
-              style={{textAlign: "center", color: secondaryColor}}
-              onTouchTap={this.props.handleExit}
-              />
-            </List>
-            </Card>:
-            null
-          }
-        </div>
         </MuiThemeProvider>
       </div>
     );

@@ -11,8 +11,7 @@
 
 .blank-background {
 	margin: 0 auto;
-	min-height: 180px;
-	max-height: 180px;
+	height: auto;
 }
 
 .machine-reported-error {

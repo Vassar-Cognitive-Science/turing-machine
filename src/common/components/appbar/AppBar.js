@@ -80,11 +80,11 @@ class AppToolBar extends React.Component {
 			        <Divider />
 			        <div style={DRAWER_STYLE.listStyle}>
 			        <List>
-			        	{this.props.testsById.map((id) => {
-			        		if (this.props.runningTrials.includes(id))  {
-			        			return (<MenuItem primaryText={id} key={id} rightIcon={ProgressCircle()}/>);
+			        	{this.props.testsById.map((obj) => {
+			        		if (this.props.runningTrials.includes(obj.id))  {
+			        			return (<MenuItem primaryText={obj.name} key={obj.id} rightIcon={ProgressCircle()}/>);
 			        		}
-			        		return (<TrialItem id={id} key={id} drawerCloseCallBack={this.handleTrialDrawerClose}/>)
+			        		return (<TrialItem id={obj.id} name={obj.name} drawerCloseCallBack={this.handleTrialDrawerClose}/>)
 			        	})}
 			        </List>
 			        </div>

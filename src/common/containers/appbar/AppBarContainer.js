@@ -217,6 +217,12 @@ const uploadTests = (dispatch) => {
 
 
 const mapStateToProps = (state, ownProps) => {
+	let idAndName = [];
+	for (let i = 0; i < state.testsById.length; i++) {
+		let id = state.testsById[i];
+		let obj = {id: id, name: state[id].name};
+		idAndName.push(obj);
+	}
     return {
     	runningTrials: state.runningTrials,
     	isRunning: state.isRunning,
@@ -227,7 +233,7 @@ const mapStateToProps = (state, ownProps) => {
     	redoAble: state.redoEditHistory.length > 0,
     	undoAble: state.undoEditHistory.length > 0,
     	lastStepAble: state.runHistory.length > 0,
-    	testsById: state.testsById,
+    	testsById: idAndName,
     	isEdittingTrial: state.isEdittingTrial
     };
 }
