@@ -26,12 +26,10 @@ class Square extends React.Component {
       this.setState(style);
     }
     this.onMouseLeave = () => {
-      let style;
-      if (this.state.style.backgroundColor === "#f1fc7e")
-        style = {style: { backgroundColor: "#fff" }};
-      else
-        style = this.state.style;
-      this.setState(style);
+      this.setState((this.state.style.backgroundColor === "#f1fc7e") ? 
+                    {style: { backgroundColor: "#fff" }} : 
+                    this.state.style
+                    );
     }
   }
 
