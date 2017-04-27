@@ -47,7 +47,7 @@ const downloadTrial = (dispatch, ownProps) => {
 		// provide download link
 		let a = document.createElement('a');
 		a.href = 'data:' + data;
-		a.download = ownProps.id + '.json';
+		a.download = trial[0].name + '.json';
 
 		a.click();
 	});
