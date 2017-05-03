@@ -8,7 +8,7 @@ class AppNavBar extends Component {
 	render() {
 		return (
 		<div style={{backgroundColor: cyan500, width: "100%", height: 50}}>
-			<p style={{color: grey50, fontSize: 24, paddingTop: 7, paddingLeft: 10}}>
+			<p style={{color: grey50, fontSize: 24, paddingTop: 7, paddingLeft: 10, fontFamily: 'Roboto'}}>
 				Turing Machine Simulator
 			</p>
 		</div>

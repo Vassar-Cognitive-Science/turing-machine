@@ -1,3 +1,5 @@
+@import url('https://fonts.google.com/specimen/Roboto+Mono?selection.family=Roboto+Mono');
+
 .card-of-tape {
   padding-bottom: 20px;
   height: 30%;
@@ -76,7 +78,7 @@
 }
 
 .head {
-  font-family: monospace;
+  font-family: 'Roboto Mono';
   background: #fff;
   border: 1px solid black;
   font-size: 18px;

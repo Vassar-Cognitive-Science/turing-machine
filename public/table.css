@@ -2,12 +2,14 @@
 .card-of-rule-table {
   width: 90%;
   margin: 0 auto; 
+  height: auto;
+  padding-bottom: 20px;
 }
 
 .rule-table-container {
 	padding-bottom: 30px;
 	margin: 0 auto;
-	min-height: 330px;
+	/*min-height: 330px;*/
 	/*max-height: 330px; uncomment it to have smaller fixed table size*/
 	width: 90%;
 }

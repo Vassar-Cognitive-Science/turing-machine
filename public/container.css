@@ -1,6 +1,13 @@
+@import url('https://fonts.google.com/specimen/Roboto+Mono?selection.family=Roboto');
+
+.canvas {
+	height: 100%;
+	min-height: 100%;
+	background-color: #FAFAFA;
+}
+
 .app-container {
 	width: 100%;
-	background-color: #FAFAFA;
 }
 
 .app-bar {
@@ -20,14 +27,6 @@
 	text-align: center;
 }
 
-.card-of-edit-tape-info-pane{
-	margin: 0 auto;
-	min-height: 350px;
-	max-height: 350px;
-	width: 90%;
-}
-
-
 .page-not-found-image {
 	background-image: url('404.png');
 	background-size: contain;
@@ -41,6 +40,4 @@
     background-position: center; 
     background-color: rgb(239, 228, 176);
     text-align: center;
-	font-weight: bolder;
-	font-size: 64px;
 }
