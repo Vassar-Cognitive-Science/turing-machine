@@ -42,7 +42,6 @@ export const initialState = {
 	/* HEAD Width settings */
 
 	/* MACHINE GUI settings */
-	machineLocked: false,
 	// is the machine running
 	isRunning: false, 
 	// Animation interval function, returned by setInterval(callback, timeout)

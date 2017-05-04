@@ -9,7 +9,6 @@ import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer
 import {
   TABLE_INPUT_COL_STYLE,
   TABLE_STATE_COL_STYLE,
-  TABLE_ROW_NO_COL_STYLE
 } from '../../constants/components/Table';
 
 export const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
@@ -103,8 +102,7 @@ class DynamicRuleTable extends React.Component {
                     <tr id={id} key={id} style={(this.props.highlightedRow === id)?
                       {backgroundColor: highlightColor }:{backgroundColor: normalColor}}>
                       <td>
-                        <p style={TABLE_ROW_NO_COL_STYLE.style}>{(++rowN) +"."}</p>
-                        <DeleteRowButton parent={id} id={standardizeDeleteButtonId(id)} />
+                        <DeleteRowButton parent={id} rowNum={++rowN} id={standardizeDeleteButtonId(id)} />
                       </td>
 
                       <td>

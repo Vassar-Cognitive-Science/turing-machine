@@ -14,7 +14,7 @@ export default function(preloadedState) {
 	    <link rel="stylesheet" href="./table.css">
 	    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 	    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-	    <script src="https://cdn.rawgit.com/inexorabletash/polyfill/$TAGNAME/polyfill.min.js"></script>
+	    <script src="./polyfill.js"></script>
 	  </head>
       <body class='canvas'>
         <div id="container"></div>

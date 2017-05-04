@@ -133,6 +133,24 @@ export function preStep(state, action) {
 }
 
 /*
+Check if the rule table is ready.
+If it is, return true
+
+*/
+function checkRuleTable(state) {
+	for (let i = 0; i < state.rowsById.length; i++) {
+		let rule = state[state.rowsById[i]];
+		if (rule.in_state_error ||
+		   	rule.read_error ||
+		   	rule.write_error ||
+		   	rule.new_state_error) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/*
 Step forward
 Find rule (handled by highlightCorrespondingRule)
 If not find, stop
@@ -144,7 +162,7 @@ Adjust head width
 Move Head according to rule.isLeft 
 */
 export function stepHelper(state, silent) { // optimize performance
-	if (state.machineLocked) {
+	if (!checkRuleTable(state)) {
 		return stop(state, {message: RULE_TABLE_ERROR, flag: true});
 	}
 
