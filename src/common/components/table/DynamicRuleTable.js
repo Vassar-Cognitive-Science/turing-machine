@@ -81,7 +81,7 @@ class DynamicRuleTable extends React.Component {
       <Card>
           <CardActions>
             <MuiThemeProvider>
-              <FlatButton label="Add Rule" labelStyle={{fontFamily: 'Roboto'}} primary={true} onTouchTap={this.props.addRow}/>
+              <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow}/>
             </MuiThemeProvider>  
            </CardActions>   
            <div className="rule-table-container">

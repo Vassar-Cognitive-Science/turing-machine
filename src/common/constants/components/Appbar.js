@@ -164,7 +164,8 @@ export const APPBAR_STYLES = {
 				paddingRight: 10,
 				paddingTop: 5,
 				color: "#424242", 
-				fontWeight: 'Bold',
+				fontWeight: 100
+				// fontWeight: 'Bold',
 			},
 			sliderStyle: {
 				bottom: -12
