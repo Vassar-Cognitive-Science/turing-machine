@@ -36,6 +36,20 @@ function populatedSquares(size) {
 }
 
 class Tape extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      editTrialName: false,
+    };
+
+    this.toggleEditTrialName = () => {
+      this.setState({editTrialName: !this.state.editTrialName})
+    }
+
+  }
+
+
   render() {
     return (
       <div >
@@ -63,13 +77,23 @@ class Tape extends React.Component {
                                                 color={(this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor}/>
                                               }
                                               />
-                                              <TextField
+                                              {
+                                                (!this.state.editTrialName) ?
+                                                <div className="TrialNameButton">
+                                                  <FlatButton 
+                                                  label={this.props.edittingTrial} 
+                                                  onTouchTap={this.toggleEditTrialName} 
+                                                  />
+                                                  </div>:
+                                                <TextField
                                                 id="test-name-input"
                                                 inputStyle={{fontSize: 16}}
                                                 style={{width:"25%"}}
                                                 defaultValue={this.props.edittingTrial}
                                                 onChange={this.props.setTrialName}
-                                              />                                         
+                                                onBlur={this.toggleEditTrialName}
+                                                />  
+                                                }                                       
                                            <FlatButton
                                             label="Save" 
                                             primary={true}

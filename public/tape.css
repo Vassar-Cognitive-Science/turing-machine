@@ -11,6 +11,7 @@
   color: #616161;
   padding-left: 10px;
   padding-top: 5px;
+  font-family: 'Roboto';
 }
 
 .whole-tape-wrapper {
@@ -119,13 +120,26 @@
 }
 /***  HEAD  ***/
 
-.editting-mode-button-group {
-  /*padding-right: 43%;*/
-  margin: 0 auto;
-  width: 45%;
+.TrialNameButton {
+    display: inline-block;
 }
 
-.editting-mode-card {
-  width: 45%;
-  margin: 0 auto;
+/* Tooltip text */
+.TrialNameButton .TrialNameButtonTooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+ 
+    /* Position the.TrialNameButtonTooltip text - see examples below! */
+    position: relative;
+    z-index: 1;
+}
+
+/* Show the.TrialNameButtonTooltip text when you mouse over the.TrialNameButtonTooltip container */
+.TrialNameButton:hover .TrialNameButtonTooltiptext {
+    visibility: visible;  
 }

@@ -1,10 +1,12 @@
 import * as tape from './tape';
 import * as gui from './gui';
+import { checkRuleTable } from './machine';
 import {
 	EXCEED_MAX_TEST_STEP_LIMIT,
 	DIFF_FINAL_STATE,
 	DIFF_FINAL_TAPE,
-	UNDEFINED_RULE
+	UNDEFINED_RULE,
+	RULE_TABLE_ERROR,
 } from '../constants/Messages';
 
 import { HALT } from '../constants/SpecialCharacters';
@@ -276,6 +278,15 @@ Run the rules in sandbox
 */
 export function runTrial(state, action) {
 	let trial = state[action.sourceId];
+	if (!checkRuleTable(state)) {
+		return reportTestResult(state, {
+			sourceId: action.sourceId,
+			name: trial.name,
+			status: STATUS_CODE_FAIL,
+			feedback: RULE_TABLE_ERROR,
+			stepCount: 0,
+		});
+	}
 
 	let sandbox = createSandbox(trial);
 	while (sandbox.tapeInternalState !== HALT) {

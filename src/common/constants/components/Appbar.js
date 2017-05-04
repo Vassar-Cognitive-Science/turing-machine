@@ -39,7 +39,7 @@ import {
 	teal300 as saveTestsColor,
 	pink400 as snackBarSuccessFulColor,
 	grey50 as snackBarNothingChangeColor,
-	deepOrange900 as deleteTestsColor
+	grey600 as deleteTestsColor
  } from 'material-ui/styles/colors';
 
 
@@ -164,7 +164,7 @@ export const APPBAR_STYLES = {
 				paddingRight: 10,
 				paddingTop: 5,
 				color: "#424242", 
-				fontWeight: 100,
+				fontWeight: 'Bold',
 			},
 			sliderStyle: {
 				bottom: -12

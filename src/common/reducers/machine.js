@@ -137,7 +137,7 @@ Check if the rule table is ready.
 If it is, return true
 
 */
-function checkRuleTable(state) {
+export function checkRuleTable(state) {
 	for (let i = 0; i < state.rowsById.length; i++) {
 		let rule = state[state.rowsById[i]];
 		if (rule.in_state_error ||
