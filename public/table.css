@@ -6,8 +6,8 @@
   padding-bottom: 20px;
 }
 
-.Table-textfield::-ms-clear {
-  display: none;
+input::-ms-clear {
+   display: none;
 }
 
 .rule-table-container {
