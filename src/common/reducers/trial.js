@@ -192,14 +192,16 @@ function createSandbox(trial) {
 	let expandTo = trial.tapePointer;
 	if (expandTo < 0) {
 		// for extra space, notice N must be greater the expandTo
-		sandbox = tape.expandBeforeHead(sandbox, { n: -expandTo + 5}); 
+		sandbox = tape.expandBeforeHead(sandbox, { n: -expandTo + 1}); 
 	} else if (expandTo > 0) {
 		expandTo -= trial.startTape.length;
 		if (expandTo > 0) {
 			// for extra space, notice N must be greater the expandTo
-			sandbox = tape.expandAfterTail(sandbox, {n: expandTo + 5});
+			sandbox = tape.expandAfterTail(sandbox, {n: expandTo + 1});
 		}
 	}
+
+	if (sandbox.tapeCellsById.length === 0) sandbox = tape.expandAfterTail(sandbox, {n: 1});
 
 	return sandbox;
 }
@@ -278,7 +280,7 @@ Run the rules in sandbox
 */
 export function runTrial(state, action) {
 	let trial = state[action.sourceId];
-	if (!checkRuleTable(state)) {
+	if (!checkRuleTable(state) || state.rowsById.length === 0) {
 		return reportTestResult(state, {
 			sourceId: action.sourceId,
 			name: trial.name,

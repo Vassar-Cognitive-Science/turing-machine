@@ -4,7 +4,7 @@ import { setRowInStateAction, setRowReadAction, setRowWriteAction, setRowNewStat
 import { FIELD_TYPES } from '../../components/table/DynamicRuleTable';
 import { HALT, BLANK, STAR } from '../../constants/SpecialCharacters';
 
-export const standardFilter = (searchText, key) => (searchText !== "" && key.startsWith(searchText) && key !== searchText);
+export const standardFilter = (searchText, key) => (searchText === "" || key.startsWith(searchText) && key !== searchText);
 
 const onUpdateInput = (searchText, dispatch, ownProps) => {
 	switch(ownProps.fieldType) {
@@ -33,11 +33,12 @@ export const getAllStates = (state) => {
 		if (row.in_state) dataSource[row.in_state] = 0;
 		if (row.new_state) dataSource[row.new_state] = 0;
 	}
+	delete dataSource[""];
 	return dataSource;
 }
 
 const getAllInputs = (state) => {
-	let dataSource = {};
+	let dataSource = { [STAR]: 0, [BLANK]: 0 };
 	for (let i = 0; i < state.rowsById.length; i++) {
 		let row = state[state.rowsById[i]];
 		if (row.read) dataSource[row.read] = 0;
@@ -64,14 +65,12 @@ const mapStateToProps = (state, ownProps) => {
 			value = thisRow.in_state;
 			error = thisRow.in_state_error;
 			dataSource = getAllStates(state);
-			// fontColor = (value === HALT) ? "#FF3D00" : fontColor; // #1976D2
 			fontColor = (value === HALT) ? "#1976D2" : fontColor; // #FF3D00
 			break;
 		case FIELD_TYPES[4]:
 			value = thisRow.new_state;
 			error = thisRow.new_state_error;
 			dataSource = getAllStates(state);
-			// fontColor = (value === HALT) ? "#FF3D00" : fontColor; // #1976D2
 			fontColor = (value === HALT) ? "#1976D2" : fontColor; // #FF3D00
 			break;
 		case FIELD_TYPES[1]:
@@ -93,7 +92,6 @@ const mapStateToProps = (state, ownProps) => {
 	}
 
 	delete dataSource[null];
-
 	return {
 		fontColor: fontColor,
 		searchText: value,

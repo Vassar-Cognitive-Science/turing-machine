@@ -6,6 +6,10 @@
   padding-bottom: 20px;
 }
 
+.Table-textfield::-ms-clear {
+  display: none;
+}
+
 .rule-table-container {
 	padding-bottom: 30px;
 	margin: 0 auto;

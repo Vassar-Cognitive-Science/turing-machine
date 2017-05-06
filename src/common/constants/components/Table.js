@@ -41,7 +41,10 @@ export const DIRECTION_BUTTON_STYLE = {
 
 export const TABLE_AUTO_COMPLETE_STYLE = {
 	popoverProps: {
-		canAutoPosition: true,
+		canAutoPosition: true
+	},
+	menuStyle: {
+		maxHeight: 200,
 		overflowY: "auto"
 	},
 	style: {
