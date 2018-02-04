@@ -167,7 +167,7 @@ export function stepHelper(state, silent) { // optimize performance
 	}
 
 	// is machine halted?
-	if (state.tapeInternalState === HALT) {
+	if (state.tapeInternalState.toUpperCase() === HALT) {
 		return stop(state, {message: REACH_HALT, flag: true});
 	}
 
