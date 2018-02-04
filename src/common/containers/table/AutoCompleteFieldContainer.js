@@ -7,7 +7,7 @@ import { HALT, BLANK, STAR } from '../../constants/SpecialCharacters';
 export const standardFilter = (searchText, key) => (searchText === "" || key.startsWith(searchText) && key !== searchText);
 
 const onUpdateInput = (searchText, dispatch, ownProps) => {
-	if (searchText.toUpperCase() === HALT) searchText = HALT;
+	searchText = searchText.toUpperCase();
 	switch(ownProps.fieldType) {
 		case FIELD_TYPES[0]:
 			dispatch(setRowInStateAction(ownProps.parent, searchText));
