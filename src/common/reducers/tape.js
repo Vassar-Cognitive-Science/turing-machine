@@ -1,5 +1,5 @@
 import { BLANK, STAR } from '../constants/SpecialCharacters';
-import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY } from '../constants/components/Head';
+import { HEAD_MOVE_INTERVAL, HEAD_LEFT_BOUNDARY, INIT_HEAD_WIDTH, INIT_HEAD_LEFT_OFFSET } from '../constants/components/Head';
 import { adjustHeadWidthHelper } from './gui';
 
 
@@ -383,6 +383,8 @@ export function initializeTape(state, action) {
 		tapeCellsById: [],
 
 		tapeInternalState: "0",
+		headWidth: INIT_HEAD_WIDTH, 
+		headLeftOffset: INIT_HEAD_LEFT_OFFSET, 
 
 		tapePointer: (action.controlled) ? state.tapePointer : Math.floor(state.cellNum / 2),
 		headX: (action.controlled) ? state.headX : HEAD_LEFT_BOUNDARY + HEAD_MOVE_INTERVAL * Math.floor(state.cellNum / 2),
