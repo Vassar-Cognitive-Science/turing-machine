@@ -54,7 +54,7 @@ export const initialState = {
 	machineReportError: "",
 	showReportedError: false,
 
-	anyChangeInNormal: false,
+	anyChangeInNormal: false, // has machine calculates any steps
 	stepCount: 0,
 	runHistory: [],
 	undoEditHistory: [],

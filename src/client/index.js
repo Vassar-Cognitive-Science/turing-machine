@@ -21,6 +21,14 @@ window.addEventListener('resize', () => {
 	store.dispatch(resizeScreenAndTapeAction(window.innerWidth, false));
 });
 
+window.addEventListener('beforeunload', (e) => {
+	let state = store.getState();
+	if (state.anyChangeInTrial || state.anyChangeInNormal) {
+		e.returnValue = true;
+		return true;
+	}
+});
+
 if (preloadedState) {
 	store.dispatch(loadMachineAction(preloadedState));
 } else {

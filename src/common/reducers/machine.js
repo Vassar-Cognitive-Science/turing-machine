@@ -123,7 +123,7 @@ export function preStep(state, action) {
 	new_state = tape.highlightCorrespondingCellHelper(new_state, true);
 
 	/* Find rule by internal state, and val of tape cell, and highlight it*/
-	new_state = highlightCorrespondingRuleHelper(new_state, true);
+	// new_state = highlightCorrespondingRuleHelper(new_state, true);
 
 	// scroll into view
 	// if (new_state.highlightedRow)
@@ -210,7 +210,7 @@ export function stepHelper(state, silent) { // optimize performance
 	// count step
 	state.stepCount++;
 	
-	return state;
+	return highlightCorrespondingRuleHelper(state, true);
 }
 
 export function step(state, action) {
