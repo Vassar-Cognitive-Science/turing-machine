@@ -50,7 +50,7 @@ const onKeyDown = (e, dispatch, ownProps) => {
   else if (key === 8 || key === 46) {
     dispatch(fillTapeAction(activeId(), ""));
   } else if ((key >= 48 && key <= 90) || (key >= 96 && key <= 105)) {
-    let val = String.fromCharCode(key);
+    let val = String.fromCharCode(key).toUpperCase();
     if (key === 51 && e.shiftKey) val = BLANK;
     // if (key === 56 && e.shiftKey) val = STAR;
     if (key === 52 && e.shiftKey) val = "$";

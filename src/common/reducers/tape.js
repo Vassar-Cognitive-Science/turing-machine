@@ -58,7 +58,7 @@ export function read(state) {
 		return undefined;
 
 	// treat null and "" as #
-	return (cur.val === null || cur.val === "") ? BLANK : cur.val.toString().toUpperCase();
+	return (cur.val === null || cur.val === "") ? BLANK : cur.val.toString();
 }
 
 
@@ -66,7 +66,7 @@ export function standardizeInputToTape(val, oldVal) {
 	if (val === undefined)
 		return val;
 
-	val = val.toString().trim().slice(0, 1).toUpperCase();
+	val = val.toString().trim().slice(0, 1);
 	if (val === BLANK)
 		return "";
 	if (val === STAR)
@@ -76,7 +76,6 @@ export function standardizeInputToTape(val, oldVal) {
 }	
 
 export function standardizeReadFromTape(val) {
-	val = val.toUpperCase();
 	if (val === "" || val === null)
 		return BLANK;
 	return val;

@@ -42,7 +42,7 @@ const headOnDrag = (e, ui, dispatch) => {
 }
 
 const onUpdateInput = (searchText, dispatch) => {
-    dispatch(setInternalStateAction(searchText));
+    dispatch(setInternalStateAction(searchText.toUpperCase()));
 }
 
 const mapStateToProps = (state, ownProps) => {
