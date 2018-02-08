@@ -16,8 +16,8 @@ class SwitchDirectionButton extends React.Component {
 
 	render() {
     let items = [
-        <MenuItem key={`toggle-${this.props.id}}-1`} value={true}  primaryText="True"/>,
-        <MenuItem key={`toggle-${this.props.id}}-2`} value={false}  primaryText="False"/>
+        <MenuItem key={`toggle-${this.props.id}}-1`} value={true}  primaryText="Left"/>,
+        <MenuItem key={`toggle-${this.props.id}}-2`} value={false}  primaryText="Right"/>
     ];
 
     return (

@@ -20,10 +20,11 @@ const highlightColor = "#87dbff";
 const normalColor = "#fff";
 
 const style = {
-	root: {
+	root: (isHighlighted) => ({
+		backgroundColor: isHighlighted ? highlightColor : normalColor,
 		display: 'flex',
 		justifyContent: 'space-evenly' 
-	},
+	}),
 	buttonContainer: {
 		alignSelf: 'center'
 	}
@@ -127,6 +128,7 @@ class RowItem extends React.Component {
 		const {
 			rowNum, 
 			id,
+			isHighlighted,
 			connectDropTarget,
 			connectDragPreview,
 			connectDragSource,
@@ -136,7 +138,7 @@ class RowItem extends React.Component {
 		} = this.props;
 
 		return connectDragPreview(connectDropTarget(
-			<div style={{...style.root}}>
+			<div style={{...style.root(isHighlighted)}}>
 				{
 					connectDragSource(
 						<div style={{...style.buttonContainer}}>

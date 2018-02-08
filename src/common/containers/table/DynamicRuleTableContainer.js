@@ -18,6 +18,7 @@ const addRow = (dispatch, ownProps) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
+	console.log(state.highlightedRow)
 	return {
 		rowsById: state.rowsById,
 		highlightedRow: state.highlightedRow,
