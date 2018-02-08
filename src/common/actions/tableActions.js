@@ -14,10 +14,11 @@ export function deleteRowAction(id) {
 	};
 }
 
-export function switchRowDirectionAction(id) {
+export function switchRowDirectionAction(id, value) {
 	return {
 		type: actionTypes.SWITCH_ROW_DIRECTION,
-		id: id
+		id: id,
+		value: value
 	};
 }
 
@@ -50,5 +51,13 @@ export function setRowNewStateAction(id, new_state) {
 		type: actionTypes.SET_ROW_NEW_STATE,
 		id: id,
 		new_state: new_state
+	}
+}
+
+export function moveToAction(from, to) {
+	return {
+		type: actionTypes.MOVE_TO,
+		from: from,
+		to: to
 	}
 }

@@ -3,9 +3,10 @@ import FlatButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Table } from 'react-bootstrap';
 import {Card, CardActions } from 'material-ui/Card';
-import DeleteRowButton from '../../containers/table/DeleteRowButtonContainer';
-import SwitchDirectionButton from '../../containers/table/SwitchDirectionButtonContainer';
-import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer';
+
+import RowItem from '../../containers/table/RowItemContainer';
+import withDragDropContext from './withDragDropContext';
+
 import {
   TABLE_INPUT_COL_STYLE,
   TABLE_STATE_COL_STYLE,
@@ -52,26 +53,7 @@ class DynamicRuleTable extends React.Component {
     }
 
   }
-  shouldComponentUpdate(nextProps) {
-    if (this.props.rowsById.length !== nextProps.rowsById.length ||
-        this.props.highlightedRow !== nextProps.highlightedRow) {
-      return true;
-    }
 
-
-    for (var i = 0; i < this.props.rowsById.length; i++) {
-      let thisRow = this.props.rowsById[i], nextRow = nextProps.rowsById[i];
-      if (thisRow.in_state !== nextRow.in_state ||
-          thisRow.read !== nextRow.read ||
-          thisRow.write !== nextRow.write ||
-          thisRow.new_state !== nextRow.new_state ||
-          thisRow.isLeft !== nextRow.isLeft) {
-        return true;
-      }
-    }
-
-    return false;
-  }
   render() {
     var rowN = 0;
 
@@ -85,58 +67,17 @@ class DynamicRuleTable extends React.Component {
             </MuiThemeProvider>  
            </CardActions>   
            <div className="rule-table-container">
-            <Table responsive condensed > 
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Current State</th>
-                  <th>Read</th>
-                  <th>Write</th>
-                  <th>Move Direction</th>
-                  <th>New State</th>
-                </tr>
-              </thead>
-                 <tbody>
-                  {this.props.rowsById.map((id) => {
-                    return (
-                    <tr id={id} key={id} style={(this.props.highlightedRow === id)?
-                      {backgroundColor: highlightColor }:{backgroundColor: normalColor}}>
-                      <td>
-                        <DeleteRowButton parent={id} rowNum={++rowN} id={standardizeDeleteButtonId(id)} />
-                      </td>
-
-                      <td>
-                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[0]} 
-                          openOnFocus={true} styles={TABLE_STATE_COL_STYLE.style} 
-                          maxLength={TABLE_STATE_COL_STYLE.maxLength} id={standardizeCurrentStateFieldId(id)} />
-                      </td>
-                        
-                      <td>
-                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[1]} 
-                          openOnFocus={true} styles={TABLE_INPUT_COL_STYLE.style} maxLength={TABLE_INPUT_COL_STYLE.maxLength}
-                          id={standardizeReadFieldId(id)} />
-                      </td>
-                        
-                      <td>
-                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[2]} 
-                          openOnFocus={true} styles={TABLE_INPUT_COL_STYLE.style} 
-                          maxLength={TABLE_INPUT_COL_STYLE.maxLength} id={standardizeWriteFieldId(id)} />
-                      </td>
-
-                      <td>
-                          <SwitchDirectionButton parent={id} fieldType={FIELD_TYPES[3]} 
-                          id={standardizeDirectionFieldId(id)} />
-                      </td>
-                        
-                      <td>
-                          <AutoCompleteField parent={id} fieldType={FIELD_TYPES[4]} 
-                          openOnFocus={true} styles={TABLE_STATE_COL_STYLE.style} 
-                          maxLength={TABLE_STATE_COL_STYLE.maxLength} id={standardizeNewStateFieldId(id)} />
-                      </td>
-                  </tr>
-                  )})}
-                </tbody>
-              </Table>
+              {this.props.rowsById.map(
+                  (id, i) =>
+                    (<RowItem 
+                        rowNum={i+1}
+                        index={i} 
+                        key={`${id}-row`} 
+                        id={id} 
+                        isHighlighted={this.props.highlightedRow === id}
+                      />)
+                )
+              }
             </div>
       </Card>
       </MuiThemeProvider>
@@ -152,4 +93,4 @@ DynamicRuleTable.PropTypes = {
   highlightedRow: PropTypes.string.isRequired
 }
 
-export default DynamicRuleTable;
+export default withDragDropContext(DynamicRuleTable);

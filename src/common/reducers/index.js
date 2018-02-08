@@ -552,6 +552,9 @@ function ruleReducer(state, action, clearRedo) {
 		case actionTypes.SET_ROW_NEW_STATE:
 			new_state = table.setRowNewState(state, action);
 			break;
+		case actionTypes.MOVE_TO:
+			new_state = table.moveTo(state, action);
+			break;
 		/* Rule actions */
 		default:
 			changed = false;

@@ -149,7 +149,15 @@ export function switchRowDirection(state, action) {
 						  in_state: oldRow.in_state, 
 						  read: oldRow.read, 
 						  write: oldRow.write, 
-						  isLeft: !oldRow.isLeft,
+						  isLeft: action.value,
 						  new_state: oldRow.new_state});
 }
 
+
+export function moveTo(state, action) {
+	let new_state = Object.assign({}, state, {
+		rowsById: state.rowsById.slice()
+	});
+	new_state.rowsById.move(action.from, action.to);
+	return new_state;
+}

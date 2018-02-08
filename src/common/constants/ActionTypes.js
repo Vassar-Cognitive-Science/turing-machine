@@ -58,6 +58,7 @@ export const SET_ROW_NEW_STATE = 'SET_ROW_NEW_STATE';
 export const SET_ROW_READ = 'SET_ROW_READ';
 export const SET_ROW_WRITE = 'SET_ROW_WRITE';
 export const SWITCH_ROW_DIRECTION = 'SWITCH_ROW_DIRECTION';
+export const MOVE_TO = 'MOVE_TO';
 /* Actions for Transition Graph */
 
 

@@ -3,8 +3,8 @@ import SwitchDirectionButton from '../../components/table/SwitchDirectionButton'
 import { switchRowDirectionAction } from '../../actions/tableActions';
 
 
-const switchDirection = (dispatch, ownProps) => {
-	dispatch(switchRowDirectionAction(ownProps.parent));
+const switchDirection = (dispatch, ownProps, value) => {
+	dispatch(switchRowDirectionAction(ownProps.parent, value));
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -14,7 +14,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	switchDirection: () => { switchDirection(dispatch, ownProps) }
+	switchDirection: (value) => { switchDirection(dispatch, ownProps, value) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SwitchDirectionButton);
