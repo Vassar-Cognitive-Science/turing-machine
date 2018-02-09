@@ -60,9 +60,12 @@ class DynamicRuleTable extends React.Component {
       <div className='card-of-rule-table'>
       <MuiThemeProvider>
         <Card>
-            <div style={{width: '100%', padding: '10px'}} />
+            {this.props.rowsById.length > 0 ?
+              <div style={{width: '100%', padding: '10px'}} /> :
+              null
+            }
              <div className="rule-table-container">
-                {this.props.rowsById.map(
+                {this.props.rowsById && this.props.rowsById.map(
                     (id, i) =>
                       (<RowItem 
                           rowNum={i+1}
@@ -74,7 +77,7 @@ class DynamicRuleTable extends React.Component {
                   )
                 }
               </div>
-              <div style={{width: '100%', display: 'flex', flexDirection: 'row-reverse', padding: '30px'}}>
+              <div style={{width: '100%', display: 'flex', flexDirection: 'row', padding: '30px'}}>
                 <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow}/>
              </div> 
         </Card>
