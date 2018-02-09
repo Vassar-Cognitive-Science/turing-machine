@@ -6,50 +6,44 @@ import DeleteRowButton from '../../containers/table/DeleteRowButtonContainer';
 import SwitchDirectionButton from '../../containers/table/SwitchDirectionButtonContainer';
 import AutoCompleteField from '../../containers/table/AutoCompleteFieldContainer';
 
-import {
-  TABLE_INPUT_COL_STYLE,
-  TABLE_STATE_COL_STYLE,
-} from '../../constants/components/Table';
-
 import flow from 'lodash/flow';
 import { DropTarget, DragSource } from 'react-dnd';
 
 import DragHandleIcon from 'material-ui/svg-icons/navigation/menu';
 
-const highlightColor = "#87dbff";
-const normalColor = "#fff";
-
 const style = {
-	root: (isHighlighted) => ({
-		backgroundColor: isHighlighted ? highlightColor : normalColor,
+	root: (isHighlighted, isDragging) => ({
+		backgroundColor: isHighlighted ? "#87dbff" : "#fff",
 		display: 'flex',
-		justifyContent: 'space-evenly' 
+		justifyContent: 'space-evenly',
+		border: isDragging ? '2px dotted #aaa' : 'none'
 	}),
 	buttonContainer: {
-		alignSelf: 'center'
+		alignSelf: 'center',
+		cursor: 'pointer',
+		marginBottom: '-25px'
+	},
+	Avatar: {
+		backgroundColor: '#2196F3',
+		size: 25,
 	}
 }
 
-export const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
+const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
 
-let DELETE_BUTTON_ID_PREFIX = "delete-row-button-of-";
-let CURRENT_STATE_COL_ID_PREFIX = "current_state-of-";
-let READ_COL_ID_PREFIX = "read-of-";
-let WRITE_COL_ID_PREFIX = "write-of-";
-let DIRECTION_COL_ID_PREFIX = "direction-of-";
-let NEW_STATE_COL_ID_PREFIX = "new_state-of-";
+const DELETE_BUTTON_ID_PREFIX = "delete-row-button-of-";
+const CURRENT_STATE_COL_ID_PREFIX = "current_state-of-";
+const READ_COL_ID_PREFIX = "read-of-";
+const WRITE_COL_ID_PREFIX = "write-of-";
+const DIRECTION_COL_ID_PREFIX = "direction-of-";
+const NEW_STATE_COL_ID_PREFIX = "new_state-of-";
 
-export const standardizeDeleteButtonId = (id) => (DELETE_BUTTON_ID_PREFIX + id);
-
-export const standardizeCurrentStateFieldId = (id) => (CURRENT_STATE_COL_ID_PREFIX + id);
-
-export const standardizeReadFieldId = (id) => (READ_COL_ID_PREFIX + id);
-
-export const standardizeWriteFieldId = (id) => (WRITE_COL_ID_PREFIX + id);
-
-export const standardizeDirectionFieldId = (id) => (DIRECTION_COL_ID_PREFIX + id);
-
-export const standardizeNewStateFieldId = (id) => (NEW_STATE_COL_ID_PREFIX + id);
+const standardizeDeleteButtonId = (id) => (DELETE_BUTTON_ID_PREFIX + id);
+const standardizeCurrentStateFieldId = (id) => (CURRENT_STATE_COL_ID_PREFIX + id);
+const standardizeReadFieldId = (id) => (READ_COL_ID_PREFIX + id);
+const standardizeWriteFieldId = (id) => (WRITE_COL_ID_PREFIX + id);
+const standardizeDirectionFieldId = (id) => (DIRECTION_COL_ID_PREFIX + id);
+const standardizeNewStateFieldId = (id) => (NEW_STATE_COL_ID_PREFIX + id);
 
 const rowItemDnD = {
 	ITEM_TYPE: "Row-Item",
@@ -132,23 +126,21 @@ class RowItem extends React.Component {
 			connectDropTarget,
 			connectDragPreview,
 			connectDragSource,
-			isOverCurrent,
-			isEnabled,
-			isSelected
+			isDragging
 		} = this.props;
 
 		return connectDragPreview(connectDropTarget(
-			<div style={{...style.root(isHighlighted)}}>
+			<div style={{...style.root(isHighlighted, isDragging)}}>
 				{
-					connectDragSource(
-						<div style={{...style.buttonContainer}}>
-							<Avatar
-								size={25}
-							>
-								{rowNum}
-							</Avatar>
-						</div>
-					)
+				connectDragSource(
+					<div style={{...style.buttonContainer}}>
+						<Avatar
+							{...style.Avatar}
+						>
+							{rowNum}
+						</Avatar>
+					</div>
+				)
 				}
 				<AutoCompleteField 
 					parent={id} 
@@ -180,7 +172,9 @@ class RowItem extends React.Component {
 					floatingLabelText={FIELD_TYPES[4]}
                     id={standardizeCurrentStateFieldId(id)} 
                 />
-				<div style={{...style.buttonContainer}}><DeleteRowButton parent={id} rowNum={rowNum} /></div>
+				<div style={{...style.buttonContainer}}>
+					<DeleteRowButton parent={id} rowNum={rowNum} />
+				</div>
 			</div>
 		))
 	}

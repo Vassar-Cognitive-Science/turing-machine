@@ -1,8 +1,7 @@
 import React, { PropTypes } from 'react';
 import FlatButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { Table } from 'react-bootstrap';
-import {Card, CardActions } from 'material-ui/Card';
+import { Card, CardActions } from 'material-ui/Card';
 
 import RowItem from '../../containers/table/RowItemContainer';
 import withDragDropContext from './withDragDropContext';
@@ -60,26 +59,25 @@ class DynamicRuleTable extends React.Component {
     return (
       <div className='card-of-rule-table'>
       <MuiThemeProvider>
-      <Card>
-          <CardActions>
-            <MuiThemeProvider>
-              <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow}/>
-            </MuiThemeProvider>  
-           </CardActions>   
-           <div className="rule-table-container">
-              {this.props.rowsById.map(
-                  (id, i) =>
-                    (<RowItem 
-                        rowNum={i+1}
-                        index={i} 
-                        key={`${id}-row`} 
-                        id={id} 
-                        isHighlighted={this.props.highlightedRow === id}
-                      />)
-                )
-              }
-            </div>
-      </Card>
+        <Card>
+            <div style={{width: '100%', padding: '10px'}} />
+             <div className="rule-table-container">
+                {this.props.rowsById.map(
+                    (id, i) =>
+                      (<RowItem 
+                          rowNum={i+1}
+                          index={i} 
+                          key={`${id}-row`} 
+                          id={id} 
+                          isHighlighted={this.props.highlightedRow === id}
+                        />)
+                  )
+                }
+              </div>
+              <div style={{width: '100%', display: 'flex', flexDirection: 'row-reverse', padding: '30px'}}>
+                <FlatButton label="Add Rule" primary={true} onTouchTap={this.props.addRow}/>
+             </div> 
+        </Card>
       </MuiThemeProvider>
       </div>
     )

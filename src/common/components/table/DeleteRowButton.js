@@ -3,6 +3,13 @@ import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui/svg-icons/action/delete-forever';
 import { TABLE_ROW_NO_COL_STYLE } from '../../constants/components/Table';
 
+const style = {
+  icon: {
+    color: '#FF9800',
+    hoverColor: '#F44336'
+  }
+}
+
 class DeleteRowButton extends React.Component {
 
 	render() {
@@ -10,7 +17,7 @@ class DeleteRowButton extends React.Component {
             <IconButton  
               onTouchTap={this.props.deleteRow}
               id={this.props.id}>
-              <Delete />
+              <Delete {...style.icon}/>
             </IconButton>
         )
 	}
