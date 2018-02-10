@@ -26,16 +26,15 @@ module.exports = function(DEV_ENVIRONMENT = false) {
 	const app = new Express();
 
 	const WebpackConfig = DEV_ENVIRONMENT ? developmentWebpackConfig : productionWebpackConfig;
-	const port = DEV_ENVIRONMENT ? 3000 : 80;
+	const port = DEV_ENVIRONMENT ? 3000 : 3000;
 
 	const compiler = webpack(WebpackConfig);
-	if (DEV_ENVIRONMENT) {
-		app.use(webpackDevMiddleware(compiler, {
-			noInfo: true,
-			publicPath: WebpackConfig.output.publicPath
-		}));
-		app.use(webpackHotMiddleware(compiler));
-	}
+
+	app.use(webpackDevMiddleware(compiler, {
+		noInfo: true,
+		publicPath: WebpackConfig.output.publicPath
+	}));
+	app.use(webpackHotMiddleware(compiler));
 
 
 	app.use(BodyParser.urlencoded({
@@ -112,11 +111,7 @@ module.exports = function(DEV_ENVIRONMENT = false) {
 	var server = app.listen(port, function() {
 		var port = server.address().port;
 
-		if (DEV_ENVIRONMENT) {
-			console.log("Example app listening at http://localhost:%s", port);
-		}
+		console.log("Example app listening at http://localhost:%s", port);
 	})
 	return server;
-
-
 }
