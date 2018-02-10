@@ -26,7 +26,7 @@ module.exports = function(DEV_ENVIRONMENT = false) {
 	const app = new Express();
 
 	const WebpackConfig = DEV_ENVIRONMENT ? developmentWebpackConfig : productionWebpackConfig;
-	const port = DEV_ENVIRONMENT ? 3000 : 3000;
+	const port = DEV_ENVIRONMENT ? 3000 : 80;
 
 	const compiler = webpack(WebpackConfig);
 
