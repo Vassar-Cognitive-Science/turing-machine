@@ -29,21 +29,14 @@ const style = {
 	}
 }
 
-const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
+export const FIELD_TYPES = ["Current State", "Read", "Write", "Direction", "New State"];
 
-const DELETE_BUTTON_ID_PREFIX = "delete-row-button-of-";
-const CURRENT_STATE_COL_ID_PREFIX = "current_state-of-";
-const READ_COL_ID_PREFIX = "read-of-";
-const WRITE_COL_ID_PREFIX = "write-of-";
-const DIRECTION_COL_ID_PREFIX = "direction-of-";
-const NEW_STATE_COL_ID_PREFIX = "new_state-of-";
-
-const standardizeDeleteButtonId = (id) => (DELETE_BUTTON_ID_PREFIX + id);
-const standardizeCurrentStateFieldId = (id) => (CURRENT_STATE_COL_ID_PREFIX + id);
-const standardizeReadFieldId = (id) => (READ_COL_ID_PREFIX + id);
-const standardizeWriteFieldId = (id) => (WRITE_COL_ID_PREFIX + id);
-const standardizeDirectionFieldId = (id) => (DIRECTION_COL_ID_PREFIX + id);
-const standardizeNewStateFieldId = (id) => (NEW_STATE_COL_ID_PREFIX + id);
+const standardizeDeleteButtonId = (id) => (`delete-row-button-of-${id}`);
+const standardizeCurrentStateFieldId = (id) => (`current_state-of-${id}`);
+const standardizeReadFieldId = (id) => (`read-of-${id}`);
+const standardizeWriteFieldId = (id) => (`write-of-${id}`);
+const standardizeDirectionFieldId = (id) => (`direction-of-${id}`);
+const standardizeNewStateFieldId = (id) => (`new_state-of-${id}`);
 
 const rowItemDnD = {
 	ITEM_TYPE: "Row-Item",

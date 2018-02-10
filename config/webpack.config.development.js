@@ -1,11 +1,12 @@
 var path = require('path')
 var webpack = require('webpack')
 
+process.noDeprecation = true;
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'eval',
   entry: [
     'webpack-hot-middleware/client',
-    './src/client/index.js'
+    path.resolve(__dirname, '../src/client/index.js')
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -13,26 +14,15 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
-      new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.HotModuleReplacementPlugin(),
-      // new webpack.optimize.UglifyJsPlugin({
-      //   beautify: false,
-      //   comments: false,
-      //   compress: {
-      //     warnings: false,
-      //     drop_console: true,
-      //     collapse_vars: true,
-      //     reduce_vars: true,
-      //   }
-      // })
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: /node_modules/,
-        include: __dirname,
+        include: path.resolve(__dirname, '../'),
         query: {
           presets: ['react-hmre']
         }

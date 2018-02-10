@@ -16,7 +16,6 @@ import Run from 'material-ui/svg-icons/av/play-circle-outline';
 import Edit from 'material-ui/svg-icons/content/create';
 import Download from 'material-ui/svg-icons/file/file-download';
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
 	red500 as failColor,
 	lightGreenA700 as passColor,
@@ -34,17 +33,17 @@ const iconButtonSelector = (statusCode, callBack) => {
 	switch(statusCode) {
 		case STATUS_CODE_PASS:
 			return <IconButton touch={true} tooltip="Accepted" tooltipStyles={{fontSize: 14}} 
-			tooltipPosition="bottom-left" onTouchTap={callBack}><Pass color={passColor} /></IconButton>;
+			tooltipPosition="bottom-left" onClick={callBack}><Pass color={passColor} /></IconButton>;
 		case STATUS_CODE_FAIL:
 			return <IconButton touch={true} tooltip="Wrong" tooltipStyles={{fontSize: 14}} 
-			tooltipPosition="bottom-left" onTouchTap={callBack}><Fail color={failColor} /></IconButton>;
+			tooltipPosition="bottom-left" onClick={callBack}><Fail color={failColor} /></IconButton>;
 		case STATUS_CODE_TIMEOUT:
 			return <IconButton touch={true} tooltip="Time Out" tooltipStyles={{fontSize: 14}} 
-			tooltipPosition="bottom-left" onTouchTap={callBack}><Timeout color={failColor} /></IconButton>;
+			tooltipPosition="bottom-left" onClick={callBack}><Timeout color={failColor} /></IconButton>;
 		case STATUS_CODE_WAITING:
 		default:
 			return <IconButton touch={true} tooltip="Options" tooltipStyles={{fontSize: 14}} 
-			tooltipPosition="bottom-left" onTouchTap={callBack}><MoreVertIcon /></IconButton>;
+			tooltipPosition="bottom-left" onClick={callBack}><MoreVertIcon /></IconButton>;
 	}
 }
 
@@ -81,38 +80,34 @@ class TrialItem extends React.Component {
 	render() {
 		return (
 			<div>
-			<MuiThemeProvider>
-			<ListItem 
-				  innerDivStyle={{paddingBottom: 10}}
-				  primaryText={this.props.name}
-				  secondaryText={(this.props.statusCode !== STATUS_CODE_PASS && 
-				  				  this.props.statusCode !== STATUS_CODE_FAIL &&
-				  				  this.props.statusCode !== STATUS_CODE_TIMEOUT) ? 
-							  	null : 
-							  	processFeedback(this.props.feedback, this.props.statusCode)}
-				  rightIconButton={iconButtonSelector(this.props.statusCode, this.handlePopoverTouchTap)}
-			/>
-	        </MuiThemeProvider>
-	        <MuiThemeProvider>
-	        <Popover
-	          open={this.state.optionMenu}
-	          anchorEl={this.state.anchorEl}
-	          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-	          targetOrigin={{horizontal: 'left', vertical: 'top'}}
-	          onRequestClose={this.handlePopoverRequestClose}
-	        >
-	          <Menu>
-	            <MenuItem primaryText="Run" leftIcon={<Run color={runButtonColor}/>} onTouchTap={() => {this.props.runTrial(); this.handlePopoverRequestClose();}} />
-	            <MenuItem primaryText="Edit" leftIcon={<Edit color={editButtonColor}/>} onTouchTap={() => {this.props.editTrial(); this.handlePopoverRequestClose();}} />
-	            <Divider />
-	            <MenuItem primaryText="Load" leftIcon={<Load color={loadColor}/>} onTouchTap={() => {this.props.loadTrial(); this.handlePopoverRequestClose();}} />
-	            <MenuItem primaryText="Download" leftIcon={<Download color={downloadColor}/>} onTouchTap={() => {this.props.downloadTrial(); this.handlePopoverRequestClose();}} />
-	            
-	            <Divider />
-	            <MenuItem primaryText="Delete" leftIcon={<Delete color={deleteButtonColor}/>} onTouchTap={() => {this.props.deleteTrial(); this.handlePopoverRequestClose();}}/>
-	          </Menu>
-	        </Popover>
-	        </MuiThemeProvider>
+				<ListItem 
+					  innerDivStyle={{paddingBottom: 10}}
+					  primaryText={this.props.name}
+					  secondaryText={(this.props.statusCode !== STATUS_CODE_PASS && 
+					  				  this.props.statusCode !== STATUS_CODE_FAIL &&
+					  				  this.props.statusCode !== STATUS_CODE_TIMEOUT) ? 
+								  	null : 
+								  	processFeedback(this.props.feedback, this.props.statusCode)}
+					  rightIconButton={iconButtonSelector(this.props.statusCode, this.handlePopoverTouchTap)}
+				/>
+		        <Popover
+		          open={this.state.optionMenu}
+		          anchorEl={this.state.anchorEl}
+		          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+		          targetOrigin={{horizontal: 'left', vertical: 'top'}}
+		          onRequestClose={this.handlePopoverRequestClose}
+		        >
+		          <Menu>
+		            <MenuItem primaryText="Run" leftIcon={<Run color={runButtonColor}/>} onClick={() => {this.props.runTrial(); this.handlePopoverRequestClose();}} />
+		            <MenuItem primaryText="Edit" leftIcon={<Edit color={editButtonColor}/>} onClick={() => {this.props.editTrial(); this.handlePopoverRequestClose();}} />
+		            <Divider />
+		            <MenuItem primaryText="Load" leftIcon={<Load color={loadColor}/>} onClick={() => {this.props.loadTrial(); this.handlePopoverRequestClose();}} />
+		            <MenuItem primaryText="Download" leftIcon={<Download color={downloadColor}/>} onClick={() => {this.props.downloadTrial(); this.handlePopoverRequestClose();}} />
+		            
+		            <Divider />
+		            <MenuItem primaryText="Delete" leftIcon={<Delete color={deleteButtonColor}/>} onClick={() => {this.props.deleteTrial(); this.handlePopoverRequestClose();}}/>
+		          </Menu>
+		        </Popover>
 	        </div>	
 		)
 	}
@@ -132,10 +127,3 @@ TrialItem.PropTypes = {
 }
 
 export default TrialItem;
-
-
-// import Traceback from 'material-ui/svg-icons/device/gps-fixed';
-// deepOrangeA400 as tracebackColor,
-// {(this.props.statusCode === STATUS_CODE_FAIL ||
-// 	            	this.props.statusCode === STATUS_CODE_TIMEOUT)?
-// 	            	<MenuItem primaryText="Traceback" leftIcon={<Traceback color={tracebackColor}/>} onTouchTap={() => {this.props.traceback(); this.handlePopoverRequestClose();}} />:null}

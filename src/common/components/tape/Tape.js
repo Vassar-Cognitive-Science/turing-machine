@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import IconButton from 'material-ui/IconButton';
 import RollRight from 'material-ui/svg-icons/av/fast-forward';
 import RollLeft from 'material-ui/svg-icons/av/fast-rewind';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { TAPE_ICON_STYLES } from '../../constants/components/Tape';
 import { Card } from 'material-ui/Card';
@@ -53,7 +52,6 @@ class Tape extends React.Component {
   render() {
     return (
       <div >
-         <MuiThemeProvider>
          <div className="card-of-tape">
           <Card>
             <div className="machine-reported-error" 
@@ -62,63 +60,66 @@ class Tape extends React.Component {
             </div>
 
             {(this.props.isEdittingTrial) ? 
-                                              <MuiThemeProvider>
-                                              <div style={{display: "inline-block"}}>
-                                              <FlatButton
-                                              label={(this.props.isEdittingExpectedTape) ? "Expected Tape": "Start Tape"}
-                                              labelPosition="after"
-                                              primary={true}
-                                              style={{
-                                                color: (this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor,
-                                                }
-                                              }
-                                              onTouchTap={this.props.changeEdittingTarget}
-                                              icon={<Swap 
-                                                color={(this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor}/>
-                                              }
-                                              />
-                                              {
-                                                (!this.state.editTrialName) ?
-                                                <div className="TrialNameButton">
-                                                  <FlatButton 
-                                                  label={this.props.edittingTrial} 
-                                                  onTouchTap={this.toggleEditTrialName} 
-                                                  />
-                                                  </div>:
-                                                <TextField
-                                                id="test-name-input"
-                                                inputStyle={{fontSize: 16}}
-                                                style={{width:"25%"}}
-                                                defaultValue={this.props.edittingTrial}
-                                                onChange={this.props.setTrialName}
-                                                onBlur={this.toggleEditTrialName}
-                                                />  
-                                                }                                       
-                                           <FlatButton
-                                            label="Save" 
-                                            primary={true}
-                                            onTouchTap={this.props.handleSave}
-                                            disabled={!this.props.anyChangeInTrial}
-                                            />
-                                            <FlatButton
-                                            label="Exit" 
-                                            secondary={true}
-                                            onTouchTap={this.props.handleExit}
-                                            />
-                                            </div>
-                                           </MuiThemeProvider>:
-                                            null}
+              <div style={{display: "inline-block"}}>
+                  <FlatButton
+                    label={(this.props.isEdittingExpectedTape) ? "Expected Tape": "Start Tape"}
+                    labelPosition="after"
+                    primary={true}
+                    style={{
+                      color: (this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor,
+                      }
+                    }
+                    onClick={this.props.changeEdittingTarget}
+                    icon={<Swap 
+                      color={(this.props.isEdittingExpectedTape) ? secondaryColor : primaryColor}/>
+                    }
+                  />
+                  {
+                    (!this.state.editTrialName) ?
+                    <div className="TrialNameButton">
+                      <FlatButton 
+                      label={this.props.edittingTrial} 
+                      onClick={this.toggleEditTrialName} 
+                      />
+                      </div>:
+                    <TextField
+                    id="test-name-input"
+                    inputStyle={{fontSize: 16}}
+                    style={{width:"25%"}}
+                    defaultValue={this.props.edittingTrial}
+                    onChange={this.props.setTrialName}
+                    onBlur={this.toggleEditTrialName}
+                    />  
+                    }                                       
+               <FlatButton
+                label="Save" 
+                primary={true}
+                onClick={this.props.handleSave}
+                disabled={!this.props.anyChangeInTrial}
+                />
+                <FlatButton
+                label="Exit" 
+                secondary={true}
+                onClick={this.props.handleExit}
+                />
+                </div> :
+                null
+            }
 
-            {(!this.props.isEdittingTrial) ? 
-              <div className="step-count"><p>Step: {this.props.stepCount}</p></div> : 
-              null}
+            {
+              (!this.props.isEdittingTrial) ? 
+              <div className="step-count">
+                <p>Step: {this.props.stepCount}</p>
+              </div> : 
+              null
+            }
 
             <div className="whole-tape-wrapper">
               <div className="whole-tape">
                 <Head />
                 <div className="roll-left">
                   <IconButton tooltip="Roll Left" 
-                    onTouchTap={this.props.rollLeft} touch={true} style={TAPE_ICON_STYLES.style} 
+                    onClick={this.props.rollLeft} touch={true} style={TAPE_ICON_STYLES.style} 
                     iconStyle={TAPE_ICON_STYLES.mediumIcon} tooltipPosition="bottom-left" disabled={this.props.isRunning}>
                     <RollLeft />
                   </IconButton>
@@ -131,7 +132,7 @@ class Tape extends React.Component {
                   })}
                 <div className="roll-right">
                   <IconButton tooltip="Roll Right" 
-                    onTouchTap={this.props.rollRight} touch={true} style={TAPE_ICON_STYLES.style} 
+                    onClick={this.props.rollRight} touch={true} style={TAPE_ICON_STYLES.style} 
                     iconStyle={TAPE_ICON_STYLES.mediumIcon} tooltipPosition="bottom-right" disabled={this.props.isRunning}>
                     <RollRight />
                   </IconButton>
@@ -140,7 +141,6 @@ class Tape extends React.Component {
             </div>
           </Card>
           </div>
-        </MuiThemeProvider>
       </div>
     );
   }

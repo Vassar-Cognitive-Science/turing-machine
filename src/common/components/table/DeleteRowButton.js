@@ -1,7 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui/svg-icons/action/delete-forever';
-import { TABLE_ROW_NO_COL_STYLE } from '../../constants/components/Table';
 
 const style = {
   icon: {
@@ -10,23 +9,15 @@ const style = {
   }
 }
 
-class DeleteRowButton extends React.Component {
-
+export default class DeleteRowButton extends React.Component {
 	render() {
     return (
             <IconButton  
-              onTouchTap={this.props.deleteRow}
-              id={this.props.id}>
+              onClick={this.props.deleteRow}
+              id={this.props.id}
+            >
               <Delete {...style.icon}/>
             </IconButton>
         )
 	}
 }
-
-DeleteRowButton.PropTypes = {
-	deleteRow: PropTypes.func.isRequired,
-	parent: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-}
-
-export default DeleteRowButton;

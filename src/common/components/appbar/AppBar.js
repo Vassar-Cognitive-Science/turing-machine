@@ -13,17 +13,14 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import { DRAWER_STYLE, APPBAR_STYLES } from '../../constants/components/Appbar';
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MediaQuery from 'react-responsive';
 import AppNavBar from './AppNavBar';
 
 import { blue400 as waitingColor } from 'material-ui/styles/colors';
 
-
 export const ProgressCircle = (size=30, color=waitingColor) => (
 	<CircularProgress color={color} size={size} thickness={2.5} />
 )
-
 
 class AppToolBar extends React.Component {
 	constructor(props) {
@@ -32,8 +29,6 @@ class AppToolBar extends React.Component {
 		this.state = {
 			toolHamburger: false,
 		};
-
-		
 
 		this.handlePopoverTouchTap = (event) => {
 			// This prevents ghost click.
@@ -49,10 +44,7 @@ class AppToolBar extends React.Component {
 				toolHamburger: false,
 			});
 		};
-
 	}
-
-	
 
 	render() {
 		return (
@@ -60,40 +52,38 @@ class AppToolBar extends React.Component {
 			<div className='app-bar'> 
 				<MediaQuery minWidth={APPBAR_STYLES.breakPoints.desktop.minWidth}>
 				<AppNavBar />
-					<MuiThemeProvider>
 					<div>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
-
 								<IconButton tooltip={APPBAR_STYLES.buttons.last.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.last.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
+									onClick={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
 
 								{(this.props.isRunning)?
 									((this.props.animationOn) ?
 									<IconButton tooltip={APPBAR_STYLES.buttons.pause.tip} 
 										 touch={true} tooltipPosition={APPBAR_STYLES.buttons.pause.tipPosition}
-										onTouchTap={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
+										onClick={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
 										</IconButton>:
 										ProgressCircle(APPBAR_STYLES.buttons.pause.progressCirlcSize, 
 													   APPBAR_STYLES.buttons.pause.progressCirlcColor)):
 									<IconButton tooltip={APPBAR_STYLES.buttons.play.tip} 
 										touch={true} tooltipPosition={APPBAR_STYLES.buttons.play.tipPosition}
-										onTouchTap={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
+										onClick={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.next.tip}  touch={true} tooltipPosition={APPBAR_STYLES.buttons.next.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
+									onClick={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.restore.tip} touch={true} 
 									tooltipPosition={APPBAR_STYLES.buttons.restore.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
+									onClick={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
 
 								<IconButton  tooltip={APPBAR_STYLES.buttons.clearTape.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.clearTape.tipPosition}
-									onTouchTap={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
+									onClick={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
 
 								<ToolbarSeparator />
 
@@ -119,30 +109,30 @@ class AppToolBar extends React.Component {
 										APPBAR_STYLES.buttons.animationToggle.onTip:
 										APPBAR_STYLES.buttons.animationToggle.offTip}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.animationToggle.tipPosition}
-									onTouchTap={this.props.handleToggleAnimation}>
+									onClick={this.props.handleToggleAnimation}>
 									{(this.props.animationOn)?APPBAR_STYLES.buttons.animationToggle.onIcon:
 									APPBAR_STYLES.buttons.animationToggle.offIcon}</IconButton>
 								<ToolbarSeparator />
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.undo.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.undo.tipPosition}
-									onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}>{APPBAR_STYLES.buttons.undo.icon}</IconButton>
+									onClick={this.props.handleUndo} disabled={!this.props.undoAble}>{APPBAR_STYLES.buttons.undo.icon}</IconButton>
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.redo.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.redo.tipPosition}
-									onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}>{APPBAR_STYLES.buttons.redo.icon}</IconButton>
+									onClick={this.props.handleRedo} disabled={!this.props.redoAble}>{APPBAR_STYLES.buttons.redo.icon}</IconButton>
 
 								<ToolbarSeparator />
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.test.tip} 
 									disabled={this.props.isEdittingTrial}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.test.tipPosition}
-									onTouchTap={this.props.trialDrawerToggleCallback}>{APPBAR_STYLES.buttons.test.icon}</IconButton>
+									onClick={this.props.trialDrawerToggleCallback}>{APPBAR_STYLES.buttons.test.icon}</IconButton>
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.save.tip} 
 									disabled={this.props.isEdittingTrial}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.save.tipPosition}
-									onTouchTap={this.props.handleSave}>
+									onClick={this.props.handleSave}>
 									{APPBAR_STYLES.buttons.save.icon}</IconButton>
 
 								<ToolbarSeparator />
@@ -150,44 +140,42 @@ class AppToolBar extends React.Component {
 
 					    </Toolbar>
 			    	</div>
-					</MuiThemeProvider>
 			    	</MediaQuery>
 			    <MediaQuery maxWidth={APPBAR_STYLES.breakPoints.ipad.maxWidth} 
 			    			minWidth={APPBAR_STYLES.breakPoints.ipad.minWidth}>
 			    <AppNavBar />
-			    <MuiThemeProvider>
 					<div>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
 								<IconButton tooltip={APPBAR_STYLES.buttons.last.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.last.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
+									onClick={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
 
 								{(this.props.isRunning)?
 									((this.props.animationOn) ?
 									<IconButton tooltip={APPBAR_STYLES.buttons.pause.tip} 
 										 touch={true} tooltipPosition={APPBAR_STYLES.buttons.pause.tipPosition}
-										onTouchTap={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
+										onClick={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
 										</IconButton>:
 										ProgressCircle(APPBAR_STYLES.buttons.pause.progressCirlcSize, 
 													   APPBAR_STYLES.buttons.pause.progressCirlcColor)):
 									<IconButton tooltip={APPBAR_STYLES.buttons.play.tip} 
 										touch={true} tooltipPosition={APPBAR_STYLES.buttons.play.tipPosition}
-										onTouchTap={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
+										onClick={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.next.tip}  touch={true} tooltipPosition={APPBAR_STYLES.buttons.next.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
+									onClick={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.restore.tip} touch={true} 
 									tooltipPosition={APPBAR_STYLES.buttons.restore.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
+									onClick={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
 
 								<IconButton  tooltip={APPBAR_STYLES.buttons.clearTape.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.clearTape.tipPosition}
-									onTouchTap={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
+									onClick={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
 
 								<ToolbarSeparator />
 								<label style={APPBAR_STYLES.buttons.sliderInBar.sliderLabelStyle}>
@@ -209,25 +197,25 @@ class AppToolBar extends React.Component {
 										APPBAR_STYLES.buttons.animationToggle.onTip:
 										APPBAR_STYLES.buttons.animationToggle.offTip}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.animationToggle.tipPosition}
-									onTouchTap={this.props.handleToggleAnimation}>
+									onClick={this.props.handleToggleAnimation}>
 									{(this.props.animationOn)?APPBAR_STYLES.buttons.animationToggle.onIcon:
 									APPBAR_STYLES.buttons.animationToggle.offIcon}</IconButton>
 
 								<ToolbarSeparator />
 								<IconButton tooltip={APPBAR_STYLES.buttons.undo.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.undo.tipPosition}
-									onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}>{APPBAR_STYLES.buttons.undo.icon}</IconButton>
+									onClick={this.props.handleUndo} disabled={!this.props.undoAble}>{APPBAR_STYLES.buttons.undo.icon}</IconButton>
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.redo.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.redo.tipPosition}
-									onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}>{APPBAR_STYLES.buttons.redo.icon}</IconButton>
+									onClick={this.props.handleRedo} disabled={!this.props.redoAble}>{APPBAR_STYLES.buttons.redo.icon}</IconButton>
 
 								<ToolbarSeparator />
 							</ToolbarGroup>
 							<ToolbarGroup lastChild={true}>
 								<IconButton tooltip={APPBAR_STYLES.buttons.moreTools.tip}  
 											touch={true} tooltipPosition={APPBAR_STYLES.buttons.moreTools.tipPosition}
-							       		    onTouchTap={this.handlePopoverTouchTap}
+							       		    onClick={this.handlePopoverTouchTap}
 							        		>{APPBAR_STYLES.buttons.moreTools.icon}</IconButton>
 							        <Popover
 							          open={this.state.toolHamburger}
@@ -242,13 +230,13 @@ class AppToolBar extends React.Component {
 							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.test.icon}  
 										disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.trialDrawerToggleCallback(); this.handlePopoverRequestClose()}}
+							        	onClick={() => { this.props.trialDrawerToggleCallback(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
 										disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
+							        	onClick={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
 							        	/>
 							        </Menu>
 							        </Popover>
@@ -256,44 +244,42 @@ class AppToolBar extends React.Component {
 
 					    </Toolbar>
 			    	</div>
-					</MuiThemeProvider>
 			    </MediaQuery>
 			    <MediaQuery maxWidth={APPBAR_STYLES.breakPoints.bigPhone.maxWidth} 
 			    			minWidth={APPBAR_STYLES.breakPoints.bigPhone.minWidth}>
 			    <AppNavBar />
-			    <MuiThemeProvider>
 					<div>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
 								<IconButton tooltip={APPBAR_STYLES.buttons.last.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.last.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
+									onClick={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
 
 								{(this.props.isRunning)?
 									((this.props.animationOn) ?
 									<IconButton tooltip={APPBAR_STYLES.buttons.pause.tip} 
 										 touch={true} tooltipPosition={APPBAR_STYLES.buttons.pause.tipPosition}
-										onTouchTap={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
+										onClick={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
 										</IconButton>:
 										ProgressCircle(APPBAR_STYLES.buttons.pause.progressCirlcSize, 
 													   APPBAR_STYLES.buttons.pause.progressCirlcColor)):
 									<IconButton tooltip={APPBAR_STYLES.buttons.play.tip} 
 										touch={true} tooltipPosition={APPBAR_STYLES.buttons.play.tipPosition}
-										onTouchTap={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
+										onClick={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.next.tip}  touch={true} tooltipPosition={APPBAR_STYLES.buttons.next.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
+									onClick={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.restore.tip} touch={true} 
 									tooltipPosition={APPBAR_STYLES.buttons.restore.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
+									onClick={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
 
 								<IconButton  tooltip={APPBAR_STYLES.buttons.clearTape.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.clearTape.tipPosition}
-									onTouchTap={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
+									onClick={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
 
 								<ToolbarSeparator />
 								<label style={APPBAR_STYLES.buttons.sliderInBar.sliderLabelStyle}>
@@ -315,7 +301,7 @@ class AppToolBar extends React.Component {
 										APPBAR_STYLES.buttons.animationToggle.onTip:
 										APPBAR_STYLES.buttons.animationToggle.offTip}
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.animationToggle.tipPosition}
-									onTouchTap={this.props.handleToggleAnimation}>
+									onClick={this.props.handleToggleAnimation}>
 									{(this.props.animationOn)?APPBAR_STYLES.buttons.animationToggle.onIcon:
 									APPBAR_STYLES.buttons.animationToggle.offIcon}</IconButton>
 								<ToolbarSeparator />
@@ -323,7 +309,7 @@ class AppToolBar extends React.Component {
 							<ToolbarGroup lastChild={true}>
 								<IconButton tooltip={APPBAR_STYLES.buttons.moreTools.tip}  
 											touch={true} tooltipPosition={APPBAR_STYLES.buttons.moreTools.tipPosition}
-							       		    onTouchTap={this.handlePopoverTouchTap}
+							       		    onClick={this.handlePopoverTouchTap}
 							        		>{APPBAR_STYLES.buttons.moreTools.icon}</IconButton>
 							        <Popover
 							          open={this.state.toolHamburger}
@@ -336,25 +322,25 @@ class AppToolBar extends React.Component {
 							       		<MenuItem 
 							       		primaryText={APPBAR_STYLES.buttons.undo.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.undo.icon} 
-							       		onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}
+							       		onClick={this.props.handleUndo} disabled={!this.props.undoAble}
 							       		/>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.redo.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.redo.icon} 
-							        	onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}
+							        	onClick={this.props.handleRedo} disabled={!this.props.redoAble}
 							        	/>
 							        	<Divider />
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.test.icon} 
 							        	disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.trialDrawerToggleCallback(); this.handlePopoverRequestClose()}}
+							        	onClick={() => { this.props.trialDrawerToggleCallback(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
 							        	disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
+							        	onClick={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
 							        	/>
 							        </Menu>
 							        </Popover>
@@ -362,43 +348,41 @@ class AppToolBar extends React.Component {
 
 					    </Toolbar>
 			    	</div>
-					</MuiThemeProvider>
 			    </MediaQuery>
 			    <MediaQuery maxWidth={APPBAR_STYLES.breakPoints.smallPhone.maxWidth}>
 			    <AppNavBar titleStyle={APPBAR_STYLES.breakPoints.smallPhone.titleStyle}/>
-			    <MuiThemeProvider>
 					<div>
 						<Toolbar>
 							<ToolbarGroup firstChild={true}>
 								<IconButton tooltip={APPBAR_STYLES.buttons.last.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.last.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
+									onClick={this.props.handleLast}>{APPBAR_STYLES.buttons.last.icon}</IconButton>
 
 								{(this.props.isRunning)?
 									((this.props.animationOn) ?
 									<IconButton tooltip={APPBAR_STYLES.buttons.pause.tip} 
 										 touch={true} tooltipPosition={APPBAR_STYLES.buttons.pause.tipPosition}
-										onTouchTap={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
+										onClick={this.props.handlePause}>{APPBAR_STYLES.buttons.pause.icon}
 										</IconButton>:
 										ProgressCircle(APPBAR_STYLES.buttons.pause.progressCirlcSize, 
 													   APPBAR_STYLES.buttons.pause.progressCirlcColor)):
 									<IconButton tooltip={APPBAR_STYLES.buttons.play.tip} 
 										touch={true} tooltipPosition={APPBAR_STYLES.buttons.play.tipPosition}
-										onTouchTap={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
+										onClick={this.props.handleRun}>{APPBAR_STYLES.buttons.play.icon}</IconButton>}
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.next.tip}  touch={true} tooltipPosition={APPBAR_STYLES.buttons.next.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
+									onClick={this.props.handleNext}>{APPBAR_STYLES.buttons.next.icon}</IconButton>
 
 								<IconButton tooltip={APPBAR_STYLES.buttons.restore.tip} touch={true} 
 									tooltipPosition={APPBAR_STYLES.buttons.restore.tipPosition}
 									disabled={this.props.isRunning && !this.props.animationOn}
-									onTouchTap={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
+									onClick={this.props.handleRestore}>{APPBAR_STYLES.buttons.restore.icon}</IconButton>
 
 								<IconButton  tooltip={APPBAR_STYLES.buttons.clearTape.tip} 
 									touch={true} tooltipPosition={APPBAR_STYLES.buttons.clearTape.tipPosition}
-									onTouchTap={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
+									onClick={this.props.handleClearTape}>{APPBAR_STYLES.buttons.clearTape.icon}</IconButton>
 
 								
 								<ToolbarSeparator />
@@ -406,7 +390,7 @@ class AppToolBar extends React.Component {
 							<ToolbarGroup lastChild={true}>
 								<IconButton tooltip={APPBAR_STYLES.buttons.moreTools.tip}  
 											touch={true} tooltipPosition={APPBAR_STYLES.buttons.moreTools.tipPosition}
-							       		    onTouchTap={this.handlePopoverTouchTap}
+							       		    onClick={this.handlePopoverTouchTap}
 							        		>{APPBAR_STYLES.buttons.moreTools.icon}</IconButton>
 							        <Popover
 							          open={this.state.toolHamburger}
@@ -431,25 +415,25 @@ class AppToolBar extends React.Component {
 							       		<MenuItem 
 							       		primaryText={APPBAR_STYLES.buttons.undo.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.undo.icon} 
-							       		onTouchTap={this.props.handleUndo} disabled={!this.props.undoAble}
+							       		onClick={this.props.handleUndo} disabled={!this.props.undoAble}
 							       		/>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.redo.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.redo.icon} 
-							        	onTouchTap={this.props.handleRedo} disabled={!this.props.redoAble}
+							        	onClick={this.props.handleRedo} disabled={!this.props.redoAble}
 							        	/>
 							        	<Divider />
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.test.tip}  
 							        	leftIcon={APPBAR_STYLES.buttons.test.icon} 
 							        	disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.trialDrawerToggleCallback(); this.handlePopoverRequestClose()}}
+							        	onClick={() => { this.props.trialDrawerToggleCallback(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<MenuItem 
 							        	primaryText={APPBAR_STYLES.buttons.save.tip} 
 							        	leftIcon={APPBAR_STYLES.buttons.save.icon} 
 							        	disabled={this.props.isEdittingTrial}
-							        	onTouchTap={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
+							        	onClick={() => { this.props.handleSave(); this.handleSaveMachineResponseOn(); this.handlePopoverRequestClose()}}
 							        	/>
 							        	<Divider />
 							        	<MenuItem 
@@ -460,7 +444,7 @@ class AppToolBar extends React.Component {
 							        	leftIcon={(this.props.animationOn)?
 							        				APPBAR_STYLES.buttons.animationToggle.onIcon:
 													APPBAR_STYLES.buttons.animationToggle.offIcon}
-							        	onTouchTap={this.props.handleToggleAnimation}
+							        	onClick={this.props.handleToggleAnimation}
 							        	/>
 							        </Menu>
 							        </Popover>
@@ -468,7 +452,6 @@ class AppToolBar extends React.Component {
 
 					    </Toolbar>
 			    	</div>
-					</MuiThemeProvider>
 			    </MediaQuery>
 		    </div>
 		    </div>

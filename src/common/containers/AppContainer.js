@@ -10,8 +10,7 @@ import {
 } from '../actions/trialActions';
 
 var TEST_ID = 1;
-const TEST_ID_PREFIX = "Test Case #";
-export const standardizeTestId = (id) => (TEST_ID_PREFIX + id); 
+export const standardizeTestId = (id) => (`Test Case #${id}`); 
 
 const handleAddTest = (dispatch, ownProps) => {
 	dispatch(function(dispatch, getState) {

@@ -8,7 +8,6 @@ import Subheader from 'material-ui/Subheader';
 import { List } from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { ProgressCircle } from './appbar/AppBar';
 import AppBar from '../containers/appbar/AppBarContainer';
@@ -91,14 +90,12 @@ class App extends React.Component {
 				        label="Okay"
 				        primary={true}
 				        keyboardFocused={true}
-				        onTouchTap={this.handleDialogClose}
+				        onClick={this.handleDialogClose}
 				      	/>
     	];
 
 		return (
   			<div className="app-container">
-
-  				<MuiThemeProvider>
 		    	<Snackbar
 	          		open={this.state.saveMachineResponseOpen}
 	          		message={(this.state.anythingNewWithMachine) ? snackBarMessage.successful : snackBarMessage.nothingNew}
@@ -106,9 +103,7 @@ class App extends React.Component {
 	          		autoHideDuration={APPBAR_STYLES.buttons.snackBar.timeout}
 	          		onRequestClose={this.handleSaveMachineResponseClose}
 	        	/>
-        		</MuiThemeProvider>
 
-        		<MuiThemeProvider>
 		        <Dialog
 		          title="Something is wrong!"
 		          actions={actions}
@@ -118,15 +113,14 @@ class App extends React.Component {
 		        >
 		          {this.state.errorMessage}
 		        </Dialog>
-        		</MuiThemeProvider>
 
-        		<MuiThemeProvider>
-					<Drawer
-			          docked={false}
-			          style={DRAWER_STYLE.style}
-			          open={this.state.trialDrawerToggle}
-			          onRequestChange={(open) => this.setState({trialDrawerToggle: open})}
-			        >
+
+				<Drawer
+		          docked={false}
+		          style={DRAWER_STYLE.style}
+		          open={this.state.trialDrawerToggle}
+		          onRequestChange={(open) => this.setState({trialDrawerToggle: open})}
+		        >
 			        <Subheader style={DRAWER_STYLE.subheadStyle}>{DRAWER_STYLE.subheadText}</Subheader>
 			        <Divider />
 			        <div style={DRAWER_STYLE.listStyle}>
@@ -144,30 +138,37 @@ class App extends React.Component {
 			        {(this.props.isRunningTrial) ?
 						<MenuItem primaryText={DRAWER_STYLE.buttons.runTrial.runningLabel} leftIcon={ProgressCircle()} /> :
 						<MenuItem primaryText={DRAWER_STYLE.buttons.runTrial.label} leftIcon={DRAWER_STYLE.buttons.runTrial.icon}
-				 			onTouchTap={this.props.handleRunAllTests}/>}
+				 			onClick={this.props.handleRunAllTests}/>}
 
 			        <MenuItem primaryText={DRAWER_STYLE.buttons.addTrial.label} leftIcon={DRAWER_STYLE.buttons.addTrial.icon}
-			         onTouchTap={this.props.handleAddTest}/>
+			         onClick={this.props.handleAddTest}/>
 			        <Divider />
 			        <MenuItem primaryText={DRAWER_STYLE.buttons.uploadTests.label} 
 			        	leftIcon={DRAWER_STYLE.buttons.uploadTests.icon} 
-			        	onTouchTap={this.props.uploadTests} />
-			        <MenuItem primaryText={DRAWER_STYLE.buttons.saveTests.label} leftIcon={DRAWER_STYLE.buttons.saveTests.icon} onTouchTap={this.props.downloadAllTests} />
+			        	onClick={this.props.uploadTests} />
+			        <MenuItem primaryText={DRAWER_STYLE.buttons.saveTests.label} leftIcon={DRAWER_STYLE.buttons.saveTests.icon} onClick={this.props.downloadAllTests} />
 
 			        <Divider />
 			        <MenuItem primaryText={DRAWER_STYLE.buttons.deleteTests.label} leftIcon={DRAWER_STYLE.buttons.deleteTests.icon}
-			         onTouchTap={this.props.handleDeleteTests}/>
+			         onClick={this.props.handleDeleteTests}/>
 			        </div>
-			        </Drawer>
-		    </MuiThemeProvider>
+		        </Drawer>
+
 
   				<AppBar snackBarPopUpCallback={this.handleSaveMachineResponseOn} 
   						errorMessagePopUpCallback={this.handleDialogOpen}
   						setErrorMessageCallback={this.setErrorMessage}
   						snackBarSetAnythingNewCallback={this.setAnythingNewWithMachine}
-  						trialDrawerToggleCallback={this.handleTrialDrawerToggle}/>
-	    		<Tape trialDrawerToggleCallback={this.handleTrialDrawerToggle}/>
-	    		{(this.props.isEdittingTrial) ? <div className='blank-background'></div> : <DynamicRuleTable />}
+  						trialDrawerToggleCallback={this.handleTrialDrawerToggle}
+  				/>
+	    		<Tape 
+	    			trialDrawerToggleCallback={this.handleTrialDrawerToggle}
+	    		/>
+	    		{
+	    			(this.props.isEdittingTrial) ? 
+	    			<div className='blank-background' /> : 
+	    			<DynamicRuleTable />
+	    		}
   			</div>
   		);
 	}

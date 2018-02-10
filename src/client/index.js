@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore , applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Router, Route } from 'react-router';
 import createBrowserHistory from 'history/createBrowserHistory';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import App from '../common/containers/AppContainer';
 import PageNotFound from '../common/components/PageNotFound';
@@ -35,16 +35,17 @@ if (preloadedState) {
 	store.dispatch(initMachineAction());
 }
 
-injectTapEventPlugin();
 ReactDOM.render(
   <Provider store={store}>
-  	<Router history={createBrowserHistory()}>
-		<div>
-			<Route exact path="/" component={App} />
-			<Route exact path="/:id" component={App} />
-			<Route exact path="/error/404" component={PageNotFound} />
-		</div>
-  	</Router>
+  	<MuiThemeProvider>
+	  	<Router history={createBrowserHistory()}>
+			<div>
+				<Route exact path="/" component={App} />
+				<Route exact path="/:id" component={App} />
+				<Route exact path="/error/404" component={PageNotFound} />
+			</div>
+	  	</Router>
+  	</MuiThemeProvider>
   </Provider>,
   document.getElementById('container')
 );

@@ -1,17 +1,18 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { DIRECTION_BUTTON_STYLE } from '../../constants/components/Table';
+const style = {
+  root: {
+    marginRight: '15px',
+    marginLeft: '15px',
+    maxWidth: '200px'
+  }
+}
 
 class SwitchDirectionButton extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.value !== nextProps.value;
   }
 
 	render() {
@@ -21,7 +22,7 @@ class SwitchDirectionButton extends React.Component {
     ];
 
     return (
-          <div style={{marginRight: '15px', marginLeft: '15px', maxWidth: '200px'}}>
+          <div style={{...style.root}}>
             <SelectField
               value={this.props.value}
               fullWidth
@@ -34,13 +35,6 @@ class SwitchDirectionButton extends React.Component {
           </div>
         )
 	  }
-}
-
-SwitchDirectionButton.PropTypes = {
-	switchDirection: PropTypes.func.isRequired,
-	parent: PropTypes.string.isRequired,
-	value: PropTypes.bool.isRequired,
-  id: PropTypes.string.isRequired,
 }
 
 SwitchDirectionButton.defaultProps = {

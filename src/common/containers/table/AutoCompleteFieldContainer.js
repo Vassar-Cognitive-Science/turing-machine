@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import AutoCompleteField from '../../components/table/AutoCompleteField';
 import { setRowInStateAction, setRowReadAction, setRowWriteAction, setRowNewStateAction } from '../../actions/tableActions';
-import { FIELD_TYPES } from '../../components/table/DynamicRuleTable';
+import { FIELD_TYPES } from '../../components/table/RowItem';
 import { HALT, BLANK, STAR } from '../../constants/SpecialCharacters';
 
 export const standardFilter = (searchText, key) => (searchText === "" || key.startsWith(searchText) && key !== searchText);
