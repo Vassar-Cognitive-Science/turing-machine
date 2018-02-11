@@ -15,7 +15,7 @@ import { Provider } from 'react-redux';
 import template from '../../public/template';
 import { createIdFromTimeStamp } from './utils';
 
-const DEV_ENVIRONMENT = process.env !== 'production';
+const DEV_ENVIRONMENT = process.env.NODE_ENV !== 'production';
 
 const MongoClient = require('mongodb').MongoClient,
 	POST_DATA_SIZE_LIMIE = '50mb',
