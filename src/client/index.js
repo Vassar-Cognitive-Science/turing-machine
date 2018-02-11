@@ -29,7 +29,9 @@ window.addEventListener('beforeunload', (e) => {
 	}
 });
 
+console.log(preloadedState)
 if (preloadedState) {
+	console.log(1);
 	store.dispatch(loadMachineAction(preloadedState));
 } else {
 	store.dispatch(initMachineAction());
