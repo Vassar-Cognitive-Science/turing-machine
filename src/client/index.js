@@ -35,6 +35,7 @@ if (preloadedState) {
 	store.dispatch(initMachineAction());
 }
 
+
 ReactDOM.render(
   <Provider store={store}>
   	<MuiThemeProvider>

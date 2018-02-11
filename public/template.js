@@ -1,4 +1,4 @@
-export default function(preloadedState) {
+export default function(preloadedState=null) {
 	return `
 	<!DOCTYPE html>
 	<html lang="en">
@@ -19,7 +19,6 @@ export default function(preloadedState) {
 	  </head>
       <body class='canvas'>
         <div id="container"></div>
-        
       </body>
       <script>
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\x3c')}

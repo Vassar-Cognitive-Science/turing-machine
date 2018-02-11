@@ -132,8 +132,6 @@ const uploadTests = (dispatch) => {
 			reader.name = files[i].name;
 			reader.readAsText(files[i]);
 		}
-
-
 	};
 
 	a.click();
