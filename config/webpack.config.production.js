@@ -6,6 +6,7 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   entry: [
     'whatwg-fetch',
+    'core-js/fn/promise',
     path.resolve(__dirname, '../src/client/index.js')
   ],
   output: {
