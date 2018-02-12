@@ -14,7 +14,7 @@ import DragHandleIcon from 'material-ui/svg-icons/navigation/menu';
 const style = {
 	root: (isHighlighted, isDragging) => ({
 		backgroundColor: isHighlighted ? "#87dbff" : "#fff",
-		display: 'flex',
+		// display: 'flex',
 		justifyContent: 'space-evenly',
 		border: isDragging ? '2px dotted #aaa' : 'none'
 	}),
@@ -123,7 +123,7 @@ class RowItem extends React.Component {
 		} = this.props;
 
 		return connectDragPreview(connectDropTarget(
-			<div style={{...style.root(isHighlighted, isDragging)}}>
+			<div className="RowItemContainer" style={{...style.root(isHighlighted, isDragging)}}>
 				{
 				connectDragSource(
 					<div style={{...style.buttonContainer}}>

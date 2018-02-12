@@ -16,9 +16,9 @@ function pauseEvent(e){
 
 function unFocus() {
   if (document.selection) {
-    document.selection.empty()
+    document.selection.empty();
   } else {
-    window.getSelection().removeAllRanges()
+    window.getSelection().removeAllRanges();
   }
 } 
 

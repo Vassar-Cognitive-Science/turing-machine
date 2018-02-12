@@ -42,8 +42,7 @@ class Head extends React.Component {
                 onUpdateInput={this.props.onUpdateInput}
                 maxLength={HEAD_INPUT_MAXLENGTH}
                 disabled={this.props.isRunning || this.props.isEdittingExpectedTape}
-                >
-              </AutoComplete>
+                />
             <div className="neck"></div>
             <div className="shoulder"></div>
           </div>
