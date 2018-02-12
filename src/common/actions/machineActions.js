@@ -1,6 +1,7 @@
 import * as actionTypes from '../constants/ActionTypes';
 import { setAnimationSpeedAction } from './guiActions';
 import { restore } from '../reducers/machine';
+import 'whatwg-fetch';
 
 export function initMachineAction() {
 	return {

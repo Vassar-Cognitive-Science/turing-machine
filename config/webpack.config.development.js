@@ -6,6 +6,8 @@ module.exports = {
   devtool: 'eval',
   entry: [
     'webpack-hot-middleware/client',
+    'whatwg-fetch',
+    'core-js/fn/promise',
     path.resolve(__dirname, '../src/client/index.js')
   ],
   output: {
@@ -14,7 +16,7 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
     rules: [

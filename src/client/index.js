@@ -29,7 +29,7 @@ window.addEventListener('beforeunload', (e) => {
 	}
 });
 
-if (preloadedState.constructor === Object && Object.keys(preloadedState).length > 0) {
+if (preloadedState && preloadedState.constructor === Object && Object.keys(preloadedState).length > 0) {
 	store.dispatch(loadMachineAction(preloadedState));
 } else {
 	store.dispatch(initMachineAction());

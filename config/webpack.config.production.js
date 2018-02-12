@@ -5,6 +5,7 @@ process.noDeprecation = true;
 module.exports = {
   devtool: 'cheap-module-source-map',
   entry: [
+    'whatwg-fetch',
     path.resolve(__dirname, '../src/client/index.js')
   ],
   output: {
