@@ -28,7 +28,7 @@ class Head extends React.Component {
           disabled={this.props.isRunning}
           >
           <div className="header">
-            <div className="hair" style={(this.props.hair_styles)? (this.props.hair_styles) : INIT_HAIR_STYLES} ></div>
+            <div className="hair" style={(this.props.hair_styles)? (this.props.hair_styles) : INIT_HAIR_STYLES} />
               <AutoComplete 
                 className="head"
                 filter={this.props.filter}
@@ -43,8 +43,8 @@ class Head extends React.Component {
                 maxLength={HEAD_INPUT_MAXLENGTH}
                 disabled={this.props.isRunning || this.props.isEdittingExpectedTape}
                 />
-            <div className="neck"></div>
-            <div className="shoulder"></div>
+            <div className="neck" />
+            <div className="shoulder" />
           </div>
         </Draggable>
       </div>

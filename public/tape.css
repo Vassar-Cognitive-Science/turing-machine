@@ -96,7 +96,7 @@
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
-  pointer-events:none;
+  /*pointer-events:none;*/
 }
 
 .neck {
