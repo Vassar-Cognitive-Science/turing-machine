@@ -51,7 +51,7 @@
   },
   "betterScripts": {
     "start": {
-      "command": "nodemon ./src/server/index.js",
+      "command": "node ./src/server/index.js",
       "env": {
         "NODE_ENV": "production"
       }
