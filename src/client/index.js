@@ -6,6 +6,8 @@ import thunk from 'redux-thunk';
 import { Router, Route } from 'react-router';
 import createBrowserHistory from 'history/createBrowserHistory';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore/lite';
 
 import App from '../common/containers/AppContainer';
 import PageNotFound from '../common/components/PageNotFound';
@@ -14,6 +16,12 @@ import { resizeScreenAndTapeAction } from '../common/actions/guiActions';
 import { initMachineAction, loadMachineAction } from '../common/actions/machineActions';
 
 const preloadedState = window.__PRELOADED_STATE__;
+
+const firebaseConfig = {
+	//...
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 

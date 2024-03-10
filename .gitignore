@@ -43,3 +43,5 @@ tests\ and\ raw\ models
 
 *.duplicate.*
 
+.idea
+.vs
