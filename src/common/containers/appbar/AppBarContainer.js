@@ -1,81 +1,80 @@
-import { connect } from 'react-redux';
-import AppToolBar from '../../components/appbar/AppBar';
-import { initializeTapeAction } from '../../actions/tapeActions';
-import { toggleAnimationAction } from '../../actions/guiActions';
+import { connect } from 'react-redux'
+import AppToolBar from '../../components/appbar/AppBar'
+import { initializeTapeAction } from '../../actions/tapeActions'
+import { toggleAnimationAction } from '../../actions/guiActions'
 import {
-	preStepAction,
-	stepAction, 
-	stopAction,
-	runMachineThunkActionCreator,
-	setMachineSpeedThunkActionCreator,
-	stepBackAction,
-	restoreAction,
-	undoAction,
-	redoAction,
-	saveMachineActionCreator,
-} from '../../actions/machineActions';
+  preStepAction,
+  stepAction,
+  stopAction,
+  runMachineThunkActionCreator,
+  setMachineSpeedThunkActionCreator,
+  stepBackAction,
+  restoreAction,
+  undoAction,
+  redoAction,
+  saveMachineActionCreator
+} from '../../actions/machineActions'
 
-const standardizeAnimationSpeedLabel = (speed) => ("x " + parseFloat(speed).toFixed(1));
+const standardizeAnimationSpeedLabel = (speed) => ('x ' + parseFloat(speed).toFixed(1))
 
-function handleRun(dispatch) {
-	dispatch(runMachineThunkActionCreator());
+function handleRun (dispatch) {
+  dispatch(runMachineThunkActionCreator())
 }
 
 const handlePause = (dispatch, ownProps) => {
-	dispatch(stopAction());
+  dispatch(stopAction())
 }
 
 const handleLast = (dispatch, ownProps) => {
-	dispatch(stopAction());
-	dispatch(stepBackAction());
+  dispatch(stopAction())
+  dispatch(stepBackAction())
 }
 
 const handleNext = (dispatch, ownProps) => {
-	dispatch(stopAction());
-	dispatch(preStepAction(true));
-	dispatch(stepAction());
+  dispatch(stopAction())
+  dispatch(preStepAction(true))
+  dispatch(stepAction())
 }
 
 const handleRestore = (dispatch, ownProps) => {
-	dispatch(stopAction());
-	dispatch(restoreAction());
+  dispatch(stopAction())
+  dispatch(restoreAction())
 }
 
 const handleToggleAnimation = (dispatch, ownProps) => {
-	dispatch(toggleAnimationAction());
+  dispatch(toggleAnimationAction())
 }
 
 const handleRedo = (dispatch, ownProps) => {
-	dispatch(stopAction());
-	dispatch(redoAction());
+  dispatch(stopAction())
+  dispatch(redoAction())
 }
 
 const handleUndo = (dispatch, ownProps) => {
-	dispatch(stopAction());
-	dispatch(undoAction());
+  dispatch(stopAction())
+  dispatch(undoAction())
 }
 
 const handleTest = (dispatch, ownProps) => {
-	dispatch(stopAction());
+  dispatch(stopAction())
 }
 
 const handleSave = (dispatch, ownProps) => {
-	dispatch(stopAction());
-	dispatch(saveMachineActionCreator(ownProps));
+  dispatch(stopAction())
+  dispatch(saveMachineActionCreator(ownProps))
 }
 
 const handleClearTape = (dispatch, ownProps) => {
-	dispatch(stopAction());
-	dispatch(initializeTapeAction(false));
+  dispatch(stopAction())
+  dispatch(initializeTapeAction(false))
 }
 
 const handleSpeedChange = (newValue, dispatch, ownProps) => {
-	dispatch(setMachineSpeedThunkActionCreator(newValue));
+  dispatch(setMachineSpeedThunkActionCreator(newValue))
 }
 
-
 const mapStateToProps = (state, ownProps) => {
-    return {
+  return {
     	isRunning: state.isRunning,
     	animationOn: state.animationOn,
     	animationSpeedFactor: state.animationSpeedFactor,
@@ -84,22 +83,22 @@ const mapStateToProps = (state, ownProps) => {
     	undoAble: state.undoEditHistory.length > 0,
     	lastStepAble: state.runHistory.length > 0,
     	isEdittingTrial: state.isEdittingTrial
-    };
+  }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	handleRun: () => { handleRun(dispatch, ownProps) },
-	handlePause: () => { handlePause(dispatch, ownProps) },
-	handleLast: () => { handleLast(dispatch, ownProps) },
-	handleNext: () => { handleNext(dispatch, ownProps) },
-	handleRestore: () => { handleRestore(dispatch, ownProps) },
-	handleUndo: () => { handleUndo(dispatch, ownProps) },
-	handleRedo: () => { handleRedo(dispatch, ownProps) },
-	handleTest: () => { handleTest(dispatch, ownProps) },
-	handleSave: () => { handleSave(dispatch, ownProps) },
-	handleClearTape: () => { handleClearTape(dispatch, ownProps) },
-	handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch, ownProps) },
-	handleToggleAnimation: () => { handleToggleAnimation(dispatch, ownProps) },
+  handleRun: () => { handleRun(dispatch, ownProps) },
+  handlePause: () => { handlePause(dispatch, ownProps) },
+  handleLast: () => { handleLast(dispatch, ownProps) },
+  handleNext: () => { handleNext(dispatch, ownProps) },
+  handleRestore: () => { handleRestore(dispatch, ownProps) },
+  handleUndo: () => { handleUndo(dispatch, ownProps) },
+  handleRedo: () => { handleRedo(dispatch, ownProps) },
+  handleTest: () => { handleTest(dispatch, ownProps) },
+  handleSave: () => { handleSave(dispatch, ownProps) },
+  handleClearTape: () => { handleClearTape(dispatch, ownProps) },
+  handleSpeedChange: (e, newValue) => { handleSpeedChange(newValue, dispatch, ownProps) },
+  handleToggleAnimation: () => { handleToggleAnimation(dispatch, ownProps) }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar);
+export default connect(mapStateToProps, mapDispatchToProps)(AppToolBar)

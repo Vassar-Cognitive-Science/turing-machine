@@ -1,13 +1,13 @@
-import * as actionTypes from '../constants/ActionTypes';
+import * as actionTypes from '../constants/ActionTypes'
 
-export function deleteTrialAction(id) {
-	return {
-		type: actionTypes.DELETE_TRIAL,
-		id: id
-	};
+export function deleteTrialAction (id) {
+  return {
+    type: actionTypes.DELETE_TRIAL,
+    id
+  }
 }
 
-export function addTrialAction(id, 
+export function addTrialAction (id,
 							   startState,
 							   startTape,
 							   expectedTape,
@@ -16,84 +16,84 @@ export function addTrialAction(id,
 							   startTapeHead,
 							   expectedTapeHead,
 							   name) {
-	return {
-		type: actionTypes.ADD_TRIAL,
-		id: id,
+  return {
+    type: actionTypes.ADD_TRIAL,
+    id,
 
-		startState: startState,
-		startTape: startTape,
-		expectedTape: expectedTape,
+    startState,
+    startTape,
+    expectedTape,
 
-		// start Head pointer
-		tapePointer: tapePointer,
-		// expected Head pointer
-		expectedTapePoiner: expectedTapePoiner,
+    // start Head pointer
+    tapePointer,
+    // expected Head pointer
+    expectedTapePoiner,
 
-		// record name of source file
-		name: name,
+    // record name of source file
+    name,
 
-		// tape head
-		startTapeHead: startTapeHead,
-		expectedTapeHead: expectedTapeHead,
-	};
+    // tape head
+    startTapeHead,
+    expectedTapeHead
+  }
 }
 
-export function preRunTrialAction(id) {
-	return {
-		type: actionTypes.PRE_RUN_TRIAL,
-		id: id
-	};
+export function preRunTrialAction (id) {
+  return {
+    type: actionTypes.PRE_RUN_TRIAL,
+    id
+  }
 }
 
-export function runTrialAction(sourceId) {
-	return {
-		type: actionTypes.RUN_TRIAL,
-		sourceId: sourceId
-	};
+export function runTrialAction (sourceId) {
+  return {
+    type: actionTypes.RUN_TRIAL,
+    sourceId
+  }
 }
 
-export function loadTrialAction(id) {
-	return {
-		type: actionTypes.LOAD_TRIAL,
-		id: id,
-	};
+export function loadTrialAction (id) {
+  return {
+    type: actionTypes.LOAD_TRIAL,
+    id
+  }
 }
 
-export function toggleIsRunningTrialAction(flag=undefined) {
-	return {
-		type: actionTypes.TOGGLE_IS_RUNNING_TRIAL,
-		flag: flag,
-	};
+export function toggleIsRunningTrialAction (flag = undefined) {
+  return {
+    type: actionTypes.TOGGLE_IS_RUNNING_TRIAL,
+    flag
+  }
 }
 
-export function clearTestResultAction() {
-	return {
-		type: actionTypes.CLEAR_TEST_RESULTS,
-	};
+export function clearTestResultAction () {
+  return {
+    type: actionTypes.CLEAR_TEST_RESULTS
+  }
 }
 
-export function toggleEditModeAction(id=undefined) {
-	return {
-		type: actionTypes.TOGGLE_EDIT_MODE,
-		id: id
-	}
+export function toggleEditModeAction (id = undefined) {
+  return {
+    type: actionTypes.TOGGLE_EDIT_MODE,
+    id
+  }
 }
 
-export function changeEdittingTargetAction() {
-	return {
-		type: actionTypes.CHANGE_EDITTING_TARGET
-	}
+export function changeEdittingTargetAction () {
+  return {
+    type: actionTypes.CHANGE_EDITTING_TARGET
+  }
 }
 
-export function saveTrialAction() {
-	return {
-		type: actionTypes.SAVE_TRIAL
-	}
+export function saveTrialAction () {
+  return {
+    type: actionTypes.SAVE_TRIAL
+  }
 }
 
-export function setTrialNameAction(name) {
-	return {
-		type: actionTypes.CHANGE_TRIAL_NAME,
-		name: name
-	}
+export function setTrialNameAction (name) {
+  return {
+    type: actionTypes.CHANGE_TRIAL_NAME,
+    name
+  }
 }

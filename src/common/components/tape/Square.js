@@ -1,67 +1,65 @@
-import React, { PropTypes } from 'react';
-import { standardizeCellId } from '../../reducers/tape';
-import { highlightCellAtAction } from '../../actions/tapeActions';
-
+import React, { PropTypes } from 'react'
+import { standardizeCellId } from '../../reducers/tape'
+import { highlightCellAtAction } from '../../actions/tapeActions'
 
 class Square extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { style: { backgroundColor: "#fff" }};
+  constructor (props) {
+    super(props)
+    this.state = { style: { backgroundColor: '#fff' } }
 
     this.onFocus = () => {
-      this.props.dispatch(highlightCellAtAction(this.props.order));
+      this.props.dispatch(highlightCellAtAction(this.props.order))
       // this.setState({style: { backgroundColor: "#87dbff" }});
     }
     this.onBlur = () => {
-      this.props.dispatch(highlightCellAtAction(-1));
+      this.props.dispatch(highlightCellAtAction(-1))
       // this.setState({style: { backgroundColor: "#fff" }});
     }
     this.onMouseEnter = () => {
-      let style;
-      if (this.state.style.backgroundColor !== "#87dbff") {
-        style = {style: { backgroundColor: "#f1fc7e" }};
+      let style
+      if (this.state.style.backgroundColor !== '#87dbff') {
+        style = { style: { backgroundColor: '#f1fc7e' } }
       } else {
-        style = this.state.style;
+        style = this.state.style
       }
-        
-      this.setState(style);
+
+      this.setState(style)
     }
     this.onMouseLeave = () => {
       this.setState(
-        (this.state.style.backgroundColor === "#f1fc7e") ? 
-        {style: { backgroundColor: "#fff" }} : 
-        this.state.style
-      );
+        (this.state.style.backgroundColor === '#f1fc7e')
+          ? { style: { backgroundColor: '#fff' } }
+          : this.state.style
+      )
     }
   }
 
-  render() {
+  render () {
   	// this.props.read[this.props.order] = "";
     return (
-      <input 
+      <input
         className="square"
         style={
-          (this.props.id === standardizeCellId(this.props.highlightedCellOrder)) ?
-          {"backgroundColor": "#87dbff"} : 
-          this.state.style
+          (this.props.id === standardizeCellId(this.props.highlightedCellOrder))
+            ? { backgroundColor: '#87dbff' }
+            : this.state.style
         }
         onKeyDown={this.props.onKeyDown}
-        value={(this.props.val)?this.props.val:""}
+        value={(this.props.val) ? this.props.val : ''}
         id={this.props.id}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
       />
-    );
+    )
   }
 }
 
 Square.PropTypes = {
   onKeyDown: PropTypes.func.isRequired,
   order: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired
 }
 
-
-export default Square;
+export default Square
