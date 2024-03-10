@@ -121,6 +121,7 @@ export const initialState = {
 	runningTrials: [], 
 /* Trials */
 
+	machineId: '',
 };
 
 export default rootReducer;

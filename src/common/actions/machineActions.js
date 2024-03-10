@@ -3,16 +3,25 @@ import { setAnimationSpeedAction } from './guiActions';
 import { restore } from '../reducers/machine';
 import 'whatwg-fetch';
 
+
+const __LOCAL_REALTIME_DB_URL = 'http://127.0.0.1:9000';
+const realtimeDatabasePostUrl = () => {
+	if (ENV === 'production') {
+		return `https://${FIREBASE_PROJECT_ID}-default-rtdb.firebaseio.com/machines.json`;
+	}
+	return `${__LOCAL_REALTIME_DB_URL}/machines.json?ns=${FIREBASE_PROJECT_ID}`
+}
+
+const realtimeDatabaseGetUrl = (machineId) => {
+	if (ENV === 'production') {
+		return `https://${FIREBASE_PROJECT_ID}-default-rtdb.firebaseio.com/machines/${machineId}.json`;
+	}
+	return `${__LOCAL_REALTIME_DB_URL}/machines/${machineId}.json?ns=${FIREBASE_PROJECT_ID}`;
+}
+
 export function initMachineAction() {
 	return {
 		type: actionTypes.INITIALIZAE_MACHINE,
-	};
-} 
-
-export function loadMachineAction(preloadedState) {
-	return {
-		type: actionTypes.LOAD_MACHINE,
-		preloadedState: preloadedState
 	};
 } 
 
@@ -109,6 +118,24 @@ export function undoAction() {
 	};
 }
 
+export function loadMachineAction(machineId, history) {
+	return (dispatch, getState) => {
+		return fetch(realtimeDatabaseGetUrl(machineId)).then((response) => {
+			return response.json();
+		}).then((data) => {
+			if (!data.machineJsonBlob) {
+				throw new Error('not found');
+			}
+			dispatch({
+				type: actionTypes.LOAD_MACHINE,
+				preloadedState: JSON.parse(data.machineJsonBlob),
+			});
+		}).catch((err) => {
+			history.push('/machine_not_found');
+		});
+	};
+}
+
 export function saveMachineActionCreator(ownProps) {
 	return (dispatch, getState) => {
 		if (!getState().anyChangeInNormal) {
@@ -119,20 +146,28 @@ export function saveMachineActionCreator(ownProps) {
 			let state = restore(getState());
 			let step = getState().stepCount;
 
-			var post = {
+			const alreadyExists = !!state.machineId;
+			const url = !alreadyExists ? realtimeDatabasePostUrl() : realtimeDatabaseGetUrl(state.machineId);
+			var action = {
 				headers: {"content-type": "application/json"},
-				method: 'POST',
-				body: JSON.stringify({state: state, step: step})
+				method: !alreadyExists ? 'POST' : 'PATCH',
+				body: JSON.stringify({
+					machineJsonBlob: JSON.stringify({state: state, step: step}),
+				})
 			}
 
-			fetch('/', post).then(function(response) {
+			fetch(url, action).then(function(response) {
 				if (response.status === 200) {
 					return response.json();
 				} else {
 					throw new Error(response.statusText);
 				}
-			}).then(function(body) {
-				dispatch(goodMachineSaveAction(body.id));
+			}).then((res) => {
+				if (!alreadyExists) {
+					dispatch(goodMachineSaveAction(res.name));
+				} else {
+					dispatch(goodMachineSaveAction(state.machineId));
+				}
 				ownProps.snackBarSetAnythingNewCallback(true);
 			}).catch(function(err) {
 				ownProps.setErrorMessageCallback(err);

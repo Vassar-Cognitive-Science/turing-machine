@@ -420,8 +420,9 @@ export function restore(state, action) {
 export function goodMachineSave(state, action) {
 	let new_state = Object.assign({}, state);
 
-	new_state.anyChangeInNormal = false;
 	history.pushState(null, null, '/' + action.url);
+	new_state.anyChangeInNormal = false;
+	new_state.machineId = action.url;
 
 	return new_state;
 } 

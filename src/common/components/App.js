@@ -84,6 +84,10 @@ class App extends React.Component {
 		}
 	}
 
+	componentWillMount() {
+		this.props.handleLoad();
+	}
+
 	render() {
 		const actions = [
 				      	<FlatButton
@@ -160,6 +164,7 @@ class App extends React.Component {
   						setErrorMessageCallback={this.setErrorMessage}
   						snackBarSetAnythingNewCallback={this.setAnythingNewWithMachine}
   						trialDrawerToggleCallback={this.handleTrialDrawerToggle}
+  						match={this.props.match}
   				/>
 	    		<Tape 
 	    			trialDrawerToggleCallback={this.handleTrialDrawerToggle}

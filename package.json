@@ -1,10 +1,9 @@
 {
   "name": "web-based-turing-machine-simulator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "devDependencies": {
     "babel": "^6.0.0",
-    "better-npm-run": "~0.0.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-jest": "^18.0.0",
@@ -15,6 +14,12 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-register": "^6.26.0",
     "babel-runtime": "^6.3.13",
+    "eslint": "^8.57.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.34.0",
     "jest": "^18.1.0",
     "react-scripts": "^1.1.4",
     "webpack": "^3.10.0",
@@ -26,6 +31,7 @@
     "core-js": "^2.5.3",
     "express": "^4.16.3",
     "file-saver": "^1.3.3",
+    "firebase": "^10.8.1",
     "history": "^4.6.1",
     "jszip": "^3.1.3",
     "material-ui": "^0.20.0",
@@ -43,18 +49,12 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
-    "dev": "node ./src/server/index.js",
-    "start": "better-npm-run start",
+    "dev": "webpack -w --config config/webpack.config.development.js",
+    "backend": "firebase emulators:start",
     "build": "webpack -p --config config/webpack.config.production.js",
+    "deploy": "npm run build && firebase deploy",
+    "pre-deploy": "npm run build && firebase hosting:channel:deploy local",
     "test": "jest",
     "test:watch": "npm test -- --watch"
-  },
-  "betterScripts": {
-    "start": {
-      "command": "node ./src/server/index.js",
-      "env": {
-        "NODE_ENV": "production"
-      }
-    }
   }
 }

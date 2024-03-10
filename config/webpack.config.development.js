@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var config = require('./config.js')
 
 process.noDeprecation = true;
 module.exports = {
@@ -11,11 +12,15 @@ module.exports = {
     path.resolve(__dirname, '../src/client/index.js')
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, '../public/static'),
     filename: 'bundle.js',
     publicPath: '/static/'
   },
   plugins: [
+    new webpack.DefinePlugin({
+      ENV: JSON.stringify('development'),
+      FIREBASE_PROJECT_ID: JSON.stringify(config.dev.firebaseProjectId)
+    }),
     new webpack.HotModuleReplacementPlugin(),
   ],
   module: {

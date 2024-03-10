@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore , applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Router, Route } from 'react-router';
-import createBrowserHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import App from '../common/containers/AppContainer';
@@ -29,22 +29,17 @@ window.addEventListener('beforeunload', (e) => {
 	}
 });
 
-if (preloadedState && preloadedState.constructor === Object && Object.keys(preloadedState).length > 0) {
-	store.dispatch(loadMachineAction(preloadedState));
-} else {
-	store.dispatch(initMachineAction());
-}
-
+store.dispatch(initMachineAction());
 
 ReactDOM.render(
   <Provider store={store}>
   	<MuiThemeProvider>
 	  	<Router history={createBrowserHistory()}>
-			<div>
-				<Route exact path="/" component={App} />
-				<Route exact path="/:id" component={App} />
-				<Route exact path="/error/404" component={PageNotFound} />
-			</div>
+				<div>
+					<Route exact path="/" component={App} />
+					<Route exact path="/:id" component={App} />
+					<Route exact path="/machine_not_found" component={PageNotFound} />
+				</div>
 	  	</Router>
   	</MuiThemeProvider>
   </Provider>,
