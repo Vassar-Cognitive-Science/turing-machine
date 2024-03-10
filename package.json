@@ -1,6 +1,6 @@
 {
   "name": "web-based-turing-machine-simulator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "devDependencies": {
     "babel": "^6.0.0",
@@ -14,7 +14,6 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-register": "^6.26.0",
     "babel-runtime": "^6.3.13",
-    "better-npm-run": "~0.0.1",
     "jest": "^18.1.0",
     "react-scripts": "^1.1.4",
     "webpack": "^3.10.0",
@@ -44,18 +43,12 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
-    "dev": "node ./src/server/index.js",
-    "start": "better-npm-run start",
+    "dev": "webpack -w --config config/webpack.config.development.js",
+    "backend": "firebase emulators:start",
     "build": "webpack -p --config config/webpack.config.production.js",
+    "deploy": "npm run build && firebase deploy",
+    "pre-deploy": "npm run build && firebase hosting:channel:deploy local",
     "test": "jest",
     "test:watch": "npm test -- --watch"
-  },
-  "betterScripts": {
-    "start": {
-      "command": "node ./src/server/index.js",
-      "env": {
-        "NODE_ENV": "production"
-      }
-    }
   }
 }

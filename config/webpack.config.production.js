@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var config = require('./config.js')
 
 process.noDeprecation = true;
 module.exports = {
@@ -16,7 +17,9 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      ENV: JSON.stringify('production'),
+      FIREBASE_PROJECT_ID: JSON.stringify(config.prod.firebaseProjectId)
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.UglifyJsPlugin({

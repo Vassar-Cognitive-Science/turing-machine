@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import App from '../components/App';
+import { loadMachineAction } from '../actions/machineActions';
 import {
 	addTrialAction,
 	runTrialAction,
@@ -111,8 +112,6 @@ function onReaderLoad(event) {
 	});
 }
 
-
-
 const uploadTests = (dispatch) => {
 	let a = document.createElement('input');
 	a.setAttribute('type', 'file');
@@ -137,7 +136,13 @@ const uploadTests = (dispatch) => {
 	a.click();
 }
 
-const mapStateToProps = (state) => {
+const handleLoad = (dispatch, ownProps) => {
+	if (ownProps.match.params.id) {
+		dispatch(loadMachineAction(ownProps.match.params.id, ownProps.history));
+	}
+};
+
+const mapStateToProps = (state, ownProps) => {
 	let idAndName = [];
 	for (let i = 0; i < state.testsById.length; i++) {
 		let id = state.testsById[i];
@@ -158,7 +163,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleRunAllTests: () => { handleRunAllTests(dispatch, ownProps) },
 	downloadAllTests: () => { downloadAllTests(dispatch, ownProps) },
 	uploadTests: () => { uploadTests(dispatch) },
-	handleDeleteTests: () => { handleDeleteTests(dispatch) }
+	handleDeleteTests: () => { handleDeleteTests(dispatch) },
+	handleLoad: () => { handleLoad(dispatch, ownProps); },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

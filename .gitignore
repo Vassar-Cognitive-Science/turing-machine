@@ -45,3 +45,7 @@ tests\ and\ raw\ models
 
 .idea
 .vs
+.firebase
+*.hot-update.js
+*.hot-update.json
+public/static/bundle*
