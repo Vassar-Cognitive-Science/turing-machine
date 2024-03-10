@@ -1,6 +1,6 @@
-import React from 'react';
-import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'material-ui/SelectField';
+import React from 'react'
+import MenuItem from 'material-ui/MenuItem'
+import SelectField from 'material-ui/SelectField'
 
 const style = {
   root: {
@@ -11,34 +11,34 @@ const style = {
 }
 
 class SwitchDirectionButton extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
   }
 
-	render() {
-    let items = [
-        <MenuItem key={`toggle-${this.props.id}}-1`} value={true}  primaryText="Left"/>,
-        <MenuItem key={`toggle-${this.props.id}}-2`} value={false}  primaryText="Right"/>
-    ];
+  render () {
+    const items = [
+        <MenuItem key={`toggle-${this.props.id}}-1`} value={true} primaryText="Left"/>,
+        <MenuItem key={`toggle-${this.props.id}}-2`} value={false} primaryText="Right"/>
+    ]
 
     return (
-          <div style={{...style.root}}>
+          <div style={{ ...style.root }}>
             <SelectField
               value={this.props.value}
               fullWidth
               floatingLabelFixed
               floatingLabelText={this.props.floatingLabelText}
-              onChange={(event, index, value) => { this.props.switchDirection(value); }}
+              onChange={(event, index, value) => { this.props.switchDirection(value) }}
             >
               {items}
             </SelectField>
           </div>
-        )
+    )
 	  }
 }
 
 SwitchDirectionButton.defaultProps = {
-  floatingLabelText: "Direction"
+  floatingLabelText: 'Direction'
 }
 
-export default SwitchDirectionButton;
+export default SwitchDirectionButton

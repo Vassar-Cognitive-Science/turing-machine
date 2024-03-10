@@ -1,6 +1,6 @@
-import React from 'react';
-import IconButton from 'material-ui/IconButton';
-import Delete from 'material-ui/svg-icons/action/delete-forever';
+import React from 'react'
+import IconButton from 'material-ui/IconButton'
+import Delete from 'material-ui/svg-icons/action/delete-forever'
 
 const style = {
   icon: {
@@ -10,14 +10,14 @@ const style = {
 }
 
 export default class DeleteRowButton extends React.Component {
-	render() {
+  render () {
     return (
-            <IconButton  
+            <IconButton
               onClick={this.props.deleteRow}
               id={this.props.id}
             >
               <Delete {...style.icon}/>
             </IconButton>
-        )
-	}
+    )
+  }
 }

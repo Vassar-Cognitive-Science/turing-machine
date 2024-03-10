@@ -1,74 +1,73 @@
-import { connect } from 'react-redux';
-import TrialItem from '../../components/appbar/TrialItem';
+import { connect } from 'react-redux'
+import TrialItem from '../../components/appbar/TrialItem'
 import {
-	deleteTrialAction,
-	runTrialAction,
-	loadTrialAction,
-	preRunTrialAction,
-	toggleEditModeAction
-} from '../../actions/trialActions';
-import { standardizeTestReportId } from '../../reducers/trial';
+  deleteTrialAction,
+  runTrialAction,
+  loadTrialAction,
+  preRunTrialAction,
+  toggleEditModeAction
+} from '../../actions/trialActions'
+import { standardizeTestReportId } from '../../reducers/trial'
 
 const deleteTrial = (dispatch, ownProps) => {
-	dispatch(deleteTrialAction(ownProps.id));
+  dispatch(deleteTrialAction(ownProps.id))
 }
 
-export const runTrial = (dispatch, ownProps, timeout=800) => {
-	dispatch(preRunTrialAction(ownProps.id));
-	dispatch(function(dispatch, getState) {
-		// let the loading button show up
-		setTimeout(()=>{dispatch(runTrialAction(ownProps.id));}, timeout);
-	});
+export const runTrial = (dispatch, ownProps, timeout = 800) => {
+  dispatch(preRunTrialAction(ownProps.id))
+  dispatch(function (dispatch, getState) {
+    // let the loading button show up
+    setTimeout(() => { dispatch(runTrialAction(ownProps.id)) }, timeout)
+  })
 }
 
 const loadTrial = (dispatch, ownProps) => {
-	dispatch(loadTrialAction(ownProps.id));
-	ownProps.drawerCloseCallBack();
+  dispatch(loadTrialAction(ownProps.id))
+  ownProps.drawerCloseCallBack()
 }
 
 const editTrial = (dispatch, ownProps) => {
-	dispatch(toggleEditModeAction(ownProps.id));
-	ownProps.drawerCloseCallBack();
+  dispatch(toggleEditModeAction(ownProps.id))
+  ownProps.drawerCloseCallBack()
 }
 
 const downloadTrial = (dispatch, ownProps) => {
-	dispatch(function(dispatch, getState) {
-		let trial = getState()[ownProps.id];
+  dispatch(function (dispatch, getState) {
+    let trial = getState()[ownProps.id]
 
-		// make a shallow copy that does not have id and testReportId
-		trial = Object.assign({}, trial);
-		delete trial.id;
-		delete trial.testReportId;
+    // make a shallow copy that does not have id and testReportId
+    trial = Object.assign({}, trial)
+    delete trial.id
+    delete trial.testReportId
 
-		trial = [trial];
+    trial = [trial]
 
-		// encode
-		let data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trial, null, 4));
-		// provide download link
-		let a = document.createElement('a');
-		a.href = 'data:' + data;
-		a.download = trial[0].name + '.json';
+    // encode
+    const data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(trial, null, 4))
+    // provide download link
+    const a = document.createElement('a')
+    a.href = 'data:' + data
+    a.download = trial[0].name + '.json'
 
-		a.click();
-	});
+    a.click()
+  })
 }
 
 const mapStateToProps = (state, ownProps) => {
-	let testReport = state[standardizeTestReportId(ownProps.id)];
-	return {
-		steps: (testReport) ? testReport.stepCount : null,
-		statusCode: (testReport) ? testReport.status : null,
-		feedback: (testReport) ? testReport.feedback : null
-	}
-};
-
+  const testReport = state[standardizeTestReportId(ownProps.id)]
+  return {
+    steps: (testReport) ? testReport.stepCount : null,
+    statusCode: (testReport) ? testReport.status : null,
+    feedback: (testReport) ? testReport.feedback : null
+  }
+}
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	deleteTrial: () => { deleteTrial(dispatch, ownProps) },
-	runTrial: () => { runTrial(dispatch, ownProps) },
-	loadTrial: () => { loadTrial(dispatch, ownProps) },
-	editTrial: () => { editTrial(dispatch, ownProps) },
-	downloadTrial: () => { downloadTrial(dispatch, ownProps) }
+  deleteTrial: () => { deleteTrial(dispatch, ownProps) },
+  runTrial: () => { runTrial(dispatch, ownProps) },
+  loadTrial: () => { loadTrial(dispatch, ownProps) },
+  editTrial: () => { editTrial(dispatch, ownProps) },
+  downloadTrial: () => { downloadTrial(dispatch, ownProps) }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(TrialItem);
+export default connect(mapStateToProps, mapDispatchToProps)(TrialItem)
