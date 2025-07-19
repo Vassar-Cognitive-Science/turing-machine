@@ -1,39 +1,43 @@
 import Express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import BodyParser from 'body-parser';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
-import developmentWebpackConfig from '../../config/webpack.config.development';
-import productionWebpackConfig from '../../config/webpack.config.production';
+import { createIdFromTimeStamp } from './utils.js';
 
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { Provider } from 'react-redux';
+import { MongoClient } from 'mongodb';
 
-import template from '../../public/template';
-import { createIdFromTimeStamp } from './utils';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const DEV_ENVIRONMENT = process.env.NODE_ENV !== 'production';
 
-const MongoClient = require('mongodb').MongoClient,
-	POST_DATA_SIZE_LIMIE = '50mb',
+const POST_DATA_SIZE_LIMIE = '50mb',
 	databaseName = 'turingMachine',
 	databaseCollection = 'saves',
 	url = "mongodb://localhost:27017/" + databaseName;
 
 const app = new Express(),
-	WebpackConfig = DEV_ENVIRONMENT ? developmentWebpackConfig : productionWebpackConfig,
-	port = DEV_ENVIRONMENT ? 3000 : 80,
-	compiler = webpack(WebpackConfig);
+	port = process.env.PORT || (DEV_ENVIRONMENT ? 3000 : 80);
 
-if (DEV_ENVIRONMENT) {
-	app.use(webpackDevMiddleware(compiler, {
-		noInfo: true,
-		publicPath: WebpackConfig.output.publicPath
+// In development, proxy static assets to esbuild dev server
+if (DEV_ENVIRONMENT && process.env.ESBUILD_HOST && process.env.ESBUILD_PORT) {
+	const esbuildUrl = `http://${process.env.ESBUILD_HOST}:${process.env.ESBUILD_PORT}`;
+	
+	// Proxy static assets and esbuild WebSocket for hot reload
+	app.use('/static', createProxyMiddleware({
+		target: esbuildUrl,
+		changeOrigin: true,
+		pathRewrite: {
+			'^/static': '/static'
+		}
 	}));
-	app.use(webpackHotMiddleware(compiler));
+	
+	app.use('/esbuild', createProxyMiddleware({
+		target: esbuildUrl,
+		changeOrigin: true,
+		ws: true, // Enable WebSocket proxying for hot reload
+	}));
 }
 
 app.use(BodyParser.urlencoded({
@@ -46,20 +50,16 @@ app.use(BodyParser.json({
 }));
 
 app.use(Express.static(path.join(__dirname + '/../../public')));
-app.use('/error', Express.static(path.join(__dirname + '/../../public')));
 
-app.get('/', function(req, res) {
-	res.send(template());
-});
-
-app.get('/error/404', function(req, res) {
-	res.send(template());
-});
-
-app.get('/:id', function(req, res) {
-	MongoClient.connect(url, function(err, db) {
+// API endpoint to get machine state by ID
+app.get('/api/state/:id', function(req, res) {
+	MongoClient.connect(url, { 
+		serverSelectionTimeoutMS: 2000,  // Timeout after 2 seconds
+		connectTimeoutMS: 2000
+	}, function(err, db) {
 		if (err || db === null) {
-			res.redirect('/error/404');
+			console.warn('MongoDB connection failed:', err?.message);
+			res.status(503).json({ error: "Database unavailable. Please start MongoDB to use save/load features." });
 			return;
 		}
 
@@ -68,23 +68,35 @@ app.get('/:id', function(req, res) {
 			},
 			function(err, target) {
 				if (target && target.state) {
-					res.send(template(target.state));
+					res.json({ state: target.state });
 				} else {
-					res.redirect('/error/404');
+					res.status(404).json({ error: "State not found" });
 				}
+				db.close();
 			}
 		);
-
-
-		db.close();
 	});
 });
 
-app.post('/', function(req, res) {
-	MongoClient.connect(url, function(err, db) {
+// Serve index.html for all non-API routes (SPA routing)
+app.get('*', function(req, res) {
+	// Skip API routes
+	if (req.path.startsWith('/api/')) {
+		res.status(404).json({ error: "API endpoint not found" });
+		return;
+	}
+	res.sendFile(path.join(__dirname + '/../../public/index.html'));
+});
+
+app.post('/api/save', function(req, res) {
+	MongoClient.connect(url, { 
+		serverSelectionTimeoutMS: 2000,  // Timeout after 2 seconds
+		connectTimeoutMS: 2000
+	}, function(err, db) {
 		if (err || db === null) {
-			res.status(403).send({
-				error: "No response"
+			console.warn('MongoDB connection failed:', err?.message);
+			res.status(503).json({
+				error: "Database unavailable. Please start MongoDB to use save/load features."
 			});
 			return;
 		}
@@ -94,18 +106,17 @@ app.post('/', function(req, res) {
 			id: id,
 			state: req.body
 		}, function(err, docsInserted) {
-			res.send({
-				id: id
-			});
+			if (err) {
+				res.status(500).json({ error: "Failed to save state" });
+			} else {
+				res.json({ id: id });
+			}
+			db.close();
 		});
-
-		db.close();
 	});
 });
 
-app.all('*', function(req, res) {
-	res.redirect('/error/404');
-});
+
 
 var server = app.listen(port, function() {
 	var port = server.address().port;

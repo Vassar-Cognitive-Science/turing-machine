@@ -10,6 +10,7 @@
   padding-left: 10px;
   padding-top: 5px;
   font-family: 'Roboto';
+  font-size: 18px;
 }
 
 .whole-tape-wrapper {
@@ -27,10 +28,10 @@
   display: inline-block;
   background: #fff;
   border: 1px solid ;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
@@ -80,7 +81,7 @@
   font-family: 'Roboto Mono', monospace;;
   background: #fff;
   border: 1px solid black;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
   height: auto;
   position: relative;
