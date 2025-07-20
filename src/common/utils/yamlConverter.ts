@@ -6,10 +6,7 @@ export interface YAMLTrialData {
   startState: string;
   startTape: string;
   expectedTape: string;
-  tapePointer?: number;
-  expectedTapePointer?: number;
   startTapeHead?: number;
-  expectedTapeHead?: number;
   description?: string;
 }
 
@@ -26,16 +23,13 @@ export const convertTrialsToYAML = (trials: TrialData[]): string => {
     startState: trial.startState,
     startTape: trial.startTape,
     expectedTape: trial.expectedTape,
-    tapePointer: trial.tapePointer,
-    expectedTapePointer: trial.expectedTapePointer,
-    startTapeHead: trial.startTapeHead,
-    expectedTapeHead: trial.expectedTapeHead,
+    ...(trial.startTapeHead !== 0 && { startTapeHead: trial.startTapeHead }),
   }));
 
   const testSuite: YAMLTestSuite = {
     name: 'Turing Machine Test Suite',
-    description: 'Exported test cases for Turing Machine simulator. Tests run in turbo mode (maximum speed). Only tape content is compared - head position is irrelevant. Leading/trailing blanks ignored.',
-    version: '1.0',
+    description: 'Exported test cases for Turing Machine simulator. Tests run in turbo mode (maximum speed). Only tape content is compared. Leading/trailing blanks ignored. Head position specified by startTapeHead (default: 0).',
+    version: '2.0',
     tests: yamlTrials,
   };
 
@@ -65,10 +59,10 @@ export const convertYAMLToTrials = (yamlContent: string): TrialData[] => {
         startState: test.startState,
         startTape: test.startTape,
         expectedTape: test.expectedTape,
-        tapePointer: test.tapePointer ?? 0,
-        expectedTapePointer: test.expectedTapePointer ?? 0,
+        tapePointer: 0, // Always start at 0, not used in comparison
+        expectedTapePointer: 0, // Not used in comparison
         startTapeHead: test.startTapeHead ?? 0,
-        expectedTapeHead: test.expectedTapeHead ?? 0,
+        expectedTapeHead: 0, // Not used in comparison
         status: 'pending',
         result: null,
         error: null,
@@ -135,6 +129,9 @@ export const validateYAMLTestSuite = (yamlContent: string): { valid: boolean; er
       }
       if (test.expectedTape === undefined) {
         errors.push(`Test ${index + 1}: missing "expectedTape" field`);
+      }
+      if (test.startTapeHead !== undefined && typeof test.startTapeHead !== 'number') {
+        errors.push(`Test ${index + 1}: "startTapeHead" must be a number`);
       }
     });
     
