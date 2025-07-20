@@ -78,6 +78,37 @@ app.get('/api/state/:id', function(req, res) {
 	});
 });
 
+// Health check endpoint for production monitoring
+app.get('/api/health', function(req, res) {
+	const healthCheck = {
+		status: 'ok',
+		timestamp: new Date().toISOString(),
+		uptime: process.uptime(),
+		environment: process.env.NODE_ENV || 'development',
+		version: process.env.npm_package_version || '0.0.1',
+		services: {
+			server: 'healthy',
+			database: 'unknown'
+		}
+	};
+
+	// Check database connection
+	MongoClient.connect(url, { 
+		serverSelectionTimeoutMS: 1000,
+		connectTimeoutMS: 1000
+	}, function(err, db) {
+		if (err || db === null) {
+			healthCheck.services.database = 'unavailable';
+			healthCheck.status = 'degraded';
+			res.status(503).json(healthCheck);
+		} else {
+			healthCheck.services.database = 'healthy';
+			db.close();
+			res.status(200).json(healthCheck);
+		}
+	});
+});
+
 // Serve index.html for all non-API routes (SPA routing)
 app.get('*', function(req, res) {
 	// Skip API routes
