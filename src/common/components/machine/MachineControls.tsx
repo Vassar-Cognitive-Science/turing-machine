@@ -133,8 +133,9 @@ export function MachineControls({
           <Button 
             color="inherit"
             onClick={() => {
+              machine.setCurrentRule(null); // Clear highlighting when user clears tape
               tape.fillTape('');
-              tape.setInternalState('START');
+              tape.setManualState('START');
             }} 
             size="small"
             variant="outlined"

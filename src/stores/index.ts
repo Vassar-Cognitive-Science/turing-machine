@@ -58,6 +58,7 @@ export const useMachineExecution = (): MachineExecution => {
     stopMachine,
     stepForward,
     setHighlightedRule,
+    setCurrentRule,
     matchRule,
     getAllRules
   } = useMachineStore();
@@ -76,10 +77,11 @@ export const useMachineExecution = (): MachineExecution => {
     const currentState = useTapeStore.getState().tapeInternalState;
     const currentSymbol = readCurrentCell();
     
-    console.log(`Step: State=${currentState}, Symbol=${currentSymbol}`);
+    console.log(`STEP START: State=${currentState}, Symbol=${currentSymbol}`);
     
     // Check for halt state
     if (currentState.toLowerCase() === 'halt') {
+      // Don't clear currentRule when already in halt state - keep last rule highlighted
       stopMachine("Machine is in halt state", false);
       return false;
     }
@@ -88,9 +90,15 @@ export const useMachineExecution = (): MachineExecution => {
     const rule = matchRule(currentState, currentSymbol);
     
     if (!rule) {
+      // Don't clear currentRule on error - keep last rule highlighted until user edits
       stopMachine(`No matching rule found for state '${currentState}' and symbol '${currentSymbol}'`, true);
       return false;
     }
+    
+    // Set current rule BEFORE executing it (this is what shows in the graph)
+    console.log(`EXECUTION: Setting currentRule to ${rule.id} for rule:`, rule);
+    setCurrentRule(rule.id);
+    console.log(`EXECUTION: After setCurrentRule, checking store state...`);
     
     console.log(`Applying rule: ${currentState},${currentSymbol} → ${rule.write},${rule.direction},${rule.new_state}`);
     
@@ -173,6 +181,7 @@ export const useMachineExecution = (): MachineExecution => {
       
       // Safety check for infinite loops
       if (stepCount > maxSteps) {
+        // Don't clear currentRule on infinite loop protection - keep last rule highlighted
         stopMachine(`Stopped after ${maxSteps} steps to prevent infinite loop`, true);
         return;
       }
@@ -186,6 +195,7 @@ export const useMachineExecution = (): MachineExecution => {
       // Check for halt state after step
       const currentState = useTapeStore.getState().tapeInternalState;
       if (currentState.toLowerCase() === 'halt') {
+        // Don't clear currentRule when halting - keep last rule highlighted
         stopMachine(`Machine halted successfully after ${stepCount} steps`);
         return;
       }
@@ -248,6 +258,7 @@ export const useMachineExecution = (): MachineExecution => {
       // Check for halt state after step
       const currentState = useTapeStore.getState().tapeInternalState;
       if (currentState.toLowerCase() === 'halt') {
+        // Don't clear currentRule when halting - keep last rule highlighted
         stopMachine(`Machine halted successfully after ${stepCount} steps`);
         return;
       }
@@ -260,15 +271,18 @@ export const useMachineExecution = (): MachineExecution => {
     
     // Safety check for infinite loops
     if (stepCount >= maxSteps) {
+      // Don't clear currentRule on infinite loop protection - keep last rule highlighted
       stopMachine(`Stopped after ${maxSteps} steps to prevent infinite loop`, true);
     }
   };
   
   const stop = (): void => {
+    // Don't clear currentRule when manually stopping - keep last rule highlighted until user edits
     stopMachine();
   };
 
   const reset = (): void => {
+    setCurrentRule(null); // Clear highlighting when user resets
     stop();
     
     // Get the first history entry (initial state) before clearing

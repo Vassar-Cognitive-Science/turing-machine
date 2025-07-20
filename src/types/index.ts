@@ -56,6 +56,7 @@ export interface MachineState {
   stepCount: number;
   runHistory: any[];
   highlightedRow: string | null;
+  currentRule: string | null;
 }
 
 export interface TapeState {
@@ -113,6 +114,7 @@ export interface MachineActions {
   deleteRule: (ruleId: string) => void;
   updateRule: (ruleId: string, field: keyof Omit<Rule, 'id'>, value: string) => void;
   setHighlightedRule: (ruleId: string | null) => void;
+  setCurrentRule: (ruleId: string | null) => void;
   reorderRules: (activeId: string, overId: string) => void;
   initializeMachine: () => void;
   loadMachine: (preloadedState: any) => void;
@@ -146,6 +148,7 @@ export interface TapeActions {
   writeToCurrentCell: (value: string) => void;
   writeToCell: (cellId: string, value: string) => void;
   setInternalState: (newState: string) => void;
+  setManualState: (newState: string) => void;
   highlightCell: (cellId: string) => void;
   clearHighlights: () => void;
   moveTapeLeft: () => void;

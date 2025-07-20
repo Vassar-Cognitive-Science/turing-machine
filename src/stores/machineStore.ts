@@ -77,6 +77,7 @@ interface InternalMachineState {
   // Rules/transition table
   rowsById: string[];
   highlightedRow: string | null;
+  currentRule: string | null;
   
   // Rule data stored as dynamic properties
   [key: string]: any; // For rule data
@@ -104,6 +105,7 @@ const initialMachineState: InternalMachineState = {
   // Rules/transition table
   rowsById: [], // Array of rule IDs
   highlightedRow: null,
+  currentRule: null,
 };
 
 export const useMachineStore = create<MachineStore>()(
@@ -240,6 +242,9 @@ export const useMachineStore = create<MachineStore>()(
       // Rule management
       addRule: (): void => {
         set((state) => {
+          // Clear highlighting when user adds a new rule
+          state.currentRule = null;
+          
           const newRuleId = `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
           state.rowsById.push(newRuleId);
           (state as any)[newRuleId] = {
@@ -260,6 +265,9 @@ export const useMachineStore = create<MachineStore>()(
 
       deleteRule: (ruleId: string): void => {
         set((state) => {
+          // Clear highlighting when user deletes a rule
+          state.currentRule = null;
+          
           state.rowsById = state.rowsById.filter(id => id !== ruleId);
           delete (state as any)[ruleId];
           state.anyChangeInNormal = true;
@@ -269,6 +277,8 @@ export const useMachineStore = create<MachineStore>()(
       updateRule: (ruleId: string, field: keyof Omit<Rule, 'id'>, value: string): void => {
         set((state) => {
           if ((state as any)[ruleId]) {
+            // Don't clear highlighting when editing rules - let it persist
+            
             // Capitalize and trim alphabet characters for state fields and tape symbols
             if (field === 'in_state' || field === 'new_state' || field === 'read' || field === 'write') {
               (state as any)[ruleId][field] = capitalizeAlphabet(value);
@@ -286,8 +296,17 @@ export const useMachineStore = create<MachineStore>()(
         });
       },
 
+      setCurrentRule: (ruleId: string | null): void => {
+        set((state) => {
+          state.currentRule = ruleId;
+        });
+      },
+
       reorderRules: (activeId: string, overId: string): void => {
         set((state) => {
+          // Clear rule highlighting when user reorders rules
+          state.currentRule = null;
+          
           const activeIndex = state.rowsById.indexOf(activeId);
           const overIndex = state.rowsById.indexOf(overId);
           
@@ -448,6 +467,9 @@ export const useMachineStore = create<MachineStore>()(
       // Seed functions for testing
       clearAllRules: (): void => {
         set((state) => {
+          // Clear rule highlighting when clearing all rules
+          state.currentRule = null;
+          
           // Clear existing rules
           state.rowsById.forEach(id => {
             delete (state as any)[id];
@@ -459,6 +481,9 @@ export const useMachineStore = create<MachineStore>()(
 
       addSeedRules: (): void => {
         set((state) => {
+          // Clear rule highlighting when adding seed rules
+          state.currentRule = null;
+          
           // Clear existing rules first
           state.rowsById.forEach(id => {
             delete (state as any)[id];
@@ -528,6 +553,9 @@ export const useMachineStore = create<MachineStore>()(
 
       renameState: (oldStateName: string, newStateName: string): void => {
         set((state) => {
+          // Clear rule highlighting when user renames states
+          state.currentRule = null;
+          
           const normalizedOldName = capitalizeAlphabet(oldStateName);
           const normalizedNewName = capitalizeAlphabet(newStateName);
           
@@ -550,6 +578,9 @@ export const useMachineStore = create<MachineStore>()(
 
       deleteState: (stateName: string): void => {
         set((state) => {
+          // Clear rule highlighting when user deletes states
+          state.currentRule = null;
+          
           const normalizedStateName = capitalizeAlphabet(stateName);
           
           // Remove all rules that reference this state
@@ -597,6 +628,9 @@ export const useMachineStore = create<MachineStore>()(
       // Update rule connection (for graph edge reconnection)
       updateRuleConnection: (ruleId: string, newSourceState: string, newTargetState: string): void => {
         set((state) => {
+          // Clear rule highlighting when user reconnects rules
+          state.currentRule = null;
+          
           const rule = (state as any)[ruleId];
           if (rule) {
             rule.in_state = capitalizeAlphabet(newSourceState);
@@ -615,6 +649,9 @@ export const useMachineStore = create<MachineStore>()(
         animationSpeed: state.animationSpeed,
         animationOn: state.animationOn,
         animationSpeedFactor: state.animationSpeedFactor,
+        // Don't persist currentRule - it should be ephemeral (only during execution)
+        // Don't persist highlightedRow - it should be ephemeral
+        // Don't persist runtime state like isRunning, stepCount, etc.
         // Persist all rule data (dynamic properties)
         ...state.rowsById.reduce((rules, ruleId) => {
           rules[ruleId] = (state as any)[ruleId];

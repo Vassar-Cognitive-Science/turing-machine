@@ -143,6 +143,9 @@ function AppModern(): React.ReactElement {
 
   // Function to load shared machine state from server format
   const loadSharedMachineState = (serverState: SharedMachineState): void => {
+    // Clear rule highlighting when loading shared machine state
+    machine.setCurrentRule(null);
+    
     // Clear existing rules
     machine.rowsById.forEach((ruleId: string) => machine.deleteRule(ruleId));
     

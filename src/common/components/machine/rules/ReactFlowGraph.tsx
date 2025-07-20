@@ -44,7 +44,17 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   const machine = useMachineStore();
   const graphLayout = useGraphLayoutStore();
   const tape = useTapeStore();
+  
+  const currentRule = machine.currentRule;
   const rules = machine.getAllRules();
+  
+  
+  // Debug logging (can be removed after testing)
+  console.log('ReactFlowGraph render:', {
+    currentRule,
+    rulesCount: rules.length,
+    machineIsRunning: machine.isRunning,
+  });
   const reactFlowInstance = useReactFlow();
   
   // Dialog state
@@ -55,7 +65,6 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   const [newStateName, setNewStateName] = useState<string>('');
   const [pendingConnection, setPendingConnection] = useState<{ source: string; target: string } | null>(null);
   
-  console.log('Rules from store:', rules);
   
   // Create a stable hash of rules to prevent infinite re-renders
   const rulesHash = useMemo(() => {
@@ -121,7 +130,7 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
           label: state,
           isStart: state.toUpperCase() === 'START',
           isHalt: state.toUpperCase() === 'HALT',
-          isCurrent: machine.isRunning && tape.tapeInternalState === state,
+          isCurrent: tape.tapeInternalState === state,
         },
       };
     });
@@ -161,6 +170,9 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
       const sourceHandle = savedEdgeLayout?.sourceHandle || distributedHandle?.sourceHandle;
       const targetHandle = savedEdgeLayout?.targetHandle || distributedHandle?.targetHandle;
 
+      const isActive = currentRule === rule.id;
+      console.log(`Creating edge for rule ${rule.id}: currentRule=${currentRule}, isActive=${isActive}`);
+      
       const edge: Edge = {
         id: edgeId,
         type: 'transitionEdge',
@@ -173,7 +185,7 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
           write: rule.write || '#',
           direction: rule.direction,
           ruleId: rule.id,
-          isActive: machine.isRunning && machine.highlightedRow === rule.id,
+          isActive: isActive,
         },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -188,12 +200,15 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
     
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [rulesHash, machine.highlightedRow, machine.isRunning, tape.tapeInternalState]); // Use rulesHash instead of rules to prevent infinite loops
+  }, [rulesHash, currentRule, tape.tapeInternalState]); // Use rulesHash instead of rules to prevent infinite loops
 
 
   // Interactive handlers
   const onConnect = useCallback((connection: Connection) => {
     console.log('New connection:', connection);
+    
+    // Clear highlighting when creating new rules
+    machine.setCurrentRule(null);
     
     if (connection.source && connection.target) {
       setPendingConnection({
@@ -210,10 +225,13 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
       
       setRuleDialogOpen(true);
     }
-  }, [graphLayout]);
+  }, [graphLayout, machine]);
 
   const onEdgeClick = useCallback((_event: React.MouseEvent, edge: Edge) => {
     console.log('Edge clicked:', edge);
+    
+    // Clear highlighting when editing existing rules
+    machine.setCurrentRule(null);
     
     // Find the rule associated with this edge
     const ruleId = edge.id.replace('edge-', '');
@@ -228,14 +246,20 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   const onNodeDoubleClick = useCallback((_event: React.MouseEvent, node: Node) => {
     console.log('Node double clicked:', node);
     
+    // Clear highlighting when editing states
+    machine.setCurrentRule(null);
+    
     setEditingState(node.id);
     setStateDialogOpen(true);
-  }, []);
+  }, [machine]);
 
   const onPaneClick = useCallback((event: React.MouseEvent) => {
     // Check if this is a double-click on empty space
     if (event.detail === 2) {
       console.log('Pane double-clicked at:', event.clientX, event.clientY);
+      
+      // Clear highlighting when user starts editing
+      machine.setCurrentRule(null);
       
       // Get click position relative to the flow
       const position = reactFlowInstance.screenToFlowPosition({
@@ -279,6 +303,9 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   const onNodesDelete = useCallback((nodesToDelete: Node[]) => {
     console.log('Nodes to delete:', nodesToDelete);
     
+    // Clear highlighting when user deletes nodes
+    machine.setCurrentRule(null);
+    
     nodesToDelete.forEach(node => {
       machine.deleteState(node.id);
     });
@@ -286,6 +313,9 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
 
   const onEdgesDelete = useCallback((edgesToDelete: Edge[]) => {
     console.log('Edges to delete:', edgesToDelete);
+    
+    // Clear highlighting when user deletes edges
+    machine.setCurrentRule(null);
     
     edgesToDelete.forEach(edge => {
       const ruleId = edge.id.replace('edge-', '');
@@ -298,6 +328,9 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   // Handle edge reconnection
   const onReconnect = useCallback((oldEdge: Edge, newConnection: Connection) => {
     console.log('Edge reconnected:', oldEdge, newConnection);
+    
+    // Clear highlighting when user reconnects edges
+    machine.setCurrentRule(null);
     
     // Extract rule ID from edge ID
     const ruleId = oldEdge.id.replace('edge-', '');
@@ -331,11 +364,15 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
 
   // Handle node position changes
   const onNodeDrag = useCallback((_event: React.MouseEvent, node: Node) => {
+    // Don't clear highlighting when just moving nodes - this is visual positioning only
+    
     // Save position during drag
     graphLayout.updateNodePosition(node.id, node.position);
   }, [graphLayout]);
 
   const onNodeDragStop = useCallback((_event: React.MouseEvent, node: Node) => {
+    // Don't clear highlighting when just moving nodes - this is visual positioning only
+    
     // Save final position
     graphLayout.updateNodePosition(node.id, node.position);
     console.log(`Node ${node.id} moved to:`, node.position);

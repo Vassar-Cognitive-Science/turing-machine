@@ -29221,7 +29221,8 @@
         // Rules/transition table
         rowsById: [],
         // Array of rule IDs
-        highlightedRow: null
+        highlightedRow: null,
+        currentRule: null
       };
       useMachineStore = create()(
         persist(
@@ -29314,6 +29315,7 @@
               // Rule management
               addRule: () => {
                 set5((state) => {
+                  state.currentRule = null;
                   const newRuleId = `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                   state.rowsById.push(newRuleId);
                   state[newRuleId] = {
@@ -29334,6 +29336,7 @@
               },
               deleteRule: (ruleId) => {
                 set5((state) => {
+                  state.currentRule = null;
                   state.rowsById = state.rowsById.filter((id2) => id2 !== ruleId);
                   delete state[ruleId];
                   state.anyChangeInNormal = true;
@@ -29356,8 +29359,14 @@
                   state.highlightedRow = ruleId;
                 });
               },
+              setCurrentRule: (ruleId) => {
+                set5((state) => {
+                  state.currentRule = ruleId;
+                });
+              },
               reorderRules: (activeId, overId) => {
                 set5((state) => {
+                  state.currentRule = null;
                   const activeIndex = state.rowsById.indexOf(activeId);
                   const overIndex = state.rowsById.indexOf(overId);
                   if (activeIndex !== -1 && overIndex !== -1) {
@@ -29473,6 +29482,7 @@
               // Seed functions for testing
               clearAllRules: () => {
                 set5((state) => {
+                  state.currentRule = null;
                   state.rowsById.forEach((id2) => {
                     delete state[id2];
                   });
@@ -29482,6 +29492,7 @@
               },
               addSeedRules: () => {
                 set5((state) => {
+                  state.currentRule = null;
                   state.rowsById.forEach((id2) => {
                     delete state[id2];
                   });
@@ -29540,6 +29551,7 @@
               },
               renameState: (oldStateName, newStateName) => {
                 set5((state) => {
+                  state.currentRule = null;
                   const normalizedOldName = capitalizeAlphabet(oldStateName);
                   const normalizedNewName = capitalizeAlphabet(newStateName);
                   if (normalizedOldName === normalizedNewName)
@@ -29558,6 +29570,7 @@
               },
               deleteState: (stateName) => {
                 set5((state) => {
+                  state.currentRule = null;
                   const normalizedStateName = capitalizeAlphabet(stateName);
                   const rulesToRemove = state.rowsById.filter((ruleId) => {
                     const rule = state[ruleId];
@@ -29593,6 +29606,7 @@
               // Update rule connection (for graph edge reconnection)
               updateRuleConnection: (ruleId, newSourceState, newTargetState) => {
                 set5((state) => {
+                  state.currentRule = null;
                   const rule = state[ruleId];
                   if (rule) {
                     rule.in_state = capitalizeAlphabet(newSourceState);
@@ -29611,6 +29625,9 @@
               animationSpeed: state.animationSpeed,
               animationOn: state.animationOn,
               animationSpeedFactor: state.animationSpeedFactor,
+              // Don't persist currentRule - it should be ephemeral (only during execution)
+              // Don't persist highlightedRow - it should be ephemeral
+              // Don't persist runtime state like isRunning, stepCount, etc.
               // Persist all rule data (dynamic properties)
               ...state.rowsById.reduce((rules, ruleId) => {
                 rules[ruleId] = state[ruleId];
@@ -29812,6 +29829,8 @@
               },
               writeToCell: (cellId, value) => {
                 set5((state) => {
+                  const { useMachineStore: useMachineStore2 } = (init_stores(), __toCommonJS(stores_exports));
+                  useMachineStore2.getState().setCurrentRule(null);
                   const cell = state[cellId];
                   if (cell) {
                     const processedValue = value === "#" ? BLANK : capitalizeAlphabet2(value || "#");
@@ -29822,6 +29841,14 @@
               // Internal state management
               setInternalState: (newState) => {
                 set5((state) => {
+                  state.tapeInternalState = capitalizeAlphabet2(newState || "START");
+                });
+              },
+              // Manual state change (for user interactions - clears highlighting)
+              setManualState: (newState) => {
+                set5((state) => {
+                  const { useMachineStore: useMachineStore2 } = (init_stores(), __toCommonJS(stores_exports));
+                  useMachineStore2.getState().setCurrentRule(null);
                   state.tapeInternalState = capitalizeAlphabet2(newState || "START");
                 });
               },
@@ -29927,6 +29954,11 @@
               // Fill tape with a string
               fillTape: (content) => {
                 set5((state) => {
+                  const { useMachineStore: useMachineStore2 } = (init_stores(), __toCommonJS(stores_exports));
+                  const machineState = useMachineStore2.getState();
+                  if (!machineState.isRunning) {
+                    machineState.setCurrentRule(null);
+                  }
                   state.tapeCellsById.forEach((cellId) => {
                     delete state[cellId];
                   });
@@ -33451,7 +33483,9 @@
                   if (!trial)
                     return false;
                   const { useMachineStore: useMachineStore2, useTapeStore: useTapeStore2 } = (init_stores(), __toCommonJS(stores_exports));
+                  const machineStore = useMachineStore2.getState();
                   const tapeStore = useTapeStore2.getState();
+                  machineStore.setCurrentRule(null);
                   tapeStore.setInternalState(trial.startState);
                   tapeStore.fillTape(trial.startTape);
                   if (typeof tapeStore.setHead === "function") {
@@ -33714,6 +33748,7 @@
           stopMachine,
           stepForward,
           setHighlightedRule,
+          setCurrentRule,
           matchRule,
           getAllRules
         } = useMachineStore();
@@ -33728,7 +33763,7 @@
         const step = () => {
           const currentState = useTapeStore.getState().tapeInternalState;
           const currentSymbol = readCurrentCell();
-          console.log(`Step: State=${currentState}, Symbol=${currentSymbol}`);
+          console.log(`STEP START: State=${currentState}, Symbol=${currentSymbol}`);
           if (currentState.toLowerCase() === "halt") {
             stopMachine("Machine is in halt state", false);
             return false;
@@ -33738,6 +33773,9 @@
             stopMachine(`No matching rule found for state '${currentState}' and symbol '${currentSymbol}'`, true);
             return false;
           }
+          console.log(`EXECUTION: Setting currentRule to ${rule.id} for rule:`, rule);
+          setCurrentRule(rule.id);
+          console.log(`EXECUTION: After setCurrentRule, checking store state...`);
           console.log(`Applying rule: ${currentState},${currentSymbol} \u2192 ${rule.write},${rule.direction},${rule.new_state}`);
           const historyEntry = {
             beforeState: {
@@ -33873,6 +33911,7 @@
           stopMachine();
         };
         const reset = () => {
+          setCurrentRule(null);
           stop();
           const history = useMachineStore.getState().runHistory;
           if (history.length > 0) {
@@ -78305,6 +78344,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     selected: selected2
   }) {
     const { read, write, direction, isActive } = data || {};
+    const safeRead = read || "#";
+    const safeWrite = write || "#";
+    const safeDirection = direction || "R";
+    const safeIsActive = Boolean(isActive);
+    if (safeIsActive) {
+      console.log(`TransitionEdge ${id2} is ACTIVE!`, { isActive, safeIsActive });
+    }
     const graphLayout = useGraphLayoutStore();
     const reactFlowInstance = useReactFlow();
     const [isDragging, setIsDragging] = (0, import_react17.useState)(false);
@@ -78317,7 +78363,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         setLabelPosition(savedLayout.controlPoint);
       }
     }, [id2, graphLayout]);
-    const label = `${read || "#"}\u2192${write || "#"},${direction}`;
+    const label = `${safeRead}\u2192${safeWrite},${safeDirection}`;
     const [defaultEdgePath, defaultLabelX, defaultLabelY] = getSmoothStepPath({
       sourceX,
       sourceY,
@@ -78400,9 +78446,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       e.preventDefault();
       e.stopPropagation();
       if (!hasDraggedRef.current) {
-        console.log("Double-click to edit rule:", { read, write, direction });
+        console.log("Double-click to edit rule:", { read: safeRead, write: safeWrite, direction: safeDirection });
       }
-    }, [read, write, direction]);
+    }, [safeRead, safeWrite, safeDirection]);
     return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(import_jsx_dev_runtime4.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
         BaseEdge,
@@ -78411,19 +78457,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           path: edgePath,
           markerEnd: "url(#react-flow__arrowclosed)",
           style: {
-            stroke: isActive ? "#ff6b00" : isDragging ? "#ff9800" : selected2 ? "#2196f3" : "#555",
-            strokeWidth: isActive ? 5 : isDragging ? 5 : selected2 ? 4 : 3,
+            stroke: safeIsActive ? "#ff6b00" : isDragging ? "#ff9800" : selected2 ? "#2196f3" : "#555",
+            strokeWidth: safeIsActive ? 5 : isDragging ? 5 : selected2 ? 4 : 3,
             strokeDasharray: isDragging ? "5,5" : "none",
             transition: "all 0.2s ease",
-            filter: isActive ? "drop-shadow(0 0 4px #ff6b00)" : "none",
-            animation: isActive ? "pulse 1.5s ease-in-out infinite" : "none"
+            filter: safeIsActive ? "drop-shadow(0 0 4px #ff6b00)" : "none",
+            animation: safeIsActive ? "pulse 1.5s ease-in-out infinite" : "none"
           }
         },
         void 0,
         false,
         {
           fileName: "src/common/components/machine/rules/TransitionEdge.tsx",
-          lineNumber: 173,
+          lineNumber: 186,
           columnNumber: 7
         },
         this
@@ -78435,15 +78481,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             position: "absolute",
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             fontSize: 12,
-            fontWeight: isActive ? "900" : "bold",
-            background: isActive ? "#fff4e6" : isDragging ? "#fff3e0" : "white",
+            fontWeight: safeIsActive ? "900" : "bold",
+            background: safeIsActive ? "#fff4e6" : isDragging ? "#fff3e0" : "white",
             padding: "4px 8px",
             borderRadius: 4,
-            border: isActive ? "2px solid #ff6b00" : isDragging ? "2px solid #ff9800" : selected2 ? "2px solid #2196f3" : "1px solid #ccc",
+            border: safeIsActive ? "2px solid #ff6b00" : isDragging ? "2px solid #ff9800" : selected2 ? "2px solid #2196f3" : "1px solid #ccc",
             pointerEvents: "all",
-            color: isActive ? "#ff6b00" : isDragging ? "#ff9800" : selected2 ? "#2196f3" : "#333",
+            color: safeIsActive ? "#ff6b00" : isDragging ? "#ff9800" : selected2 ? "#2196f3" : "#333",
             cursor: isDragging ? "grabbing" : "grab",
-            boxShadow: isActive ? "0 4px 8px rgba(255,107,0,0.3)" : isDragging ? "0 4px 8px rgba(0,0,0,0.2)" : "0 2px 4px rgba(0,0,0,0.1)",
+            boxShadow: safeIsActive ? "0 4px 8px rgba(255,107,0,0.3)" : isDragging ? "0 4px 8px rgba(0,0,0,0.2)" : "0 2px 4px rgba(0,0,0,0.1)",
             transition: "all 0.2s ease"
           },
           className: "nodrag nopan",
@@ -78455,22 +78501,22 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/TransitionEdge.tsx",
-          lineNumber: 189,
+          lineNumber: 202,
           columnNumber: 9
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/rules/TransitionEdge.tsx",
-        lineNumber: 188,
+        lineNumber: 201,
         columnNumber: 7
       }, this)
     ] }, void 0, true, {
       fileName: "src/common/components/machine/rules/TransitionEdge.tsx",
-      lineNumber: 172,
+      lineNumber: 185,
       columnNumber: 5
     }, this);
   }
-  var TransitionEdge_default = (0, import_react17.memo)(TransitionEdge);
+  var TransitionEdge_default = TransitionEdge;
 
   // src/common/components/machine/rules/RuleEditDialog.tsx
   var import_react19 = __toESM(require_react(), 1);
@@ -79036,7 +79082,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const machine = useMachineStore();
     const graphLayout = useGraphLayoutStore();
     const tape = useTapeStore();
+    const currentRule = machine.currentRule;
     const rules = machine.getAllRules();
+    console.log("ReactFlowGraph render:", {
+      currentRule,
+      rulesCount: rules.length,
+      machineIsRunning: machine.isRunning
+    });
     const reactFlowInstance = useReactFlow();
     const [ruleDialogOpen, setRuleDialogOpen] = (0, import_react21.useState)(false);
     const [stateDialogOpen, setStateDialogOpen] = (0, import_react21.useState)(false);
@@ -79044,7 +79096,6 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const [editingState, setEditingState] = (0, import_react21.useState)("");
     const [newStateName, setNewStateName] = (0, import_react21.useState)("");
     const [pendingConnection, setPendingConnection] = (0, import_react21.useState)(null);
-    console.log("Rules from store:", rules);
     const rulesHash = (0, import_react21.useMemo)(() => {
       return JSON.stringify(rules.map((rule) => ({
         id: rule.id,
@@ -79097,7 +79148,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             label: state,
             isStart: state.toUpperCase() === "START",
             isHalt: state.toUpperCase() === "HALT",
-            isCurrent: machine.isRunning && tape.tapeInternalState === state
+            isCurrent: tape.tapeInternalState === state
           }
         };
       });
@@ -79119,6 +79170,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         const distributedHandle = distributedHandles[edgeId];
         const sourceHandle = savedEdgeLayout?.sourceHandle || distributedHandle?.sourceHandle;
         const targetHandle = savedEdgeLayout?.targetHandle || distributedHandle?.targetHandle;
+        const isActive = currentRule === rule.id;
+        console.log(`Creating edge for rule ${rule.id}: currentRule=${currentRule}, isActive=${isActive}`);
         const edge = {
           id: edgeId,
           type: "transitionEdge",
@@ -79131,7 +79184,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             write: rule.write || "#",
             direction: rule.direction,
             ruleId: rule.id,
-            isActive: machine.isRunning && machine.highlightedRow === rule.id
+            isActive
           },
           markerEnd: {
             type: MarkerType.ArrowClosed
@@ -79143,9 +79196,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       console.log("Setting edges:", newEdges);
       setNodes(newNodes);
       setEdges(newEdges);
-    }, [rulesHash, machine.highlightedRow, machine.isRunning, tape.tapeInternalState]);
+    }, [rulesHash, currentRule, tape.tapeInternalState]);
     const onConnect = (0, import_react21.useCallback)((connection) => {
       console.log("New connection:", connection);
+      machine.setCurrentRule(null);
       if (connection.source && connection.target) {
         setPendingConnection({
           source: connection.source,
@@ -79158,9 +79212,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         });
         setRuleDialogOpen(true);
       }
-    }, [graphLayout]);
+    }, [graphLayout, machine]);
     const onEdgeClick = (0, import_react21.useCallback)((_event, edge) => {
       console.log("Edge clicked:", edge);
+      machine.setCurrentRule(null);
       const ruleId = edge.id.replace("edge-", "");
       const rule = machine.getRule(ruleId);
       if (rule) {
@@ -79170,12 +79225,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, [machine]);
     const onNodeDoubleClick = (0, import_react21.useCallback)((_event, node) => {
       console.log("Node double clicked:", node);
+      machine.setCurrentRule(null);
       setEditingState(node.id);
       setStateDialogOpen(true);
-    }, []);
+    }, [machine]);
     const onPaneClick = (0, import_react21.useCallback)((event) => {
       if (event.detail === 2) {
         console.log("Pane double-clicked at:", event.clientX, event.clientY);
+        machine.setCurrentRule(null);
         const position = reactFlowInstance.screenToFlowPosition({
           x: event.clientX,
           y: event.clientY
@@ -79207,12 +79264,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, [reactFlowInstance, machine, setNodes]);
     const onNodesDelete = (0, import_react21.useCallback)((nodesToDelete) => {
       console.log("Nodes to delete:", nodesToDelete);
+      machine.setCurrentRule(null);
       nodesToDelete.forEach((node) => {
         machine.deleteState(node.id);
       });
     }, [machine]);
     const onEdgesDelete = (0, import_react21.useCallback)((edgesToDelete) => {
       console.log("Edges to delete:", edgesToDelete);
+      machine.setCurrentRule(null);
       edgesToDelete.forEach((edge) => {
         const ruleId = edge.id.replace("edge-", "");
         machine.deleteRule(ruleId);
@@ -79221,6 +79280,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, [machine, graphLayout]);
     const onReconnect = (0, import_react21.useCallback)((oldEdge, newConnection) => {
       console.log("Edge reconnected:", oldEdge, newConnection);
+      machine.setCurrentRule(null);
       const ruleId = oldEdge.id.replace("edge-", "");
       if (newConnection.source && newConnection.target) {
         machine.updateRuleConnection(ruleId, newConnection.source, newConnection.target);
@@ -79374,7 +79434,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           },
           children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Typography_default, { color: "text.secondary", children: "No states to display. Add some rules to see the state diagram." }, void 0, false, {
             fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-            lineNumber: 505,
+            lineNumber: 542,
             columnNumber: 13
           }, this)
         },
@@ -79382,7 +79442,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 493,
+          lineNumber: 530,
           columnNumber: 11
         },
         this
@@ -79474,12 +79534,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Background, {}, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 595,
+              lineNumber: 632,
               columnNumber: 15
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Controls, {}, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 596,
+              lineNumber: 633,
               columnNumber: 15
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("svg", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("defs", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(
@@ -79494,7 +79554,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 markerUnits: "strokeWidth",
                 children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("polygon", { points: "0,0 0,6 6,3", fill: "#555" }, void 0, false, {
                   fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                  lineNumber: 608,
+                  lineNumber: 645,
                   columnNumber: 21
                 }, this)
               },
@@ -79502,17 +79562,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               false,
               {
                 fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                lineNumber: 599,
+                lineNumber: 636,
                 columnNumber: 19
               },
               this
             ) }, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 598,
+              lineNumber: 635,
               columnNumber: 17
             }, this) }, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 597,
+              lineNumber: 634,
               columnNumber: 15
             }, this)
           ]
@@ -79521,17 +79581,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         true,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 566,
+          lineNumber: 603,
           columnNumber: 13
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-        lineNumber: 510,
+        lineNumber: 547,
         columnNumber: 11
       }, this) }, void 0, false, {
         fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-        lineNumber: 489,
+        lineNumber: 526,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(
@@ -79548,7 +79608,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 618,
+          lineNumber: 655,
           columnNumber: 7
         },
         this
@@ -79565,25 +79625,25 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 627,
+          lineNumber: 664,
           columnNumber: 7
         },
         this
       )
     ] }, void 0, true, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 488,
+      lineNumber: 525,
       columnNumber: 5
     }, this);
   }
   function ReactFlowGraph(props) {
     return /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(ReactFlowProvider, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(ReactFlowGraphInner, { ...props }, void 0, false, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 641,
+      lineNumber: 678,
       columnNumber: 7
     }, this) }, void 0, false, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 640,
+      lineNumber: 677,
       columnNumber: 5
     }, this);
   }
@@ -80295,8 +80355,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           {
             color: "inherit",
             onClick: () => {
+              machine.setCurrentRule(null);
               tape.fillTape("");
-              tape.setInternalState("START");
+              tape.setManualState("START");
             },
             size: "small",
             variant: "outlined",
@@ -80329,7 +80390,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             disabled: machineExecution.isRunning,
             startIcon: /* @__PURE__ */ (0, import_jsx_dev_runtime10.jsxDEV)(RestartAlt_default, {}, void 0, false, {
               fileName: "src/common/components/machine/MachineControls.tsx",
-              lineNumber: 158,
+              lineNumber: 159,
               columnNumber: 24
             }, this),
             sx: {
@@ -80343,7 +80404,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/MachineControls.tsx",
-            lineNumber: 150,
+            lineNumber: 151,
             columnNumber: 11
           },
           this
@@ -80355,7 +80416,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime10.jsxDEV)(Box_default, { sx: { flexGrow: 1 } }, void 0, false, {
         fileName: "src/common/components/machine/MachineControls.tsx",
-        lineNumber: 170,
+        lineNumber: 171,
         columnNumber: 9
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime10.jsxDEV)(Box_default, { sx: { display: "flex", gap: 1 }, children: [
@@ -80367,7 +80428,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             title: "Save Machine to Database",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime10.jsxDEV)(Save_default, {}, void 0, false, {
               fileName: "src/common/components/machine/MachineControls.tsx",
-              lineNumber: 179,
+              lineNumber: 180,
               columnNumber: 13
             }, this)
           },
@@ -80375,7 +80436,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/MachineControls.tsx",
-            lineNumber: 174,
+            lineNumber: 175,
             columnNumber: 11
           },
           this
@@ -80388,7 +80449,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             title: "Open Trials",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime10.jsxDEV)(Menu_default2, {}, void 0, false, {
               fileName: "src/common/components/machine/MachineControls.tsx",
-              lineNumber: 186,
+              lineNumber: 187,
               columnNumber: 13
             }, this)
           },
@@ -80396,14 +80457,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/MachineControls.tsx",
-            lineNumber: 181,
+            lineNumber: 182,
             columnNumber: 11
           },
           this
         )
       ] }, void 0, true, {
         fileName: "src/common/components/machine/MachineControls.tsx",
-        lineNumber: 173,
+        lineNumber: 174,
         columnNumber: 9
       }, this)
     ] }, void 0, true, {
@@ -81636,6 +81697,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       loadMachineState();
     }, [params.id]);
     const loadSharedMachineState = (serverState) => {
+      machine.setCurrentRule(null);
       machine.rowsById.forEach((ruleId) => machine.deleteRule(ruleId));
       const ruleIds = serverState.rowsById || [];
       ruleIds.forEach((ruleId) => {
@@ -81824,11 +81886,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         zIndex: 9999
       }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Typography_default, { variant: "h6", children: "Loading machine state..." }, void 0, false, {
         fileName: "src/common/components/AppModern.tsx",
-        lineNumber: 383,
+        lineNumber: 386,
         columnNumber: 11
       }, this) }, void 0, false, {
         fileName: "src/common/components/AppModern.tsx",
-        lineNumber: 371,
+        lineNumber: 374,
         columnNumber: 9
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
@@ -81845,7 +81907,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 388,
+          lineNumber: 391,
           columnNumber: 7
         },
         this
@@ -81853,7 +81915,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Container_default, { maxWidth: "lg", sx: { mt: 2, mb: 2 }, children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(TapeDisplay, {}, void 0, false, {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 400,
+          lineNumber: 403,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
@@ -81865,14 +81927,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/AppModern.tsx",
-            lineNumber: 403,
+            lineNumber: 406,
             columnNumber: 9
           },
           this
         )
       ] }, void 0, true, {
         fileName: "src/common/components/AppModern.tsx",
-        lineNumber: 398,
+        lineNumber: 401,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
@@ -81887,7 +81949,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 409,
+          lineNumber: 412,
           columnNumber: 7
         },
         this
@@ -81900,7 +81962,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           onClose: () => setSnackbar({ ...snackbar, open: false }),
           children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Alert_default, { severity: snackbar.severity, onClose: () => setSnackbar({ ...snackbar, open: false }), children: snackbar.message }, void 0, false, {
             fileName: "src/common/components/AppModern.tsx",
-            lineNumber: 422,
+            lineNumber: 425,
             columnNumber: 9
           }, this)
         },
@@ -81908,7 +81970,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 417,
+          lineNumber: 420,
           columnNumber: 7
         },
         this
@@ -81916,19 +81978,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Dialog_default, { open: errorDialog.open, onClose: () => setErrorDialog({ open: false, message: "" }), children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(DialogTitle_default, { children: "Error" }, void 0, false, {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 429,
+          lineNumber: 432,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(DialogContent_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Typography_default, { children: errorDialog.message }, void 0, false, {
-          fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 431,
-          columnNumber: 11
-        }, this) }, void 0, false, {
-          fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 430,
-          columnNumber: 9
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(DialogActions_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Button_default, { onClick: () => setErrorDialog({ open: false, message: "" }), children: "Close" }, void 0, false, {
           fileName: "src/common/components/AppModern.tsx",
           lineNumber: 434,
           columnNumber: 11
@@ -81936,16 +81989,25 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           fileName: "src/common/components/AppModern.tsx",
           lineNumber: 433,
           columnNumber: 9
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(DialogActions_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Button_default, { onClick: () => setErrorDialog({ open: false, message: "" }), children: "Close" }, void 0, false, {
+          fileName: "src/common/components/AppModern.tsx",
+          lineNumber: 437,
+          columnNumber: 11
+        }, this) }, void 0, false, {
+          fileName: "src/common/components/AppModern.tsx",
+          lineNumber: 436,
+          columnNumber: 9
         }, this)
       ] }, void 0, true, {
         fileName: "src/common/components/AppModern.tsx",
-        lineNumber: 428,
+        lineNumber: 431,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Dialog_default, { open: newTrialDialog, onClose: () => setNewTrialDialog(false), maxWidth: "sm", fullWidth: true, children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(DialogTitle_default, { children: "Create New Test Case" }, void 0, false, {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 442,
+          lineNumber: 445,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(DialogContent_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Box_default, { sx: { pt: 1 }, children: [
@@ -81962,7 +82024,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/AppModern.tsx",
-              lineNumber: 445,
+              lineNumber: 448,
               columnNumber: 13
             },
             this
@@ -81981,7 +82043,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/AppModern.tsx",
-              lineNumber: 452,
+              lineNumber: 455,
               columnNumber: 13
             },
             this
@@ -82000,24 +82062,24 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/AppModern.tsx",
-              lineNumber: 460,
+              lineNumber: 463,
               columnNumber: 13
             },
             this
           )
         ] }, void 0, true, {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 444,
+          lineNumber: 447,
           columnNumber: 11
         }, this) }, void 0, false, {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 443,
+          lineNumber: 446,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(DialogActions_default, { children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(Button_default, { onClick: () => setNewTrialDialog(false), children: "Cancel" }, void 0, false, {
             fileName: "src/common/components/AppModern.tsx",
-            lineNumber: 471,
+            lineNumber: 474,
             columnNumber: 11
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)(
@@ -82039,24 +82101,24 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/AppModern.tsx",
-              lineNumber: 472,
+              lineNumber: 475,
               columnNumber: 11
             },
             this
           )
         ] }, void 0, true, {
           fileName: "src/common/components/AppModern.tsx",
-          lineNumber: 470,
+          lineNumber: 473,
           columnNumber: 9
         }, this)
       ] }, void 0, true, {
         fileName: "src/common/components/AppModern.tsx",
-        lineNumber: 441,
+        lineNumber: 444,
         columnNumber: 7
       }, this)
     ] }, void 0, true, {
       fileName: "src/common/components/AppModern.tsx",
-      lineNumber: 368,
+      lineNumber: 371,
       columnNumber: 5
     }, this);
   }

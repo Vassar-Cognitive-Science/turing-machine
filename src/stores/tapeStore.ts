@@ -254,6 +254,10 @@ export const useTapeStore = create<TapeStore>()(
 
       writeToCell: (cellId: string, value: string): void => {
         set((state) => {
+          // Clear rule highlighting when user manually edits tape
+          const { useMachineStore } = require('./index');
+          useMachineStore.getState().setCurrentRule(null);
+          
           const cell = (state as any)[cellId];
           if (cell) {
             // If # is written, set cell to blank (# is the only blank symbol)
@@ -267,6 +271,21 @@ export const useTapeStore = create<TapeStore>()(
       // Internal state management
       setInternalState: (newState: string): void => {
         set((state) => {
+          // Don't clear rule highlighting during machine execution - only clear on manual user changes
+          // The machine execution will manage currentRule highlighting appropriately
+          
+          // Capitalize alphabet characters in state names
+          state.tapeInternalState = capitalizeAlphabet(newState || "START");
+        });
+      },
+
+      // Manual state change (for user interactions - clears highlighting)
+      setManualState: (newState: string): void => {
+        set((state) => {
+          // Clear rule highlighting when user manually changes state
+          const { useMachineStore } = require('./index');
+          useMachineStore.getState().setCurrentRule(null);
+          
           // Capitalize alphabet characters in state names
           state.tapeInternalState = capitalizeAlphabet(newState || "START");
         });
@@ -414,6 +433,15 @@ export const useTapeStore = create<TapeStore>()(
       // Fill tape with a string
       fillTape: (content: string): void => {
         set((state) => {
+          // Clear rule highlighting when user fills tape (except when done programmatically during reset)
+          // We can detect manual vs programmatic by checking if the machine is currently being reset
+          const { useMachineStore } = require('./index');
+          const machineState = useMachineStore.getState();
+          // Only clear if machine is not currently running (manual tape fill)
+          if (!machineState.isRunning) {
+            machineState.setCurrentRule(null);
+          }
+          
           // Clear existing tape
           state.tapeCellsById.forEach(cellId => {
             delete (state as any)[cellId];

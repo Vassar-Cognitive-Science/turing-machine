@@ -625,7 +625,11 @@ export const useTrialStore = create<TrialStore>()(
 
           // Import the stores
           const { useMachineStore, useTapeStore } = require('./index');
+          const machineStore = useMachineStore.getState();
           const tapeStore = useTapeStore.getState();
+          
+          // Clear rule highlighting when user loads trial to tape
+          machineStore.setCurrentRule(null);
           
           // Load trial's initial state onto the main tape
           tapeStore.setInternalState(trial.startState);
