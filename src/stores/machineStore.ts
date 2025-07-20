@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { persist } from 'zustand/middleware';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Rule, MachineStore } from '../types';
 
@@ -37,9 +38,22 @@ interface CanRunResult {
 }
 
 interface HistoryEntry {
-  stepCount: number;
-  state: any; // This would be more specific based on what we're tracking
+  beforeState: {
+    state: string;
+    symbol: string;
+    headPosition: number;
+    tapeContent: string;
+  };
+  afterState?: {
+    state: string;
+    symbol: string;
+    headPosition: number;
+    tapeContent: string;
+  };
+  rule: Rule;
+  timestamp: number;
 }
+
 
 // Extended state for internal store management
 interface InternalMachineState {
@@ -58,6 +72,7 @@ interface InternalMachineState {
   anyChangeInNormal: boolean;
   stepCount: number;
   runHistory: HistoryEntry[];
+  redoHistory: HistoryEntry[];
   
   // Rules/transition table
   rowsById: string[];
@@ -84,6 +99,7 @@ const initialMachineState: InternalMachineState = {
   anyChangeInNormal: false,
   stepCount: 0,
   runHistory: [],
+  redoHistory: [],
   
   // Rules/transition table
   rowsById: [], // Array of rule IDs
@@ -91,8 +107,9 @@ const initialMachineState: InternalMachineState = {
 };
 
 export const useMachineStore = create<MachineStore>()(
-  subscribeWithSelector(
-    immer((set, get) => ({
+  persist(
+    subscribeWithSelector(
+      immer((set, get) => ({
       ...initialMachineState,
 
       // Machine execution actions
@@ -137,18 +154,85 @@ export const useMachineStore = create<MachineStore>()(
       // Step execution
       stepForward: (): void => {
         set((state) => {
-          // This will be implemented with the actual Turing machine logic
+          // If this is a regular step forward (not redo), just increment step count
+          // The actual stepping logic is handled in the useMachineExecution hook
           state.stepCount += 1;
           state.anyChangeInNormal = true;
-          // TODO: Implement actual stepping logic
         });
       },
 
       stepBack: (): void => {
         set((state) => {
           if (state.runHistory.length > 0) {
+            // Get the last history entry (the step we want to undo)
+            const lastEntry = state.runHistory.pop()!;
+            
+            // Add it to redo history so we can redo later
+            state.redoHistory.push(lastEntry);
+            
+            // Restore the state from beforeState
+            const { useTapeStore } = require('./index');
+            const tapeStore = useTapeStore.getState();
+            
+            // Restore tape state
+            tapeStore.setInternalState(lastEntry.beforeState.state);
+            
+            // Restore tape content - use fillTape to recreate the tape structure
+            tapeStore.fillTape(lastEntry.beforeState.tapeContent);
+            
+            // Restore head position - accounting for fillTape padding
+            const paddingBefore = 5; // fillTape adds 5 padding cells before content
+            const targetPos = lastEntry.beforeState.headPosition;
+            
+            if (targetPos < tapeStore.tapeCellsById.length) {
+              tapeStore.setHeadPosition(tapeStore.tapeCellsById[targetPos]);
+            }
+            
+            // Update step count
             state.stepCount = Math.max(0, state.stepCount - 1);
-            // TODO: Restore previous state from history
+            
+            // Clear any highlighted rule
+            state.highlightedRow = null;
+          }
+        });
+      },
+
+      // Redo functionality - restore a step that was undone
+      redoStep: (): void => {
+        set((state) => {
+          if (state.redoHistory.length > 0) {
+            // Get the next history entry (the step we want to redo)
+            const nextEntry = state.redoHistory.pop()!;
+            
+            // Add it back to run history
+            state.runHistory.push(nextEntry);
+            
+            // If there's an afterState, restore it
+            if (nextEntry.afterState) {
+              const { useTapeStore } = require('./index');
+              const tapeStore = useTapeStore.getState();
+              
+              // Restore tape state
+              tapeStore.setInternalState(nextEntry.afterState.state);
+              
+              // Restore tape content
+              tapeStore.fillTape(nextEntry.afterState.tapeContent);
+              
+              // Restore head position
+              const targetPos = nextEntry.afterState.headPosition;
+              
+              if (targetPos < tapeStore.tapeCellsById.length) {
+                tapeStore.setHeadPosition(tapeStore.tapeCellsById[targetPos]);
+              }
+              
+              // Update step count
+              state.stepCount += 1;
+              
+              // Highlight the rule that was applied
+              if (nextEntry.rule && nextEntry.rule.id) {
+                state.highlightedRow = nextEntry.rule.id;
+              }
+            }
           }
         });
       },
@@ -237,12 +321,15 @@ export const useMachineStore = create<MachineStore>()(
       recordHistory: (historyEntry: HistoryEntry): void => {
         set((state) => {
           state.runHistory.push(historyEntry);
+          // Clear redo history when new operations are performed
+          state.redoHistory = [];
         });
       },
 
       clearHistory: (): void => {
         set((state) => {
           state.runHistory = [];
+          state.redoHistory = [];
           state.stepCount = 0;
         });
       },
@@ -506,7 +593,35 @@ export const useMachineStore = create<MachineStore>()(
         
         return Array.from(stateSet).sort();
       },
+
+      // Update rule connection (for graph edge reconnection)
+      updateRuleConnection: (ruleId: string, newSourceState: string, newTargetState: string): void => {
+        set((state) => {
+          const rule = (state as any)[ruleId];
+          if (rule) {
+            rule.in_state = capitalizeAlphabet(newSourceState);
+            rule.new_state = capitalizeAlphabet(newTargetState);
+            state.anyChangeInNormal = true;
+          }
+        });
+      },
     }))
+    ),
+    {
+      name: 'turing-machine-store',
+      partialize: (state) => ({
+        // Persist only essential machine configuration
+        rowsById: state.rowsById,
+        animationSpeed: state.animationSpeed,
+        animationOn: state.animationOn,
+        animationSpeedFactor: state.animationSpeedFactor,
+        // Persist all rule data (dynamic properties)
+        ...state.rowsById.reduce((rules, ruleId) => {
+          rules[ruleId] = (state as any)[ruleId];
+          return rules;
+        }, {} as Record<string, any>),
+      }),
+    }
   )
 );
 

@@ -497,24 +497,27 @@ export const useTrialOperations = (): TrialOperations => {
 
 // Hook for undo/redo operations
 export const useUndoRedo = (): UndoRedoState => {
-  const { stepBack, runHistory, stepForward } = useMachineStore() as any;
+  const { stepBack, redoStep, runHistory, redoHistory, isRunning } = useMachineStore() as any;
   
-  // Simple implementation - can be enhanced with the middleware
   const undo = (): void => {
-    // For now, just step back in machine history
+    if (isRunning) {
+      return; // Don't allow undo while machine is running
+    }
     stepBack();
   };
   
   const redo = (): void => {
-    // For now, just step forward
-    stepForward();
+    if (isRunning) {
+      return; // Don't allow redo while machine is running
+    }
+    redoStep();
   };
   
   return {
     undo,
     redo,
-    canUndo: runHistory.length > 0,
-    canRedo: false, // Will be implemented with proper redo history
+    canUndo: runHistory.length > 0 && !isRunning,
+    canRedo: redoHistory.length > 0 && !isRunning,
   };
 };
 
@@ -527,11 +530,17 @@ export const initializeStores = (): void => {
   // Initialize GUI with current screen size
   (gui as any).initialize();
   
-  // Initialize machine
-  (machine as any).initializeMachine();
+  // Only initialize machine and tape if they don't have persisted data
+  // Persistence middleware will have already restored data if it exists
+  if (machine.rowsById.length === 0) {
+    // No persisted rules, initialize with empty machine
+    (machine as any).initializeMachine();
+  }
   
-  // Initialize tape
-  (tape as any).initializeTape();
+  if (tape.tapeCellsById.length === 0) {
+    // No persisted tape, initialize with empty tape
+    (tape as any).initializeTape();
+  }
 };
 
 // Reset all stores to initial state

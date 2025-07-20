@@ -40,7 +40,7 @@ const edgeTypes = {
 
 
 // Main component that needs to be inside ReactFlowProvider
-function ReactFlowGraphInner({ onEditRule, onDeleteRule, onAddRule }: ReactFlowGraphProps): React.ReactElement {
+function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteRule, onAddRule: _onAddRule }: ReactFlowGraphProps): React.ReactElement {
   const machine = useMachineStore();
   const graphLayout = useGraphLayoutStore();
   const tape = useTapeStore();
@@ -299,6 +299,14 @@ function ReactFlowGraphInner({ onEditRule, onDeleteRule, onAddRule }: ReactFlowG
   const onReconnect = useCallback((oldEdge: Edge, newConnection: Connection) => {
     console.log('Edge reconnected:', oldEdge, newConnection);
     
+    // Extract rule ID from edge ID
+    const ruleId = oldEdge.id.replace('edge-', '');
+    
+    // Update the underlying rule in the machine store
+    if (newConnection.source && newConnection.target) {
+      machine.updateRuleConnection(ruleId, newConnection.source, newConnection.target);
+    }
+    
     // Update the edge layout with new handles
     graphLayout.updateEdgeLayout(oldEdge.id, {
       sourceHandle: newConnection.sourceHandle || undefined,
@@ -319,15 +327,15 @@ function ReactFlowGraphInner({ onEditRule, onDeleteRule, onAddRule }: ReactFlowG
           : edge
       )
     );
-  }, [graphLayout, setEdges]);
+  }, [machine, graphLayout, setEdges]);
 
   // Handle node position changes
-  const onNodeDrag = useCallback((event: React.MouseEvent, node: Node) => {
+  const onNodeDrag = useCallback((_event: React.MouseEvent, node: Node) => {
     // Save position during drag
     graphLayout.updateNodePosition(node.id, node.position);
   }, [graphLayout]);
 
-  const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node) => {
+  const onNodeDragStop = useCallback((_event: React.MouseEvent, node: Node) => {
     // Save final position
     graphLayout.updateNodePosition(node.id, node.position);
     console.log(`Node ${node.id} moved to:`, node.position);

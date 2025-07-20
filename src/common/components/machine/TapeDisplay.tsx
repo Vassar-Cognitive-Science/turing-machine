@@ -44,7 +44,7 @@ export function TapeDisplay(): React.ReactElement {
           <Box
             sx={{
               position: 'absolute',
-              left: `calc(50% + ${(headIndex - Math.floor(visibleCells.length / 2)) * 50}px + 25px)`,
+              left: `calc(50% + ${(headIndex - (visibleCells.length - 1) / 2) * 50}px)`,
               transform: 'translateX(-50%)',
               display: 'flex',
               flexDirection: 'column',

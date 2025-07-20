@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { persist } from 'zustand/middleware';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { TapeCell, TapeStore, VisibleCell } from '../types';
 
@@ -59,8 +60,9 @@ const initialTapeState: InternalTapeState = {
 };
 
 export const useTapeStore = create<TapeStore>()(
-  subscribeWithSelector(
-    immer((set, get) => ({
+  persist(
+    subscribeWithSelector(
+      immer((set, get) => ({
       ...initialTapeState,
 
       // Tape initialization
@@ -512,6 +514,47 @@ export const useTapeStore = create<TapeStore>()(
                (!state[state.tapeHead] || state[state.tapeHead].val === BLANK);
       },
     }))
+    ),
+    {
+      name: 'turing-tape-store',
+      partialize: (state) => {
+        // Convert tape content to a simple string for persistence
+        const tapeContent = state.tapeCellsById
+          .map((cellId: string) => {
+            const cell = (state as any)[cellId];
+            return cell ? cell.val : BLANK;
+          })
+          .join('');
+        
+        // Save head position relative to content, not absolute position
+        const headPosition = state.tapeCellsById.indexOf(state.tapePointer!);
+        
+        // Extract just the meaningful content (remove leading/trailing blanks)
+        const meaningfulContent = tapeContent.replace(/^∅+|∅+$/g, '');
+        
+        return {
+          // Persist simplified tape representation
+          tapeContent: meaningfulContent.replace(new RegExp(BLANK, 'g'), '#'), // Convert blanks to # for storage
+          headPosition: Math.max(0, headPosition),
+          tapeInternalState: state.tapeInternalState,
+        };
+      },
+      onRehydrateStorage: () => (state) => {
+        if (state && (state as any).tapeContent) {
+          // Restore tape from persisted content
+          const content = (state as any).tapeContent;
+          const headPos = (state as any).headPosition || 0;
+          
+          // Use fillTape to restore the structure - this is the simplest approach
+          state.fillTape(content);
+          
+          // Set head position
+          if (headPos < state.tapeCellsById.length) {
+            state.tapePointer = state.tapeCellsById[headPos];
+          }
+        }
+      },
+    }
   )
 );
 

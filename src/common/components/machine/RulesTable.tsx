@@ -7,6 +7,11 @@ import {
   Grid,
   TextField,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
 import {
   Add,
@@ -139,6 +144,7 @@ export function RulesTable({
   const machine = useMachineStore();
   const rules = machine.getAllRules();
   const [currentView, setCurrentView] = useState<RulesViewType>('table');
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -165,6 +171,19 @@ export function RulesTable({
   const handleDeleteRule = (ruleId: string) => {
     machine.deleteRule(ruleId);
   };
+
+  const handleClearAllRules = () => {
+    setClearConfirmOpen(true);
+  };
+
+  const handleConfirmClear = () => {
+    machine.clearAllRules();
+    setClearConfirmOpen(false);
+  };
+
+  const handleCancelClear = () => {
+    setClearConfirmOpen(false);
+  };
   
   return (
     <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
@@ -188,7 +207,7 @@ export function RulesTable({
             Load Test Rules
           </Button>
           <Button 
-            onClick={machine.clearAllRules} 
+            onClick={handleClearAllRules} 
             variant="outlined" 
             size="medium"
             color="warning"
@@ -235,6 +254,30 @@ export function RulesTable({
           onAddRule={onAddRule}
         />
       )}
+
+      <Dialog
+        open={clearConfirmOpen}
+        onClose={handleCancelClear}
+        aria-labelledby="clear-confirm-dialog-title"
+        aria-describedby="clear-confirm-dialog-description"
+      >
+        <DialogTitle id="clear-confirm-dialog-title">
+          Clear All Rules
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="clear-confirm-dialog-description">
+            Are you sure you want to clear all rules? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelClear} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmClear} color="warning" variant="contained">
+            Clear All
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 }

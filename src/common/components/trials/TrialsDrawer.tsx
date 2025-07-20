@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Drawer,
   Box,
@@ -10,14 +10,24 @@ import {
   Divider,
   Chip,
   Stack,
+  IconButton,
+  Tooltip,
+  Menu,
+  MenuItem,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 import {
   PlaylistPlay,
   Add,
+  FileUpload,
+  FileDownload,
+  MoreVert,
 } from '@mui/icons-material';
 
-import { useTrialOperations } from '../../../stores';
-import type { Trial } from '../../../types';
+import { useTrialStore } from '../../../stores/trialStore';
+import { TrialDetails } from './TrialDetails';
+import { TrialEditor } from './TrialEditor';
 
 interface TrialsDrawerProps {
   open: boolean;
@@ -32,39 +42,104 @@ export function TrialsDrawer({
   onRunAllTrials,
   onAddTrial,
 }: TrialsDrawerProps): React.ReactElement {
-  const trialOps = useTrialOperations();
-  const trials = trialOps.trials;
-  const stats = trialOps.stats;
+  const {
+    getAllTrials,
+    getTrialStats,
+    isRunningTrial,
+    exportTrialsAsYAML,
+    importTrialsFromYAML,
+    loadTrialToTape,
+  } = useTrialStore();
+  
+  const trials = getAllTrials();
+  const stats = getTrialStats();
+  
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [editingTrialId, setEditingTrialId] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ message: string; severity: 'success' | 'error' | 'info' }>({ message: '', severity: 'info' });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleExportYAML = () => {
+    setMenuAnchor(null);
+    try {
+      exportTrialsAsYAML();
+      setNotification({
+        message: 'Tests exported successfully',
+        severity: 'success'
+      });
+    } catch (error) {
+      setNotification({
+        message: 'Failed to export tests',
+        severity: 'error'
+      });
+    }
+  };
+  
+  const handleImportYAML = () => {
+    setMenuAnchor(null);
+    fileInputRef.current?.click();
+  };
+  
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      if (content) {
+        const result = importTrialsFromYAML(content);
+        setNotification({
+          message: result.message,
+          severity: result.success ? 'success' : 'error'
+        });
+      }
+    };
+    reader.readAsText(file);
+    
+    // Reset the input
+    event.target.value = '';
+  };
   
   return (
     <Drawer
       anchor="right"
       open={open}
       onClose={onClose}
-      sx={{ '& .MuiDrawer-paper': { width: 320 } }}
+      sx={{ '& .MuiDrawer-paper': { width: 420, maxWidth: '90vw' } }}
     >
       <Box sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
           Test Cases
         </Typography>
         
-        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-          <Chip label={`${stats.total} Total`} size="medium" />
-          <Chip label={`${stats.passed} Passed`} color="success" size="medium" />
-          <Chip label={`${stats.failed} Failed`} color="error" size="medium" />
+        <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: 'wrap' }}>
+          <Chip label={`${stats.total} Total`} size="small" />
+          <Chip label={`${stats.passed} Passed`} color="success" size="small" />
+          <Chip label={`${stats.failed} Failed`} color="error" size="small" />
+          {stats.errors > 0 && (
+            <Chip label={`${stats.errors} Errors`} color="warning" size="small" />
+          )}
         </Stack>
         
         <Box sx={{ mb: 2 }}>
-          <Button
-            fullWidth
-            variant="contained"
-            startIcon={<PlaylistPlay />}
-            onClick={onRunAllTrials}
-            disabled={trialOps.isRunning}
-            sx={{ mb: 1 }}
-          >
-            {trialOps.isRunning ? 'Running...' : 'Run All Tests'}
-          </Button>
+          <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+            <Button
+              fullWidth
+              variant="contained"
+              startIcon={<PlaylistPlay />}
+              onClick={onRunAllTrials}
+              disabled={isRunningTrial}
+            >
+              {isRunningTrial ? 'Running...' : 'Run All (Turbo)'}
+            </Button>
+            <IconButton
+              onClick={(e) => setMenuAnchor(e.currentTarget)}
+              size="small"
+            >
+              <MoreVert />
+            </IconButton>
+          </Stack>
           <Button
             fullWidth
             variant="outlined"
@@ -77,34 +152,89 @@ export function TrialsDrawer({
         
         <Divider sx={{ mb: 2 }} />
         
-        <List>
-          {trials.map((trial: Trial) => (
-            <ListItem key={trial.id}>
-              <ListItemText
-                primary={trial.name}
-                secondary={`Status: ${trial.status}`}
-              />
-              <Chip
-                label={trial.status}
-                color={
-                  trial.status === 'passed' ? 'success' :
-                  trial.status === 'failed' ? 'error' :
-                  trial.status === 'running' ? 'warning' : 'default'
-                }
-                size="medium"
-              />
-            </ListItem>
+        <Box>
+          {trials.map((trial) => (
+            <TrialDetails
+              key={trial.id}
+              trialId={trial.id}
+              onEdit={(trialId) => setEditingTrialId(trialId)}
+              onLoadToTape={(trialId) => {
+                const success = loadTrialToTape(trialId);
+                const trialName = trials.find(t => t.id === trialId)?.name || 'trial';
+                setNotification({
+                  message: success 
+                    ? `Loaded "${trialName}" to tape successfully` 
+                    : 'Failed to load trial to tape',
+                  severity: success ? 'success' : 'error'
+                });
+              }}
+            />
           ))}
           {trials.length === 0 && (
-            <ListItem>
-              <ListItemText
-                primary="No test cases"
-                secondary="Add a test case to get started"
-              />
-            </ListItem>
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body2" color="textSecondary">
+                No test cases
+              </Typography>
+              <Typography variant="caption" color="textSecondary">
+                Add a test case to get started
+              </Typography>
+            </Box>
           )}
-        </List>
+        </Box>
       </Box>
+      
+      {/* Export/Import Menu */}
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={() => setMenuAnchor(null)}
+      >
+        <MenuItem onClick={handleExportYAML}>
+          <FileDownload sx={{ mr: 1 }} />
+          Export as YAML
+        </MenuItem>
+        <MenuItem onClick={handleImportYAML}>
+          <FileUpload sx={{ mr: 1 }} />
+          Import YAML
+        </MenuItem>
+      </Menu>
+      
+      {/* Hidden file input for YAML import */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        accept=".yaml,.yml"
+        onChange={handleFileSelect}
+      />
+      
+      {/* Trial Editor Dialog */}
+      <TrialEditor
+        open={Boolean(editingTrialId)}
+        trialId={editingTrialId}
+        onClose={() => setEditingTrialId(null)}
+        onSave={() => {
+          setEditingTrialId(null);
+          setNotification({
+            message: 'Trial updated successfully',
+            severity: 'success'
+          });
+        }}
+      />
+      
+      {/* Notification Snackbar */}
+      <Snackbar
+        open={Boolean(notification.message)}
+        autoHideDuration={4000}
+        onClose={() => setNotification({ message: '', severity: 'info' })}
+      >
+        <Alert 
+          severity={notification.severity} 
+          onClose={() => setNotification({ message: '', severity: 'info' })}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Drawer>
   );
 }

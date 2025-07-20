@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { persist } from 'zustand/middleware';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Trial, TrialStore } from '../types';
+import { convertTrialsToYAML, convertYAMLToTrials, downloadYAMLFile, validateYAMLTestSuite } from '../common/utils/yamlConverter';
 
 // Constants
-const MAX_TEST_STEP_LIMIT = 100000;
+const MAX_TEST_STEP_LIMIT = 10000; // Detect infinite loops after 10000 steps
 
 // Trial test result statuses
 const TEST_STATUS = {
@@ -23,7 +25,33 @@ const generateTrialId = (): string => {
   return `trial_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 };
 
-interface TrialData {
+// Normalize tape output by removing leading/trailing blank symbols but preserving spaces between content
+const normalizeTapeOutput = (output: string): string => {
+  // First, replace blank symbols with spaces to normalize them
+  let normalized = output
+    .replace(/∅/g, ' ') // Replace blank symbols with spaces
+    .replace(/\u2205/g, ' ') // Replace Unicode empty set symbol with spaces
+    .replace(/_/g, ' '); // Replace underscores with spaces (sometimes used as blanks)
+  
+  // Remove leading and trailing whitespace (infinite tape blanks)
+  normalized = normalized.trim();
+  
+  // Collapse multiple consecutive spaces into single spaces
+  // but preserve single spaces between characters
+  normalized = normalized.replace(/\s+/g, ' ');
+  
+  return normalized;
+};
+
+// Clean tape output for display by removing leading/trailing blanks
+const cleanTapeOutput = (output: string): string => {
+  return output
+    .replace(/^∅+/, '') // Remove leading blanks
+    .replace(/∅+$/, '') // Remove trailing blanks
+    .trim();
+};
+
+export interface TrialData {
   id: string;
   name: string;
   startState: string;
@@ -121,8 +149,9 @@ const initialTrialState: InternalTrialState = {
 };
 
 export const useTrialStore = create<TrialStore>()(
-  subscribeWithSelector(
-    immer((set, get) => ({
+  persist(
+    subscribeWithSelector(
+      immer((set, get) => ({
       ...initialTrialState,
 
       // Trial CRUD operations
@@ -191,7 +220,7 @@ export const useTrialStore = create<TrialStore>()(
       },
 
       // Trial execution
-      runTrial: async (trialId: string): Promise<void> => {
+      runTrial: async (trialId: string, restoreState: boolean = false): Promise<void> => {
         const trial = (get() as any)[trialId];
         if (!trial) return;
 
@@ -205,7 +234,7 @@ export const useTrialStore = create<TrialStore>()(
         try {
           // This would integrate with the machine store to actually run the trial
           // For now, we'll simulate the execution
-          const result = await get().executeTrial(trialId);
+          const result = await get().executeTrial(trialId, restoreState);
           
           set((state) => {
             state.runningTrials = state.runningTrials.filter(id => id !== trialId);
@@ -214,12 +243,22 @@ export const useTrialStore = create<TrialStore>()(
             (state as any)[trialId].actualOutput = result.output;
             (state as any)[trialId].steps = result.steps;
             (state as any)[trialId].executionTime = result.executionTime;
+            // Copy error to trial level for easier access in UI
+            (state as any)[trialId].error = result.error || null;
           });
         } catch (error) {
           set((state) => {
             state.runningTrials = state.runningTrials.filter(id => id !== trialId);
             (state as any)[trialId].status = TEST_STATUS.ERROR;
             (state as any)[trialId].error = (error as Error).message;
+            // Try to get current tape state even on error
+            try {
+              const { useTapeStore } = require('./index');
+              const currentTapeStore = useTapeStore.getState();
+              (state as any)[trialId].actualOutput = cleanTapeOutput(currentTapeStore.getTapeAsString());
+            } catch {
+              (state as any)[trialId].actualOutput = '(error reading tape)';
+            }
           });
         }
       },
@@ -230,10 +269,12 @@ export const useTrialStore = create<TrialStore>()(
         });
 
         const trials = get().testsById;
-        const promises = trials.map(trialId => get().runTrial(trialId));
         
         try {
-          await Promise.all(promises);
+          // Run trials sequentially to avoid interference, with state restoration between tests
+          for (const trialId of trials) {
+            await get().runTrial(trialId, true);
+          }
         } finally {
           set((state) => {
             state.isRunningTrial = false;
@@ -242,7 +283,7 @@ export const useTrialStore = create<TrialStore>()(
       },
 
       // Real trial execution using machine stores
-      executeTrial: async (trialId: string): Promise<TrialResult> => {
+      executeTrial: async (trialId: string, restoreState: boolean = false): Promise<TrialResult> => {
         return new Promise((resolve, reject) => {
           const trial = (get() as any)[trialId];
           if (!trial) {
@@ -254,7 +295,7 @@ export const useTrialStore = create<TrialStore>()(
             // Import the machine stores
             const { useMachineStore, useTapeStore } = require('./index');
             const machineStore = useMachineStore.getState();
-            const tapeStore = useTapeStore.getState();
+            let tapeStore = useTapeStore.getState();
             
             // Save current state
             const originalState = {
@@ -267,29 +308,62 @@ export const useTrialStore = create<TrialStore>()(
             tapeStore.setInternalState(trial.startState);
             tapeStore.fillTape(trial.startTape);
             
-            // Run the machine
+            // Set head position if specified
+            // Note: fillTape adds 5 padding cells before content, so we need to adjust the position
+            if (trial.startTapeHead !== undefined && trial.startTapeHead >= 0) {
+              // Try to use the setHead method if it exists, otherwise fallback
+              if (typeof (tapeStore as any).setHead === 'function') {
+                (tapeStore as any).setHead(trial.startTapeHead);
+              } else {
+                // Fallback: calculate position accounting for padding
+                const paddingBefore = 5; // fillTape adds 5 padding cells before content
+                const currentPos = tapeStore.getCurrentHeadPosition();
+                const targetPos = trial.startTapeHead + paddingBefore; // Adjust for padding
+                const diff = targetPos - currentPos;
+                
+                if (diff > 0) {
+                  for (let i = 0; i < diff; i++) {
+                    tapeStore.moveHeadRight();
+                  }
+                } else if (diff < 0) {
+                  for (let i = 0; i < Math.abs(diff); i++) {
+                    tapeStore.moveHeadLeft();
+                  }
+                }
+              }
+            }
+            
+            // Get fresh state after setup to ensure all changes are applied
+            tapeStore = useTapeStore.getState();
+            
+            // Run the machine in turbo mode (no delays, direct execution)
             let steps = 0;
-            const maxSteps = 1000;
+            const maxSteps = MAX_TEST_STEP_LIMIT;
             const startTime = Date.now();
             
-            const executeStep = (): void => {
-              steps++;
-              
-              if (steps > maxSteps) {
-                // Restore original state
-                tapeStore.setInternalState(originalState.tapeInternalState);
-                tapeStore.fillTape(originalState.tapeContent);
-                
-                resolve({
-                  passed: false,
-                  output: tapeStore.getTapeAsString(),
-                  steps,
-                  executionTime: Date.now() - startTime,
-                  finalState: tapeStore.tapeInternalState,
-                  error: 'Execution exceeded maximum steps'
-                });
-                return;
-              }
+            // Verify initial setup with fresh state
+            const initialState = tapeStore.tapeInternalState;
+            const initialSymbol = tapeStore.readCurrentCell();
+            const initialTape = tapeStore.getTapeAsString();
+            const headPosition = tapeStore.getCurrentHeadPosition();
+            
+            // Only error if trial start state is not halt but we're somehow still in halt
+            if (initialState.toLowerCase() === 'halt' && trial.startState.toLowerCase() !== 'halt') {
+              resolve({
+                passed: false,
+                output: initialTape,
+                steps: 0,
+                executionTime: Date.now() - startTime,
+                finalState: initialState,
+                error: `Machine failed to initialize from halt state to '${trial.startState}'`
+              });
+              return;
+            }
+            
+            // Execute synchronously in a tight loop for maximum speed
+            while (steps < maxSteps) {
+              // Get fresh tape store state for each iteration
+              tapeStore = useTapeStore.getState();
               
               // Get current state and symbol
               const currentState = tapeStore.tapeInternalState;
@@ -298,15 +372,23 @@ export const useTrialStore = create<TrialStore>()(
               // Check for halt
               if (currentState.toLowerCase() === 'halt') {
                 const finalOutput = tapeStore.getTapeAsString();
-                const passed = finalOutput === trial.expectedTape;
+                const cleanedFinalOutput = cleanTapeOutput(finalOutput);
                 
-                // Restore original state
-                tapeStore.setInternalState(originalState.tapeInternalState);
-                tapeStore.fillTape(originalState.tapeContent);
+                // Compare normalized outputs (ignoring blank spaces)
+                const normalizedFinalOutput = normalizeTapeOutput(finalOutput);
+                const normalizedExpectedOutput = normalizeTapeOutput(trial.expectedTape);
+                const passed = normalizedFinalOutput === normalizedExpectedOutput;
+                
+                // Only restore state if requested (for batch runs)
+                if (restoreState) {
+                  tapeStore.setInternalState(originalState.tapeInternalState);
+                  tapeStore.fillTape(originalState.tapeContent);
+                }
+                // For individual test runs, leave tape in final state so user can see result
                 
                 resolve({
                   passed,
-                  output: finalOutput,
+                  output: cleanedFinalOutput, // Return cleaned output without leading/trailing blanks
                   steps,
                   executionTime: Date.now() - startTime,
                   finalState: 'halt'
@@ -318,23 +400,36 @@ export const useTrialStore = create<TrialStore>()(
               const rule = machineStore.matchRule(currentState, currentSymbol);
               
               if (!rule) {
-                // Restore original state
-                tapeStore.setInternalState(originalState.tapeInternalState);
-                tapeStore.fillTape(originalState.tapeContent);
+                // Capture tape output at point of failure BEFORE restoring state
+                const failureOutput = cleanTapeOutput(tapeStore.getTapeAsString());
+                
+                // Restore original state on error
+                if (restoreState) {
+                  tapeStore.setInternalState(originalState.tapeInternalState);
+                  tapeStore.fillTape(originalState.tapeContent);
+                }
                 
                 resolve({
                   passed: false,
-                  output: tapeStore.getTapeAsString(),
-                  steps,
+                  output: failureOutput, // Use captured output from point of failure
+                  steps, // Number of successful steps completed before failure
                   executionTime: Date.now() - startTime,
                   finalState: currentState,
-                  error: `No rule found for state '${currentState}' and symbol '${currentSymbol}'`
+                  error: `No rule matches: READ '${currentSymbol}' in STATE '${currentState}' (after ${steps} step(s))`
                 });
                 return;
               }
               
-              // Execute the rule
-              tapeStore.writeToCurrentCell(rule.write || '∅');
+              // Execute the rule synchronously
+              const beforeWrite = tapeStore.getTapeAsString();
+              const beforeSymbol = tapeStore.readCurrentCell();
+              const beforeState = tapeStore.tapeInternalState;
+              
+              // Execute rule operations synchronously
+              const writeValue = rule.write || '∅';
+              
+              // Apply all changes and get fresh state after each operation
+              tapeStore.writeToCurrentCell(writeValue);
               tapeStore.setInternalState(rule.new_state);
               
               // Move head
@@ -344,11 +439,42 @@ export const useTrialStore = create<TrialStore>()(
                 tapeStore.moveHeadRight();
               }
               
-              // Continue execution
-              setTimeout(executeStep, 1);
-            };
+              // Get completely fresh state after all operations
+              tapeStore = useTapeStore.getState();
+              const afterWrite = tapeStore.getTapeAsString();
+              const afterSymbol = tapeStore.readCurrentCell();
+              const afterState = tapeStore.tapeInternalState;
+              
+              // Increment step counter after successful rule execution
+              steps++;
+              
+              // Debug: Log first few steps to see if changes are happening
+              if (steps <= 3) {
+                console.log(`Step ${steps}: ${beforeState}/${beforeSymbol} -> ${writeValue}/${rule.direction}/${rule.new_state} -> ${afterState}/${afterSymbol}`);
+                console.log(`  Before: ${cleanTapeOutput(beforeWrite)}`);
+                console.log(`  After:  ${cleanTapeOutput(afterWrite)}`);
+                console.log(`  Rule matched: in_state=${rule.in_state}, read=${rule.read}, write=${rule.write}, direction=${rule.direction}, new_state=${rule.new_state}`);
+              }
+            }
             
-            executeStep();
+            // If we reach here, execution exceeded maximum steps
+            // Capture tape output at point of timeout BEFORE restoring state
+            const timeoutOutput = cleanTapeOutput(tapeStore.getTapeAsString());
+            const timeoutState = tapeStore.tapeInternalState;
+            
+            if (restoreState) {
+              tapeStore.setInternalState(originalState.tapeInternalState);
+              tapeStore.fillTape(originalState.tapeContent);
+            }
+            
+            resolve({
+              passed: false,
+              output: timeoutOutput, // Use captured output from point of timeout
+              steps,
+              executionTime: Date.now() - startTime,
+              finalState: timeoutState,
+              error: `Test stopped after ${steps} steps (maximum limit: ${MAX_TEST_STEP_LIMIT}). Machine may be in an infinite loop.`
+            });
             
           } catch (error) {
             reject(error);
@@ -459,6 +585,80 @@ export const useTrialStore = create<TrialStore>()(
         URL.revokeObjectURL(url);
       },
 
+      exportTrialsAsYAML: (): void => {
+        const state = get() as any;
+        const trials = state.testsById.map((trialId: string) => state[trialId]);
+        const yamlContent = convertTrialsToYAML(trials);
+        downloadYAMLFile(yamlContent);
+      },
+
+      importTrialsFromYAML: (yamlContent: string): { success: boolean; message: string; count?: number } => {
+        try {
+          const validation = validateYAMLTestSuite(yamlContent);
+          if (!validation.valid) {
+            return { 
+              success: false, 
+              message: `Invalid YAML format: ${validation.errors.join(', ')}` 
+            };
+          }
+
+          const trials = convertYAMLToTrials(yamlContent);
+          get().importTrials(trials);
+          
+          return { 
+            success: true, 
+            message: `Successfully imported ${trials.length} test(s)`,
+            count: trials.length 
+          };
+        } catch (error) {
+          return { 
+            success: false, 
+            message: error instanceof Error ? error.message : 'Unknown error occurred' 
+          };
+        }
+      },
+
+      loadTrialToTape: (trialId: string): boolean => {
+        try {
+          const trial = get().getTrial(trialId);
+          if (!trial) return false;
+
+          // Import the stores
+          const { useMachineStore, useTapeStore } = require('./index');
+          const tapeStore = useTapeStore.getState();
+          
+          // Load trial's initial state onto the main tape
+          tapeStore.setInternalState(trial.startState);
+          tapeStore.fillTape(trial.startTape);
+          
+          // Set head position accounting for padding (if setHead method exists)
+          if (typeof (tapeStore as any).setHead === 'function') {
+            (tapeStore as any).setHead(trial.startTapeHead);
+          } else {
+            // Fallback: calculate position accounting for padding
+            const paddingBefore = 5; // fillTape adds 5 padding cells before content
+            const currentPos = tapeStore.getCurrentHeadPosition();
+            const targetPos = trial.startTapeHead + paddingBefore; // Adjust for padding
+            const diff = targetPos - currentPos;
+            
+            if (diff > 0) {
+              for (let i = 0; i < diff; i++) {
+                tapeStore.moveHeadRight();
+              }
+            } else if (diff < 0) {
+              for (let i = 0; i < Math.abs(diff); i++) {
+                tapeStore.moveHeadLeft();
+              }
+            }
+          }
+          
+          return true;
+        } catch (error) {
+          console.error('Failed to load trial to tape:', error);
+          return false;
+        }
+      },
+
       importTrials: (trialsData: Partial<TrialData>[]): void => {
         set((state) => {
           trialsData.forEach(trialData => {
@@ -509,6 +709,40 @@ export const useTrialStore = create<TrialStore>()(
         return state.runningTrials.includes(trialId);
       },
     }))
+    ),
+    {
+      name: 'turing-trial-store',
+      partialize: (state) => ({
+        // Persist trial definitions but not runtime/execution state
+        testsById: state.testsById,
+        // Persist all trial data (dynamic properties) but clean the runtime data
+        ...state.testsById.reduce((trials, trialId) => {
+          const trial = (state as any)[trialId];
+          if (trial) {
+            trials[trialId] = {
+              id: trial.id,
+              name: trial.name,
+              startState: trial.startState,
+              startTape: trial.startTape,
+              expectedTape: trial.expectedTape,
+              tapePointer: trial.tapePointer,
+              expectedTapePointer: trial.expectedTapePointer,
+              startTapeHead: trial.startTapeHead,
+              expectedTapeHead: trial.expectedTapeHead,
+              createdAt: trial.createdAt,
+              // Reset runtime state
+              status: TEST_STATUS.PENDING,
+              result: null,
+              error: null,
+              executionTime: 0,
+              steps: 0,
+              actualOutput: "",
+            };
+          }
+          return trials;
+        }, {} as Record<string, any>),
+      }),
+    }
   )
 );
 

@@ -133,6 +133,7 @@ export interface MachineActions {
   deleteState: (stateName: string) => void;
   getRulesByState: (stateName: string) => Rule[];
   getStateNames: () => string[];
+  updateRuleConnection: (ruleId: string, newSourceState: string, newTargetState: string) => void;
 }
 
 export interface TapeActions {
@@ -181,9 +182,9 @@ export interface TrialActions {
   addTrial: (name: string, startState?: string, startTape?: string, expectedTape?: string, tapePointer?: number, expectedTapePointer?: number, startTapeHead?: number, expectedTapeHead?: number) => void;
   deleteTrial: (trialId: string) => void;
   updateTrial: (trialId: string, updates: any) => void;
-  runTrial: (trialId: string) => Promise<void>;
+  runTrial: (trialId: string, restoreState?: boolean) => Promise<void>;
   runAllTrials: () => Promise<void>;
-  executeTrial: (trialId: string) => Promise<any>;
+  executeTrial: (trialId: string, restoreState?: boolean) => Promise<any>;
   enterEditMode: (trialId: string, targetType?: 'start' | 'expected') => void;
   exitEditMode: (save?: boolean) => void;
   changeEditingTarget: (targetType: 'start' | 'expected') => void;
