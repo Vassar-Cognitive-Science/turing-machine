@@ -4,16 +4,9 @@ import {
   Box,
   Typography,
   Button,
-  List,
-  ListItem,
-  ListItemText,
   Divider,
   Chip,
   Stack,
-  IconButton,
-  Tooltip,
-  Menu,
-  MenuItem,
   Alert,
   Snackbar,
 } from '@mui/material';
@@ -22,7 +15,6 @@ import {
   Add,
   FileUpload,
   FileDownload,
-  MoreVert,
 } from '@mui/icons-material';
 
 import { useTrialStore } from '../../../stores/trialStore';
@@ -54,13 +46,11 @@ export function TrialsDrawer({
   const trials = getAllTrials();
   const stats = getTrialStats();
   
-  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [editingTrialId, setEditingTrialId] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ message: string; severity: 'success' | 'error' | 'info' }>({ message: '', severity: 'info' });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportYAML = () => {
-    setMenuAnchor(null);
     try {
       exportTrialsAsYAML();
       setNotification({
@@ -76,7 +66,6 @@ export function TrialsDrawer({
   };
   
   const handleImportYAML = () => {
-    setMenuAnchor(null);
     fileInputRef.current?.click();
   };
   
@@ -123,31 +112,48 @@ export function TrialsDrawer({
         </Stack>
         
         <Box sx={{ mb: 2 }}>
+          <Button
+            fullWidth
+            variant="contained"
+            startIcon={<PlaylistPlay />}
+            onClick={onRunAllTrials}
+            disabled={isRunningTrial}
+            sx={{ mb: 1 }}
+          >
+            {isRunningTrial ? 'Running...' : 'Run All'}
+          </Button>
+          
           <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
             <Button
               fullWidth
-              variant="contained"
-              startIcon={<PlaylistPlay />}
-              onClick={onRunAllTrials}
-              disabled={isRunningTrial}
+              variant="outlined"
+              startIcon={<Add />}
+              onClick={onAddTrial}
             >
-              {isRunningTrial ? 'Running...' : 'Run All (Turbo)'}
+              Add Test
             </Button>
-            <IconButton
-              onClick={(e) => setMenuAnchor(e.currentTarget)}
+          </Stack>
+          
+          <Stack direction="row" spacing={1}>
+            <Button
+              fullWidth
+              variant="outlined"
+              startIcon={<FileUpload />}
+              onClick={handleImportYAML}
               size="small"
             >
-              <MoreVert />
-            </IconButton>
+              Import
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              startIcon={<FileDownload />}
+              onClick={handleExportYAML}
+              size="small"
+            >
+              Export
+            </Button>
           </Stack>
-          <Button
-            fullWidth
-            variant="outlined"
-            startIcon={<Add />}
-            onClick={onAddTrial}
-          >
-            Add Test
-          </Button>
         </Box>
         
         <Divider sx={{ mb: 2 }} />
@@ -182,22 +188,6 @@ export function TrialsDrawer({
           )}
         </Box>
       </Box>
-      
-      {/* Export/Import Menu */}
-      <Menu
-        anchorEl={menuAnchor}
-        open={Boolean(menuAnchor)}
-        onClose={() => setMenuAnchor(null)}
-      >
-        <MenuItem onClick={handleExportYAML}>
-          <FileDownload sx={{ mr: 1 }} />
-          Export as YAML
-        </MenuItem>
-        <MenuItem onClick={handleImportYAML}>
-          <FileUpload sx={{ mr: 1 }} />
-          Import YAML
-        </MenuItem>
-      </Menu>
       
       {/* Hidden file input for YAML import */}
       <input

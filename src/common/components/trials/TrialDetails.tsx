@@ -110,18 +110,18 @@ export const TrialDetails: React.FC<TrialDetailsProps> = ({
       </AccordionSummary>
 
       <AccordionDetails>
-        <Stack spacing={3}>
+        <Stack spacing={2}>
           {/* Action Buttons */}
-          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <Stack direction="row" spacing={1}>
             <Button
               startIcon={<PlayIcon />}
               onClick={handleRunTrial}
               disabled={isRunning}
               variant="contained"
               size="small"
-              color="primary"
+              fullWidth
             >
-              {isRunning ? 'Running...' : 'Run Test (Turbo)'}
+              {isRunning ? 'Running...' : 'Run'}
             </Button>
             
             <Button
@@ -129,9 +129,9 @@ export const TrialDetails: React.FC<TrialDetailsProps> = ({
               onClick={handleLoadToTape}
               variant="outlined"
               size="small"
-              color="secondary"
+              fullWidth
             >
-              Load to Tape
+              Load
             </Button>
             
             <Button
@@ -139,18 +139,19 @@ export const TrialDetails: React.FC<TrialDetailsProps> = ({
               onClick={() => onEdit(trialId)}
               variant="outlined"
               size="small"
+              fullWidth
             >
               Edit
             </Button>
-          </Box>
+          </Stack>
 
           {/* Test Configuration */}
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom color="primary">
-              Test Configuration
+          <Paper sx={{ p: 1.5 }}>
+            <Typography variant="subtitle1" gutterBottom color="primary" sx={{ fontWeight: 'medium' }}>
+              Configuration
             </Typography>
             
-            <Stack spacing={2}>
+            <Stack spacing={1.5}>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Box sx={{ flex: 1, minWidth: '200px' }}>
                   <Typography variant="body2" color="textSecondary">
@@ -212,12 +213,12 @@ export const TrialDetails: React.FC<TrialDetailsProps> = ({
 
           {/* Execution Results */}
           {trial.result && (
-            <Paper sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom color="primary">
-                Execution Results
+            <Paper sx={{ p: 1.5 }}>
+              <Typography variant="subtitle1" gutterBottom color="primary" sx={{ fontWeight: 'medium' }}>
+                Results
               </Typography>
               
-              <Stack spacing={2}>
+              <Stack spacing={1.5}>
                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                   <Box sx={{ flex: '1 1 100px' }}>
                     <Typography variant="body2" color="textSecondary">
@@ -286,11 +287,6 @@ export const TrialDetails: React.FC<TrialDetailsProps> = ({
             </Paper>
           )}
 
-          {/* Metadata */}
-          <Typography variant="caption" color="textSecondary">
-            Created: {new Date(trial.createdAt).toLocaleDateString()} at{' '}
-            {new Date(trial.createdAt).toLocaleTimeString()}
-          </Typography>
         </Stack>
       </AccordionDetails>
     </Accordion>

@@ -12,7 +12,7 @@ import {
   PlayArrow,
   Stop,
   SkipNext,
-  Menu,
+  Quiz,
   Undo,
   Redo,
   Save,
@@ -182,9 +182,9 @@ export function MachineControls({
           <IconButton
             color="inherit"
             onClick={onOpenDrawer}
-            title="Open Trials"
+            title="Test Cases"
           >
-            <Menu />
+            <Quiz />
           </IconButton>
         </Box>
       </Toolbar>
