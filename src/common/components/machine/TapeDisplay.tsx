@@ -6,6 +6,8 @@ import {
   Button,
   TextField,
   IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import {
   ChevronLeft,
@@ -28,6 +30,13 @@ export function TapeDisplay(): React.ReactElement {
   
   // Track drag state
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  
+  // Context menu state
+  const [contextMenu, setContextMenu] = useState<{
+    mouseX: number;
+    mouseY: number;
+    cellId: string;
+  } | null>(null);
   
   return (
     <Paper elevation={2} sx={{ p: 3, mb: 2 }}>
@@ -215,6 +224,21 @@ export function TapeDisplay(): React.ReactElement {
           {visibleCells.map((cell: VisibleCell, index: number) => (
             <Box
               key={cell.id}
+              onContextMenu={(e: React.MouseEvent) => {
+                // Handle right-click to show context menu
+                if (!machineExecution.isRunning) {
+                  e.preventDefault(); // Prevent browser context menu
+                  setContextMenu(
+                    contextMenu === null
+                      ? {
+                          mouseX: e.clientX + 2,
+                          mouseY: e.clientY - 6,
+                          cellId: cell.id,
+                        }
+                      : null
+                  );
+                }
+              }}
               sx={{
                 width: 50,
                 height: 50,
@@ -233,6 +257,7 @@ export function TapeDisplay(): React.ReactElement {
                   backgroundColor: cell.isHead ? '#bbdefb' : '#f5f5f5',
                 },
               }}
+              title={machineExecution.isRunning ? '' : 'Right-click for options'}
             >
               <input
                 type="text"
@@ -273,6 +298,21 @@ export function TapeDisplay(): React.ReactElement {
                 }}
                 onFocus={(e) => {
                   e.target.select(); // Select all text when focused
+                }}
+                onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => {
+                  // Delegate right-click to show context menu
+                  if (!machineExecution.isRunning) {
+                    e.preventDefault();
+                    setContextMenu(
+                      contextMenu === null
+                        ? {
+                            mouseX: e.clientX + 2,
+                            mouseY: e.clientY - 6,
+                            cellId: cell.id,
+                          }
+                        : null
+                    );
+                  }
                 }}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === 'ArrowRight' && !e.shiftKey) {
@@ -383,6 +423,31 @@ export function TapeDisplay(): React.ReactElement {
           <KeyboardDoubleArrowRight />
         </IconButton>
       </Box>
+      
+      {/* Context Menu for Cell Actions */}
+      <Menu
+        open={contextMenu !== null}
+        onClose={() => setContextMenu(null)}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          contextMenu !== null
+            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+            : undefined
+        }
+      >
+        <MenuItem
+          onClick={() => {
+            if (contextMenu) {
+              tape.setHeadPosition(contextMenu.cellId);
+              // Clear any current input focus
+              (document.activeElement as HTMLElement)?.blur?.();
+            }
+            setContextMenu(null);
+          }}
+        >
+          Move head here
+        </MenuItem>
+      </Menu>
     </Paper>
   );
 }

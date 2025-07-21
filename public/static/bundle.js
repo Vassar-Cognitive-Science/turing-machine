@@ -64831,6 +64831,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const visibleCells = tapeOps.visibleCells;
     const headIndex = visibleCells.findIndex((cell) => cell.isHead);
     const [isDragging, setIsDragging] = (0, import_react8.useState)(false);
+    const [contextMenu, setContextMenu] = (0, import_react8.useState)(null);
     return /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Paper_default, { elevation: 2, sx: { p: 3, mb: 2 }, children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Box_default, { sx: {
         display: "flex",
@@ -64952,7 +64953,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                   false,
                   {
                     fileName: "src/common/components/machine/TapeDisplay.tsx",
-                    lineNumber: 136,
+                    lineNumber: 145,
                     columnNumber: 15
                   },
                   this
@@ -64962,7 +64963,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               false,
               {
                 fileName: "src/common/components/machine/TapeDisplay.tsx",
-                lineNumber: 58,
+                lineNumber: 67,
                 columnNumber: 13
               },
               this
@@ -64991,7 +64992,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                     false,
                     {
                       fileName: "src/common/components/machine/TapeDisplay.tsx",
-                      lineNumber: 174,
+                      lineNumber: 183,
                       columnNumber: 15
                     },
                     this
@@ -65011,7 +65012,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                     false,
                     {
                       fileName: "src/common/components/machine/TapeDisplay.tsx",
-                      lineNumber: 181,
+                      lineNumber: 190,
                       columnNumber: 15
                     },
                     this
@@ -65022,7 +65023,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               true,
               {
                 fileName: "src/common/components/machine/TapeDisplay.tsx",
-                lineNumber: 166,
+                lineNumber: 175,
                 columnNumber: 13
               },
               this
@@ -65033,13 +65034,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         true,
         {
           fileName: "src/common/components/machine/TapeDisplay.tsx",
-          lineNumber: 44,
+          lineNumber: 53,
           columnNumber: 11
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/TapeDisplay.tsx",
-        lineNumber: 36,
+        lineNumber: 45,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Box_default, { sx: {
@@ -65058,7 +65059,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             title: "Scroll tape left",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(KeyboardDoubleArrowLeft_default, {}, void 0, false, {
               fileName: "src/common/components/machine/TapeDisplay.tsx",
-              lineNumber: 210,
+              lineNumber: 219,
               columnNumber: 11
             }, this)
           },
@@ -65066,7 +65067,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 204,
+            lineNumber: 213,
             columnNumber: 9
           },
           this
@@ -65074,6 +65075,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Box_default, { sx: { display: "flex", gap: 0 }, "data-tape-container": true, children: visibleCells.map((cell, index2) => /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
           Box_default,
           {
+            onContextMenu: (e) => {
+              if (!machineExecution.isRunning) {
+                e.preventDefault();
+                setContextMenu(
+                  contextMenu === null ? {
+                    mouseX: e.clientX + 2,
+                    mouseY: e.clientY - 6,
+                    cellId: cell.id
+                  } : null
+                );
+              }
+            },
             sx: {
               width: 50,
               height: 50,
@@ -65092,6 +65105,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 backgroundColor: cell.isHead ? "#bbdefb" : "#f5f5f5"
               }
             },
+            title: machineExecution.isRunning ? "" : "Right-click for options",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
               "input",
               {
@@ -65125,6 +65139,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 },
                 onFocus: (e) => {
                   e.target.select();
+                },
+                onContextMenu: (e) => {
+                  if (!machineExecution.isRunning) {
+                    e.preventDefault();
+                    setContextMenu(
+                      contextMenu === null ? {
+                        mouseX: e.clientX + 2,
+                        mouseY: e.clientY - 6,
+                        cellId: cell.id
+                      } : null
+                    );
+                  }
                 },
                 onKeyDown: (e) => {
                   if (e.key === "ArrowRight" && !e.shiftKey) {
@@ -65215,7 +65241,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               false,
               {
                 fileName: "src/common/components/machine/TapeDisplay.tsx",
-                lineNumber: 237,
+                lineNumber: 262,
                 columnNumber: 15
               },
               this
@@ -65225,13 +65251,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 216,
+            lineNumber: 225,
             columnNumber: 13
           },
           this
         )) }, void 0, false, {
           fileName: "src/common/components/machine/TapeDisplay.tsx",
-          lineNumber: 214,
+          lineNumber: 223,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
@@ -65243,7 +65269,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             title: "Scroll tape right",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(KeyboardDoubleArrowRight_default, {}, void 0, false, {
               fileName: "src/common/components/machine/TapeDisplay.tsx",
-              lineNumber: 383,
+              lineNumber: 423,
               columnNumber: 11
             }, this)
           },
@@ -65251,19 +65277,57 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 377,
+            lineNumber: 417,
             columnNumber: 9
           },
           this
         )
       ] }, void 0, true, {
         fileName: "src/common/components/machine/TapeDisplay.tsx",
-        lineNumber: 196,
+        lineNumber: 205,
         columnNumber: 7
-      }, this)
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
+        Menu_default,
+        {
+          open: contextMenu !== null,
+          onClose: () => setContextMenu(null),
+          anchorReference: "anchorPosition",
+          anchorPosition: contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : void 0,
+          children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
+            MenuItem_default,
+            {
+              onClick: () => {
+                if (contextMenu) {
+                  tape.setHeadPosition(contextMenu.cellId);
+                  document.activeElement?.blur?.();
+                }
+                setContextMenu(null);
+              },
+              children: "Move head here"
+            },
+            void 0,
+            false,
+            {
+              fileName: "src/common/components/machine/TapeDisplay.tsx",
+              lineNumber: 438,
+              columnNumber: 9
+            },
+            this
+          )
+        },
+        void 0,
+        false,
+        {
+          fileName: "src/common/components/machine/TapeDisplay.tsx",
+          lineNumber: 428,
+          columnNumber: 7
+        },
+        this
+      )
     ] }, void 0, true, {
       fileName: "src/common/components/machine/TapeDisplay.tsx",
-      lineNumber: 33,
+      lineNumber: 42,
       columnNumber: 5
     }, this);
   }
