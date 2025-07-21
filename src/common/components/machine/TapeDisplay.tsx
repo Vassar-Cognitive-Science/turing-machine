@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import {
   Paper,
-  Typography,
   Box,
-  Button,
-  TextField,
   IconButton,
   Menu,
   MenuItem,
 } from '@mui/material';
 import {
-  ChevronLeft,
-  ChevronRight,
   KeyboardDoubleArrowLeft,
   KeyboardDoubleArrowRight,
 } from '@mui/icons-material';

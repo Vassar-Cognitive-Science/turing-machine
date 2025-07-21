@@ -39,16 +39,20 @@ export function RulesViewSwitcher({
           aria-label="table view"
           title="Table View - Edit rules in a structured table format"
         >
-          <TableRows />
-          Table
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <TableRows />
+            Table
+          </Box>
         </ToggleButton>
         <ToggleButton 
           value="graph" 
           aria-label="graph view"
           title="Graph View - Visualize rules as a state diagram"
         >
-          <AccountTree />
-          Graph
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <AccountTree />
+            Graph
+          </Box>
         </ToggleButton>
       </ToggleButtonGroup>
     </Box>

@@ -64953,7 +64953,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                   false,
                   {
                     fileName: "src/common/components/machine/TapeDisplay.tsx",
-                    lineNumber: 145,
+                    lineNumber: 140,
                     columnNumber: 15
                   },
                   this
@@ -64963,7 +64963,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               false,
               {
                 fileName: "src/common/components/machine/TapeDisplay.tsx",
-                lineNumber: 67,
+                lineNumber: 62,
                 columnNumber: 13
               },
               this
@@ -64992,7 +64992,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                     false,
                     {
                       fileName: "src/common/components/machine/TapeDisplay.tsx",
-                      lineNumber: 183,
+                      lineNumber: 178,
                       columnNumber: 15
                     },
                     this
@@ -65012,7 +65012,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                     false,
                     {
                       fileName: "src/common/components/machine/TapeDisplay.tsx",
-                      lineNumber: 190,
+                      lineNumber: 185,
                       columnNumber: 15
                     },
                     this
@@ -65023,7 +65023,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               true,
               {
                 fileName: "src/common/components/machine/TapeDisplay.tsx",
-                lineNumber: 175,
+                lineNumber: 170,
                 columnNumber: 13
               },
               this
@@ -65034,13 +65034,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         true,
         {
           fileName: "src/common/components/machine/TapeDisplay.tsx",
-          lineNumber: 53,
+          lineNumber: 48,
           columnNumber: 11
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/TapeDisplay.tsx",
-        lineNumber: 45,
+        lineNumber: 40,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Box_default, { sx: {
@@ -65059,7 +65059,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             title: "Scroll tape left",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(KeyboardDoubleArrowLeft_default, {}, void 0, false, {
               fileName: "src/common/components/machine/TapeDisplay.tsx",
-              lineNumber: 219,
+              lineNumber: 214,
               columnNumber: 11
             }, this)
           },
@@ -65067,7 +65067,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 213,
+            lineNumber: 208,
             columnNumber: 9
           },
           this
@@ -65241,7 +65241,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               false,
               {
                 fileName: "src/common/components/machine/TapeDisplay.tsx",
-                lineNumber: 262,
+                lineNumber: 257,
                 columnNumber: 15
               },
               this
@@ -65251,13 +65251,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 225,
+            lineNumber: 220,
             columnNumber: 13
           },
           this
         )) }, void 0, false, {
           fileName: "src/common/components/machine/TapeDisplay.tsx",
-          lineNumber: 223,
+          lineNumber: 218,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
@@ -65269,7 +65269,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             title: "Scroll tape right",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(KeyboardDoubleArrowRight_default, {}, void 0, false, {
               fileName: "src/common/components/machine/TapeDisplay.tsx",
-              lineNumber: 423,
+              lineNumber: 418,
               columnNumber: 11
             }, this)
           },
@@ -65277,14 +65277,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 417,
+            lineNumber: 412,
             columnNumber: 9
           },
           this
         )
       ] }, void 0, true, {
         fileName: "src/common/components/machine/TapeDisplay.tsx",
-        lineNumber: 205,
+        lineNumber: 200,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
@@ -65310,7 +65310,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/machine/TapeDisplay.tsx",
-              lineNumber: 438,
+              lineNumber: 433,
               columnNumber: 9
             },
             this
@@ -65320,14 +65320,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/TapeDisplay.tsx",
-          lineNumber: 428,
+          lineNumber: 423,
           columnNumber: 7
         },
         this
       )
     ] }, void 0, true, {
       fileName: "src/common/components/machine/TapeDisplay.tsx",
-      lineNumber: 42,
+      lineNumber: 37,
       columnNumber: 5
     }, this);
   }
@@ -69347,17 +69347,21 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               value: "table",
               "aria-label": "table view",
               title: "Table View - Edit rules in a structured table format",
-              children: [
+              children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Box_default, { sx: { display: "flex", alignItems: "center", gap: 1 }, children: [
                 /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(TableRows_default, {}, void 0, false, {
                   fileName: "src/common/components/machine/rules/RulesViewSwitcher.tsx",
-                  lineNumber: 42,
-                  columnNumber: 11
+                  lineNumber: 43,
+                  columnNumber: 13
                 }, this),
                 "Table"
-              ]
+              ] }, void 0, true, {
+                fileName: "src/common/components/machine/rules/RulesViewSwitcher.tsx",
+                lineNumber: 42,
+                columnNumber: 11
+              }, this)
             },
             void 0,
-            true,
+            false,
             {
               fileName: "src/common/components/machine/rules/RulesViewSwitcher.tsx",
               lineNumber: 37,
@@ -69371,20 +69375,24 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               value: "graph",
               "aria-label": "graph view",
               title: "Graph View - Visualize rules as a state diagram",
-              children: [
+              children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Box_default, { sx: { display: "flex", alignItems: "center", gap: 1 }, children: [
                 /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(AccountTree_default, {}, void 0, false, {
                   fileName: "src/common/components/machine/rules/RulesViewSwitcher.tsx",
-                  lineNumber: 50,
-                  columnNumber: 11
+                  lineNumber: 53,
+                  columnNumber: 13
                 }, this),
                 "Graph"
-              ]
+              ] }, void 0, true, {
+                fileName: "src/common/components/machine/rules/RulesViewSwitcher.tsx",
+                lineNumber: 52,
+                columnNumber: 11
+              }, this)
             },
             void 0,
-            true,
+            false,
             {
               fileName: "src/common/components/machine/rules/RulesViewSwitcher.tsx",
-              lineNumber: 45,
+              lineNumber: 47,
               columnNumber: 9
             },
             this
