@@ -22,7 +22,7 @@ type TestStatus = typeof TEST_STATUS[keyof typeof TEST_STATUS];
 
 // Generate unique trial ID
 const generateTrialId = (): string => {
-  return `trial_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `trial_${crypto.randomUUID()}`;
 };
 
 // Normalize tape output by removing leading/trailing blank symbols but preserving spaces between content
@@ -716,6 +716,7 @@ export const useTrialStore = create<TrialStore>()(
     ),
     {
       name: 'turing-trial-store',
+      version: 2, // Version 2 with UUID-based trial IDs
       partialize: (state) => ({
         // Persist trial definitions but not runtime/execution state
         testsById: state.testsById,

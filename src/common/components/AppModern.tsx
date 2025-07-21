@@ -98,7 +98,7 @@ function AppModern(): React.ReactElement {
           const response = await fetch(`/api/state/${params.id}`);
           if (response.ok) {
             const data = await response.json();
-            loadSharedMachineState(data.state);
+            await loadSharedMachineState(data.state);
             setSnackbar({ 
               open: true, 
               message: 'Machine state loaded successfully!', 
@@ -120,7 +120,7 @@ function AppModern(): React.ReactElement {
       // Fallback to preloaded state (for backward compatibility)
       else if (preloadedState && Object.keys(preloadedState).length > 0) {
         try {
-          loadSharedMachineState(preloadedState);
+          await loadSharedMachineState(preloadedState);
           setSnackbar({ 
             open: true, 
             message: 'Machine state loaded successfully!', 
@@ -141,70 +141,57 @@ function AppModern(): React.ReactElement {
     loadMachineState();
   }, [params.id]); // Re-run when URL parameter changes
 
-  // Function to load shared machine state from server format
-  const loadSharedMachineState = (serverState: SharedMachineState): void => {
-    // Clear rule highlighting when loading shared machine state
-    machine.setCurrentRule(null);
-    
-    // Clear existing rules
-    machine.rowsById.forEach((ruleId: string) => machine.deleteRule(ruleId));
-    
-    // Load rules from server state
-    const ruleIds = serverState.rowsById || [];
-    ruleIds.forEach((ruleId) => {
-      const ruleData = serverState[ruleId];
-      if (ruleData) {
-        machine.addRule();
-        const newRuleIds = machine.rowsById;
-        const newRuleId = newRuleIds[newRuleIds.length - 1];
+  // Function to load shared machine state from serialized stores
+  const loadSharedMachineState = async (serializedState: any): Promise<void> => {
+    try {
+      // Check for new serialization format (v2.0+)
+      if (serializedState.version === '2.0') {
         
-        if (newRuleId) {
-          machine.updateRule(newRuleId, 'in_state', ruleData.in_state || '');
-          machine.updateRule(newRuleId, 'read', ruleData.read || '');
-          machine.updateRule(newRuleId, 'write', ruleData.write || '');
-          machine.updateRule(newRuleId, 'direction', ruleData.direction || 'R');
-          machine.updateRule(newRuleId, 'new_state', ruleData.new_state || '');
+        // Clear current state
+        machine.setCurrentRule(null);
+        machine.clearHistory();
+        
+        // Use batch loading for rules (bypasses addRule() issues)
+        if (serializedState.machine?.rules && Array.isArray(serializedState.machine.rules)) {
+          machine.loadRules(serializedState.machine.rules);
         }
-      }
-    });
-    
-    // Load tape content from linked list structure
-    const tapeCellsById = serverState.tapeCellsById || [];
-    if (tapeCellsById.length > 0) {
-      let tapeContent = '';
-      let currentCellId = serverState.tapeHead;
-      
-      // Traverse the linked list to reconstruct tape content
-      while (currentCellId) {
-        const cellData = serverState[currentCellId];
-        if (cellData) {
-          tapeContent += cellData.val || '∅';
-          currentCellId = cellData.next;
-        } else {
-          break;
+        
+        // Restore tape state exactly as it was saved
+        if (serializedState.tape?.tapeContent) {
+          const tapeContent = serializedState.tape.tapeContent;
+          const headPosition = serializedState.tape.headPosition || 7; // Default to center
+          const anchorCell = serializedState.tape.anchorCell || 0;
+          
+          (tape as any).restoreExactTapeState(tapeContent, headPosition, anchorCell);
         }
+        
+        // Restore animation settings
+        if (serializedState.machine?.animationSpeedFactor !== undefined) {
+          (machine as any).setAnimationSpeed(serializedState.machine.animationSpeedFactor);
+        }
+        
+        // Restore trials
+        if (serializedState.trials && Array.isArray(serializedState.trials)) {
+          (trial as any).importTrials?.(serializedState.trials);
+        }
+        
+        // Restore tape internal state (machine state)
+        if (serializedState.tape?.currentState) {
+          tape.setInternalState(serializedState.tape.currentState);
+        }
+        
+      } else {
+        // Legacy format or unrecognized format - clear state
+        machine.setCurrentRule(null);
+        machine.clearAllRules();
+        machine.clearHistory();
+        tape.fillTape('');
       }
       
-      // Set tape content, filtering out empty symbols
-      const cleanedTapeContent = tapeContent.replace(/∅+$/, '');
-      tape.fillTape(cleanedTapeContent);
-    } else {
-      tape.fillTape('');
+    } catch (error) {
+      console.error('Error loading machine state:', error);
+      throw error;
     }
-    
-    // Set internal state
-    if (serverState.tapeInternalState) {
-      tape.setInternalState(serverState.tapeInternalState);
-    }
-    
-    // Clear execution history for fresh start
-    (machine as any).clearHistory();
-    
-    setSnackbar({ 
-      open: true, 
-      message: 'Shared machine loaded successfully!', 
-      severity: 'success' 
-    });
   };
 
   // Handle window resize
@@ -216,6 +203,16 @@ function AppModern(): React.ReactElement {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [gui]);
+
+  // Helper function to get the entire tape content as-is
+  const getFullTapeContent = (): string => {
+    return tape.getTapeAsString();
+  };
+
+  // Helper function to get absolute head position
+  const getAbsoluteHeadPosition = (): number => {
+    return tape.getCurrentHeadPosition();
+  };
 
   // Machine control handlers
   const handlePlay = (): void => {
@@ -241,63 +238,29 @@ function AppModern(): React.ReactElement {
 
   const handleShareMachine = async (): Promise<void> => {
     try {
-      // Create machine state in the format expected by the original server
-      const stateToSave: SharedMachineState = {
-        // Convert new store format to original Redux-like format
-        rowsById: machine.rowsById,
-        tapeInternalState: tapeOps.currentState,
-        stepCount: (machineExecution as any).stepCount,
-        anyChangeInNormal: (machineExecution as any).stepCount > 0,
-        
-        // Add rule data
-        ...machine.getAllRules().reduce((acc: any, rule: Rule) => {
-          acc[rule.id] = {
-            in_state: rule.in_state,
-            read: rule.read,
-            write: rule.write,
-            direction: rule.direction,
-            new_state: rule.new_state,
-            isLeft: rule.direction === 'L'
-          };
-          return acc;
-        }, {}),
-        
-        // Add trial data
+      // Directly serialize the complete application state
+      const stateToSave = {
+        version: '2.0', // New serialization format version
+        machine: {
+          rules: machine.getAllRules(),
+          animationSpeedFactor: (machine as any).animationSpeedFactor,
+          animationSpeed: (machine as any).animationSpeed,
+          animationOn: (machine as any).animationOn
+        },
+        tape: {
+          tapeContent: getFullTapeContent(),
+          headPosition: getAbsoluteHeadPosition(),
+          anchorCell: (tape as any).anchorCell || 0,
+          currentState: tapeOps.currentState,
+          currentSymbol: tapeOps.currentSymbol
+        },
         trials: (trial as any).getAllTrials ? (trial as any).getAllTrials() : [],
-        
-        // Add tape data - convert to original format
-        tapeCellsById: [], // Will be populated based on tape content
-        tapeHead: null,
-        tapeTail: null,
-        tapePointer: null,
-        anchorCell: 0
+        execution: {
+          stepCount: machineExecution.stepCount,
+          currentState: machineExecution.currentState
+        }
       };
 
-      // If there's tape content, create the linked list structure
-      const tapeContent = tapeOps.tapeContent;
-      if (tapeContent && tapeContent.length > 0) {
-        const cellIds: string[] = [];
-        tapeContent.split('').forEach((char: string, index: number) => {
-          const cellId = `TAPE-CELL ${index}`;
-          cellIds.push(cellId);
-          stateToSave[cellId] = {
-            val: char,
-            prev: index > 0 ? cellIds[index - 1] : null,
-            next: index < tapeContent.length - 1 ? null : null, // Will be set in next iteration
-            highlight: false
-          };
-          
-          // Set next pointer for previous cell
-          if (index > 0) {
-            stateToSave[cellIds[index - 1]].next = cellId;
-          }
-        });
-        
-        stateToSave.tapeCellsById = cellIds;
-        stateToSave.tapeHead = cellIds[0];
-        stateToSave.tapeTail = cellIds[cellIds.length - 1];
-        stateToSave.tapePointer = cellIds[0]; // Head starts at beginning
-      }
 
       const response = await fetch('/api/save', {
         method: 'POST',
@@ -313,6 +276,9 @@ function AppModern(): React.ReactElement {
 
       const result: ShareResponse = await response.json();
       const shareUrl = `${window.location.origin}/${result.id}`;
+      
+      // Update the browser URL to the saved URL
+      window.history.pushState({}, '', `/${result.id}`);
       
       // Copy to clipboard
       if (navigator.clipboard) {

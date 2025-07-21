@@ -22,7 +22,7 @@ const standardizeCellId = (id: string | number | null): string | null => {
 };
 
 const generateCellId = (): string => {
-  return standardizeCellId(Date.now() + "_" + Math.random().toString(36).substr(2, 9))!;
+  return standardizeCellId(crypto.randomUUID())!;
 };
 
 // Extended state for internal store management
@@ -447,59 +447,98 @@ export const useTapeStore = create<TapeStore>()(
             delete (state as any)[cellId];
           });
 
-          if (!content || content.length === 0) {
-            // Create empty tape with multiple blank cells to show infinite tape
-            // Initialize tape directly instead of calling get().initializeTape()
-            const numInitialCells = 15;
-            const cellIds: string[] = [];
-            
-            // Generate cell IDs and create cells
-            for (let i = 0; i < numInitialCells; i++) {
-              const cellId = generateCellId();
-              cellIds.push(cellId);
-              
-              (state as any)[cellId] = {
-                val: BLANK,
-                prev: i > 0 ? cellIds[i - 1] : null,
-                next: null, // Will be set in next iteration
-                highlight: false,
-              };
-              
-              // Set next pointer for previous cell
-              if (i > 0) {
-                (state as any)[cellIds[i - 1]].next = cellId;
-              }
-            }
-
-            // Set up tape structure
-            state.tapeHead = cellIds[0];
-            state.tapeTail = cellIds[cellIds.length - 1];
-            state.tapePointer = cellIds[Math.floor(numInitialCells / 2)]; // Start in middle
-            state.tapeCellsById = cellIds;
-            state.anchorCell = 0;
-            state.highlightedCellOrder = -1;
-            return;
-          }
-
-          // Add padding cells before and after content to show infinite tape
-          const paddingBefore = 5;
-          const paddingAfter = 5;
+          // Create expandable tape with initial size to accommodate content plus buffer
+          const minTapeSize = 15;
+          const contentLength = content ? content.length : 0;
+          const bufferSize = 5; // Buffer on each side for expansion
+          const initialTapeSize = Math.max(minTapeSize, contentLength + 2 * bufferSize);
+          
           const cellIds: string[] = [];
-          const contentArray = content.split('');
-          const totalCells = paddingBefore + contentArray.length + paddingAfter;
-
-          // Create all cells (padding + content + padding)
-          for (let i = 0; i < totalCells; i++) {
+          
+          // Calculate where to place content (center it in the tape)
+          const contentStartPos = Math.floor((initialTapeSize - contentLength) / 2);
+          
+          // Generate cell IDs and create cells
+          for (let i = 0; i < initialTapeSize; i++) {
             const cellId = generateCellId();
             cellIds.push(cellId);
             
-            let cellValue = BLANK;
-            if (i >= paddingBefore && i < paddingBefore + contentArray.length) {
+            // Determine cell value
+            let cellValue = BLANK; // Default to blank
+            if (content && i >= contentStartPos && i < contentStartPos + contentLength) {
               // This is a content cell
-              const contentIndex = i - paddingBefore;
-              const rawValue = contentArray[contentIndex] === ' ' ? "#" : contentArray[contentIndex];
-              // Capitalize alphabet characters in tape content, use # for blank
-              cellValue = rawValue === "#" ? BLANK : capitalizeAlphabet(rawValue);
+              const contentIndex = i - contentStartPos;
+              const rawValue = content[contentIndex] === ' ' || content[contentIndex] === '#' ? BLANK : content[contentIndex];
+              cellValue = rawValue === BLANK ? BLANK : capitalizeAlphabet(rawValue);
+            }
+            
+            (state as any)[cellId] = {
+              val: cellValue,
+              prev: i > 0 ? cellIds[i - 1] : null,
+              next: null, // Will be set in next iteration
+              highlight: false,
+            };
+
+            // Set next pointer for previous cell
+            if (i > 0) {
+              (state as any)[cellIds[i - 1]].next = cellId;
+            }
+          }
+
+          // Set up tape structure
+          state.tapeHead = cellIds[0];
+          state.tapeTail = cellIds[cellIds.length - 1];
+          state.tapeCellsById = cellIds;
+          
+          // Position head at the start of content (or center if no content)
+          const headPosition = content ? contentStartPos : Math.floor(initialTapeSize / 2);
+          state.tapePointer = cellIds[headPosition];
+          
+          state.anchorCell = 0;
+          state.highlightedCellOrder = -1;
+        });
+      },
+
+      // Set head position directly to a specific cell
+      setHeadPosition: (cellId: string): void => {
+        set((state) => {
+          // Verify the cell exists in the tape
+          if (state.tapeCellsById.includes(cellId)) {
+            state.tapePointer = cellId;
+          }
+        });
+      },
+
+      // Set head position by absolute index (0-14 for 15-cell tape)
+      setHeadPositionByIndex: (index: number): void => {
+        set((state) => {
+          if (index >= 0 && index < state.tapeCellsById.length) {
+            state.tapePointer = state.tapeCellsById[index];
+          }
+        });
+      },
+
+      // Restore exact tape state (for undo/redo and load operations)
+      restoreExactTapeState: (tapeContent: string, headPosition: number, anchorCell: number = 0): void => {
+        set((state) => {
+          // Clear existing tape
+          state.tapeCellsById.forEach(cellId => {
+            delete (state as any)[cellId];
+          });
+
+          // Create tape with exact size to match the saved content
+          const numCells = Math.max(15, tapeContent.length); // At least 15 cells, or content length
+          const cellIds: string[] = [];
+          
+          // Generate cell IDs and set content
+          for (let i = 0; i < numCells; i++) {
+            const cellId = generateCellId();
+            cellIds.push(cellId);
+            
+            // Set cell value from tapeContent or blank
+            let cellValue = BLANK;
+            if (tapeContent && i < tapeContent.length) {
+              cellValue = tapeContent[i] === '#' || tapeContent[i] === ' ' ? BLANK : tapeContent[i];
             }
             
             (state as any)[cellId] = {
@@ -516,21 +555,20 @@ export const useTapeStore = create<TapeStore>()(
           }
 
           // Update tape structure
-          state.tapeCellsById = cellIds;
           state.tapeHead = cellIds[0];
           state.tapeTail = cellIds[cellIds.length - 1];
-          state.tapePointer = cellIds[paddingBefore]; // Start at beginning of content
-          state.anchorCell = 0;
-        });
-      },
-
-      // Set head position directly to a specific cell
-      setHeadPosition: (cellId: string): void => {
-        set((state) => {
-          // Verify the cell exists in the tape
-          if (state.tapeCellsById.includes(cellId)) {
-            state.tapePointer = cellId;
+          state.tapeCellsById = cellIds;
+          state.anchorCell = anchorCell;
+          
+          // Set head position by absolute index
+          if (headPosition >= 0 && headPosition < cellIds.length) {
+            state.tapePointer = cellIds[headPosition];
+          } else {
+            // Default to center if invalid position
+            state.tapePointer = cellIds[Math.floor(numCells / 2)];
           }
+          
+          state.highlightedCellOrder = -1;
         });
       },
 
@@ -545,6 +583,7 @@ export const useTapeStore = create<TapeStore>()(
     ),
     {
       name: 'turing-tape-store',
+      version: 2, // Version 2 with UUID-based cell IDs
       partialize: (state) => {
         // Convert tape content to a simple string for persistence
         const tapeContent = state.tapeCellsById

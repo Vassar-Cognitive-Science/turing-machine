@@ -127,6 +127,7 @@ export interface MachineActions {
   getValidRules: () => Rule[];
   canRun: () => any;
   clearAllRules: () => void;
+  loadRules: (rules: Rule[]) => void;
   addSeedRules: () => void;
   // Interactive graph editing methods
   addRuleFromConnection: (sourceStateId: string, targetStateId: string, ruleData?: { read?: string; write?: string; direction?: 'L' | 'R' }) => string;
@@ -160,6 +161,8 @@ export interface TapeActions {
   getCurrentHeadPosition: () => number;
   fillTape: (content: string) => void;
   setHeadPosition: (cellId: string) => void;
+  setHeadPositionByIndex: (index: number) => void;
+  restoreExactTapeState: (tapeContent: string, headPosition: number, anchorCell?: number) => void;
   isTapeEmpty: () => boolean;
 }
 

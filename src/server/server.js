@@ -52,34 +52,45 @@ app.use(BodyParser.json({
 app.use(Express.static(path.join(__dirname + '/../../public')));
 
 // API endpoint to get machine state by ID
-app.get('/api/state/:id', function(req, res) {
-	MongoClient.connect(url, { 
-		serverSelectionTimeoutMS: 2000,  // Timeout after 2 seconds
-		connectTimeoutMS: 2000
-	}, function(err, db) {
-		if (err || db === null) {
-			console.warn('MongoDB connection failed:', err?.message);
-			res.status(503).json({ error: "Database unavailable. Please start MongoDB to use save/load features." });
-			return;
+app.get('/api/state/:id', async function(req, res) {
+	let client;
+	try {
+		client = new MongoClient(url, {
+			serverSelectionTimeoutMS: 2000,
+			connectTimeoutMS: 2000
+		});
+		
+		await client.connect();
+		const db = client.db(databaseName);
+		
+		const target = await db.collection(databaseCollection).findOne({
+			id: req.params.id.toString()
+		});
+		
+		if (target && target.state) {
+			res.json({ state: target.state });
+		} else {
+			res.status(404).json({ error: "State not found" });
 		}
-
-		db.collection(databaseCollection).findOne({
-				id: req.params.id.toString()
-			},
-			function(err, target) {
-				if (target && target.state) {
-					res.json({ state: target.state });
-				} else {
-					res.status(404).json({ error: "State not found" });
-				}
-				db.close();
-			}
-		);
-	});
+		
+	} catch (err) {
+		console.warn('MongoDB operation failed:', err?.message);
+		if (err.name === 'MongoServerSelectionError') {
+			res.status(503).json({ 
+				error: "Database unavailable. Please start MongoDB to use save/load features." 
+			});
+		} else {
+			res.status(500).json({ error: "Database query failed" });
+		}
+	} finally {
+		if (client) {
+			await client.close();
+		}
+	}
 });
 
 // Health check endpoint for production monitoring
-app.get('/api/health', function(req, res) {
+app.get('/api/health', function(_req, res) {
 	const healthCheck = {
 		status: 'ok',
 		timestamp: new Date().toISOString(),
@@ -119,32 +130,40 @@ app.get('*', function(req, res) {
 	res.sendFile(path.join(__dirname + '/../../public/index.html'));
 });
 
-app.post('/api/save', function(req, res) {
-	MongoClient.connect(url, { 
-		serverSelectionTimeoutMS: 2000,  // Timeout after 2 seconds
-		connectTimeoutMS: 2000
-	}, function(err, db) {
-		if (err || db === null) {
-			console.warn('MongoDB connection failed:', err?.message);
+app.post('/api/save', async function(req, res) {
+	let client;
+	try {
+		client = new MongoClient(url, {
+			serverSelectionTimeoutMS: 2000,
+			connectTimeoutMS: 2000
+		});
+		
+		await client.connect();
+		const db = client.db(databaseName);
+		
+		const id = createIdFromTimeStamp();
+		await db.collection(databaseCollection).insertOne({
+			id: id,
+			state: req.body,
+			createdAt: new Date()
+		});
+		
+		res.json({ id: id });
+		
+	} catch (err) {
+		console.warn('MongoDB operation failed:', err?.message);
+		if (err.name === 'MongoServerSelectionError') {
 			res.status(503).json({
 				error: "Database unavailable. Please start MongoDB to use save/load features."
 			});
-			return;
+		} else {
+			res.status(500).json({ error: "Failed to save state" });
 		}
-
-		var id = createIdFromTimeStamp();
-		db.collection(databaseCollection).insert({
-			id: id,
-			state: req.body
-		}, function(err, docsInserted) {
-			if (err) {
-				res.status(500).json({ error: "Failed to save state" });
-			} else {
-				res.json({ id: id });
-			}
-			db.close();
-		});
-	});
+	} finally {
+		if (client) {
+			await client.close();
+		}
+	}
 });
 
 

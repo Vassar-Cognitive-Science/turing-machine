@@ -176,19 +176,12 @@ export const useMachineStore = create<MachineStore>()(
             const { useTapeStore } = require('./index');
             const tapeStore = useTapeStore.getState();
             
-            // Restore tape state
+            // Restore exact tape state using the simplified approach
+            tapeStore.restoreExactTapeState(
+              lastEntry.beforeState.tapeContent, 
+              lastEntry.beforeState.headPosition
+            );
             tapeStore.setInternalState(lastEntry.beforeState.state);
-            
-            // Restore tape content - use fillTape to recreate the tape structure
-            tapeStore.fillTape(lastEntry.beforeState.tapeContent);
-            
-            // Restore head position - accounting for fillTape padding
-            const paddingBefore = 5; // fillTape adds 5 padding cells before content
-            const targetPos = lastEntry.beforeState.headPosition;
-            
-            if (targetPos < tapeStore.tapeCellsById.length) {
-              tapeStore.setHeadPosition(tapeStore.tapeCellsById[targetPos]);
-            }
             
             // Update step count
             state.stepCount = Math.max(0, state.stepCount - 1);
@@ -214,18 +207,12 @@ export const useMachineStore = create<MachineStore>()(
               const { useTapeStore } = require('./index');
               const tapeStore = useTapeStore.getState();
               
-              // Restore tape state
+              // Restore exact tape state using the simplified approach
+              tapeStore.restoreExactTapeState(
+                nextEntry.afterState.tapeContent, 
+                nextEntry.afterState.headPosition
+              );
               tapeStore.setInternalState(nextEntry.afterState.state);
-              
-              // Restore tape content
-              tapeStore.fillTape(nextEntry.afterState.tapeContent);
-              
-              // Restore head position
-              const targetPos = nextEntry.afterState.headPosition;
-              
-              if (targetPos < tapeStore.tapeCellsById.length) {
-                tapeStore.setHeadPosition(tapeStore.tapeCellsById[targetPos]);
-              }
               
               // Update step count
               state.stepCount += 1;
@@ -245,7 +232,7 @@ export const useMachineStore = create<MachineStore>()(
           // Clear highlighting when user adds a new rule
           state.currentRule = null;
           
-          const newRuleId = `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          const newRuleId = `rule_${crypto.randomUUID()}`;
           state.rowsById.push(newRuleId);
           (state as any)[newRuleId] = {
             in_state: "",
@@ -479,6 +466,40 @@ export const useMachineStore = create<MachineStore>()(
         });
       },
 
+      // Batch loading method for direct state restoration
+      loadRules: (rules: Rule[]): void => {
+        set((state) => {
+          // Clear rule highlighting when loading rules
+          state.currentRule = null;
+          
+          // Clear existing rules first
+          state.rowsById.forEach(id => {
+            delete (state as any)[id];
+          });
+          state.rowsById = [];
+          
+          // Add all rules directly
+          rules.forEach(rule => {
+            const ruleId = rule.id;
+            state.rowsById.push(ruleId);
+            (state as any)[ruleId] = {
+              in_state: rule.in_state || '',
+              read: rule.read || '',
+              write: rule.write || '',
+              direction: rule.direction || 'R',
+              new_state: rule.new_state || '',
+              isLeft: rule.direction === 'L',
+              in_state_error: false,
+              read_error: false,
+              write_error: false,
+              new_state_error: false,
+            } as RuleData;
+          });
+          
+          state.anyChangeInNormal = true;
+        });
+      },
+
       addSeedRules: (): void => {
         set((state) => {
           // Clear rule highlighting when adding seed rules
@@ -500,7 +521,7 @@ export const useMachineStore = create<MachineStore>()(
           ];
 
           seedRules.forEach(rule => {
-            const ruleId = `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            const ruleId = `rule_${crypto.randomUUID()}`;
             state.rowsById.push(ruleId);
             (state as any)[ruleId] = {
               in_state: rule.in_state,
@@ -521,7 +542,7 @@ export const useMachineStore = create<MachineStore>()(
 
       // Interactive graph editing methods
       addRuleFromConnection: (sourceStateId: string, targetStateId: string, ruleData?: { read?: string; write?: string; direction?: 'L' | 'R' }): string => {
-        const newRuleId = `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const newRuleId = `rule_${crypto.randomUUID()}`;
         
         set((state) => {
           state.rowsById.push(newRuleId);
@@ -643,15 +664,13 @@ export const useMachineStore = create<MachineStore>()(
     ),
     {
       name: 'turing-machine-store',
+      version: 2, // Version 2 with UUID-based IDs
       partialize: (state) => ({
         // Persist only essential machine configuration
         rowsById: state.rowsById,
         animationSpeed: state.animationSpeed,
         animationOn: state.animationOn,
         animationSpeedFactor: state.animationSpeedFactor,
-        // Don't persist currentRule - it should be ephemeral (only during execution)
-        // Don't persist highlightedRow - it should be ephemeral
-        // Don't persist runtime state like isRunning, stepCount, etc.
         // Persist all rule data (dynamic properties)
         ...state.rowsById.reduce((rules, ruleId) => {
           rules[ruleId] = (state as any)[ruleId];

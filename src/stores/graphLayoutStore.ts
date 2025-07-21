@@ -149,6 +149,7 @@ export const useGraphLayoutStore = create<GraphLayoutStore>()(
     ),
     {
       name: 'graph-layout-store',
+      version: 2, // Version 2 for consistency
       // Only persist essential layout data
       partialize: (state) => ({
         nodePositions: state.nodePositions,
