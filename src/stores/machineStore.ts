@@ -188,6 +188,7 @@ export const useMachineStore = create<MachineStore>()(
             
             // Clear any highlighted rule
             state.highlightedRow = null;
+            state.currentRule = null;
           }
         });
       },

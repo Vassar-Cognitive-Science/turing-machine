@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -64,6 +64,12 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   const [editingState, setEditingState] = useState<string>('');
   const [newStateName, setNewStateName] = useState<string>('');
   const [pendingConnection, setPendingConnection] = useState<{ source: string; target: string } | null>(null);
+  
+
+  // Debug: Component initialization
+  useEffect(() => {
+    console.log('🚀 ReactFlowGraph initialized with drag detection debugging enabled');
+  }, []);
   
   
   // Create a stable hash of rules to prevent infinite re-renders
@@ -203,6 +209,8 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   }, [rulesHash, currentRule, tape.tapeInternalState]); // Use rulesHash instead of rules to prevent infinite loops
 
 
+
+
   // Interactive handlers
   const onConnect = useCallback((connection: Connection) => {
     console.log('New connection:', connection);
@@ -227,8 +235,26 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
     }
   }, [graphLayout, machine]);
 
-  const onEdgeClick = useCallback((_event: React.MouseEvent, edge: Edge) => {
-    console.log('Edge clicked:', edge);
+  const onEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
+    const timestamp = Date.now();
+    const edgeData = edge.data as any;
+    const hasDragged = edgeData?.hasDragged || false;
+    
+    console.log(`🔵 onEdgeClick [${timestamp}]:`, {
+      edgeId: edge.id,
+      hasDragged,
+      edgeData,
+      mousePosition: { x: event.clientX, y: event.clientY },
+      eventType: event.type
+    });
+    
+    // Check if the edge was just dragged
+    if (hasDragged) {
+      console.log('🚫 BLOCKED: Preventing dialog due to edge drag detected');
+      return;
+    }
+    
+    console.log('✅ ALLOWING: Opening edit dialog for rule');
     
     // Clear highlighting when editing existing rules
     machine.setCurrentRule(null);
@@ -240,6 +266,9 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
     if (rule) {
       setEditingRule({ id: ruleId, ...rule });
       setRuleDialogOpen(true);
+      console.log('✅ Dialog opened for rule:', ruleId);
+    } else {
+      console.log('❌ No rule found for edge:', ruleId);
     }
   }, [machine]);
 
@@ -254,6 +283,11 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   }, [machine]);
 
   const onPaneClick = useCallback((event: React.MouseEvent) => {
+    console.log('⚪ onPaneClick:', {
+      detail: event.detail,
+      position: { x: event.clientX, y: event.clientY }
+    });
+    
     // Check if this is a double-click on empty space
     if (event.detail === 2) {
       console.log('Pane double-clicked at:', event.clientX, event.clientY);
@@ -364,6 +398,7 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
 
   // Handle node position changes
   const onNodeDrag = useCallback((_event: React.MouseEvent, node: Node) => {
+    console.log('🟢 onNodeDrag:', node.id);
     // Don't clear highlighting when just moving nodes - this is visual positioning only
     
     // Save position during drag
@@ -371,11 +406,11 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   }, [graphLayout]);
 
   const onNodeDragStop = useCallback((_event: React.MouseEvent, node: Node) => {
+    console.log('🟢 onNodeDragStop:', node.id, 'position:', node.position);
     // Don't clear highlighting when just moving nodes - this is visual positioning only
     
     // Save final position
     graphLayout.updateNodePosition(node.id, node.position);
-    console.log(`Node ${node.id} moved to:`, node.position);
   }, [graphLayout]);
 
   // Handle viewport changes
@@ -628,6 +663,7 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
               connectionLineType={ConnectionLineType.SmoothStep}
               snapToGrid={true}
               snapGrid={[20, 20]}
+              paneClickDistance={10}
             >
               <Background />
               <Controls />
@@ -635,14 +671,36 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
                 <defs>
                   <marker
                     id="react-flow__arrowclosed"
-                    markerWidth="12"
-                    markerHeight="12"
-                    refX="6"
-                    refY="3"
+                    markerWidth="10"
+                    markerHeight="10"
+                    refX="5"
+                    refY="2.5"
                     orient="auto"
                     markerUnits="strokeWidth"
                   >
-                    <polygon points="0,0 0,6 6,3" fill="#555" />
+                    <polygon points="0,0 0,5 5,2.5" fill="#555" />
+                  </marker>
+                  <marker
+                    id="react-flow__arrowclosed-orange"
+                    markerWidth="10"
+                    markerHeight="10"
+                    refX="5"
+                    refY="2.5"
+                    orient="auto"
+                    markerUnits="strokeWidth"
+                  >
+                    <polygon points="0,0 0,5 5,2.5" fill="#ff6b00" />
+                  </marker>
+                  <marker
+                    id="react-flow__arrowclosed-blue"
+                    markerWidth="10"
+                    markerHeight="10"
+                    refX="5"
+                    refY="2.5"
+                    orient="auto"
+                    markerUnits="strokeWidth"
+                  >
+                    <polygon points="0,0 0,5 5,2.5" fill="#2196f3" />
                   </marker>
                 </defs>
               </svg>
