@@ -141,7 +141,7 @@ export function TapeDisplay(): React.ReactElement {
                 type="text"
                 value={tapeOps.currentState}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  tape.setInternalState(e.target.value || 'START');
+                  tape.setInternalState(e.target.value);
                 }}
                 disabled={machineExecution.isRunning}
                 style={{
@@ -163,7 +163,6 @@ export function TapeDisplay(): React.ReactElement {
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
-                placeholder="STATE"
               />
             </Box>
             {/* Connector arrow to tape */}

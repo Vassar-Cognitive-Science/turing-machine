@@ -1110,7 +1110,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect33(create3, deps) {
+          function useEffect34(create3, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create3, deps);
           }
@@ -1126,7 +1126,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
-          function useMemo21(create3, deps) {
+          function useMemo22(create3, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useMemo(create3, deps);
           }
@@ -1893,12 +1893,12 @@
           exports.useContext = useContext18;
           exports.useDebugValue = useDebugValue5;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect33;
+          exports.useEffect = useEffect34;
           exports.useId = useId2;
           exports.useImperativeHandle = useImperativeHandle7;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect6;
-          exports.useMemo = useMemo21;
+          exports.useMemo = useMemo22;
           exports.useReducer = useReducer2;
           exports.useRef = useRef38;
           exports.useState = useState32;
@@ -25577,10 +25577,10 @@
         }
         return React__namespace.createElement.apply(null, createElementArgArray);
       };
-      (function(_jsx122) {
+      (function(_jsx125) {
         var JSX;
         /* @__PURE__ */ (function(_JSX) {
-        })(JSX || (JSX = _jsx122.JSX || (_jsx122.JSX = {})));
+        })(JSX || (JSX = _jsx125.JSX || (_jsx125.JSX = {})));
       })(exports.jsx || (exports.jsx = {}));
       var Global2 = /* @__PURE__ */ emotionElement.withEmotionCache(function(props, cache) {
         var styles5 = props.styles;
@@ -27961,7 +27961,7 @@
             },
             [subscribe, value, getSnapshot]
           );
-          useEffect33(
+          useEffect34(
             function() {
               checkIfSnapshotChanged(inst) && forceUpdate({ inst });
               return subscribe(function() {
@@ -27987,7 +27987,7 @@
           return getSnapshot();
         }
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-        var React145 = require_react(), objectIs = "function" === typeof Object.is ? Object.is : is2, useState32 = React145.useState, useEffect33 = React145.useEffect, useLayoutEffect6 = React145.useLayoutEffect, useDebugValue5 = React145.useDebugValue, didWarnOld18Alpha = false, didWarnUncachedGetSnapshot = false, shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
+        var React145 = require_react(), objectIs = "function" === typeof Object.is ? Object.is : is2, useState32 = React145.useState, useEffect34 = React145.useEffect, useLayoutEffect6 = React145.useLayoutEffect, useDebugValue5 = React145.useDebugValue, didWarnOld18Alpha = false, didWarnUncachedGetSnapshot = false, shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
         exports.useSyncExternalStore = void 0 !== React145.useSyncExternalStore ? React145.useSyncExternalStore : shim;
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
       })();
@@ -28015,7 +28015,7 @@
           return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
         }
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-        var React145 = require_react(), shim = require_shim(), objectIs = "function" === typeof Object.is ? Object.is : is2, useSyncExternalStore = shim.useSyncExternalStore, useRef38 = React145.useRef, useEffect33 = React145.useEffect, useMemo21 = React145.useMemo, useDebugValue5 = React145.useDebugValue;
+        var React145 = require_react(), shim = require_shim(), objectIs = "function" === typeof Object.is ? Object.is : is2, useSyncExternalStore = shim.useSyncExternalStore, useRef38 = React145.useRef, useEffect34 = React145.useEffect, useMemo22 = React145.useMemo, useDebugValue5 = React145.useDebugValue;
         exports.useSyncExternalStoreWithSelector = function(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
           var instRef = useRef38(null);
           if (null === instRef.current) {
@@ -28023,7 +28023,7 @@
             instRef.current = inst;
           } else
             inst = instRef.current;
-          instRef = useMemo21(
+          instRef = useMemo22(
             function() {
               function memoizedSelector(nextSnapshot) {
                 if (!hasMemo) {
@@ -28059,7 +28059,7 @@
             [getSnapshot, getServerSnapshot, selector, isEqual]
           );
           var value = useSyncExternalStore(subscribe, instRef[0], instRef[1]);
-          useEffect33(
+          useEffect34(
             function() {
               inst.hasValue = true;
               inst.value = value;
@@ -29865,7 +29865,7 @@
               // Internal state management
               setInternalState: (newState) => {
                 set5((state) => {
-                  state.tapeInternalState = capitalizeAlphabet2(newState || "START");
+                  state.tapeInternalState = capitalizeAlphabet2(newState);
                 });
               },
               // Manual state change (for user interactions - clears highlighting)
@@ -29873,7 +29873,7 @@
                 set5((state) => {
                   const { useMachineStore: useMachineStore2 } = (init_stores(), __toCommonJS(stores_exports));
                   useMachineStore2.getState().setCurrentRule(null);
-                  state.tapeInternalState = capitalizeAlphabet2(newState || "START");
+                  state.tapeInternalState = capitalizeAlphabet2(newState);
                 });
               },
               // Cell highlighting
@@ -64676,173 +64676,191 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     d: "M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"
   }), "ArrowBack");
 
-  // node_modules/@mui/icons-material/esm/Cached.js
+  // node_modules/@mui/icons-material/esm/ArrowDownward.js
   var import_jsx_runtime96 = __toESM(require_jsx_runtime(), 1);
-  var Cached_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime96.jsx)("path", {
+  var ArrowDownward_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime96.jsx)("path", {
+    d: "m20 12-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8z"
+  }), "ArrowDownward");
+
+  // node_modules/@mui/icons-material/esm/ArrowUpward.js
+  var import_jsx_runtime97 = __toESM(require_jsx_runtime(), 1);
+  var ArrowUpward_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime97.jsx)("path", {
+    d: "m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8z"
+  }), "ArrowUpward");
+
+  // node_modules/@mui/icons-material/esm/Cached.js
+  var import_jsx_runtime98 = __toESM(require_jsx_runtime(), 1);
+  var Cached_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime98.jsx)("path", {
     d: "m19 8-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4z"
   }), "Cached");
 
   // node_modules/@mui/icons-material/esm/CheckCircle.js
-  var import_jsx_runtime97 = __toESM(require_jsx_runtime(), 1);
-  var CheckCircle_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime97.jsx)("path", {
+  var import_jsx_runtime99 = __toESM(require_jsx_runtime(), 1);
+  var CheckCircle_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime99.jsx)("path", {
     d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8z"
   }), "CheckCircle");
 
   // node_modules/@mui/icons-material/esm/Delete.js
-  var import_jsx_runtime98 = __toESM(require_jsx_runtime(), 1);
-  var Delete_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime98.jsx)("path", {
+  var import_jsx_runtime100 = __toESM(require_jsx_runtime(), 1);
+  var Delete_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime100.jsx)("path", {
     d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"
   }), "Delete");
 
   // node_modules/@mui/icons-material/esm/DeleteSweep.js
-  var import_jsx_runtime99 = __toESM(require_jsx_runtime(), 1);
-  var DeleteSweep_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime99.jsx)("path", {
+  var import_jsx_runtime101 = __toESM(require_jsx_runtime(), 1);
+  var DeleteSweep_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime101.jsx)("path", {
     d: "M15 16h4v2h-4zm0-8h7v2h-7zm0 4h6v2h-6zM3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3zM14 5h-3l-1-1H6L5 5H2v2h12z"
   }), "DeleteSweep");
 
   // node_modules/@mui/icons-material/esm/Download.js
-  var import_jsx_runtime100 = __toESM(require_jsx_runtime(), 1);
-  var Download_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime100.jsx)("path", {
+  var import_jsx_runtime102 = __toESM(require_jsx_runtime(), 1);
+  var Download_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime102.jsx)("path", {
     d: "M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z"
   }), "Download");
 
   // node_modules/@mui/icons-material/esm/DragIndicator.js
-  var import_jsx_runtime101 = __toESM(require_jsx_runtime(), 1);
-  var DragIndicator_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime101.jsx)("path", {
+  var import_jsx_runtime103 = __toESM(require_jsx_runtime(), 1);
+  var DragIndicator_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime103.jsx)("path", {
     d: "M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2m-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2m0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2"
   }), "DragIndicator");
 
   // node_modules/@mui/icons-material/esm/Edit.js
-  var import_jsx_runtime102 = __toESM(require_jsx_runtime(), 1);
-  var Edit_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime102.jsx)("path", {
+  var import_jsx_runtime104 = __toESM(require_jsx_runtime(), 1);
+  var Edit_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime104.jsx)("path", {
     d: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"
   }), "Edit");
 
   // node_modules/@mui/icons-material/esm/Error.js
-  var import_jsx_runtime103 = __toESM(require_jsx_runtime(), 1);
-  var Error_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime103.jsx)("path", {
+  var import_jsx_runtime105 = __toESM(require_jsx_runtime(), 1);
+  var Error_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime105.jsx)("path", {
     d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-2h2zm0-4h-2V7h2z"
   }), "Error");
 
   // node_modules/@mui/icons-material/esm/ExpandMore.js
-  var import_jsx_runtime104 = __toESM(require_jsx_runtime(), 1);
-  var ExpandMore_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime104.jsx)("path", {
+  var import_jsx_runtime106 = __toESM(require_jsx_runtime(), 1);
+  var ExpandMore_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime106.jsx)("path", {
     d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
   }), "ExpandMore");
 
   // node_modules/@mui/icons-material/esm/FileDownload.js
-  var import_jsx_runtime105 = __toESM(require_jsx_runtime(), 1);
-  var FileDownload_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime105.jsx)("path", {
+  var import_jsx_runtime107 = __toESM(require_jsx_runtime(), 1);
+  var FileDownload_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime107.jsx)("path", {
     d: "M19 9h-4V3H9v6H5l7 7zM5 18v2h14v-2z"
   }), "FileDownload");
 
   // node_modules/@mui/icons-material/esm/FileUpload.js
-  var import_jsx_runtime106 = __toESM(require_jsx_runtime(), 1);
-  var FileUpload_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime106.jsx)("path", {
+  var import_jsx_runtime108 = __toESM(require_jsx_runtime(), 1);
+  var FileUpload_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
     d: "M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"
   }), "FileUpload");
 
   // node_modules/@mui/icons-material/esm/FlashOn.js
-  var import_jsx_runtime107 = __toESM(require_jsx_runtime(), 1);
-  var FlashOn_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime107.jsx)("path", {
+  var import_jsx_runtime109 = __toESM(require_jsx_runtime(), 1);
+  var FlashOn_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M7 2v11h3v9l7-12h-4l4-8z"
   }), "FlashOn");
 
   // node_modules/@mui/icons-material/esm/Home.js
-  var import_jsx_runtime108 = __toESM(require_jsx_runtime(), 1);
-  var Home_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  var import_jsx_runtime110 = __toESM(require_jsx_runtime(), 1);
+  var Home_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime110.jsx)("path", {
     d: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
   }), "Home");
 
   // node_modules/@mui/icons-material/esm/KeyboardDoubleArrowLeft.js
-  var import_jsx_runtime109 = __toESM(require_jsx_runtime(), 1);
-  var KeyboardDoubleArrowLeft_default = createSvgIcon([/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
+  var import_jsx_runtime111 = __toESM(require_jsx_runtime(), 1);
+  var KeyboardDoubleArrowLeft_default = createSvgIcon([/* @__PURE__ */ (0, import_jsx_runtime111.jsx)("path", {
     d: "M17.59 18 19 16.59 14.42 12 19 7.41 17.59 6l-6 6z"
-  }, "0"), /* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
+  }, "0"), /* @__PURE__ */ (0, import_jsx_runtime111.jsx)("path", {
     d: "m11 18 1.41-1.41L7.83 12l4.58-4.59L11 6l-6 6z"
   }, "1")], "KeyboardDoubleArrowLeft");
 
   // node_modules/@mui/icons-material/esm/KeyboardDoubleArrowRight.js
-  var import_jsx_runtime110 = __toESM(require_jsx_runtime(), 1);
-  var KeyboardDoubleArrowRight_default = createSvgIcon([/* @__PURE__ */ (0, import_jsx_runtime110.jsx)("path", {
+  var import_jsx_runtime112 = __toESM(require_jsx_runtime(), 1);
+  var KeyboardDoubleArrowRight_default = createSvgIcon([/* @__PURE__ */ (0, import_jsx_runtime112.jsx)("path", {
     d: "M6.41 6 5 7.41 9.58 12 5 16.59 6.41 18l6-6z"
-  }, "0"), /* @__PURE__ */ (0, import_jsx_runtime110.jsx)("path", {
+  }, "0"), /* @__PURE__ */ (0, import_jsx_runtime112.jsx)("path", {
     d: "m13 6-1.41 1.41L16.17 12l-4.58 4.59L13 18l6-6z"
   }, "1")], "KeyboardDoubleArrowRight");
 
   // node_modules/@mui/icons-material/esm/PlayArrow.js
-  var import_jsx_runtime111 = __toESM(require_jsx_runtime(), 1);
-  var PlayArrow_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime111.jsx)("path", {
+  var import_jsx_runtime113 = __toESM(require_jsx_runtime(), 1);
+  var PlayArrow_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime113.jsx)("path", {
     d: "M8 5v14l11-7z"
   }), "PlayArrow");
 
   // node_modules/@mui/icons-material/esm/PlaylistPlay.js
-  var import_jsx_runtime112 = __toESM(require_jsx_runtime(), 1);
-  var PlaylistPlay_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime112.jsx)("path", {
+  var import_jsx_runtime114 = __toESM(require_jsx_runtime(), 1);
+  var PlaylistPlay_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime114.jsx)("path", {
     d: "M3 10h11v2H3zm0-4h11v2H3zm0 8h7v2H3zm13-1v8l6-4z"
   }), "PlaylistPlay");
 
   // node_modules/@mui/icons-material/esm/Quiz.js
-  var import_jsx_runtime113 = __toESM(require_jsx_runtime(), 1);
-  var Quiz_default = createSvgIcon([/* @__PURE__ */ (0, import_jsx_runtime113.jsx)("path", {
+  var import_jsx_runtime115 = __toESM(require_jsx_runtime(), 1);
+  var Quiz_default = createSvgIcon([/* @__PURE__ */ (0, import_jsx_runtime115.jsx)("path", {
     d: "M4 6H2v14c0 1.1.9 2 2 2h14v-2H4z"
-  }, "0"), /* @__PURE__ */ (0, import_jsx_runtime113.jsx)("path", {
+  }, "0"), /* @__PURE__ */ (0, import_jsx_runtime115.jsx)("path", {
     d: "M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-5.99 13c-.59 0-1.05-.47-1.05-1.05 0-.59.47-1.04 1.05-1.04.59 0 1.04.45 1.04 1.04-.01.58-.45 1.05-1.04 1.05m2.5-6.17c-.63.93-1.23 1.21-1.56 1.81-.13.24-.18.4-.18 1.18h-1.52c0-.41-.06-1.08.26-1.65.41-.73 1.18-1.16 1.63-1.8.48-.68.21-1.94-1.14-1.94-.88 0-1.32.67-1.5 1.23l-1.37-.57C11.51 5.96 12.52 5 13.99 5c1.23 0 2.08.56 2.51 1.26.37.61.58 1.73.01 2.57"
   }, "1")], "Quiz");
 
   // node_modules/@mui/icons-material/esm/Redo.js
-  var import_jsx_runtime114 = __toESM(require_jsx_runtime(), 1);
-  var Redo_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime114.jsx)("path", {
+  var import_jsx_runtime116 = __toESM(require_jsx_runtime(), 1);
+  var Redo_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime116.jsx)("path", {
     d: "M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7z"
   }), "Redo");
 
   // node_modules/@mui/icons-material/esm/RestartAlt.js
-  var import_jsx_runtime115 = __toESM(require_jsx_runtime(), 1);
-  var RestartAlt_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime115.jsx)("path", {
+  var import_jsx_runtime117 = __toESM(require_jsx_runtime(), 1);
+  var RestartAlt_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime117.jsx)("path", {
     d: "M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6 0 2.97-2.17 5.43-5 5.91v2.02c3.95-.49 7-3.85 7-7.93 0-4.42-3.58-8-8-8m-6 8c0-1.65.67-3.15 1.76-4.24L6.34 7.34C4.9 8.79 4 10.79 4 13c0 4.08 3.05 7.44 7 7.93v-2.02c-2.83-.48-5-2.94-5-5.91"
   }), "RestartAlt");
 
   // node_modules/@mui/icons-material/esm/Save.js
-  var import_jsx_runtime116 = __toESM(require_jsx_runtime(), 1);
-  var Save_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime116.jsx)("path", {
+  var import_jsx_runtime118 = __toESM(require_jsx_runtime(), 1);
+  var Save_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime118.jsx)("path", {
     d: "M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3m3-10H5V5h10z"
   }), "Save");
 
   // node_modules/@mui/icons-material/esm/Schedule.js
-  var import_jsx_runtime117 = __toESM(require_jsx_runtime(), 1);
-  var Schedule_default = createSvgIcon([/* @__PURE__ */ (0, import_jsx_runtime117.jsx)("path", {
+  var import_jsx_runtime119 = __toESM(require_jsx_runtime(), 1);
+  var Schedule_default = createSvgIcon([/* @__PURE__ */ (0, import_jsx_runtime119.jsx)("path", {
     d: "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2M12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8"
-  }, "0"), /* @__PURE__ */ (0, import_jsx_runtime117.jsx)("path", {
+  }, "0"), /* @__PURE__ */ (0, import_jsx_runtime119.jsx)("path", {
     d: "M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"
   }, "1")], "Schedule");
 
   // node_modules/@mui/icons-material/esm/SkipNext.js
-  var import_jsx_runtime118 = __toESM(require_jsx_runtime(), 1);
-  var SkipNext_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime118.jsx)("path", {
+  var import_jsx_runtime120 = __toESM(require_jsx_runtime(), 1);
+  var SkipNext_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime120.jsx)("path", {
     d: "m6 18 8.5-6L6 6zM16 6v12h2V6z"
   }), "SkipNext");
 
+  // node_modules/@mui/icons-material/esm/Sort.js
+  var import_jsx_runtime121 = __toESM(require_jsx_runtime(), 1);
+  var Sort_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime121.jsx)("path", {
+    d: "M3 18h6v-2H3zM3 6v2h18V6zm0 7h12v-2H3z"
+  }), "Sort");
+
   // node_modules/@mui/icons-material/esm/Speed.js
-  var import_jsx_runtime119 = __toESM(require_jsx_runtime(), 1);
-  var Speed_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime119.jsx)("path", {
+  var import_jsx_runtime122 = __toESM(require_jsx_runtime(), 1);
+  var Speed_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime122.jsx)("path", {
     d: "m20.38 8.57-1.23 1.85a8 8 0 0 1-.22 7.58H5.07A8 8 0 0 1 15.58 6.85l1.85-1.23A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1 10 10 0 0 0-.27-10.44zm-9.79 6.84a2 2 0 0 0 2.83 0l5.66-8.49-8.49 5.66a2 2 0 0 0 0 2.83"
   }), "Speed");
 
   // node_modules/@mui/icons-material/esm/Stop.js
-  var import_jsx_runtime120 = __toESM(require_jsx_runtime(), 1);
-  var Stop_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime120.jsx)("path", {
+  var import_jsx_runtime123 = __toESM(require_jsx_runtime(), 1);
+  var Stop_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime123.jsx)("path", {
     d: "M6 6h12v12H6z"
   }), "Stop");
 
   // node_modules/@mui/icons-material/esm/TableRows.js
-  var import_jsx_runtime121 = __toESM(require_jsx_runtime(), 1);
-  var TableRows_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime121.jsx)("path", {
+  var import_jsx_runtime124 = __toESM(require_jsx_runtime(), 1);
+  var TableRows_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime124.jsx)("path", {
     d: "M21 8H3V4h18zm0 2H3v4h18zm0 6H3v4h18z"
   }), "TableRows");
 
   // node_modules/@mui/icons-material/esm/Undo.js
-  var import_jsx_runtime122 = __toESM(require_jsx_runtime(), 1);
-  var Undo_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime122.jsx)("path", {
+  var import_jsx_runtime125 = __toESM(require_jsx_runtime(), 1);
+  var Undo_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime125.jsx)("path", {
     d: "M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8"
   }), "Undo");
 
@@ -64950,7 +64968,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                     type: "text",
                     value: tapeOps.currentState,
                     onChange: (e) => {
-                      tape.setInternalState(e.target.value || "START");
+                      tape.setInternalState(e.target.value);
                     },
                     disabled: machineExecution.isRunning,
                     style: {
@@ -64971,8 +64989,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                     },
                     onClick: (e) => {
                       e.stopPropagation();
-                    },
-                    placeholder: "STATE"
+                    }
                   },
                   void 0,
                   false,
@@ -65017,7 +65034,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                     false,
                     {
                       fileName: "src/common/components/machine/TapeDisplay.tsx",
-                      lineNumber: 178,
+                      lineNumber: 177,
                       columnNumber: 15
                     },
                     this
@@ -65037,7 +65054,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                     false,
                     {
                       fileName: "src/common/components/machine/TapeDisplay.tsx",
-                      lineNumber: 185,
+                      lineNumber: 184,
                       columnNumber: 15
                     },
                     this
@@ -65048,7 +65065,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               true,
               {
                 fileName: "src/common/components/machine/TapeDisplay.tsx",
-                lineNumber: 170,
+                lineNumber: 169,
                 columnNumber: 13
               },
               this
@@ -65084,7 +65101,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             title: "Scroll tape left",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(KeyboardDoubleArrowLeft_default, {}, void 0, false, {
               fileName: "src/common/components/machine/TapeDisplay.tsx",
-              lineNumber: 214,
+              lineNumber: 213,
               columnNumber: 11
             }, this)
           },
@@ -65092,7 +65109,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 208,
+            lineNumber: 207,
             columnNumber: 9
           },
           this
@@ -65266,7 +65283,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               false,
               {
                 fileName: "src/common/components/machine/TapeDisplay.tsx",
-                lineNumber: 257,
+                lineNumber: 256,
                 columnNumber: 15
               },
               this
@@ -65276,13 +65293,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 220,
+            lineNumber: 219,
             columnNumber: 13
           },
           this
         )) }, void 0, false, {
           fileName: "src/common/components/machine/TapeDisplay.tsx",
-          lineNumber: 218,
+          lineNumber: 217,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
@@ -65294,7 +65311,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             title: "Scroll tape right",
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(KeyboardDoubleArrowRight_default, {}, void 0, false, {
               fileName: "src/common/components/machine/TapeDisplay.tsx",
-              lineNumber: 418,
+              lineNumber: 417,
               columnNumber: 11
             }, this)
           },
@@ -65302,14 +65319,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/TapeDisplay.tsx",
-            lineNumber: 412,
+            lineNumber: 411,
             columnNumber: 9
           },
           this
         )
       ] }, void 0, true, {
         fileName: "src/common/components/machine/TapeDisplay.tsx",
-        lineNumber: 200,
+        lineNumber: 199,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(
@@ -65335,7 +65352,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/machine/TapeDisplay.tsx",
-              lineNumber: 433,
+              lineNumber: 432,
               columnNumber: 9
             },
             this
@@ -65345,7 +65362,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/TapeDisplay.tsx",
-          lineNumber: 423,
+          lineNumber: 422,
           columnNumber: 7
         },
         this
@@ -69443,7 +69460,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react21 = __toESM(require_react(), 1);
 
   // node_modules/@xyflow/react/dist/esm/index.js
-  var import_jsx_runtime123 = __toESM(require_jsx_runtime());
+  var import_jsx_runtime126 = __toESM(require_jsx_runtime());
   var import_react14 = __toESM(require_react());
 
   // node_modules/classcat/index.js
@@ -75247,22 +75264,22 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var ariaLabelConfigSelector = (s) => s.ariaLabelConfig;
   function AriaLiveMessage({ rfId }) {
     const ariaLiveMessage = useStore2(ariaLiveSelector);
-    return (0, import_jsx_runtime123.jsx)("div", { id: `${ARIA_LIVE_MESSAGE}-${rfId}`, "aria-live": "assertive", "aria-atomic": "true", style: ariaLiveStyle, children: ariaLiveMessage });
+    return (0, import_jsx_runtime126.jsx)("div", { id: `${ARIA_LIVE_MESSAGE}-${rfId}`, "aria-live": "assertive", "aria-atomic": "true", style: ariaLiveStyle, children: ariaLiveMessage });
   }
   function A11yDescriptions({ rfId, disableKeyboardA11y }) {
     const ariaLabelConfig = useStore2(ariaLabelConfigSelector);
-    return (0, import_jsx_runtime123.jsxs)(import_jsx_runtime123.Fragment, { children: [(0, import_jsx_runtime123.jsx)("div", { id: `${ARIA_NODE_DESC_KEY}-${rfId}`, style: style4, children: disableKeyboardA11y ? ariaLabelConfig["node.a11yDescription.default"] : ariaLabelConfig["node.a11yDescription.keyboardDisabled"] }), (0, import_jsx_runtime123.jsx)("div", { id: `${ARIA_EDGE_DESC_KEY}-${rfId}`, style: style4, children: ariaLabelConfig["edge.a11yDescription.default"] }), !disableKeyboardA11y && (0, import_jsx_runtime123.jsx)(AriaLiveMessage, { rfId })] });
+    return (0, import_jsx_runtime126.jsxs)(import_jsx_runtime126.Fragment, { children: [(0, import_jsx_runtime126.jsx)("div", { id: `${ARIA_NODE_DESC_KEY}-${rfId}`, style: style4, children: disableKeyboardA11y ? ariaLabelConfig["node.a11yDescription.default"] : ariaLabelConfig["node.a11yDescription.keyboardDisabled"] }), (0, import_jsx_runtime126.jsx)("div", { id: `${ARIA_EDGE_DESC_KEY}-${rfId}`, style: style4, children: ariaLabelConfig["edge.a11yDescription.default"] }), !disableKeyboardA11y && (0, import_jsx_runtime126.jsx)(AriaLiveMessage, { rfId })] });
   }
   var Panel = (0, import_react14.forwardRef)(({ position = "top-left", children: children2, className, style: style5, ...rest }, ref) => {
     const positionClasses = `${position}`.split("-");
-    return (0, import_jsx_runtime123.jsx)("div", { className: cc(["react-flow__panel", className, ...positionClasses]), style: style5, ref, ...rest, children: children2 });
+    return (0, import_jsx_runtime126.jsx)("div", { className: cc(["react-flow__panel", className, ...positionClasses]), style: style5, ref, ...rest, children: children2 });
   });
   Panel.displayName = "Panel";
   function Attribution({ proOptions, position = "bottom-right" }) {
     if (proOptions?.hideAttribution) {
       return null;
     }
-    return (0, import_jsx_runtime123.jsx)(Panel, { position, className: "react-flow__attribution", "data-message": "Please only hide this attribution when you are subscribed to React Flow Pro: https://pro.reactflow.dev", children: (0, import_jsx_runtime123.jsx)("a", { href: "https://reactflow.dev", target: "_blank", rel: "noopener noreferrer", "aria-label": "React Flow attribution", children: "React Flow" }) });
+    return (0, import_jsx_runtime126.jsx)(Panel, { position, className: "react-flow__attribution", "data-message": "Please only hide this attribution when you are subscribed to React Flow Pro: https://pro.reactflow.dev", children: (0, import_jsx_runtime126.jsx)("a", { href: "https://reactflow.dev", target: "_blank", rel: "noopener noreferrer", "aria-label": "React Flow attribution", children: "React Flow" }) });
   }
   var selector$m = (s) => {
     const selectedNodes = [];
@@ -75297,7 +75314,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function SelectionListener({ onSelectionChange }) {
     const storeHasSelectionChangeHandlers = useStore2(changeSelector);
     if (onSelectionChange || storeHasSelectionChangeHandlers) {
-      return (0, import_jsx_runtime123.jsx)(SelectionListenerInner, { onSelectionChange });
+      return (0, import_jsx_runtime126.jsx)(SelectionListenerInner, { onSelectionChange });
     }
     return null;
   }
@@ -75827,7 +75844,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, []);
     const edgeQueue = useQueue(edgeQueueHandler);
     const value = (0, import_react14.useMemo)(() => ({ nodeQueue, edgeQueue }), []);
-    return (0, import_jsx_runtime123.jsx)(BatchContext.Provider, { value, children: children2 });
+    return (0, import_jsx_runtime126.jsx)(BatchContext.Provider, { value, children: children2 });
   }
   function useBatchContext() {
     const batchContext = (0, import_react14.useContext)(BatchContext);
@@ -76143,7 +76160,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       lib,
       onTransformChange
     ]);
-    return (0, import_jsx_runtime123.jsx)("div", { className: "react-flow__renderer", ref: zoomPane, style: containerStyle, children: children2 });
+    return (0, import_jsx_runtime126.jsx)("div", { className: "react-flow__renderer", ref: zoomPane, style: containerStyle, children: children2 });
   }
   var selector$i = (s) => ({
     userSelectionActive: s.userSelectionActive,
@@ -76155,7 +76172,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (!isActive) {
       return null;
     }
-    return (0, import_jsx_runtime123.jsx)("div", { className: "react-flow__selection react-flow__container", style: {
+    return (0, import_jsx_runtime126.jsx)("div", { className: "react-flow__selection react-flow__container", style: {
       width: userSelectionRect.width,
       height: userSelectionRect.height,
       transform: `translate(${userSelectionRect.x}px, ${userSelectionRect.y}px)`
@@ -76292,7 +76309,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       selectionStarted.current = false;
     };
     const draggable = panOnDrag === true || Array.isArray(panOnDrag) && panOnDrag.includes(0);
-    return (0, import_jsx_runtime123.jsxs)("div", { className: cc(["react-flow__pane", { draggable, dragging, selection: isSelecting }]), onClick: hasActiveSelection ? void 0 : wrapHandler(onClick, container2), onContextMenu: wrapHandler(onContextMenu, container2), onWheel: wrapHandler(onWheel, container2), onPointerEnter: hasActiveSelection ? void 0 : onPaneMouseEnter, onPointerDown: hasActiveSelection ? onPointerDown2 : onPaneMouseMove, onPointerMove: hasActiveSelection ? onPointerMove : onPaneMouseMove, onPointerUp: hasActiveSelection ? onPointerUp : void 0, onPointerLeave: onPaneMouseLeave, ref: container2, style: containerStyle, children: [children2, (0, import_jsx_runtime123.jsx)(UserSelection, {})] });
+    return (0, import_jsx_runtime126.jsxs)("div", { className: cc(["react-flow__pane", { draggable, dragging, selection: isSelecting }]), onClick: hasActiveSelection ? void 0 : wrapHandler(onClick, container2), onContextMenu: wrapHandler(onContextMenu, container2), onWheel: wrapHandler(onWheel, container2), onPointerEnter: hasActiveSelection ? void 0 : onPaneMouseEnter, onPointerDown: hasActiveSelection ? onPointerDown2 : onPaneMouseMove, onPointerMove: hasActiveSelection ? onPointerMove : onPaneMouseMove, onPointerUp: hasActiveSelection ? onPointerUp : void 0, onPointerLeave: onPaneMouseLeave, ref: container2, style: containerStyle, children: [children2, (0, import_jsx_runtime126.jsx)(UserSelection, {})] });
   }
   function handleNodeClick({ id: id2, store, unselect = false, nodeRef }) {
     const { addSelectedNodes, unselectNodesAndEdges, multiSelectionActive, nodeLookup, onError } = store.getState();
@@ -76511,7 +76528,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onClickConnectEnd?.(event, connectionClone);
       store.setState({ connectionClickStartHandle: null });
     };
-    return (0, import_jsx_runtime123.jsx)("div", { "data-handleid": handleId, "data-nodeid": nodeId, "data-handlepos": position, "data-id": `${rfId}-${nodeId}-${handleId}-${type2}`, className: cc([
+    return (0, import_jsx_runtime126.jsx)("div", { "data-handleid": handleId, "data-nodeid": nodeId, "data-handlepos": position, "data-id": `${rfId}-${nodeId}-${handleId}-${type2}`, className: cc([
       "react-flow__handle",
       `react-flow__handle-${position}`,
       "nodrag",
@@ -76537,16 +76554,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var Handle = (0, import_react14.memo)(fixedForwardRef(HandleComponent));
   function InputNode({ data, isConnectable, sourcePosition = Position.Bottom }) {
-    return (0, import_jsx_runtime123.jsxs)(import_jsx_runtime123.Fragment, { children: [data?.label, (0, import_jsx_runtime123.jsx)(Handle, { type: "source", position: sourcePosition, isConnectable })] });
+    return (0, import_jsx_runtime126.jsxs)(import_jsx_runtime126.Fragment, { children: [data?.label, (0, import_jsx_runtime126.jsx)(Handle, { type: "source", position: sourcePosition, isConnectable })] });
   }
   function DefaultNode({ data, isConnectable, targetPosition = Position.Top, sourcePosition = Position.Bottom }) {
-    return (0, import_jsx_runtime123.jsxs)(import_jsx_runtime123.Fragment, { children: [(0, import_jsx_runtime123.jsx)(Handle, { type: "target", position: targetPosition, isConnectable }), data?.label, (0, import_jsx_runtime123.jsx)(Handle, { type: "source", position: sourcePosition, isConnectable })] });
+    return (0, import_jsx_runtime126.jsxs)(import_jsx_runtime126.Fragment, { children: [(0, import_jsx_runtime126.jsx)(Handle, { type: "target", position: targetPosition, isConnectable }), data?.label, (0, import_jsx_runtime126.jsx)(Handle, { type: "source", position: sourcePosition, isConnectable })] });
   }
   function GroupNode() {
     return null;
   }
   function OutputNode({ data, isConnectable, targetPosition = Position.Top }) {
-    return (0, import_jsx_runtime123.jsxs)(import_jsx_runtime123.Fragment, { children: [(0, import_jsx_runtime123.jsx)(Handle, { type: "target", position: targetPosition, isConnectable }), data?.label] });
+    return (0, import_jsx_runtime126.jsxs)(import_jsx_runtime126.Fragment, { children: [(0, import_jsx_runtime126.jsx)(Handle, { type: "target", position: targetPosition, isConnectable }), data?.label] });
   }
   var arrowKeyDiffs = {
     ArrowUp: { x: 0, y: -1 },
@@ -76614,9 +76631,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         });
       }
     };
-    return (0, import_jsx_runtime123.jsx)("div", { className: cc(["react-flow__nodesselection", "react-flow__container", noPanClassName]), style: {
+    return (0, import_jsx_runtime126.jsx)("div", { className: cc(["react-flow__nodesselection", "react-flow__container", noPanClassName]), style: {
       transform: transformString
-    }, children: (0, import_jsx_runtime123.jsx)("div", { ref: nodeRef, className: "react-flow__nodesselection-rect", onContextMenu, tabIndex: disableKeyboardA11y ? void 0 : -1, onKeyDown: disableKeyboardA11y ? void 0 : onKeyDown, style: {
+    }, children: (0, import_jsx_runtime126.jsx)("div", { ref: nodeRef, className: "react-flow__nodesselection-rect", onContextMenu, tabIndex: disableKeyboardA11y ? void 0 : -1, onKeyDown: disableKeyboardA11y ? void 0 : onKeyDown, style: {
       width: width2,
       height: height2
     } }) });
@@ -76634,7 +76651,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const _selectionOnDrag = selectionOnDrag && panOnDrag !== true;
     const isSelecting = selectionKeyPressed || userSelectionActive || _selectionOnDrag;
     useGlobalKeyHandler({ deleteKeyCode, multiSelectionKeyCode });
-    return (0, import_jsx_runtime123.jsx)(ZoomPane, { onPaneContextMenu, elementsSelectable, zoomOnScroll, zoomOnPinch, panOnScroll, panOnScrollSpeed, panOnScrollMode, zoomOnDoubleClick, panOnDrag: !selectionKeyPressed && panOnDrag, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, zoomActivationKeyCode, preventScrolling, noWheelClassName, noPanClassName, onViewportChange, isControlledViewport, paneClickDistance, children: (0, import_jsx_runtime123.jsxs)(Pane, { onSelectionStart, onSelectionEnd, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneContextMenu, onPaneScroll, panOnDrag, isSelecting: !!isSelecting, selectionMode, selectionKeyPressed, selectionOnDrag: _selectionOnDrag, children: [children2, nodesSelectionActive && (0, import_jsx_runtime123.jsx)(NodesSelection, { onSelectionContextMenu, noPanClassName, disableKeyboardA11y })] }) });
+    return (0, import_jsx_runtime126.jsx)(ZoomPane, { onPaneContextMenu, elementsSelectable, zoomOnScroll, zoomOnPinch, panOnScroll, panOnScrollSpeed, panOnScrollMode, zoomOnDoubleClick, panOnDrag: !selectionKeyPressed && panOnDrag, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, zoomActivationKeyCode, preventScrolling, noWheelClassName, noPanClassName, onViewportChange, isControlledViewport, paneClickDistance, children: (0, import_jsx_runtime126.jsxs)(Pane, { onSelectionStart, onSelectionEnd, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneContextMenu, onPaneScroll, panOnDrag, isSelecting: !!isSelecting, selectionMode, selectionKeyPressed, selectionOnDrag: _selectionOnDrag, children: [children2, nodesSelectionActive && (0, import_jsx_runtime126.jsx)(NodesSelection, { onSelectionContextMenu, noPanClassName, disableKeyboardA11y })] }) });
   }
   FlowRendererComponent.displayName = "FlowRenderer";
   var FlowRenderer = (0, import_react14.memo)(FlowRendererComponent);
@@ -76813,7 +76830,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         });
       }
     };
-    return (0, import_jsx_runtime123.jsx)("div", { className: cc([
+    return (0, import_jsx_runtime126.jsx)("div", { className: cc([
       "react-flow__node",
       `react-flow__node-${nodeType}`,
       {
@@ -76835,7 +76852,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       visibility: hasDimensions ? "visible" : "hidden",
       ...node.style,
       ...inlineDimensions
-    }, "data-id": id2, "data-testid": `rf__node-${id2}`, onMouseEnter: onMouseEnterHandler, onMouseMove: onMouseMoveHandler, onMouseLeave: onMouseLeaveHandler, onContextMenu: onContextMenuHandler, onClick: onSelectNodeHandler, onDoubleClick: onDoubleClickHandler, onKeyDown: isFocusable ? onKeyDown : void 0, tabIndex: isFocusable ? 0 : void 0, onFocus: isFocusable ? onFocus : void 0, role: node.ariaRole ?? (isFocusable ? "group" : void 0), "aria-roledescription": "node", "aria-describedby": disableKeyboardA11y ? void 0 : `${ARIA_NODE_DESC_KEY}-${rfId}`, "aria-label": node.ariaLabel, ...node.domAttributes, children: (0, import_jsx_runtime123.jsx)(Provider, { value: id2, children: (0, import_jsx_runtime123.jsx)(NodeComponent, { id: id2, data: node.data, type: nodeType, positionAbsoluteX: internals.positionAbsolute.x, positionAbsoluteY: internals.positionAbsolute.y, selected: node.selected ?? false, selectable: isSelectable, draggable: isDraggable, deletable: node.deletable ?? true, isConnectable, sourcePosition: node.sourcePosition, targetPosition: node.targetPosition, dragging, dragHandle: node.dragHandle, zIndex: internals.z, parentId: node.parentId, ...nodeDimensions }) }) });
+    }, "data-id": id2, "data-testid": `rf__node-${id2}`, onMouseEnter: onMouseEnterHandler, onMouseMove: onMouseMoveHandler, onMouseLeave: onMouseLeaveHandler, onContextMenu: onContextMenuHandler, onClick: onSelectNodeHandler, onDoubleClick: onDoubleClickHandler, onKeyDown: isFocusable ? onKeyDown : void 0, tabIndex: isFocusable ? 0 : void 0, onFocus: isFocusable ? onFocus : void 0, role: node.ariaRole ?? (isFocusable ? "group" : void 0), "aria-roledescription": "node", "aria-describedby": disableKeyboardA11y ? void 0 : `${ARIA_NODE_DESC_KEY}-${rfId}`, "aria-label": node.ariaLabel, ...node.domAttributes, children: (0, import_jsx_runtime126.jsx)(Provider, { value: id2, children: (0, import_jsx_runtime126.jsx)(NodeComponent, { id: id2, data: node.data, type: nodeType, positionAbsoluteX: internals.positionAbsolute.x, positionAbsoluteY: internals.positionAbsolute.y, selected: node.selected ?? false, selectable: isSelectable, draggable: isDraggable, deletable: node.deletable ?? true, isConnectable, sourcePosition: node.sourcePosition, targetPosition: node.targetPosition, dragging, dragHandle: node.dragHandle, zIndex: internals.z, parentId: node.parentId, ...nodeDimensions }) }) });
   }
   var selector$b = (s) => ({
     nodesDraggable: s.nodesDraggable,
@@ -76848,7 +76865,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const { nodesDraggable, nodesConnectable, nodesFocusable, elementsSelectable, onError } = useStore2(selector$b, shallow$1);
     const nodeIds = useVisibleNodeIds(props.onlyRenderVisibleElements);
     const resizeObserver = useResizeObserver2();
-    return (0, import_jsx_runtime123.jsx)("div", { className: "react-flow__nodes", style: containerStyle, children: nodeIds.map((nodeId) => {
+    return (0, import_jsx_runtime126.jsx)("div", { className: "react-flow__nodes", style: containerStyle, children: nodeIds.map((nodeId) => {
       return (
         /*
          * The split of responsibilities between NodeRenderer and
@@ -76875,7 +76892,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
          *   memorized – so if `NodeRenderer` *has* to rerender, it only
          *   needs to regenerate the list of nodes, nothing else.
          */
-        (0, import_jsx_runtime123.jsx)(NodeWrapper, { id: nodeId, nodeTypes: props.nodeTypes, nodeExtent: props.nodeExtent, onClick: props.onNodeClick, onMouseEnter: props.onNodeMouseEnter, onMouseMove: props.onNodeMouseMove, onMouseLeave: props.onNodeMouseLeave, onContextMenu: props.onNodeContextMenu, onDoubleClick: props.onNodeDoubleClick, noDragClassName: props.noDragClassName, noPanClassName: props.noPanClassName, rfId: props.rfId, disableKeyboardA11y: props.disableKeyboardA11y, resizeObserver, nodesDraggable, nodesConnectable, nodesFocusable, elementsSelectable, nodeClickDistance: props.nodeClickDistance, onError }, nodeId)
+        (0, import_jsx_runtime126.jsx)(NodeWrapper, { id: nodeId, nodeTypes: props.nodeTypes, nodeExtent: props.nodeExtent, onClick: props.onNodeClick, onMouseEnter: props.onNodeMouseEnter, onMouseMove: props.onNodeMouseMove, onMouseLeave: props.onNodeMouseLeave, onContextMenu: props.onNodeContextMenu, onDoubleClick: props.onNodeDoubleClick, noDragClassName: props.noDragClassName, noPanClassName: props.noPanClassName, rfId: props.rfId, disableKeyboardA11y: props.disableKeyboardA11y, resizeObserver, nodesDraggable, nodesConnectable, nodesFocusable, elementsSelectable, nodeClickDistance: props.nodeClickDistance, onError }, nodeId)
       );
     }) });
   }
@@ -76907,13 +76924,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return edgeIds;
   }
   var ArrowSymbol = ({ color: color3 = "none", strokeWidth = 1 }) => {
-    return (0, import_jsx_runtime123.jsx)("polyline", { style: {
+    return (0, import_jsx_runtime126.jsx)("polyline", { style: {
       stroke: color3,
       strokeWidth
     }, strokeLinecap: "round", strokeLinejoin: "round", fill: "none", points: "-5,-4 0,0 -5,4" });
   };
   var ArrowClosedSymbol = ({ color: color3 = "none", strokeWidth = 1 }) => {
-    return (0, import_jsx_runtime123.jsx)("polyline", { style: {
+    return (0, import_jsx_runtime126.jsx)("polyline", { style: {
       stroke: color3,
       fill: color3,
       strokeWidth
@@ -76940,7 +76957,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (!Symbol2) {
       return null;
     }
-    return (0, import_jsx_runtime123.jsx)("marker", { className: "react-flow__arrowhead", id: id2, markerWidth: `${width2}`, markerHeight: `${height2}`, viewBox: "-10 -10 20 20", markerUnits, orient, refX: "0", refY: "0", children: (0, import_jsx_runtime123.jsx)(Symbol2, { color: color3, strokeWidth }) });
+    return (0, import_jsx_runtime126.jsx)("marker", { className: "react-flow__arrowhead", id: id2, markerWidth: `${width2}`, markerHeight: `${height2}`, viewBox: "-10 -10 20 20", markerUnits, orient, refX: "0", refY: "0", children: (0, import_jsx_runtime126.jsx)(Symbol2, { color: color3, strokeWidth }) });
   };
   var MarkerDefinitions = ({ defaultColor, rfId }) => {
     const edges = useStore2((s) => s.edges);
@@ -76957,7 +76974,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (!markers.length) {
       return null;
     }
-    return (0, import_jsx_runtime123.jsx)("svg", { className: "react-flow__marker", "aria-hidden": "true", children: (0, import_jsx_runtime123.jsx)("defs", { children: markers.map((marker) => (0, import_jsx_runtime123.jsx)(Marker, { id: marker.id, type: marker.type, color: marker.color, width: marker.width, height: marker.height, markerUnits: marker.markerUnits, strokeWidth: marker.strokeWidth, orient: marker.orient }, marker.id)) }) });
+    return (0, import_jsx_runtime126.jsx)("svg", { className: "react-flow__marker", "aria-hidden": "true", children: (0, import_jsx_runtime126.jsx)("defs", { children: markers.map((marker) => (0, import_jsx_runtime126.jsx)(Marker, { id: marker.id, type: marker.type, color: marker.color, width: marker.width, height: marker.height, markerUnits: marker.markerUnits, strokeWidth: marker.strokeWidth, orient: marker.orient }, marker.id)) }) });
   };
   MarkerDefinitions.displayName = "MarkerDefinitions";
   var MarkerDefinitions$1 = (0, import_react14.memo)(MarkerDefinitions);
@@ -76979,12 +76996,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (!label) {
       return null;
     }
-    return (0, import_jsx_runtime123.jsxs)("g", { transform: `translate(${x - edgeTextBbox.width / 2} ${y - edgeTextBbox.height / 2})`, className: edgeTextClasses, visibility: edgeTextBbox.width ? "visible" : "hidden", ...rest, children: [labelShowBg && (0, import_jsx_runtime123.jsx)("rect", { width: edgeTextBbox.width + 2 * labelBgPadding[0], x: -labelBgPadding[0], y: -labelBgPadding[1], height: edgeTextBbox.height + 2 * labelBgPadding[1], className: "react-flow__edge-textbg", style: labelBgStyle, rx: labelBgBorderRadius, ry: labelBgBorderRadius }), (0, import_jsx_runtime123.jsx)("text", { className: "react-flow__edge-text", y: edgeTextBbox.height / 2, dy: "0.3em", ref: edgeTextRef, style: labelStyle, children: label }), children2] });
+    return (0, import_jsx_runtime126.jsxs)("g", { transform: `translate(${x - edgeTextBbox.width / 2} ${y - edgeTextBbox.height / 2})`, className: edgeTextClasses, visibility: edgeTextBbox.width ? "visible" : "hidden", ...rest, children: [labelShowBg && (0, import_jsx_runtime126.jsx)("rect", { width: edgeTextBbox.width + 2 * labelBgPadding[0], x: -labelBgPadding[0], y: -labelBgPadding[1], height: edgeTextBbox.height + 2 * labelBgPadding[1], className: "react-flow__edge-textbg", style: labelBgStyle, rx: labelBgBorderRadius, ry: labelBgBorderRadius }), (0, import_jsx_runtime126.jsx)("text", { className: "react-flow__edge-text", y: edgeTextBbox.height / 2, dy: "0.3em", ref: edgeTextRef, style: labelStyle, children: label }), children2] });
   }
   EdgeTextComponent.displayName = "EdgeText";
   var EdgeText = (0, import_react14.memo)(EdgeTextComponent);
   function BaseEdge({ path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, interactionWidth = 20, ...props }) {
-    return (0, import_jsx_runtime123.jsxs)(import_jsx_runtime123.Fragment, { children: [(0, import_jsx_runtime123.jsx)("path", { ...props, d: path, fill: "none", className: cc(["react-flow__edge-path", props.className]) }), interactionWidth && (0, import_jsx_runtime123.jsx)("path", { d: path, fill: "none", strokeOpacity: 0, strokeWidth: interactionWidth, className: "react-flow__edge-interaction" }), label && isNumeric(labelX) && isNumeric(labelY) ? (0, import_jsx_runtime123.jsx)(EdgeText, { x: labelX, y: labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius }) : null] });
+    return (0, import_jsx_runtime126.jsxs)(import_jsx_runtime126.Fragment, { children: [(0, import_jsx_runtime126.jsx)("path", { ...props, d: path, fill: "none", className: cc(["react-flow__edge-path", props.className]) }), interactionWidth && (0, import_jsx_runtime126.jsx)("path", { d: path, fill: "none", strokeOpacity: 0, strokeWidth: interactionWidth, className: "react-flow__edge-interaction" }), label && isNumeric(labelX) && isNumeric(labelY) ? (0, import_jsx_runtime126.jsx)(EdgeText, { x: labelX, y: labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius }) : null] });
   }
   function getControl({ pos, x1, y1, x2, y2 }) {
     if (pos === Position.Left || pos === Position.Right) {
@@ -77036,7 +77053,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         targetPosition
       });
       const _id = params.isInternal ? void 0 : id2;
-      return (0, import_jsx_runtime123.jsx)(BaseEdge, { id: _id, path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth });
+      return (0, import_jsx_runtime126.jsx)(BaseEdge, { id: _id, path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth });
     });
   }
   var SimpleBezierEdge = createSimpleBezierEdge({ isInternal: false });
@@ -77057,7 +77074,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         stepPosition: pathOptions?.stepPosition
       });
       const _id = params.isInternal ? void 0 : id2;
-      return (0, import_jsx_runtime123.jsx)(BaseEdge, { id: _id, path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth });
+      return (0, import_jsx_runtime126.jsx)(BaseEdge, { id: _id, path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth });
     });
   }
   var SmoothStepEdge = createSmoothStepEdge({ isInternal: false });
@@ -77067,7 +77084,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function createStepEdge(params) {
     return (0, import_react14.memo)(({ id: id2, ...props }) => {
       const _id = params.isInternal ? void 0 : id2;
-      return (0, import_jsx_runtime123.jsx)(SmoothStepEdge, { ...props, id: _id, pathOptions: (0, import_react14.useMemo)(() => ({ borderRadius: 0, offset: props.pathOptions?.offset }), [props.pathOptions?.offset]) });
+      return (0, import_jsx_runtime126.jsx)(SmoothStepEdge, { ...props, id: _id, pathOptions: (0, import_react14.useMemo)(() => ({ borderRadius: 0, offset: props.pathOptions?.offset }), [props.pathOptions?.offset]) });
     });
   }
   var StepEdge = createStepEdge({ isInternal: false });
@@ -77078,7 +77095,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return (0, import_react14.memo)(({ id: id2, sourceX, sourceY, targetX, targetY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth }) => {
       const [path, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
       const _id = params.isInternal ? void 0 : id2;
-      return (0, import_jsx_runtime123.jsx)(BaseEdge, { id: _id, path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth });
+      return (0, import_jsx_runtime126.jsx)(BaseEdge, { id: _id, path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth });
     });
   }
   var StraightEdge = createStraightEdge({ isInternal: false });
@@ -77097,7 +77114,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         curvature: pathOptions?.curvature
       });
       const _id = params.isInternal ? void 0 : id2;
-      return (0, import_jsx_runtime123.jsx)(BaseEdge, { id: _id, path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth });
+      return (0, import_jsx_runtime126.jsx)(BaseEdge, { id: _id, path, labelX, labelY, label, labelStyle, labelShowBg, labelBgStyle, labelBgPadding, labelBgBorderRadius, style: style5, markerEnd, markerStart, interactionWidth });
     });
   }
   var BezierEdge = createBezierEdge({ isInternal: false });
@@ -77135,7 +77152,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   };
   var EdgeUpdaterClassName = "react-flow__edgeupdater";
   function EdgeAnchor({ position, centerX, centerY, radius = 10, onMouseDown, onMouseEnter, onMouseOut, type: type2 }) {
-    return (0, import_jsx_runtime123.jsx)("circle", { onMouseDown, onMouseEnter, onMouseOut, className: cc([EdgeUpdaterClassName, `${EdgeUpdaterClassName}-${type2}`]), cx: shiftX(centerX, radius, position), cy: shiftY(centerY, radius, position), r: radius, stroke: "transparent", fill: "transparent" });
+    return (0, import_jsx_runtime126.jsx)("circle", { onMouseDown, onMouseEnter, onMouseOut, className: cc([EdgeUpdaterClassName, `${EdgeUpdaterClassName}-${type2}`]), cx: shiftX(centerX, radius, position), cy: shiftY(centerY, radius, position), r: radius, stroke: "transparent", fill: "transparent" });
   }
   function EdgeUpdateAnchors({ isReconnectable, reconnectRadius, edge, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, onReconnect, onReconnectStart, onReconnectEnd, setReconnecting, setUpdateHover }) {
     const store = useStoreApi();
@@ -77184,7 +77201,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const onReconnectTargetMouseDown = (event) => handleEdgeUpdater(event, { nodeId: edge.source, id: edge.sourceHandle ?? null, type: "source" });
     const onReconnectMouseEnter = () => setUpdateHover(true);
     const onReconnectMouseOut = () => setUpdateHover(false);
-    return (0, import_jsx_runtime123.jsxs)(import_jsx_runtime123.Fragment, { children: [(isReconnectable === true || isReconnectable === "source") && (0, import_jsx_runtime123.jsx)(EdgeAnchor, { position: sourcePosition, centerX: sourceX, centerY: sourceY, radius: reconnectRadius, onMouseDown: onReconnectSourceMouseDown, onMouseEnter: onReconnectMouseEnter, onMouseOut: onReconnectMouseOut, type: "source" }), (isReconnectable === true || isReconnectable === "target") && (0, import_jsx_runtime123.jsx)(EdgeAnchor, { position: targetPosition, centerX: targetX, centerY: targetY, radius: reconnectRadius, onMouseDown: onReconnectTargetMouseDown, onMouseEnter: onReconnectMouseEnter, onMouseOut: onReconnectMouseOut, type: "target" })] });
+    return (0, import_jsx_runtime126.jsxs)(import_jsx_runtime126.Fragment, { children: [(isReconnectable === true || isReconnectable === "source") && (0, import_jsx_runtime126.jsx)(EdgeAnchor, { position: sourcePosition, centerX: sourceX, centerY: sourceY, radius: reconnectRadius, onMouseDown: onReconnectSourceMouseDown, onMouseEnter: onReconnectMouseEnter, onMouseOut: onReconnectMouseOut, type: "source" }), (isReconnectable === true || isReconnectable === "target") && (0, import_jsx_runtime126.jsx)(EdgeAnchor, { position: targetPosition, centerX: targetX, centerY: targetY, radius: reconnectRadius, onMouseDown: onReconnectTargetMouseDown, onMouseEnter: onReconnectMouseEnter, onMouseOut: onReconnectMouseOut, type: "target" })] });
   }
   function EdgeWrapper({ id: id2, edgesFocusable, edgesReconnectable, elementsSelectable, onClick, onDoubleClick, onContextMenu, onMouseEnter, onMouseMove, onMouseLeave, reconnectRadius, onReconnect, onReconnectStart, onReconnectEnd, rfId, edgeTypes: edgeTypes2, noPanClassName, onError, disableKeyboardA11y }) {
     let edge = useStore2((s) => s.edgeLookup.get(id2));
@@ -77281,7 +77298,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       }
     };
-    return (0, import_jsx_runtime123.jsx)("svg", { style: { zIndex: zIndex2 }, children: (0, import_jsx_runtime123.jsxs)("g", { className: cc([
+    return (0, import_jsx_runtime126.jsx)("svg", { style: { zIndex: zIndex2 }, children: (0, import_jsx_runtime126.jsxs)("g", { className: cc([
       "react-flow__edge",
       `react-flow__edge-${edgeType}`,
       edge.className,
@@ -77293,7 +77310,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         updating: updateHover,
         selectable: isSelectable
       }
-    ]), onClick: onEdgeClick, onDoubleClick: onEdgeDoubleClick, onContextMenu: onEdgeContextMenu, onMouseEnter: onEdgeMouseEnter, onMouseMove: onEdgeMouseMove, onMouseLeave: onEdgeMouseLeave, onKeyDown: isFocusable ? onKeyDown : void 0, tabIndex: isFocusable ? 0 : void 0, role: edge.ariaRole ?? (isFocusable ? "group" : "img"), "aria-roledescription": "edge", "data-id": id2, "data-testid": `rf__edge-${id2}`, "aria-label": edge.ariaLabel === null ? void 0 : edge.ariaLabel || `Edge from ${edge.source} to ${edge.target}`, "aria-describedby": isFocusable ? `${ARIA_EDGE_DESC_KEY}-${rfId}` : void 0, ref: edgeRef, ...edge.domAttributes, children: [!reconnecting && (0, import_jsx_runtime123.jsx)(EdgeComponent, { id: id2, source: edge.source, target: edge.target, type: edge.type, selected: edge.selected, animated: edge.animated, selectable: isSelectable, deletable: edge.deletable ?? true, label: edge.label, labelStyle: edge.labelStyle, labelShowBg: edge.labelShowBg, labelBgStyle: edge.labelBgStyle, labelBgPadding: edge.labelBgPadding, labelBgBorderRadius: edge.labelBgBorderRadius, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data: edge.data, style: edge.style, sourceHandleId: edge.sourceHandle, targetHandleId: edge.targetHandle, markerStart: markerStartUrl, markerEnd: markerEndUrl, pathOptions: "pathOptions" in edge ? edge.pathOptions : void 0, interactionWidth: edge.interactionWidth }), isReconnectable && (0, import_jsx_runtime123.jsx)(EdgeUpdateAnchors, { edge, isReconnectable, reconnectRadius, onReconnect, onReconnectStart, onReconnectEnd, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, setUpdateHover, setReconnecting })] }) });
+    ]), onClick: onEdgeClick, onDoubleClick: onEdgeDoubleClick, onContextMenu: onEdgeContextMenu, onMouseEnter: onEdgeMouseEnter, onMouseMove: onEdgeMouseMove, onMouseLeave: onEdgeMouseLeave, onKeyDown: isFocusable ? onKeyDown : void 0, tabIndex: isFocusable ? 0 : void 0, role: edge.ariaRole ?? (isFocusable ? "group" : "img"), "aria-roledescription": "edge", "data-id": id2, "data-testid": `rf__edge-${id2}`, "aria-label": edge.ariaLabel === null ? void 0 : edge.ariaLabel || `Edge from ${edge.source} to ${edge.target}`, "aria-describedby": isFocusable ? `${ARIA_EDGE_DESC_KEY}-${rfId}` : void 0, ref: edgeRef, ...edge.domAttributes, children: [!reconnecting && (0, import_jsx_runtime126.jsx)(EdgeComponent, { id: id2, source: edge.source, target: edge.target, type: edge.type, selected: edge.selected, animated: edge.animated, selectable: isSelectable, deletable: edge.deletable ?? true, label: edge.label, labelStyle: edge.labelStyle, labelShowBg: edge.labelShowBg, labelBgStyle: edge.labelBgStyle, labelBgPadding: edge.labelBgPadding, labelBgBorderRadius: edge.labelBgBorderRadius, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data: edge.data, style: edge.style, sourceHandleId: edge.sourceHandle, targetHandleId: edge.targetHandle, markerStart: markerStartUrl, markerEnd: markerEndUrl, pathOptions: "pathOptions" in edge ? edge.pathOptions : void 0, interactionWidth: edge.interactionWidth }), isReconnectable && (0, import_jsx_runtime126.jsx)(EdgeUpdateAnchors, { edge, isReconnectable, reconnectRadius, onReconnect, onReconnectStart, onReconnectEnd, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, setUpdateHover, setReconnecting })] }) });
   }
   var selector$a = (s) => ({
     edgesFocusable: s.edgesFocusable,
@@ -77305,8 +77322,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function EdgeRendererComponent({ defaultMarkerColor, onlyRenderVisibleElements, rfId, edgeTypes: edgeTypes2, noPanClassName, onReconnect, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, onEdgeClick, reconnectRadius, onEdgeDoubleClick, onReconnectStart, onReconnectEnd, disableKeyboardA11y }) {
     const { edgesFocusable, edgesReconnectable, elementsSelectable, onError } = useStore2(selector$a, shallow$1);
     const edgeIds = useVisibleEdgeIds(onlyRenderVisibleElements);
-    return (0, import_jsx_runtime123.jsxs)("div", { className: "react-flow__edges", children: [(0, import_jsx_runtime123.jsx)(MarkerDefinitions$1, { defaultColor: defaultMarkerColor, rfId }), edgeIds.map((id2) => {
-      return (0, import_jsx_runtime123.jsx)(EdgeWrapper, { id: id2, edgesFocusable, edgesReconnectable, elementsSelectable, noPanClassName, onReconnect, onContextMenu: onEdgeContextMenu, onMouseEnter: onEdgeMouseEnter, onMouseMove: onEdgeMouseMove, onMouseLeave: onEdgeMouseLeave, onClick: onEdgeClick, reconnectRadius, onDoubleClick: onEdgeDoubleClick, onReconnectStart, onReconnectEnd, rfId, onError, edgeTypes: edgeTypes2, disableKeyboardA11y }, id2);
+    return (0, import_jsx_runtime126.jsxs)("div", { className: "react-flow__edges", children: [(0, import_jsx_runtime126.jsx)(MarkerDefinitions$1, { defaultColor: defaultMarkerColor, rfId }), edgeIds.map((id2) => {
+      return (0, import_jsx_runtime126.jsx)(EdgeWrapper, { id: id2, edgesFocusable, edgesReconnectable, elementsSelectable, noPanClassName, onReconnect, onContextMenu: onEdgeContextMenu, onMouseEnter: onEdgeMouseEnter, onMouseMove: onEdgeMouseMove, onMouseLeave: onEdgeMouseLeave, onClick: onEdgeClick, reconnectRadius, onDoubleClick: onEdgeDoubleClick, onReconnectStart, onReconnectEnd, rfId, onError, edgeTypes: edgeTypes2, disableKeyboardA11y }, id2);
     })] });
   }
   EdgeRendererComponent.displayName = "EdgeRenderer";
@@ -77314,7 +77331,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var selector$9 = (s) => `translate(${s.transform[0]}px,${s.transform[1]}px) scale(${s.transform[2]})`;
   function Viewport({ children: children2 }) {
     const transform2 = useStore2(selector$9);
-    return (0, import_jsx_runtime123.jsx)("div", { className: "react-flow__viewport xyflow__viewport react-flow__container", style: { transform: transform2 }, children: children2 });
+    return (0, import_jsx_runtime126.jsx)("div", { className: "react-flow__viewport xyflow__viewport react-flow__container", style: { transform: transform2 }, children: children2 });
   }
   function useOnInitHandler(onInit) {
     const rfInstance = useReactFlow();
@@ -77368,7 +77385,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (!renderConnection) {
       return null;
     }
-    return (0, import_jsx_runtime123.jsx)("svg", { style: containerStyle2, width: width2, height: height2, className: "react-flow__connectionline react-flow__container", children: (0, import_jsx_runtime123.jsx)("g", { className: cc(["react-flow__connection", getConnectionStatus(isValid)]), children: (0, import_jsx_runtime123.jsx)(ConnectionLine, { style: style5, type: type2, CustomComponent: component, isValid }) }) });
+    return (0, import_jsx_runtime126.jsx)("svg", { style: containerStyle2, width: width2, height: height2, className: "react-flow__connectionline react-flow__container", children: (0, import_jsx_runtime126.jsx)("g", { className: cc(["react-flow__connection", getConnectionStatus(isValid)]), children: (0, import_jsx_runtime126.jsx)(ConnectionLine, { style: style5, type: type2, CustomComponent: component, isValid }) }) });
   }
   var ConnectionLine = ({ style: style5, type: type2 = ConnectionLineType.Bezier, CustomComponent, isValid }) => {
     const { inProgress, from, fromNode, fromHandle, fromPosition, to, toNode, toHandle, toPosition } = useConnection();
@@ -77376,7 +77393,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       return;
     }
     if (CustomComponent) {
-      return (0, import_jsx_runtime123.jsx)(CustomComponent, { connectionLineType: type2, connectionLineStyle: style5, fromNode, fromHandle, fromX: from.x, fromY: from.y, toX: to.x, toY: to.y, fromPosition, toPosition, connectionStatus: getConnectionStatus(isValid), toNode, toHandle });
+      return (0, import_jsx_runtime126.jsx)(CustomComponent, { connectionLineType: type2, connectionLineStyle: style5, fromNode, fromHandle, fromX: from.x, fromY: from.y, toX: to.x, toY: to.y, fromPosition, toPosition, connectionStatus: getConnectionStatus(isValid), toNode, toHandle });
     }
     let path = "";
     const pathParams = {
@@ -77406,7 +77423,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       default:
         [path] = getStraightPath(pathParams);
     }
-    return (0, import_jsx_runtime123.jsx)("path", { d: path, fill: "none", className: "react-flow__connection-path", style: style5 });
+    return (0, import_jsx_runtime126.jsx)("path", { d: path, fill: "none", className: "react-flow__connection-path", style: style5 });
   };
   ConnectionLine.displayName = "ConnectionLine";
   var emptyTypes = {};
@@ -77447,7 +77464,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     useStylesLoadedWarning();
     useOnInitHandler(onInit);
     useViewportSync(viewport);
-    return (0, import_jsx_runtime123.jsx)(FlowRenderer, { onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneContextMenu, onPaneScroll, paneClickDistance, deleteKeyCode, selectionKeyCode, selectionOnDrag, selectionMode, onSelectionStart, onSelectionEnd, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, elementsSelectable, zoomOnScroll, zoomOnPinch, zoomOnDoubleClick, panOnScroll, panOnScrollSpeed, panOnScrollMode, panOnDrag, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, onSelectionContextMenu, preventScrolling, noDragClassName, noWheelClassName, noPanClassName, disableKeyboardA11y, onViewportChange, isControlledViewport: !!viewport, children: (0, import_jsx_runtime123.jsxs)(Viewport, { children: [(0, import_jsx_runtime123.jsx)(EdgeRenderer, { edgeTypes: edgeTypes2, onEdgeClick, onEdgeDoubleClick, onReconnect, onReconnectStart, onReconnectEnd, onlyRenderVisibleElements, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, defaultMarkerColor, noPanClassName, disableKeyboardA11y, rfId }), (0, import_jsx_runtime123.jsx)(ConnectionLineWrapper, { style: connectionLineStyle, type: connectionLineType, component: connectionLineComponent, containerStyle: connectionLineContainerStyle }), (0, import_jsx_runtime123.jsx)("div", { className: "react-flow__edgelabel-renderer" }), (0, import_jsx_runtime123.jsx)(NodeRenderer, { nodeTypes: nodeTypes2, onNodeClick, onNodeDoubleClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, nodeClickDistance, onlyRenderVisibleElements, noPanClassName, noDragClassName, disableKeyboardA11y, nodeExtent, rfId }), (0, import_jsx_runtime123.jsx)("div", { className: "react-flow__viewport-portal" })] }) });
+    return (0, import_jsx_runtime126.jsx)(FlowRenderer, { onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneContextMenu, onPaneScroll, paneClickDistance, deleteKeyCode, selectionKeyCode, selectionOnDrag, selectionMode, onSelectionStart, onSelectionEnd, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, elementsSelectable, zoomOnScroll, zoomOnPinch, zoomOnDoubleClick, panOnScroll, panOnScrollSpeed, panOnScrollMode, panOnDrag, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, onSelectionContextMenu, preventScrolling, noDragClassName, noWheelClassName, noPanClassName, disableKeyboardA11y, onViewportChange, isControlledViewport: !!viewport, children: (0, import_jsx_runtime126.jsxs)(Viewport, { children: [(0, import_jsx_runtime126.jsx)(EdgeRenderer, { edgeTypes: edgeTypes2, onEdgeClick, onEdgeDoubleClick, onReconnect, onReconnectStart, onReconnectEnd, onlyRenderVisibleElements, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, defaultMarkerColor, noPanClassName, disableKeyboardA11y, rfId }), (0, import_jsx_runtime126.jsx)(ConnectionLineWrapper, { style: connectionLineStyle, type: connectionLineType, component: connectionLineComponent, containerStyle: connectionLineContainerStyle }), (0, import_jsx_runtime126.jsx)("div", { className: "react-flow__edgelabel-renderer" }), (0, import_jsx_runtime126.jsx)(NodeRenderer, { nodeTypes: nodeTypes2, onNodeClick, onNodeDoubleClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, nodeClickDistance, onlyRenderVisibleElements, noPanClassName, noDragClassName, disableKeyboardA11y, nodeExtent, rfId }), (0, import_jsx_runtime126.jsx)("div", { className: "react-flow__viewport-portal" })] }) });
   }
   GraphViewComponent.displayName = "GraphView";
   var GraphView = (0, import_react14.memo)(GraphViewComponent);
@@ -77806,14 +77823,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       nodeOrigin,
       nodeExtent
     }));
-    return (0, import_jsx_runtime123.jsx)(Provider$1, { value: store, children: (0, import_jsx_runtime123.jsx)(BatchProvider, { children: children2 }) });
+    return (0, import_jsx_runtime126.jsx)(Provider$1, { value: store, children: (0, import_jsx_runtime126.jsx)(BatchProvider, { children: children2 }) });
   }
   function Wrapper({ children: children2, nodes, edges, defaultNodes, defaultEdges, width: width2, height: height2, fitView, fitViewOptions, minZoom, maxZoom, nodeOrigin, nodeExtent }) {
     const isWrapped = (0, import_react14.useContext)(StoreContext);
     if (isWrapped) {
-      return (0, import_jsx_runtime123.jsx)(import_jsx_runtime123.Fragment, { children: children2 });
+      return (0, import_jsx_runtime126.jsx)(import_jsx_runtime126.Fragment, { children: children2 });
     }
-    return (0, import_jsx_runtime123.jsx)(ReactFlowProvider, { initialNodes: nodes, initialEdges: edges, defaultNodes, defaultEdges, initialWidth: width2, initialHeight: height2, fitView, initialFitViewOptions: fitViewOptions, initialMinZoom: minZoom, initialMaxZoom: maxZoom, nodeOrigin, nodeExtent, children: children2 });
+    return (0, import_jsx_runtime126.jsx)(ReactFlowProvider, { initialNodes: nodes, initialEdges: edges, defaultNodes, defaultEdges, initialWidth: width2, initialHeight: height2, fitView, initialFitViewOptions: fitViewOptions, initialMinZoom: minZoom, initialMaxZoom: maxZoom, nodeOrigin, nodeExtent, children: children2 });
   }
   var wrapperStyle = {
     width: "100%",
@@ -77829,7 +77846,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       e.currentTarget.scrollTo({ top: 0, left: 0, behavior: "instant" });
       onScroll?.(e);
     }, [onScroll]);
-    return (0, import_jsx_runtime123.jsx)("div", { "data-testid": "rf__wrapper", ...rest, onScroll: wrapperOnScroll, style: { ...style5, ...wrapperStyle }, ref, className: cc(["react-flow", className, colorModeClassName]), id: id2, role: "application", children: (0, import_jsx_runtime123.jsxs)(Wrapper, { nodes, edges, width: width2, height: height2, fitView, fitViewOptions, minZoom, maxZoom, nodeOrigin, nodeExtent, children: [(0, import_jsx_runtime123.jsx)(GraphView, { onInit, onNodeClick, onEdgeClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, onNodeDoubleClick, nodeTypes: nodeTypes2, edgeTypes: edgeTypes2, connectionLineType, connectionLineStyle, connectionLineComponent, connectionLineContainerStyle, selectionKeyCode, selectionOnDrag, selectionMode, deleteKeyCode, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, onlyRenderVisibleElements, defaultViewport: defaultViewport$1, translateExtent, minZoom, maxZoom, preventScrolling, zoomOnScroll, zoomOnPinch, zoomOnDoubleClick, panOnScroll, panOnScrollSpeed, panOnScrollMode, panOnDrag, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneScroll, onPaneContextMenu, paneClickDistance, nodeClickDistance, onSelectionContextMenu, onSelectionStart, onSelectionEnd, onReconnect, onReconnectStart, onReconnectEnd, onEdgeContextMenu, onEdgeDoubleClick, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, defaultMarkerColor, noDragClassName, noWheelClassName, noPanClassName, rfId, disableKeyboardA11y, nodeExtent, viewport, onViewportChange }), (0, import_jsx_runtime123.jsx)(StoreUpdater, { nodes, edges, defaultNodes, defaultEdges, onConnect, onConnectStart, onConnectEnd, onClickConnectStart, onClickConnectEnd, nodesDraggable, autoPanOnNodeFocus, nodesConnectable, nodesFocusable, edgesFocusable, edgesReconnectable, elementsSelectable, elevateNodesOnSelect, elevateEdgesOnSelect, minZoom, maxZoom, nodeExtent, onNodesChange, onEdgesChange, snapToGrid, snapGrid, connectionMode, translateExtent, connectOnClick, defaultEdgeOptions, fitView, fitViewOptions, onNodesDelete, onEdgesDelete, onDelete, onNodeDragStart, onNodeDrag, onNodeDragStop, onSelectionDrag, onSelectionDragStart, onSelectionDragStop, onMove, onMoveStart, onMoveEnd, noPanClassName, nodeOrigin, rfId, autoPanOnConnect, autoPanOnNodeDrag, autoPanSpeed, onError, connectionRadius, isValidConnection, selectNodesOnDrag, nodeDragThreshold, connectionDragThreshold, onBeforeDelete, paneClickDistance, debug, ariaLabelConfig }), (0, import_jsx_runtime123.jsx)(SelectionListener, { onSelectionChange }), children2, (0, import_jsx_runtime123.jsx)(Attribution, { proOptions, position: attributionPosition }), (0, import_jsx_runtime123.jsx)(A11yDescriptions, { rfId, disableKeyboardA11y })] }) });
+    return (0, import_jsx_runtime126.jsx)("div", { "data-testid": "rf__wrapper", ...rest, onScroll: wrapperOnScroll, style: { ...style5, ...wrapperStyle }, ref, className: cc(["react-flow", className, colorModeClassName]), id: id2, role: "application", children: (0, import_jsx_runtime126.jsxs)(Wrapper, { nodes, edges, width: width2, height: height2, fitView, fitViewOptions, minZoom, maxZoom, nodeOrigin, nodeExtent, children: [(0, import_jsx_runtime126.jsx)(GraphView, { onInit, onNodeClick, onEdgeClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, onNodeDoubleClick, nodeTypes: nodeTypes2, edgeTypes: edgeTypes2, connectionLineType, connectionLineStyle, connectionLineComponent, connectionLineContainerStyle, selectionKeyCode, selectionOnDrag, selectionMode, deleteKeyCode, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, onlyRenderVisibleElements, defaultViewport: defaultViewport$1, translateExtent, minZoom, maxZoom, preventScrolling, zoomOnScroll, zoomOnPinch, zoomOnDoubleClick, panOnScroll, panOnScrollSpeed, panOnScrollMode, panOnDrag, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneScroll, onPaneContextMenu, paneClickDistance, nodeClickDistance, onSelectionContextMenu, onSelectionStart, onSelectionEnd, onReconnect, onReconnectStart, onReconnectEnd, onEdgeContextMenu, onEdgeDoubleClick, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, defaultMarkerColor, noDragClassName, noWheelClassName, noPanClassName, rfId, disableKeyboardA11y, nodeExtent, viewport, onViewportChange }), (0, import_jsx_runtime126.jsx)(StoreUpdater, { nodes, edges, defaultNodes, defaultEdges, onConnect, onConnectStart, onConnectEnd, onClickConnectStart, onClickConnectEnd, nodesDraggable, autoPanOnNodeFocus, nodesConnectable, nodesFocusable, edgesFocusable, edgesReconnectable, elementsSelectable, elevateNodesOnSelect, elevateEdgesOnSelect, minZoom, maxZoom, nodeExtent, onNodesChange, onEdgesChange, snapToGrid, snapGrid, connectionMode, translateExtent, connectOnClick, defaultEdgeOptions, fitView, fitViewOptions, onNodesDelete, onEdgesDelete, onDelete, onNodeDragStart, onNodeDrag, onNodeDragStop, onSelectionDrag, onSelectionDragStart, onSelectionDragStop, onMove, onMoveStart, onMoveEnd, noPanClassName, nodeOrigin, rfId, autoPanOnConnect, autoPanOnNodeDrag, autoPanSpeed, onError, connectionRadius, isValidConnection, selectNodesOnDrag, nodeDragThreshold, connectionDragThreshold, onBeforeDelete, paneClickDistance, debug, ariaLabelConfig }), (0, import_jsx_runtime126.jsx)(SelectionListener, { onSelectionChange }), children2, (0, import_jsx_runtime126.jsx)(Attribution, { proOptions, position: attributionPosition }), (0, import_jsx_runtime126.jsx)(A11yDescriptions, { rfId, disableKeyboardA11y })] }) });
   }
   var index = fixedForwardRef(ReactFlow);
   var selector$6 = (s) => s.domNode?.querySelector(".react-flow__edgelabel-renderer");
@@ -77852,10 +77869,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   var error014 = errorMessages["error014"]();
   function LinePattern({ dimensions, lineWidth, variant, className }) {
-    return (0, import_jsx_runtime123.jsx)("path", { strokeWidth: lineWidth, d: `M${dimensions[0] / 2} 0 V${dimensions[1]} M0 ${dimensions[1] / 2} H${dimensions[0]}`, className: cc(["react-flow__background-pattern", variant, className]) });
+    return (0, import_jsx_runtime126.jsx)("path", { strokeWidth: lineWidth, d: `M${dimensions[0] / 2} 0 V${dimensions[1]} M0 ${dimensions[1] / 2} H${dimensions[0]}`, className: cc(["react-flow__background-pattern", variant, className]) });
   }
   function DotPattern({ radius, className }) {
-    return (0, import_jsx_runtime123.jsx)("circle", { cx: radius, cy: radius, r: radius, className: cc(["react-flow__background-pattern", "dots", className]) });
+    return (0, import_jsx_runtime126.jsx)("circle", { cx: radius, cy: radius, r: radius, className: cc(["react-flow__background-pattern", "dots", className]) });
   }
   var BackgroundVariant;
   (function(BackgroundVariant2) {
@@ -77899,32 +77916,32 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       offsetXY[1] * transform2[2] || 1 + patternDimensions[1] / 2
     ];
     const _patternId = `${patternId}${id2 ? id2 : ""}`;
-    return (0, import_jsx_runtime123.jsxs)("svg", { className: cc(["react-flow__background", className]), style: {
+    return (0, import_jsx_runtime126.jsxs)("svg", { className: cc(["react-flow__background", className]), style: {
       ...style5,
       ...containerStyle,
       "--xy-background-color-props": bgColor,
       "--xy-background-pattern-color-props": color3
-    }, ref, "data-testid": "rf__background", children: [(0, import_jsx_runtime123.jsx)("pattern", { id: _patternId, x: transform2[0] % scaledGap[0], y: transform2[1] % scaledGap[1], width: scaledGap[0], height: scaledGap[1], patternUnits: "userSpaceOnUse", patternTransform: `translate(-${scaledOffset[0]},-${scaledOffset[1]})`, children: isDots ? (0, import_jsx_runtime123.jsx)(DotPattern, { radius: scaledSize / 2, className: patternClassName }) : (0, import_jsx_runtime123.jsx)(LinePattern, { dimensions: patternDimensions, lineWidth, variant, className: patternClassName }) }), (0, import_jsx_runtime123.jsx)("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: `url(#${_patternId})` })] });
+    }, ref, "data-testid": "rf__background", children: [(0, import_jsx_runtime126.jsx)("pattern", { id: _patternId, x: transform2[0] % scaledGap[0], y: transform2[1] % scaledGap[1], width: scaledGap[0], height: scaledGap[1], patternUnits: "userSpaceOnUse", patternTransform: `translate(-${scaledOffset[0]},-${scaledOffset[1]})`, children: isDots ? (0, import_jsx_runtime126.jsx)(DotPattern, { radius: scaledSize / 2, className: patternClassName }) : (0, import_jsx_runtime126.jsx)(LinePattern, { dimensions: patternDimensions, lineWidth, variant, className: patternClassName }) }), (0, import_jsx_runtime126.jsx)("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: `url(#${_patternId})` })] });
   }
   BackgroundComponent.displayName = "Background";
   var Background = (0, import_react14.memo)(BackgroundComponent);
   function PlusIcon() {
-    return (0, import_jsx_runtime123.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 32 32", children: (0, import_jsx_runtime123.jsx)("path", { d: "M32 18.133H18.133V32h-4.266V18.133H0v-4.266h13.867V0h4.266v13.867H32z" }) });
+    return (0, import_jsx_runtime126.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 32 32", children: (0, import_jsx_runtime126.jsx)("path", { d: "M32 18.133H18.133V32h-4.266V18.133H0v-4.266h13.867V0h4.266v13.867H32z" }) });
   }
   function MinusIcon() {
-    return (0, import_jsx_runtime123.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 32 5", children: (0, import_jsx_runtime123.jsx)("path", { d: "M0 0h32v4.2H0z" }) });
+    return (0, import_jsx_runtime126.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 32 5", children: (0, import_jsx_runtime126.jsx)("path", { d: "M0 0h32v4.2H0z" }) });
   }
   function FitViewIcon() {
-    return (0, import_jsx_runtime123.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 32 30", children: (0, import_jsx_runtime123.jsx)("path", { d: "M3.692 4.63c0-.53.4-.938.939-.938h5.215V0H4.708C2.13 0 0 2.054 0 4.63v5.216h3.692V4.631zM27.354 0h-5.2v3.692h5.17c.53 0 .984.4.984.939v5.215H32V4.631A4.624 4.624 0 0027.354 0zm.954 24.83c0 .532-.4.94-.939.94h-5.215v3.768h5.215c2.577 0 4.631-2.13 4.631-4.707v-5.139h-3.692v5.139zm-23.677.94c-.531 0-.939-.4-.939-.94v-5.138H0v5.139c0 2.577 2.13 4.707 4.708 4.707h5.138V25.77H4.631z" }) });
+    return (0, import_jsx_runtime126.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 32 30", children: (0, import_jsx_runtime126.jsx)("path", { d: "M3.692 4.63c0-.53.4-.938.939-.938h5.215V0H4.708C2.13 0 0 2.054 0 4.63v5.216h3.692V4.631zM27.354 0h-5.2v3.692h5.17c.53 0 .984.4.984.939v5.215H32V4.631A4.624 4.624 0 0027.354 0zm.954 24.83c0 .532-.4.94-.939.94h-5.215v3.768h5.215c2.577 0 4.631-2.13 4.631-4.707v-5.139h-3.692v5.139zm-23.677.94c-.531 0-.939-.4-.939-.94v-5.138H0v5.139c0 2.577 2.13 4.707 4.708 4.707h5.138V25.77H4.631z" }) });
   }
   function LockIcon() {
-    return (0, import_jsx_runtime123.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 25 32", children: (0, import_jsx_runtime123.jsx)("path", { d: "M21.333 10.667H19.81V7.619C19.81 3.429 16.38 0 12.19 0 8 0 4.571 3.429 4.571 7.619v3.048H3.048A3.056 3.056 0 000 13.714v15.238A3.056 3.056 0 003.048 32h18.285a3.056 3.056 0 003.048-3.048V13.714a3.056 3.056 0 00-3.048-3.047zM12.19 24.533a3.056 3.056 0 01-3.047-3.047 3.056 3.056 0 013.047-3.048 3.056 3.056 0 013.048 3.048 3.056 3.056 0 01-3.048 3.047zm4.724-13.866H7.467V7.619c0-2.59 2.133-4.724 4.723-4.724 2.591 0 4.724 2.133 4.724 4.724v3.048z" }) });
+    return (0, import_jsx_runtime126.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 25 32", children: (0, import_jsx_runtime126.jsx)("path", { d: "M21.333 10.667H19.81V7.619C19.81 3.429 16.38 0 12.19 0 8 0 4.571 3.429 4.571 7.619v3.048H3.048A3.056 3.056 0 000 13.714v15.238A3.056 3.056 0 003.048 32h18.285a3.056 3.056 0 003.048-3.048V13.714a3.056 3.056 0 00-3.048-3.047zM12.19 24.533a3.056 3.056 0 01-3.047-3.047 3.056 3.056 0 013.047-3.048 3.056 3.056 0 013.048 3.048 3.056 3.056 0 01-3.048 3.047zm4.724-13.866H7.467V7.619c0-2.59 2.133-4.724 4.723-4.724 2.591 0 4.724 2.133 4.724 4.724v3.048z" }) });
   }
   function UnlockIcon() {
-    return (0, import_jsx_runtime123.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 25 32", children: (0, import_jsx_runtime123.jsx)("path", { d: "M21.333 10.667H19.81V7.619C19.81 3.429 16.38 0 12.19 0c-4.114 1.828-1.37 2.133.305 2.438 1.676.305 4.42 2.59 4.42 5.181v3.048H3.047A3.056 3.056 0 000 13.714v15.238A3.056 3.056 0 003.048 32h18.285a3.056 3.056 0 003.048-3.048V13.714a3.056 3.056 0 00-3.048-3.047zM12.19 24.533a3.056 3.056 0 01-3.047-3.047 3.056 3.056 0 013.047-3.048 3.056 3.056 0 013.048 3.048 3.056 3.056 0 01-3.048 3.047z" }) });
+    return (0, import_jsx_runtime126.jsx)("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 25 32", children: (0, import_jsx_runtime126.jsx)("path", { d: "M21.333 10.667H19.81V7.619C19.81 3.429 16.38 0 12.19 0c-4.114 1.828-1.37 2.133.305 2.438 1.676.305 4.42 2.59 4.42 5.181v3.048H3.047A3.056 3.056 0 000 13.714v15.238A3.056 3.056 0 003.048 32h18.285a3.056 3.056 0 003.048-3.048V13.714a3.056 3.056 0 00-3.048-3.047zM12.19 24.533a3.056 3.056 0 01-3.047-3.047 3.056 3.056 0 013.047-3.048 3.056 3.056 0 013.048 3.048 3.056 3.056 0 01-3.048 3.047z" }) });
   }
   function ControlButton({ children: children2, className, ...rest }) {
-    return (0, import_jsx_runtime123.jsx)("button", { type: "button", className: cc(["react-flow__controls-button", className]), ...rest, children: children2 });
+    return (0, import_jsx_runtime126.jsx)("button", { type: "button", className: cc(["react-flow__controls-button", className]), ...rest, children: children2 });
   }
   var selector$2 = (s) => ({
     isInteractive: s.nodesDraggable || s.nodesConnectable || s.elementsSelectable,
@@ -77957,14 +77974,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onInteractiveChange?.(!isInteractive);
     };
     const orientationClass = orientation === "horizontal" ? "horizontal" : "vertical";
-    return (0, import_jsx_runtime123.jsxs)(Panel, { className: cc(["react-flow__controls", orientationClass, className]), position, style: style5, "data-testid": "rf__controls", "aria-label": ariaLabel ?? ariaLabelConfig["controls.ariaLabel"], children: [showZoom && (0, import_jsx_runtime123.jsxs)(import_jsx_runtime123.Fragment, { children: [(0, import_jsx_runtime123.jsx)(ControlButton, { onClick: onZoomInHandler, className: "react-flow__controls-zoomin", title: ariaLabelConfig["controls.zoomIn.ariaLabel"], "aria-label": ariaLabelConfig["controls.zoomIn.ariaLabel"], disabled: maxZoomReached, children: (0, import_jsx_runtime123.jsx)(PlusIcon, {}) }), (0, import_jsx_runtime123.jsx)(ControlButton, { onClick: onZoomOutHandler, className: "react-flow__controls-zoomout", title: ariaLabelConfig["controls.zoomOut.ariaLabel"], "aria-label": ariaLabelConfig["controls.zoomOut.ariaLabel"], disabled: minZoomReached, children: (0, import_jsx_runtime123.jsx)(MinusIcon, {}) })] }), showFitView && (0, import_jsx_runtime123.jsx)(ControlButton, { className: "react-flow__controls-fitview", onClick: onFitViewHandler, title: ariaLabelConfig["controls.fitView.ariaLabel"], "aria-label": ariaLabelConfig["controls.fitView.ariaLabel"], children: (0, import_jsx_runtime123.jsx)(FitViewIcon, {}) }), showInteractive && (0, import_jsx_runtime123.jsx)(ControlButton, { className: "react-flow__controls-interactive", onClick: onToggleInteractivity, title: ariaLabelConfig["controls.interactive.ariaLabel"], "aria-label": ariaLabelConfig["controls.interactive.ariaLabel"], children: isInteractive ? (0, import_jsx_runtime123.jsx)(UnlockIcon, {}) : (0, import_jsx_runtime123.jsx)(LockIcon, {}) }), children2] });
+    return (0, import_jsx_runtime126.jsxs)(Panel, { className: cc(["react-flow__controls", orientationClass, className]), position, style: style5, "data-testid": "rf__controls", "aria-label": ariaLabel ?? ariaLabelConfig["controls.ariaLabel"], children: [showZoom && (0, import_jsx_runtime126.jsxs)(import_jsx_runtime126.Fragment, { children: [(0, import_jsx_runtime126.jsx)(ControlButton, { onClick: onZoomInHandler, className: "react-flow__controls-zoomin", title: ariaLabelConfig["controls.zoomIn.ariaLabel"], "aria-label": ariaLabelConfig["controls.zoomIn.ariaLabel"], disabled: maxZoomReached, children: (0, import_jsx_runtime126.jsx)(PlusIcon, {}) }), (0, import_jsx_runtime126.jsx)(ControlButton, { onClick: onZoomOutHandler, className: "react-flow__controls-zoomout", title: ariaLabelConfig["controls.zoomOut.ariaLabel"], "aria-label": ariaLabelConfig["controls.zoomOut.ariaLabel"], disabled: minZoomReached, children: (0, import_jsx_runtime126.jsx)(MinusIcon, {}) })] }), showFitView && (0, import_jsx_runtime126.jsx)(ControlButton, { className: "react-flow__controls-fitview", onClick: onFitViewHandler, title: ariaLabelConfig["controls.fitView.ariaLabel"], "aria-label": ariaLabelConfig["controls.fitView.ariaLabel"], children: (0, import_jsx_runtime126.jsx)(FitViewIcon, {}) }), showInteractive && (0, import_jsx_runtime126.jsx)(ControlButton, { className: "react-flow__controls-interactive", onClick: onToggleInteractivity, title: ariaLabelConfig["controls.interactive.ariaLabel"], "aria-label": ariaLabelConfig["controls.interactive.ariaLabel"], children: isInteractive ? (0, import_jsx_runtime126.jsx)(UnlockIcon, {}) : (0, import_jsx_runtime126.jsx)(LockIcon, {}) }), children2] });
   }
   ControlsComponent.displayName = "Controls";
   var Controls = (0, import_react14.memo)(ControlsComponent);
   function MiniMapNodeComponent({ id: id2, x, y, width: width2, height: height2, style: style5, color: color3, strokeColor, strokeWidth, className, borderRadius: borderRadius2, shapeRendering, selected: selected2, onClick }) {
     const { background, backgroundColor: backgroundColor2 } = style5 || {};
     const fill = color3 || background || backgroundColor2;
-    return (0, import_jsx_runtime123.jsx)("rect", { className: cc(["react-flow__minimap-node", { selected: selected2 }, className]), x, y, rx: borderRadius2, ry: borderRadius2, width: width2, height: height2, style: {
+    return (0, import_jsx_runtime126.jsx)("rect", { className: cc(["react-flow__minimap-node", { selected: selected2 }, className]), x, y, rx: borderRadius2, ry: borderRadius2, width: width2, height: height2, style: {
       fill,
       stroke: strokeColor,
       strokeWidth
@@ -77991,7 +78008,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const nodeStrokeColorFunc = getAttrFunction(nodeStrokeColor);
     const nodeClassNameFunc = getAttrFunction(nodeClassName);
     const shapeRendering = typeof window === "undefined" || !!window.chrome ? "crispEdges" : "geometricPrecision";
-    return (0, import_jsx_runtime123.jsx)(import_jsx_runtime123.Fragment, { children: nodeIds.map((nodeId) => (
+    return (0, import_jsx_runtime126.jsx)(import_jsx_runtime126.Fragment, { children: nodeIds.map((nodeId) => (
       /*
        * The split of responsibilities between MiniMapNodes and
        * NodeComponentWrapper may appear weird. However, it’s designed to
@@ -77999,7 +78016,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
        *
        * For more details, see a similar commit in `NodeRenderer/index.tsx`.
        */
-      (0, import_jsx_runtime123.jsx)(NodeComponentWrapper, { id: nodeId, nodeColorFunc, nodeStrokeColorFunc, nodeClassNameFunc, nodeBorderRadius, nodeStrokeWidth, NodeComponent, onClick, shapeRendering }, nodeId)
+      (0, import_jsx_runtime126.jsx)(NodeComponentWrapper, { id: nodeId, nodeColorFunc, nodeStrokeColorFunc, nodeClassNameFunc, nodeBorderRadius, nodeStrokeWidth, NodeComponent, onClick, shapeRendering }, nodeId)
     )) });
   }
   function NodeComponentWrapperInner({ id: id2, nodeColorFunc, nodeStrokeColorFunc, nodeClassNameFunc, nodeBorderRadius, nodeStrokeWidth, shapeRendering, NodeComponent, onClick }) {
@@ -78019,7 +78036,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (!node || node.hidden || !nodeHasDimensions(node)) {
       return null;
     }
-    return (0, import_jsx_runtime123.jsx)(NodeComponent, { x, y, width: width2, height: height2, style: node.style, selected: !!node.selected, className: nodeClassNameFunc(node), color: nodeColorFunc(node), borderRadius: nodeBorderRadius, strokeColor: nodeStrokeColorFunc(node), strokeWidth: nodeStrokeWidth, shapeRendering, onClick, id: node.id });
+    return (0, import_jsx_runtime126.jsx)(NodeComponent, { x, y, width: width2, height: height2, style: node.style, selected: !!node.selected, className: nodeClassNameFunc(node), color: nodeColorFunc(node), borderRadius: nodeBorderRadius, strokeColor: nodeStrokeColorFunc(node), strokeWidth: nodeStrokeWidth, shapeRendering, onClick, id: node.id });
   }
   var NodeComponentWrapper = (0, import_react14.memo)(NodeComponentWrapperInner);
   var MiniMapNodes$1 = (0, import_react14.memo)(MiniMapNodes);
@@ -78124,7 +78141,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onNodeClick(event, node);
     }, []) : void 0;
     const _ariaLabel = ariaLabel ?? ariaLabelConfig["minimap.ariaLabel"];
-    return (0, import_jsx_runtime123.jsx)(Panel, { position, style: {
+    return (0, import_jsx_runtime126.jsx)(Panel, { position, style: {
       ...style5,
       "--xy-minimap-background-color-props": typeof bgColor === "string" ? bgColor : void 0,
       "--xy-minimap-mask-background-color-props": typeof maskColor === "string" ? maskColor : void 0,
@@ -78133,7 +78150,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       "--xy-minimap-node-background-color-props": typeof nodeColor === "string" ? nodeColor : void 0,
       "--xy-minimap-node-stroke-color-props": typeof nodeStrokeColor === "string" ? nodeStrokeColor : void 0,
       "--xy-minimap-node-stroke-width-props": typeof nodeStrokeWidth === "number" ? nodeStrokeWidth : void 0
-    }, className: cc(["react-flow__minimap", className]), "data-testid": "rf__minimap", children: (0, import_jsx_runtime123.jsxs)("svg", { width: elementWidth, height: elementHeight, viewBox: `${x} ${y} ${width2} ${height2}`, className: "react-flow__minimap-svg", role: "img", "aria-labelledby": labelledBy, ref: svg, onClick: onSvgClick, children: [_ariaLabel && (0, import_jsx_runtime123.jsx)("title", { id: labelledBy, children: _ariaLabel }), (0, import_jsx_runtime123.jsx)(MiniMapNodes$1, { onClick: onSvgNodeClick, nodeColor, nodeStrokeColor, nodeBorderRadius, nodeClassName, nodeStrokeWidth, nodeComponent }), (0, import_jsx_runtime123.jsx)("path", { className: "react-flow__minimap-mask", d: `M${x - offset},${y - offset}h${width2 + offset * 2}v${height2 + offset * 2}h${-width2 - offset * 2}z
+    }, className: cc(["react-flow__minimap", className]), "data-testid": "rf__minimap", children: (0, import_jsx_runtime126.jsxs)("svg", { width: elementWidth, height: elementHeight, viewBox: `${x} ${y} ${width2} ${height2}`, className: "react-flow__minimap-svg", role: "img", "aria-labelledby": labelledBy, ref: svg, onClick: onSvgClick, children: [_ariaLabel && (0, import_jsx_runtime126.jsx)("title", { id: labelledBy, children: _ariaLabel }), (0, import_jsx_runtime126.jsx)(MiniMapNodes$1, { onClick: onSvgNodeClick, nodeColor, nodeStrokeColor, nodeBorderRadius, nodeClassName, nodeStrokeWidth, nodeComponent }), (0, import_jsx_runtime126.jsx)("path", { className: "react-flow__minimap-mask", d: `M${x - offset},${y - offset}h${width2 + offset * 2}v${height2 + offset * 2}h${-width2 - offset * 2}z
         M${viewBB.x},${viewBB.y}h${viewBB.width}v${viewBB.height}h${-viewBB.width}z`, fillRule: "evenodd", pointerEvents: "none" })] }) });
   }
   MiniMapComponent.displayName = "MiniMap";
@@ -78273,7 +78290,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       shouldResize
     ]);
     const positionClassNames = controlPosition.split("-");
-    return (0, import_jsx_runtime123.jsx)("div", { className: cc(["react-flow__resize-control", "nodrag", ...positionClassNames, variant, className]), ref: resizeControlRef, style: {
+    return (0, import_jsx_runtime126.jsx)("div", { className: cc(["react-flow__resize-control", "nodrag", ...positionClassNames, variant, className]), ref: resizeControlRef, style: {
       ...style5,
       scale,
       ...color3 && { [isHandleControl ? "backgroundColor" : "borderColor"]: color3 }
@@ -79967,7 +79984,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // src/common/components/machine/RulesTable.tsx
   var import_jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
-  function SortableRuleRow({ rule, machine }) {
+  function SortableRuleRow({ rule, machine, rowNumber }) {
     const {
       attributes,
       listeners,
@@ -79982,7 +79999,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       opacity: isDragging ? 0.5 : 1
     };
     return /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(import_react23.default.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 1, ref: setNodeRef, style: style5, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 0.5, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", sx: { pt: 2, textAlign: "center", color: "text.secondary" }, children: rowNumber }, void 0, false, {
+        fileName: "src/common/components/machine/RulesTable.tsx",
+        lineNumber: 77,
+        columnNumber: 9
+      }, this) }, void 0, false, {
+        fileName: "src/common/components/machine/RulesTable.tsx",
+        lineNumber: 76,
+        columnNumber: 7
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 0.5, ref: setNodeRef, style: style5, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
         IconButton_default,
         {
           size: "small",
@@ -79991,7 +80017,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           ...listeners,
           children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DragIndicator_default, {}, void 0, false, {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 79,
+            lineNumber: 88,
             columnNumber: 11
           }, this)
         },
@@ -79999,13 +80025,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 73,
+          lineNumber: 82,
           columnNumber: 9
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/RulesTable.tsx",
-        lineNumber: 72,
+        lineNumber: 81,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
@@ -80020,13 +80046,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 83,
+          lineNumber: 92,
           columnNumber: 9
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/RulesTable.tsx",
-        lineNumber: 82,
+        lineNumber: 91,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
@@ -80036,28 +80062,6 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           value: rule.read,
           onChange: (e) => machine.updateRule(rule.id, "read", e.target.value),
           placeholder: "\u2205",
-          slotProps: { htmlInput: { maxLength: 1 } }
-        },
-        void 0,
-        false,
-        {
-          fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 91,
-          columnNumber: 9
-        },
-        this
-      ) }, void 0, false, {
-        fileName: "src/common/components/machine/RulesTable.tsx",
-        lineNumber: 90,
-        columnNumber: 7
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
-        TextField_default,
-        {
-          size: "medium",
-          value: rule.write,
-          onChange: (e) => machine.updateRule(rule.id, "write", e.target.value),
-          placeholder: "1",
           slotProps: { htmlInput: { maxLength: 1 } }
         },
         void 0,
@@ -80077,25 +80081,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         TextField_default,
         {
           size: "medium",
-          select: true,
-          value: rule.direction,
-          onChange: (e) => machine.updateRule(rule.id, "direction", e.target.value),
-          slotProps: { select: { native: true } },
-          children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("option", { value: "R", children: "Right" }, void 0, false, {
-              fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 116,
-              columnNumber: 11
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("option", { value: "L", children: "Left" }, void 0, false, {
-              fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 117,
-              columnNumber: 11
-            }, this)
-          ]
+          value: rule.write,
+          onChange: (e) => machine.updateRule(rule.id, "write", e.target.value),
+          placeholder: "1",
+          slotProps: { htmlInput: { maxLength: 1 } }
         },
         void 0,
-        true,
+        false,
         {
           fileName: "src/common/components/machine/RulesTable.tsx",
           lineNumber: 109,
@@ -80111,6 +80103,40 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         TextField_default,
         {
           size: "medium",
+          select: true,
+          value: rule.direction,
+          onChange: (e) => machine.updateRule(rule.id, "direction", e.target.value),
+          slotProps: { select: { native: true } },
+          children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("option", { value: "R", children: "Right" }, void 0, false, {
+              fileName: "src/common/components/machine/RulesTable.tsx",
+              lineNumber: 125,
+              columnNumber: 11
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)("option", { value: "L", children: "Left" }, void 0, false, {
+              fileName: "src/common/components/machine/RulesTable.tsx",
+              lineNumber: 126,
+              columnNumber: 11
+            }, this)
+          ]
+        },
+        void 0,
+        true,
+        {
+          fileName: "src/common/components/machine/RulesTable.tsx",
+          lineNumber: 118,
+          columnNumber: 9
+        },
+        this
+      ) }, void 0, false, {
+        fileName: "src/common/components/machine/RulesTable.tsx",
+        lineNumber: 117,
+        columnNumber: 7
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
+        TextField_default,
+        {
+          size: "medium",
           value: rule.new_state,
           onChange: (e) => machine.updateRule(rule.id, "new_state", e.target.value),
           placeholder: "halt"
@@ -80119,13 +80145,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 121,
+          lineNumber: 130,
           columnNumber: 9
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/RulesTable.tsx",
-        lineNumber: 120,
+        lineNumber: 129,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 1, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
@@ -80136,7 +80162,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           color: "error",
           children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Delete_default, {}, void 0, false, {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 134,
+            lineNumber: 143,
             columnNumber: 11
           }, this)
         },
@@ -80144,18 +80170,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 129,
+          lineNumber: 138,
           columnNumber: 9
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/RulesTable.tsx",
-        lineNumber: 128,
+        lineNumber: 137,
         columnNumber: 7
       }, this)
     ] }, void 0, true, {
       fileName: "src/common/components/machine/RulesTable.tsx",
-      lineNumber: 71,
+      lineNumber: 75,
       columnNumber: 5
     }, this);
   }
@@ -80166,6 +80192,55 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const rules = machine.getAllRules();
     const [currentView, setCurrentView] = (0, import_react23.useState)("table");
     const [clearConfirmOpen, setClearConfirmOpen] = (0, import_react23.useState)(false);
+    const [sortField, setSortField] = (0, import_react23.useState)("none");
+    const [sortDirection, setSortDirection] = (0, import_react23.useState)("asc");
+    const [displayRules, setDisplayRules] = (0, import_react23.useState)([]);
+    (0, import_react23.useEffect)(() => {
+      if (sortField === "none") {
+        setDisplayRules(rules);
+      } else {
+        const sorted = [...rules].sort((a, b) => {
+          const fieldA = a[sortField].toLowerCase();
+          const fieldB = b[sortField].toLowerCase();
+          if (fieldA < fieldB)
+            return sortDirection === "asc" ? -1 : 1;
+          if (fieldA > fieldB)
+            return sortDirection === "asc" ? 1 : -1;
+          return 0;
+        });
+        setDisplayRules(sorted);
+      }
+    }, [rules, sortField, sortDirection]);
+    const handleSort = (field) => {
+      if (sortField === field) {
+        if (sortDirection === "asc") {
+          setSortDirection("desc");
+        } else {
+          setSortField("none");
+          setSortDirection("asc");
+        }
+      } else {
+        setSortField(field);
+        setSortDirection("asc");
+      }
+    };
+    const getSortIcon = (field) => {
+      if (sortField !== field)
+        return /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Sort_default, { fontSize: "small" }, void 0, false, {
+          fileName: "src/common/components/machine/RulesTable.tsx",
+          lineNumber: 198,
+          columnNumber: 37
+        }, this);
+      return sortDirection === "asc" ? /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(ArrowUpward_default, { fontSize: "small" }, void 0, false, {
+        fileName: "src/common/components/machine/RulesTable.tsx",
+        lineNumber: 199,
+        columnNumber: 38
+      }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(ArrowDownward_default, { fontSize: "small" }, void 0, false, {
+        fileName: "src/common/components/machine/RulesTable.tsx",
+        lineNumber: 199,
+        columnNumber: 73
+      }, this);
+    };
     const sensors = useSensors(
       useSensor(PointerSensor),
       useSensor(KeyboardSensor, {
@@ -80175,7 +80250,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const handleDragEnd = (event) => {
       const { active, over } = event;
       if (over && active.id !== over.id) {
-        machine.reorderRules(active.id, over.id);
+        const oldIndex = displayRules.findIndex((rule) => rule.id === active.id);
+        const newIndex = displayRules.findIndex((rule) => rule.id === over.id);
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newDisplayRules = [...displayRules];
+          const [reorderedRule] = newDisplayRules.splice(oldIndex, 1);
+          newDisplayRules.splice(newIndex, 0, reorderedRule);
+          setDisplayRules(newDisplayRules);
+          setSortField("none");
+          machine.loadRules(newDisplayRules);
+        }
       }
     };
     const handleEditRule = (ruleId) => {
@@ -80207,23 +80291,23 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 192,
+            lineNumber: 260,
             columnNumber: 11
           },
           this
         ) }, void 0, false, {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 191,
+          lineNumber: 259,
           columnNumber: 9
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Box_default, { sx: { display: "flex", gap: 1 }, children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Button_default, { startIcon: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Add_default, {}, void 0, false, {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 198,
+            lineNumber: 266,
             columnNumber: 30
           }, this), onClick: onAddRule, variant: "outlined", size: "medium", children: "Add Rule" }, void 0, false, {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 198,
+            lineNumber: 266,
             columnNumber: 11
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
@@ -80239,7 +80323,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 201,
+              lineNumber: 269,
               columnNumber: 11
             },
             this
@@ -80257,26 +80341,26 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 209,
+              lineNumber: 277,
               columnNumber: 11
             },
             this
           )
         ] }, void 0, true, {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 197,
+          lineNumber: 265,
           columnNumber: 9
         }, this)
       ] }, void 0, true, {
         fileName: "src/common/components/machine/RulesTable.tsx",
-        lineNumber: 190,
+        lineNumber: 258,
         columnNumber: 7
       }, this),
       currentView === "table" ? (
         // Table View
         rules.length === 0 ? /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { color: "text.secondary", align: "center", children: "No rules defined. Add a rule to get started." }, void 0, false, {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 223,
+          lineNumber: 291,
           columnNumber: 11
         }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
           DndContext,
@@ -80285,81 +80369,160 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             collisionDetection: closestCenter,
             onDragEnd: handleDragEnd,
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { container: true, spacing: 1, children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 1, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Order" }, void 0, false, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 0.5, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "#" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 233,
-                columnNumber: 30
+                lineNumber: 301,
+                columnNumber: 79
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 233,
+                lineNumber: 301,
                 columnNumber: 15
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "State" }, void 0, false, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 0.5, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Order" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 234,
-                columnNumber: 30
+                lineNumber: 302,
+                columnNumber: 79
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 234,
+                lineNumber: 302,
                 columnNumber: 15
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Read" }, void 0, false, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
+                Button_default,
+                {
+                  variant: "text",
+                  size: "small",
+                  onClick: () => handleSort("in_state"),
+                  endIcon: getSortIcon("in_state"),
+                  sx: {
+                    "&.MuiButton-root": {
+                      textTransform: "none",
+                      fontWeight: 600,
+                      fontSize: "1rem",
+                      lineHeight: 1.43,
+                      minWidth: "auto",
+                      minHeight: "auto",
+                      margin: 0,
+                      padding: 0,
+                      color: "text.primary",
+                      justifyContent: "flex-start",
+                      alignItems: "center"
+                    },
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.04)"
+                    },
+                    "& .MuiButton-endIcon": {
+                      marginLeft: 0.5,
+                      marginRight: 0
+                    }
+                  },
+                  children: "State"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "src/common/components/machine/RulesTable.tsx",
+                  lineNumber: 304,
+                  columnNumber: 17
+                },
+                this
+              ) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 235,
-                columnNumber: 30
-              }, this) }, void 0, false, {
-                fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 235,
+                lineNumber: 303,
                 columnNumber: 15
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Write" }, void 0, false, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Read" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 236,
-                columnNumber: 30
+                lineNumber: 335,
+                columnNumber: 77
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 236,
+                lineNumber: 335,
                 columnNumber: 15
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Move" }, void 0, false, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Write" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 237,
-                columnNumber: 30
+                lineNumber: 336,
+                columnNumber: 77
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 237,
+                lineNumber: 336,
                 columnNumber: 15
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "New State" }, void 0, false, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Move" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 238,
-                columnNumber: 30
+                lineNumber: 337,
+                columnNumber: 77
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 238,
+                lineNumber: 337,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
+                Button_default,
+                {
+                  variant: "text",
+                  size: "small",
+                  onClick: () => handleSort("new_state"),
+                  endIcon: getSortIcon("new_state"),
+                  sx: {
+                    "&.MuiButton-root": {
+                      textTransform: "none",
+                      fontWeight: 600,
+                      fontSize: "1rem",
+                      lineHeight: 1.43,
+                      minWidth: "auto",
+                      minHeight: "auto",
+                      margin: 0,
+                      padding: 0,
+                      color: "text.primary",
+                      justifyContent: "flex-start",
+                      alignItems: "center"
+                    },
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.04)"
+                    },
+                    "& .MuiButton-endIcon": {
+                      marginLeft: 0.5,
+                      marginRight: 0
+                    }
+                  },
+                  children: "New State"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "src/common/components/machine/RulesTable.tsx",
+                  lineNumber: 339,
+                  columnNumber: 17
+                },
+                this
+              ) }, void 0, false, {
+                fileName: "src/common/components/machine/RulesTable.tsx",
+                lineNumber: 338,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 1, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Actions" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 239,
+                lineNumber: 370,
                 columnNumber: 30
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 239,
+                lineNumber: 370,
                 columnNumber: 15
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(SortableContext, { items: rules.map((rule) => rule.id), strategy: verticalListSortingStrategy, children: rules.map((rule) => /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(SortableRuleRow, { rule, machine }, rule.id, false, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(SortableContext, { items: displayRules.map((rule) => rule.id), strategy: verticalListSortingStrategy, children: displayRules.map((rule, index2) => /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(SortableRuleRow, { rule, machine, rowNumber: index2 + 1 }, rule.id, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 243,
+                lineNumber: 374,
                 columnNumber: 19
               }, this)) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 241,
+                lineNumber: 372,
                 columnNumber: 15
               }, this)
             ] }, void 0, true, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 232,
+              lineNumber: 300,
               columnNumber: 13
             }, this)
           },
@@ -80367,7 +80530,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 227,
+            lineNumber: 295,
             columnNumber: 11
           },
           this
@@ -80385,7 +80548,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 251,
+            lineNumber: 382,
             columnNumber: 9
           },
           this
@@ -80401,32 +80564,32 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DialogTitle_default, { id: "clear-confirm-dialog-title", children: "Clear All Rules" }, void 0, false, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 264,
+              lineNumber: 395,
               columnNumber: 9
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DialogContent_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DialogContentText_default, { id: "clear-confirm-dialog-description", children: "Are you sure you want to clear all rules? This action cannot be undone." }, void 0, false, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 268,
+              lineNumber: 399,
               columnNumber: 11
             }, this) }, void 0, false, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 267,
+              lineNumber: 398,
               columnNumber: 9
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DialogActions_default, { children: [
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Button_default, { onClick: handleCancelClear, color: "primary", children: "Cancel" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 273,
+                lineNumber: 404,
                 columnNumber: 11
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Button_default, { onClick: handleConfirmClear, color: "warning", variant: "contained", children: "Clear All" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 276,
+                lineNumber: 407,
                 columnNumber: 11
               }, this)
             ] }, void 0, true, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 272,
+              lineNumber: 403,
               columnNumber: 9
             }, this)
           ]
@@ -80435,14 +80598,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         true,
         {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 258,
+          lineNumber: 389,
           columnNumber: 7
         },
         this
       )
     ] }, void 0, true, {
       fileName: "src/common/components/machine/RulesTable.tsx",
-      lineNumber: 189,
+      lineNumber: 257,
       columnNumber: 5
     }, this);
   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Paper,
   Typography,
@@ -17,6 +17,9 @@ import {
   Add,
   Delete,
   DragIndicator,
+  ArrowUpward,
+  ArrowDownward,
+  Sort,
 } from '@mui/icons-material';
 import {
   DndContext,
@@ -49,9 +52,10 @@ interface RulesTableProps {
 interface SortableRuleRowProps {
   rule: Rule;
   machine: any;
+  rowNumber: number;
 }
 
-function SortableRuleRow({ rule, machine }: SortableRuleRowProps): React.ReactElement {
+function SortableRuleRow({ rule, machine, rowNumber }: SortableRuleRowProps): React.ReactElement {
   const {
     attributes,
     listeners,
@@ -69,7 +73,12 @@ function SortableRuleRow({ rule, machine }: SortableRuleRowProps): React.ReactEl
 
   return (
     <React.Fragment>
-      <Grid size={1} ref={setNodeRef} style={style}>
+      <Grid size={0.5}>
+        <Typography variant="body2" sx={{ pt: 2, textAlign: 'center', color: 'text.secondary' }}>
+          {rowNumber}
+        </Typography>
+      </Grid>
+      <Grid size={0.5} ref={setNodeRef} style={style}>
         <IconButton
           size="small"
           sx={{ cursor: 'grab', '&:active': { cursor: 'grabbing' } }}
@@ -138,6 +147,9 @@ function SortableRuleRow({ rule, machine }: SortableRuleRowProps): React.ReactEl
   );
 }
 
+type SortField = 'in_state' | 'new_state' | 'none';
+type SortDirection = 'asc' | 'desc';
+
 export function RulesTable({
   onAddRule,
 }: RulesTableProps): React.ReactElement {
@@ -145,6 +157,47 @@ export function RulesTable({
   const rules = machine.getAllRules();
   const [currentView, setCurrentView] = useState<RulesViewType>('table');
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
+  const [sortField, setSortField] = useState<SortField>('none');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [displayRules, setDisplayRules] = useState<Rule[]>([]);
+  
+  // Update displayRules when rules change or when sorting is applied
+  useEffect(() => {
+    if (sortField === 'none') {
+      setDisplayRules(rules);
+    } else {
+      const sorted = [...rules].sort((a, b) => {
+        const fieldA = a[sortField].toLowerCase();
+        const fieldB = b[sortField].toLowerCase();
+        
+        if (fieldA < fieldB) return sortDirection === 'asc' ? -1 : 1;
+        if (fieldA > fieldB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+      setDisplayRules(sorted);
+    }
+  }, [rules, sortField, sortDirection]);
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // If same field clicked again, cycle: asc -> desc -> none (manual order)
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else {
+        setSortField('none');
+        setSortDirection('asc');
+      }
+    } else {
+      // New field clicked, start with ascending
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) return <Sort fontSize="small" />;
+    return sortDirection === 'asc' ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />;
+  };
   
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -157,7 +210,22 @@ export function RulesTable({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      machine.reorderRules(active.id as string, over.id as string);
+      // Update the local displayRules state to reflect the new order
+      const oldIndex = displayRules.findIndex(rule => rule.id === active.id);
+      const newIndex = displayRules.findIndex(rule => rule.id === over.id);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newDisplayRules = [...displayRules];
+        const [reorderedRule] = newDisplayRules.splice(oldIndex, 1);
+        newDisplayRules.splice(newIndex, 0, reorderedRule);
+        setDisplayRules(newDisplayRules);
+        
+        // Clear sorting since user is manually reordering
+        setSortField('none');
+        
+        // Update the store with the new order (based on current displayRules, not original order)
+        machine.loadRules(newDisplayRules);
+      }
     }
   };
   
@@ -230,17 +298,80 @@ export function RulesTable({
             onDragEnd={handleDragEnd}
           >
             <Grid container spacing={1}>
-              <Grid size={1}><Typography variant="body2" fontWeight="bold">Order</Typography></Grid>
-              <Grid size={2}><Typography variant="body2" fontWeight="bold">State</Typography></Grid>
-              <Grid size={2}><Typography variant="body2" fontWeight="bold">Read</Typography></Grid>
-              <Grid size={2}><Typography variant="body2" fontWeight="bold">Write</Typography></Grid>
-              <Grid size={2}><Typography variant="body2" fontWeight="bold">Move</Typography></Grid>
-              <Grid size={2}><Typography variant="body2" fontWeight="bold">New State</Typography></Grid>
+              <Grid size={0.5} sx={{ display: 'flex', alignItems: 'center' }}><Typography variant="body2" fontWeight="bold">#</Typography></Grid>
+              <Grid size={0.5} sx={{ display: 'flex', alignItems: 'center' }}><Typography variant="body2" fontWeight="bold">Order</Typography></Grid>
+              <Grid size={2} sx={{ display: 'flex', alignItems: 'center' }}>
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={() => handleSort('in_state')}
+                  endIcon={getSortIcon('in_state')}
+                  sx={{ 
+                    '&.MuiButton-root': {
+                      textTransform: 'none', 
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      lineHeight: 1.43,
+                      minWidth: 'auto',
+                      minHeight: 'auto',
+                      margin: 0,
+                      padding: 0,
+                      color: 'text.primary',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                    },
+                    '&:hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                    },
+                    '& .MuiButton-endIcon': {
+                      marginLeft: 0.5,
+                      marginRight: 0
+                    }
+                  }}
+                >
+                  State
+                </Button>
+              </Grid>
+              <Grid size={2} sx={{ display: 'flex', alignItems: 'center' }}><Typography variant="body2" fontWeight="bold">Read</Typography></Grid>
+              <Grid size={2} sx={{ display: 'flex', alignItems: 'center' }}><Typography variant="body2" fontWeight="bold">Write</Typography></Grid>
+              <Grid size={2} sx={{ display: 'flex', alignItems: 'center' }}><Typography variant="body2" fontWeight="bold">Move</Typography></Grid>
+              <Grid size={2} sx={{ display: 'flex', alignItems: 'center' }}>
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={() => handleSort('new_state')}
+                  endIcon={getSortIcon('new_state')}
+                  sx={{ 
+                    '&.MuiButton-root': {
+                      textTransform: 'none', 
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      lineHeight: 1.43,
+                      minWidth: 'auto',
+                      minHeight: 'auto',
+                      margin: 0,
+                      padding: 0,
+                      color: 'text.primary',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                    },
+                    '&:hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                    },
+                    '& .MuiButton-endIcon': {
+                      marginLeft: 0.5,
+                      marginRight: 0
+                    }
+                  }}
+                >
+                  New State
+                </Button>
+              </Grid>
               <Grid size={1}><Typography variant="body2" fontWeight="bold">Actions</Typography></Grid>
               
-              <SortableContext items={rules.map(rule => rule.id)} strategy={verticalListSortingStrategy}>
-                {rules.map((rule: Rule) => (
-                  <SortableRuleRow key={rule.id} rule={rule} machine={machine} />
+              <SortableContext items={displayRules.map(rule => rule.id)} strategy={verticalListSortingStrategy}>
+                {displayRules.map((rule: Rule, index: number) => (
+                  <SortableRuleRow key={rule.id} rule={rule} machine={machine} rowNumber={index + 1} />
                 ))}
               </SortableContext>
             </Grid>

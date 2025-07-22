@@ -275,7 +275,7 @@ export const useTapeStore = create<TapeStore>()(
           // The machine execution will manage currentRule highlighting appropriately
           
           // Capitalize alphabet characters in state names
-          state.tapeInternalState = capitalizeAlphabet(newState || "START");
+          state.tapeInternalState = capitalizeAlphabet(newState);
         });
       },
 
@@ -287,7 +287,7 @@ export const useTapeStore = create<TapeStore>()(
           useMachineStore.getState().setCurrentRule(null);
           
           // Capitalize alphabet characters in state names
-          state.tapeInternalState = capitalizeAlphabet(newState || "START");
+          state.tapeInternalState = capitalizeAlphabet(newState);
         });
       },
 
