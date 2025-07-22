@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import {
   EdgeProps,
   getBezierPath,
@@ -46,9 +46,11 @@ function TransitionEdge({
   const reactFlowInstance = useReactFlow();
   const [isDragging, setIsDragging] = useState(false);
   const [labelPosition, setLabelPositionInternal] = useState<{ x: number; y: number } | null>(null);
+  const labelPositionRef = useRef<{ x: number; y: number } | null>(null);
   
-  // Custom setLabelPosition wrapper
+  // Custom setLabelPosition wrapper that updates both state and ref
   const setLabelPosition = useCallback((position: { x: number; y: number } | null) => {
+    labelPositionRef.current = position;
     setLabelPositionInternal(position);
   }, []);
   const dragOffsetRef = useRef<{ x: number; y: number } | null>(null);
@@ -71,13 +73,13 @@ function TransitionEdge({
     }, 50); // 50ms debounce
   }, [id, graphLayout]);
 
-  // Load saved label position on mount
+  // Load saved label position on mount only (now handled in memoized calculation above)
   useEffect(() => {
-    const savedLayout = graphLayout.getEdgeLayout(id);
-    if (savedLayout?.controlPoint) {
-      setLabelPosition(savedLayout.controlPoint);
+    // Only update state if we have a position in ref but not in state
+    if (labelPositionRef.current && !labelPosition) {
+      setLabelPositionInternal(labelPositionRef.current);
     }
-  }, [id, graphLayout, setLabelPosition]);
+  }, [labelPosition]);
 
   // Track component lifecycle and cleanup
   useEffect(() => {
@@ -93,25 +95,43 @@ function TransitionEdge({
   // Create the label text
   const label = `${safeRead}→${safeWrite},${safeDirection}`;
 
-  // Calculate label position (default to midpoint of the edge path)
-  const [defaultEdgePath, defaultLabelX, defaultLabelY] = getSmoothStepPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-    borderRadius: 8,
-  });
+  // Memoize the default path calculations to prevent recalculation on every render
+  const defaultPathData = useMemo(() => {
+    return getSmoothStepPath({
+      sourceX,
+      sourceY,
+      sourcePosition,
+      targetX,
+      targetY,
+      targetPosition,
+      borderRadius: 8,
+    });
+  }, [sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition]);
 
-  // Use custom label position if dragged, otherwise use path midpoint
-  const labelX = labelPosition?.x || defaultLabelX;
-  const labelY = labelPosition?.y || defaultLabelY;
+  const [defaultEdgePath, defaultLabelX, defaultLabelY] = defaultPathData;
+
+  // Use custom label position if available (from state or ref), otherwise use path midpoint
+  // Initialize with saved position immediately if available
+  const finalLabelPosition = useMemo(() => {
+    const current = labelPosition || labelPositionRef.current;
+    if (!current) {
+      // On first render, try to get saved position immediately
+      const savedLayout = graphLayout.getEdgeLayout(id);
+      if (savedLayout?.controlPoint) {
+        labelPositionRef.current = savedLayout.controlPoint;
+        return savedLayout.controlPoint;
+      }
+    }
+    return current;
+  }, [labelPosition, id, graphLayout]);
+
+  const labelX = finalLabelPosition?.x ?? defaultLabelX;
+  const labelY = finalLabelPosition?.y ?? defaultLabelY;
 
 
   // Create edge path that routes through the label position
   const getPathThroughLabel = () => {
-    if (!labelPosition) {
+    if (!finalLabelPosition) {
       // No custom position, use default path
       return defaultEdgePath;
     }

@@ -1126,7 +1126,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
-          function useMemo22(create3, deps) {
+          function useMemo23(create3, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useMemo(create3, deps);
           }
@@ -1898,7 +1898,7 @@
           exports.useImperativeHandle = useImperativeHandle7;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect6;
-          exports.useMemo = useMemo22;
+          exports.useMemo = useMemo23;
           exports.useReducer = useReducer2;
           exports.useRef = useRef38;
           exports.useState = useState32;
@@ -28015,7 +28015,7 @@
           return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
         }
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-        var React145 = require_react(), shim = require_shim(), objectIs = "function" === typeof Object.is ? Object.is : is2, useSyncExternalStore = shim.useSyncExternalStore, useRef38 = React145.useRef, useEffect34 = React145.useEffect, useMemo22 = React145.useMemo, useDebugValue5 = React145.useDebugValue;
+        var React145 = require_react(), shim = require_shim(), objectIs = "function" === typeof Object.is ? Object.is : is2, useSyncExternalStore = shim.useSyncExternalStore, useRef38 = React145.useRef, useEffect34 = React145.useEffect, useMemo23 = React145.useMemo, useDebugValue5 = React145.useDebugValue;
         exports.useSyncExternalStoreWithSelector = function(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
           var instRef = useRef38(null);
           if (null === instRef.current) {
@@ -28023,7 +28023,7 @@
             instRef.current = inst;
           } else
             inst = instRef.current;
-          instRef = useMemo22(
+          instRef = useMemo23(
             function() {
               function memoizedSelector(nextSnapshot) {
                 if (!hasMemo) {
@@ -78521,7 +78521,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const reactFlowInstance = useReactFlow();
     const [isDragging, setIsDragging] = (0, import_react17.useState)(false);
     const [labelPosition, setLabelPositionInternal] = (0, import_react17.useState)(null);
+    const labelPositionRef = (0, import_react17.useRef)(null);
     const setLabelPosition = (0, import_react17.useCallback)((position) => {
+      labelPositionRef.current = position;
       setLabelPositionInternal(position);
     }, []);
     const dragOffsetRef = (0, import_react17.useRef)(null);
@@ -78539,11 +78541,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }, 50);
     }, [id2, graphLayout]);
     (0, import_react17.useEffect)(() => {
-      const savedLayout = graphLayout.getEdgeLayout(id2);
-      if (savedLayout?.controlPoint) {
-        setLabelPosition(savedLayout.controlPoint);
+      if (labelPositionRef.current && !labelPosition) {
+        setLabelPositionInternal(labelPositionRef.current);
       }
-    }, [id2, graphLayout, setLabelPosition]);
+    }, [labelPosition]);
     (0, import_react17.useEffect)(() => {
       return () => {
         if (saveTimeoutRef.current) {
@@ -78553,19 +78554,33 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       };
     }, [id2]);
     const label = `${safeRead}\u2192${safeWrite},${safeDirection}`;
-    const [defaultEdgePath, defaultLabelX, defaultLabelY] = getSmoothStepPath({
-      sourceX,
-      sourceY,
-      sourcePosition,
-      targetX,
-      targetY,
-      targetPosition,
-      borderRadius: 8
-    });
-    const labelX = labelPosition?.x || defaultLabelX;
-    const labelY = labelPosition?.y || defaultLabelY;
+    const defaultPathData = (0, import_react17.useMemo)(() => {
+      return getSmoothStepPath({
+        sourceX,
+        sourceY,
+        sourcePosition,
+        targetX,
+        targetY,
+        targetPosition,
+        borderRadius: 8
+      });
+    }, [sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition]);
+    const [defaultEdgePath, defaultLabelX, defaultLabelY] = defaultPathData;
+    const finalLabelPosition = (0, import_react17.useMemo)(() => {
+      const current2 = labelPosition || labelPositionRef.current;
+      if (!current2) {
+        const savedLayout = graphLayout.getEdgeLayout(id2);
+        if (savedLayout?.controlPoint) {
+          labelPositionRef.current = savedLayout.controlPoint;
+          return savedLayout.controlPoint;
+        }
+      }
+      return current2;
+    }, [labelPosition, id2, graphLayout]);
+    const labelX = finalLabelPosition?.x ?? defaultLabelX;
+    const labelY = finalLabelPosition?.y ?? defaultLabelY;
     const getPathThroughLabel = () => {
-      if (!labelPosition) {
+      if (!finalLabelPosition) {
         return defaultEdgePath;
       }
       const [pathToLabel] = getSmoothStepPath({
@@ -78717,7 +78732,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/TransitionEdge.tsx",
-          lineNumber: 303,
+          lineNumber: 323,
           columnNumber: 7
         },
         this
@@ -78749,18 +78764,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/TransitionEdge.tsx",
-          lineNumber: 322,
+          lineNumber: 342,
           columnNumber: 9
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/rules/TransitionEdge.tsx",
-        lineNumber: 321,
+        lineNumber: 341,
         columnNumber: 7
       }, this)
     ] }, void 0, true, {
       fileName: "src/common/components/machine/rules/TransitionEdge.tsx",
-      lineNumber: 302,
+      lineNumber: 322,
       columnNumber: 5
     }, this);
   }
@@ -79456,7 +79471,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       console.log("Setting edges:", newEdges);
       setNodes(newNodes);
       setEdges(newEdges);
-    }, [rulesHash, currentRule, tape.tapeInternalState]);
+    }, [rulesHash, tape.tapeInternalState]);
+    (0, import_react21.useEffect)(() => {
+      console.log("Updating active state for currentRule:", currentRule);
+      setEdges(
+        (currentEdges) => currentEdges.map((edge) => ({
+          ...edge,
+          data: {
+            ...edge.data,
+            isActive: currentRule === edge.data?.ruleId
+          }
+        }))
+      );
+    }, [currentRule, setEdges]);
     const onConnect = (0, import_react21.useCallback)((connection) => {
       console.log("New connection:", connection);
       machine.setCurrentRule(null);
@@ -79790,12 +79817,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Background, {}, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 666,
+              lineNumber: 681,
               columnNumber: 15
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Controls, {}, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 667,
+              lineNumber: 682,
               columnNumber: 15
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("svg", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("defs", { children: [
@@ -79811,7 +79838,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                   markerUnits: "strokeWidth",
                   children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("polygon", { points: "0,0 0,5 5,2.5", fill: "#555" }, void 0, false, {
                     fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                    lineNumber: 679,
+                    lineNumber: 694,
                     columnNumber: 21
                   }, this)
                 },
@@ -79819,7 +79846,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 false,
                 {
                   fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                  lineNumber: 670,
+                  lineNumber: 685,
                   columnNumber: 19
                 },
                 this
@@ -79836,7 +79863,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                   markerUnits: "strokeWidth",
                   children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("polygon", { points: "0,0 0,5 5,2.5", fill: "#ff6b00" }, void 0, false, {
                     fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                    lineNumber: 690,
+                    lineNumber: 705,
                     columnNumber: 21
                   }, this)
                 },
@@ -79844,7 +79871,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 false,
                 {
                   fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                  lineNumber: 681,
+                  lineNumber: 696,
                   columnNumber: 19
                 },
                 this
@@ -79861,7 +79888,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                   markerUnits: "strokeWidth",
                   children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("polygon", { points: "0,0 0,5 5,2.5", fill: "#2196f3" }, void 0, false, {
                     fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                    lineNumber: 701,
+                    lineNumber: 716,
                     columnNumber: 21
                   }, this)
                 },
@@ -79869,18 +79896,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 false,
                 {
                   fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                  lineNumber: 692,
+                  lineNumber: 707,
                   columnNumber: 19
                 },
                 this
               )
             ] }, void 0, true, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 669,
+              lineNumber: 684,
               columnNumber: 17
             }, this) }, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 668,
+              lineNumber: 683,
               columnNumber: 15
             }, this)
           ]
@@ -79889,17 +79916,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         true,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 636,
+          lineNumber: 651,
           columnNumber: 13
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-        lineNumber: 580,
+        lineNumber: 595,
         columnNumber: 11
       }, this) }, void 0, false, {
         fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-        lineNumber: 576,
+        lineNumber: 591,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(
@@ -79916,7 +79943,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 711,
+          lineNumber: 726,
           columnNumber: 7
         },
         this
@@ -79933,25 +79960,25 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 720,
+          lineNumber: 735,
           columnNumber: 7
         },
         this
       )
     ] }, void 0, true, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 575,
+      lineNumber: 590,
       columnNumber: 5
     }, this);
   }
   function ReactFlowGraph(props) {
     return /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(ReactFlowProvider, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(ReactFlowGraphInner, { ...props }, void 0, false, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 734,
+      lineNumber: 749,
       columnNumber: 7
     }, this) }, void 0, false, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 733,
+      lineNumber: 748,
       columnNumber: 5
     }, this);
   }

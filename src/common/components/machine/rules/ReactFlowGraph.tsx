@@ -87,7 +87,7 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
-  // Update graph when rules change
+  // Update graph when rules change (structure changes)
   useEffect(() => {
     console.log('Effect triggered - rules changed');
     
@@ -221,7 +221,22 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
     
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [rulesHash, currentRule, tape.tapeInternalState]); // Use rulesHash instead of rules to prevent infinite loops
+  }, [rulesHash, tape.tapeInternalState]); // Remove currentRule from dependencies
+
+  // Update only the active state of edges when currentRule changes
+  useEffect(() => {
+    console.log('Updating active state for currentRule:', currentRule);
+    
+    setEdges(currentEdges => 
+      currentEdges.map(edge => ({
+        ...edge,
+        data: {
+          ...edge.data,
+          isActive: currentRule === edge.data?.ruleId,
+        },
+      }))
+    );
+  }, [currentRule, setEdges]);
 
 
 
