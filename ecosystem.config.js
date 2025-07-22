@@ -2,7 +2,6 @@ module.exports = {
   apps: [{
     name: 'turing-machine',
     script: './src/server/index.js',
-    cwd: '/Users/jdeleeuw/Documents/GitHub/turing-machine',
     instances: 1,
     exec_mode: 'cluster',
     
