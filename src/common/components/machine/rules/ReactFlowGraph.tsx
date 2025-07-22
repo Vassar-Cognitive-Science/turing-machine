@@ -13,7 +13,7 @@ import {
   ConnectionLineType,
   useReactFlow,
 } from '@xyflow/react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { useMachineStore, useGraphLayoutStore, useTapeStore } from '../../../../stores';
 import StateNode from './StateNode';
@@ -91,31 +91,46 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
   useEffect(() => {
     console.log('Effect triggered - rules changed');
     
-    if (!rules || rules.length === 0) {
-      console.log('No rules found, clearing graph');
-      setNodes([]);
-      setEdges([]);
-      return;
-    }
-
     // Extract unique states - be more permissive with filtering
     const stateSet = new Set<string>();
-    rules.forEach(rule => {
-      console.log('Processing rule:', rule);
-      if (rule.in_state && rule.in_state.trim()) {
-        stateSet.add(rule.in_state.trim());
-      }
-      if (rule.new_state && rule.new_state.trim()) {
-        stateSet.add(rule.new_state.trim());
-      }
-    });
+    if (rules && rules.length > 0) {
+      rules.forEach(rule => {
+        console.log('Processing rule:', rule);
+        if (rule.in_state && rule.in_state.trim()) {
+          stateSet.add(rule.in_state.trim());
+        }
+        if (rule.new_state && rule.new_state.trim()) {
+          stateSet.add(rule.new_state.trim());
+        }
+      });
+    }
+    
+    // Always include HALT state to give users something to connect to when starting
+    stateSet.add('HALT');
+    
     const states = Array.from(stateSet);
     
-    console.log('Extracted states:', states);
+    console.log('Extracted states (including always-visible HALT):', states);
 
-    if (states.length === 0) {
-      console.log('No valid states found');
-      setNodes([]);
+    // Clear edges if no rules, but keep HALT node
+    if (!rules || rules.length === 0) {
+      console.log('No rules found, showing only HALT state');
+      
+      // Create just the HALT node for empty state
+      const haltPosition = graphLayout.getNodePosition('HALT') || { x: 200, y: 150 };
+      const haltNode: Node = {
+        id: 'HALT',
+        type: 'stateNode',
+        position: haltPosition,
+        data: {
+          label: 'HALT',
+          isStart: false,
+          isHalt: true,
+          isCurrent: tape.tapeInternalState === 'HALT',
+        },
+      };
+      
+      setNodes([haltNode]);
       setEdges([]);
       return;
     }
@@ -560,25 +575,8 @@ function ReactFlowGraphInner({ onEditRule: _onEditRule, onDeleteRule: _onDeleteR
     <>
       <Box sx={{ height: 'auto', width: '100%' }}>
         
-        {/* Graph visualization */}
-        {nodes.length === 0 ? (
-          <Box 
-            sx={{ 
-              height: 400,
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              border: 1,
-              borderColor: 'grey.300',
-              borderRadius: 1,
-              bgcolor: 'grey.50',
-            }}
-          >
-            <Typography color="text.secondary">
-              No states to display. Add some rules to see the state diagram.
-            </Typography>
-          </Box>
-        ) : (
+        {/* Graph visualization - always show the graph now that HALT is always visible */}
+        {(
           <Box sx={{ 
             height: 400, 
             border: 1, 

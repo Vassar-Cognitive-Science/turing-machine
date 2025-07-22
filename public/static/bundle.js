@@ -79344,27 +79344,36 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     (0, import_react21.useEffect)(() => {
       console.log("Effect triggered - rules changed");
-      if (!rules || rules.length === 0) {
-        console.log("No rules found, clearing graph");
-        setNodes([]);
-        setEdges([]);
-        return;
-      }
       const stateSet = /* @__PURE__ */ new Set();
-      rules.forEach((rule) => {
-        console.log("Processing rule:", rule);
-        if (rule.in_state && rule.in_state.trim()) {
-          stateSet.add(rule.in_state.trim());
-        }
-        if (rule.new_state && rule.new_state.trim()) {
-          stateSet.add(rule.new_state.trim());
-        }
-      });
+      if (rules && rules.length > 0) {
+        rules.forEach((rule) => {
+          console.log("Processing rule:", rule);
+          if (rule.in_state && rule.in_state.trim()) {
+            stateSet.add(rule.in_state.trim());
+          }
+          if (rule.new_state && rule.new_state.trim()) {
+            stateSet.add(rule.new_state.trim());
+          }
+        });
+      }
+      stateSet.add("HALT");
       const states = Array.from(stateSet);
-      console.log("Extracted states:", states);
-      if (states.length === 0) {
-        console.log("No valid states found");
-        setNodes([]);
+      console.log("Extracted states (including always-visible HALT):", states);
+      if (!rules || rules.length === 0) {
+        console.log("No rules found, showing only HALT state");
+        const haltPosition = graphLayout.getNodePosition("HALT") || { x: 200, y: 150 };
+        const haltNode = {
+          id: "HALT",
+          type: "stateNode",
+          position: haltPosition,
+          data: {
+            label: "HALT",
+            isStart: false,
+            isHalt: true,
+            isCurrent: tape.tapeInternalState === "HALT"
+          }
+        };
+        setNodes([haltNode]);
         setEdges([]);
         return;
       }
@@ -79675,34 +79684,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       setNewStateName("");
     }, []);
     return /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(import_jsx_dev_runtime7.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Box_default, { sx: { height: "auto", width: "100%" }, children: nodes.length === 0 ? /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(
-        Box_default,
-        {
-          sx: {
-            height: 400,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            border: 1,
-            borderColor: "grey.300",
-            borderRadius: 1,
-            bgcolor: "grey.50"
-          },
-          children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Typography_default, { color: "text.secondary", children: "No states to display. Add some rules to see the state diagram." }, void 0, false, {
-            fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-            lineNumber: 577,
-            columnNumber: 13
-          }, this)
-        },
-        void 0,
-        false,
-        {
-          fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 565,
-          columnNumber: 11
-        },
-        this
-      ) : /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Box_default, { sx: {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Box_default, { sx: { height: "auto", width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Box_default, { sx: {
         height: 400,
         border: 1,
         borderColor: "grey.300",
@@ -79791,12 +79773,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Background, {}, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 668,
+              lineNumber: 666,
               columnNumber: 15
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Controls, {}, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 669,
+              lineNumber: 667,
               columnNumber: 15
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("svg", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("defs", { children: [
@@ -79812,7 +79794,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                   markerUnits: "strokeWidth",
                   children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("polygon", { points: "0,0 0,5 5,2.5", fill: "#555" }, void 0, false, {
                     fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                    lineNumber: 681,
+                    lineNumber: 679,
                     columnNumber: 21
                   }, this)
                 },
@@ -79820,7 +79802,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 false,
                 {
                   fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                  lineNumber: 672,
+                  lineNumber: 670,
                   columnNumber: 19
                 },
                 this
@@ -79837,7 +79819,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                   markerUnits: "strokeWidth",
                   children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("polygon", { points: "0,0 0,5 5,2.5", fill: "#ff6b00" }, void 0, false, {
                     fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                    lineNumber: 692,
+                    lineNumber: 690,
                     columnNumber: 21
                   }, this)
                 },
@@ -79845,7 +79827,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 false,
                 {
                   fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                  lineNumber: 683,
+                  lineNumber: 681,
                   columnNumber: 19
                 },
                 this
@@ -79862,7 +79844,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                   markerUnits: "strokeWidth",
                   children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("polygon", { points: "0,0 0,5 5,2.5", fill: "#2196f3" }, void 0, false, {
                     fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                    lineNumber: 703,
+                    lineNumber: 701,
                     columnNumber: 21
                   }, this)
                 },
@@ -79870,18 +79852,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 false,
                 {
                   fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-                  lineNumber: 694,
+                  lineNumber: 692,
                   columnNumber: 19
                 },
                 this
               )
             ] }, void 0, true, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 671,
+              lineNumber: 669,
               columnNumber: 17
             }, this) }, void 0, false, {
               fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-              lineNumber: 670,
+              lineNumber: 668,
               columnNumber: 15
             }, this)
           ]
@@ -79890,17 +79872,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         true,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 638,
+          lineNumber: 636,
           columnNumber: 13
         },
         this
       ) }, void 0, false, {
         fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-        lineNumber: 582,
+        lineNumber: 580,
         columnNumber: 11
       }, this) }, void 0, false, {
         fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-        lineNumber: 561,
+        lineNumber: 576,
         columnNumber: 7
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(
@@ -79917,7 +79899,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 713,
+          lineNumber: 711,
           columnNumber: 7
         },
         this
@@ -79934,25 +79916,25 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         false,
         {
           fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-          lineNumber: 722,
+          lineNumber: 720,
           columnNumber: 7
         },
         this
       )
     ] }, void 0, true, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 560,
+      lineNumber: 575,
       columnNumber: 5
     }, this);
   }
   function ReactFlowGraph(props) {
     return /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(ReactFlowProvider, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(ReactFlowGraphInner, { ...props }, void 0, false, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 736,
+      lineNumber: 734,
       columnNumber: 7
     }, this) }, void 0, false, {
       fileName: "src/common/components/machine/rules/ReactFlowGraph.tsx",
-      lineNumber: 735,
+      lineNumber: 733,
       columnNumber: 5
     }, this);
   }
