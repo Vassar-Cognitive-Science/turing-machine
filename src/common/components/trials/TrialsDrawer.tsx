@@ -9,12 +9,18 @@ import {
   Stack,
   Alert,
   Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
 import {
   PlaylistPlay,
   Add,
   FileUpload,
   FileDownload,
+  DeleteSweep,
 } from '@mui/icons-material';
 
 import { useTrialStore } from '../../../stores/trialStore';
@@ -41,6 +47,7 @@ export function TrialsDrawer({
     exportTrialsAsYAML,
     importTrialsFromYAML,
     loadTrialToTape,
+    clearAllTrials,
   } = useTrialStore();
   
   const trials = getAllTrials();
@@ -48,6 +55,7 @@ export function TrialsDrawer({
   
   const [editingTrialId, setEditingTrialId] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ message: string; severity: 'success' | 'error' | 'info' }>({ message: '', severity: 'info' });
+  const [clearAllDialogOpen, setClearAllDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportYAML = () => {
@@ -88,6 +96,23 @@ export function TrialsDrawer({
     
     // Reset the input
     event.target.value = '';
+  };
+
+  const handleClearAllTests = () => {
+    setClearAllDialogOpen(true);
+  };
+
+  const handleConfirmClearAll = () => {
+    clearAllTrials();
+    setClearAllDialogOpen(false);
+    setNotification({
+      message: `All ${stats.total} test cases have been deleted`,
+      severity: 'success'
+    });
+  };
+
+  const handleCancelClearAll = () => {
+    setClearAllDialogOpen(false);
   };
   
   return (
@@ -154,6 +179,20 @@ export function TrialsDrawer({
               Export
             </Button>
           </Stack>
+          
+          {trials.length > 0 && (
+            <Button
+              fullWidth
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteSweep />}
+              onClick={handleClearAllTests}
+              size="small"
+              sx={{ mt: 1 }}
+            >
+              Clear All Tests
+            </Button>
+          )}
         </Box>
         
         <Divider sx={{ mb: 2 }} />
@@ -225,6 +264,32 @@ export function TrialsDrawer({
           {notification.message}
         </Alert>
       </Snackbar>
+      
+      {/* Clear All Confirmation Dialog */}
+      <Dialog
+        open={clearAllDialogOpen}
+        onClose={handleCancelClearAll}
+        aria-labelledby="clear-all-dialog-title"
+        aria-describedby="clear-all-dialog-description"
+      >
+        <DialogTitle id="clear-all-dialog-title">
+          Clear All Test Cases?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="clear-all-dialog-description">
+            Are you sure you want to delete all {stats.total} test case{stats.total !== 1 ? 's' : ''}? 
+            This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelClearAll} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmClearAll} color="error" variant="contained" autoFocus>
+            Delete All
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Drawer>
   );
 }

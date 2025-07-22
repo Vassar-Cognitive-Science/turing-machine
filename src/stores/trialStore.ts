@@ -555,6 +555,30 @@ export const useTrialStore = create<TrialStore>()(
         });
       },
 
+      clearAllTrials: (): void => {
+        set((state) => {
+          // Remove all trial data
+          state.testsById.forEach(trialId => {
+            delete (state as any)[trialId];
+          });
+          state.testsById = [];
+          
+          // Clear any running state
+          state.runningTrials = [];
+          state.isRunningTrial = false;
+          
+          // Clear edit mode if active
+          state.isEdittingTrial = false;
+          state.isEdittingExpectedTape = false;
+          state.edittingTrialId = null;
+          state.edittingTrialName = null;
+          state.anyChangeInTrial = false;
+          state.originalTape = null;
+          state.edittingStartTape = null;
+          state.edittingExpectedTape = null;
+        });
+      },
+
       // File operations
       exportTrials: (): void => {
         const state = get() as any;
