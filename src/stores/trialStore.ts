@@ -29,6 +29,7 @@ const generateTrialId = (): string => {
 const normalizeTapeOutput = (output: string): string => {
   // First, replace blank symbols with spaces to normalize them
   let normalized = output
+    .replace(/#/g, ' ') // Replace blank symbols with spaces
     .replace(/∅/g, ' ') // Replace blank symbols with spaces
     .replace(/\u2205/g, ' ') // Replace Unicode empty set symbol with spaces
     .replace(/_/g, ' '); // Replace underscores with spaces (sometimes used as blanks)
@@ -46,8 +47,10 @@ const normalizeTapeOutput = (output: string): string => {
 // Clean tape output for display by removing leading/trailing blanks
 const cleanTapeOutput = (output: string): string => {
   return output
-    .replace(/^∅+/, '') // Remove leading blanks
-    .replace(/∅+$/, '') // Remove trailing blanks
+    .replace(/^#+/, '') // Remove leading blanks
+    .replace(/#+$/, '') // Remove trailing blanks
+    .replace(/^∅+/, '') // Remove leading blanks (legacy)
+    .replace(/∅+$/, '') // Remove trailing blanks (legacy)
     .trim();
 };
 
@@ -426,7 +429,7 @@ export const useTrialStore = create<TrialStore>()(
               const beforeState = tapeStore.tapeInternalState;
               
               // Execute rule operations synchronously
-              const writeValue = rule.write || '∅';
+              const writeValue = rule.write || '#';
               
               // Apply all changes and get fresh state after each operation
               tapeStore.writeToCurrentCell(writeValue);

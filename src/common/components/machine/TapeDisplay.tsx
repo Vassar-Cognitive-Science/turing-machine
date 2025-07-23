@@ -255,12 +255,12 @@ export function TapeDisplay(): React.ReactElement {
             >
               <input
                 type="text"
-                value={cell.val === '∅' || !cell.val ? '' : cell.val}
+                value={cell.val === '#' || cell.val === '∅' || !cell.val ? '' : cell.val}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const newValue = e.target.value.slice(-1); // Only take last character
                   
                   // Write directly to this specific cell
-                  tape.writeToCell(cell.id, newValue || '∅');
+                  tape.writeToCell(cell.id, newValue || '#');
                   
                   // Auto-advance: focus next cell if a symbol was entered
                   if (newValue) {
@@ -367,18 +367,18 @@ export function TapeDisplay(): React.ReactElement {
                     }
                   } else if (e.key === 'Backspace') {
                     e.preventDefault();
-                    const currentValue = cell.val === '∅' || !cell.val ? '' : cell.val;
+                    const currentValue = cell.val === '#' || cell.val === '∅' || !cell.val ? '' : cell.val;
                     
                     if (currentValue) {
                       // If current cell has content, clear it
-                      tape.writeToCell(cell.id, '∅');
+                      tape.writeToCell(cell.id, '#');
                     } else if (index > 0) {
                       // If current cell is empty, move to previous cell and clear it
                       const currentInput = e.target as HTMLInputElement;
                       const prevInput = currentInput.parentElement?.previousElementSibling?.querySelector('input') as HTMLInputElement;
                       if (prevInput) {
                         const prevCell = visibleCells[index - 1];
-                        tape.writeToCell(prevCell.id, '∅');
+                        tape.writeToCell(prevCell.id, '#');
                         prevInput.focus();
                         prevInput.select();
                       }
@@ -386,7 +386,7 @@ export function TapeDisplay(): React.ReactElement {
                   } else if (e.key === 'Delete') {
                     e.preventDefault();
                     // Delete always clears current cell
-                    tape.writeToCell(cell.id, '∅');
+                    tape.writeToCell(cell.id, '#');
                   }
                 }}
                 disabled={machineExecution.isRunning}

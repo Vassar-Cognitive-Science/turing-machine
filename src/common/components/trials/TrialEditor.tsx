@@ -165,7 +165,7 @@ export const TrialEditor: React.FC<TrialEditorProps> = ({
             label="Start Tape Content"
             value={formData.startTape}
             onChange={(e) => handleInputChange('startTape', e.target.value)}
-            helperText="Initial tape content (use ∅ for blank cells)"
+            helperText="Initial tape content (use # for blank cells)"
           />
 
           {/* Expected Tape Output */}
@@ -184,7 +184,7 @@ export const TrialEditor: React.FC<TrialEditorProps> = ({
         <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
           <Typography variant="body2" color="textSecondary">
             <strong>Tips:</strong>
-            <br />• Use ∅ to represent blank cells on the tape
+            <br />• Use # to represent blank cells on the tape
             <br />• Head position is where the read/write head starts (0-indexed)
             <br />• <strong>Only tape content is compared for pass/fail</strong>
             <br />• Leading/trailing blanks are ignored in comparison

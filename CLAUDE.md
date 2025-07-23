@@ -4,91 +4,98 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a web-based Turing Machine simulator built with **modern React 18**, **Zustand** for state management, and **Material-UI v5**. The application allows users to create, edit, and run Turing machines with visual tape representation and state transitions.
-
-**⚡ Recently Modernized**: This project has been completely migrated from Redux + Webpack 3 to Zustand + esbuild with full Turing machine execution logic implemented.
+This is a web-based Turing Machine simulator built with **React 18**, **Zustand** for state management, **Material-UI v7**, and **esbuild** for ultra-fast builds. The application allows users to create, edit, and run Turing machines with visual tape representation and state transitions.
 
 ## Development Commands
 
-- `npm run dev` - Start development server with esbuild hot reload
-- `npm start` - Start production server  
-- `npm run build` - Build for production using esbuild (sub-second builds!)
+### Essential Commands
+- `npm run dev` - Start development server with hot reload (runs frontend + server concurrently)
+- `npm run build` - Build for production using esbuild
+- `npm test` - Run Jest tests with ES modules support
+- `npm run type-check` - TypeScript type checking (also aliased as `npm run lint`)
+
+### Additional Development Commands
+- `npm run dev:frontend` - Start only the frontend build in watch mode
+- `npm run dev:server` - Start only the development server
 - `npm run build:watch` - Build with watch mode
-- `npm test` - Run Jest tests
 - `npm run test:watch` - Run tests in watch mode
-- `npm run type-check` - TypeScript type checking
+- `npm run type-check:watch` - TypeScript checking in watch mode
+
+### Database Commands (MongoDB via Docker)
+- `npm run db:start` - Start MongoDB container
+- `npm run db:stop` - Stop MongoDB container
+- `npm run db:reset` - Reset database (removes volumes)
+- `npm run db:logs` - View database logs
+
+### Production/Deployment
+- `npm start` - Start production server
+- `npm run deploy:prod` - Build and deploy with PM2
+- Various `pm2:*` commands for process management
 
 ## Architecture
 
-### Modern React Architecture
-- **Entry Point**: `src/client/index.js` with React 18 createRoot
-- **State Management**: Zustand stores with immer middleware
-- **Routing**: React Router v6 with modern routing
-- **UI Framework**: Material-UI v5 with emotion styling
-- **Build System**: esbuild for ultra-fast compilation
+### Modern React + TypeScript Architecture
+- **Entry Point**: `src/client/index.tsx` with React 18 createRoot and MUI theming
+- **Main App**: `src/common/components/AppModern.tsx` - Central component coordinating all functionality
+- **State Management**: Zustand stores with immer and persistence middleware
+- **UI Framework**: Material-UI v5 with custom theme and larger font sizes
+- **Build System**: esbuild with TypeScript support for sub-second builds
 
-### Zustand Store Structure
-The application uses multiple focused Zustand stores:
-- **Machine Store** (`src/stores/machineStore.js`): Rules, execution, stepping logic
-- **Tape Store** (`src/stores/tapeStore.js`): Virtual tape cells, head position, read/write operations
-- **GUI Store** (`src/stores/guiStore.js`): UI state, responsive layout, dialogs
-- **Trial Store** (`src/stores/trialStore.js`): Test cases, trial execution, results
+### Zustand Store Architecture
+The application uses multiple focused Zustand stores with TypeScript:
 
-### Component Organization
-- `src/common/components/AppModern.js` - Main application component using hooks
-- `src/stores/` - Zustand stores with TypeScript support
-- `build/` - esbuild configuration and build scripts
-- Modern React patterns: hooks, functional components, Material-UI v5
+- **Machine Store** (`src/stores/machineStore.ts`): Rule management, validation, execution state
+- **Tape Store** (`src/stores/tapeStore.ts`): Virtual tape implementation, head position, cell operations  
+- **GUI Store** (`src/stores/guiStore.ts`): UI state management, responsive layout
+- **Trial Store** (`src/stores/trialStore.ts`): Test case creation, execution, results
+- **Graph Layout Store** (`src/stores/graphLayoutStore.ts`): React Flow graph layout state
 
-### Key Stores and Hooks
-- `useMachineStore()` - Machine state and rule management
-- `useTapeStore()` - Tape operations and head movement
-- `useGuiStore()` - UI state and responsive behavior
-- `useTrialStore()` - Test case management
-- `useMachineExecution()` - Combined hook for machine execution
-- `useTapeOperations()` - Combined hook for tape interactions
+### Combined Operation Hooks
+The `src/stores/index.ts` file provides higher-level hooks that combine multiple stores:
 
-### Server-Side Structure
-- **Server Entry**: `src/server/index.js` → `src/server/server.js`
-- **Framework**: Express.js with Babel transpilation
-- **Static Files**: Serves from `public/` directory
+- `useMachineExecution()` - Machine running, stepping, stopping, reset logic
+- `useTapeOperations()` - Tape reading, writing, head movement operations
+- `useTrialOperations()` - Test case creation and batch execution
+- `useUndoRedo()` - History-based undo/redo functionality
 
-### Build System
-- **Webpack**: Separate configs for development and production
-- **Babel**: ES6+ transpilation with React presets
-- **Development**: Uses webpack-dev-middleware and hot-middleware
+### Component Structure
+- **Machine Components**: `src/common/components/machine/` (controls, rules table, tape display)
+- **Trial Components**: `src/common/components/trials/` (drawer, editor, details)
+- **Rules Components**: `src/common/components/machine/rules/` (React Flow graph, rule editing)
 
-## Key Features
+### Build System Details
+- **esbuild Configuration**: `build/esbuild.config.js` with separate dev/prod configurations
+- **Build Script**: `build/build.js` supports watch mode and production optimization
+- **TypeScript**: Configured with path aliases (`@/*` for `src/*`) in `tsconfig.json`
+- **Output**: Single bundle to `public/static/bundle.js`
 
-### Undo/Redo System
-The application implements a comprehensive undo/redo system in the root reducer that tracks:
-- Rule table modifications
-- Tape state changes
-- Machine state transitions
+### Server Architecture  
+- **Express Server**: `src/server/server.js` with API endpoints for saving/loading machine states
+- **MongoDB Integration**: State persistence with Docker-based development database
+- **API Endpoints**: `/api/save`, `/api/state/:id`, `/api/health`
 
-### Animation System
-- Configurable animation speed
-- Step-by-step execution visualization
-- Tape head movement animation
+## Key Implementation Details
 
-### Trial System
-- Create and manage test cases
-- Edit mode for trial creation
-- Batch trial execution
-- Expected vs actual output comparison
+### Machine Execution Logic
+The machine execution is implemented in `useMachineExecution()` hook with:
+- Step-by-step execution with rule matching and state transitions
+- Animation support with configurable speed
+- Infinite loop protection (10,000 step limit)
+- History tracking for undo/redo functionality
+- Turbo mode for fast execution without animation
 
-## Development Notes
+### State Persistence 
+- **Zustand Persistence**: Automatic local storage persistence for stores
+- **Server State Sharing**: Full machine state serialization (v2.0 format) with shareable URLs
+- **State Loading**: URL-based state loading with fallback to preloaded state
 
-### State Management Patterns
-- Uses immutable state updates
-- Implements side effect cleanup in reducers
-- Tracks changes separately for normal vs trial edit modes
+### Testing Configuration
+- **Jest**: Configured for ES modules with `NODE_OPTIONS="--experimental-vm-modules"`
+- **Test Files**: Located in `test/` directory with `.test.js` extension
+- **Integration Tests**: Database integration tests with Docker container management
 
-### Component Patterns
-- Container/Component separation
-- React-DnD for drag-and-drop functionality
-- Material-UI theming and responsive design
-
-### Testing
-- Jest test framework configured
-- Babel integration for ES6+ test files
+### React Flow Integration
+The rules visualization uses React Flow (`@xyflow/react`) with:
+- Custom node and edge components for state transitions
+- Automatic layout using dagre algorithm
+- Interactive graph editing and state renaming

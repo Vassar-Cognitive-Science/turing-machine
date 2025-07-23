@@ -101,7 +101,7 @@ function SortableRuleRow({ rule, machine, rowNumber }: SortableRuleRowProps): Re
           size="medium"
           value={rule.read}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => machine.updateRule(rule.id, 'read', e.target.value)}
-          placeholder="∅"
+          placeholder="#"
           slotProps={{ htmlInput: { maxLength: 1 } }}
         />
       </Grid>

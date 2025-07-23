@@ -49,7 +49,7 @@ export function StatusBar(): React.ReactElement {
           <Typography variant="body2" component="div">
             <strong>Symbol:</strong> 
             <Chip 
-              label={tapeOps.currentSymbol || '∅'} 
+              label={tapeOps.currentSymbol || '#'} 
               variant="outlined"
               size="medium"
               sx={{ ml: 1 }}

@@ -5,7 +5,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import type { TapeCell, TapeStore, VisibleCell } from '../types';
 
 // Constants from original codebase
-const BLANK = "∅"; // Blank symbol
+const BLANK = "#"; // Blank symbol
 const CELL_ID_PREFIX = "TAPE-CELL ";
 
 // Utility function to capitalize alphabet characters and trim whitespace
@@ -597,7 +597,7 @@ export const useTapeStore = create<TapeStore>()(
         const headPosition = state.tapeCellsById.indexOf(state.tapePointer!);
         
         // Extract just the meaningful content (remove leading/trailing blanks)
-        const meaningfulContent = tapeContent.replace(/^∅+|∅+$/g, '');
+        const meaningfulContent = tapeContent.replace(/^#+|#+$/g, '');
         
         return {
           // Persist simplified tape representation

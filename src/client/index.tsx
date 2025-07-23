@@ -7,6 +7,7 @@ import '@xyflow/react/dist/style.css';
 
 import App from '../common/components/AppModern';
 import PageNotFound from '../common/components/PageNotFoundModern';
+import GradingPage from '../common/components/GradingPage';
 
 // Create MUI theme
 const theme = createTheme({
@@ -62,6 +63,7 @@ function AppWrapper(): React.ReactElement {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="/grade" element={<GradingPage />} />
           <Route path="/:id" element={<App />} />
           <Route path="/error/404" element={<PageNotFound />} />
         </Routes>
