@@ -27,10 +27,12 @@ coverage
 build/Release
 
 # Dependency directories
-build
 dist
 node_modules
 jspm_packages
+
+# Build output (but keep build scripts)
+public/static/bundle.js*
 
 # Optional npm cache directory
 .npm
