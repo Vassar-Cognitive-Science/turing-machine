@@ -267,14 +267,6 @@ export function RulesTable({
             Add Rule
           </Button>
           <Button 
-            onClick={machine.addSeedRules} 
-            variant="outlined" 
-            size="medium"
-            color="success"
-          >
-            Load Test Rules
-          </Button>
-          <Button 
             onClick={handleClearAllRules} 
             variant="outlined" 
             size="medium"
