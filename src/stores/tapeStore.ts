@@ -415,15 +415,6 @@ export const useTapeStore = create<TapeStore>()(
         const state = get() as any;
         const startIndex = Math.max(0, state.anchorCell);
         
-        // Debug logging
-        console.log('getVisibleCells called:', {
-          count,
-          tapeCellsByIdLength: state.tapeCellsById?.length || 0,
-          tapePointer: state.tapePointer,
-          startIndex,
-          anchorCell: state.anchorCell
-        });
-        
         // Always return exactly `count` cells
         const visibleCells = state.tapeCellsById
           .slice(startIndex, startIndex + count)
@@ -433,7 +424,6 @@ export const useTapeStore = create<TapeStore>()(
             isHead: cellId === state.tapePointer,
           }));
           
-        console.log('getVisibleCells result:', visibleCells.map(c => ({ id: c.id, isHead: c.isHead })));
         return visibleCells;
       },
 

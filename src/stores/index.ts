@@ -556,6 +556,13 @@ export const initializeStores = (): void => {
   if (tape.tapeCellsById.length === 0) {
     // No persisted tape, initialize with empty tape
     (tape as any).initializeTape();
+  } else {
+    // Even if tape exists from persistence, ensure tapePointer is set
+    if (!tape.tapePointer && tape.tapeCellsById.length > 0) {
+      // Find a valid cell to set as head (preferably the middle one)
+      const middleIndex = Math.floor(tape.tapeCellsById.length / 2);
+      tape.setHeadPosition(tape.tapeCellsById[middleIndex]);
+    }
   }
 };
 
