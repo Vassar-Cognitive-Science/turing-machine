@@ -612,13 +612,59 @@ export const useTapeStore = create<TapeStore>()(
           const content = (state as any).tapeContent;
           const headPos = (state as any).headPosition || 0;
           
-          // Use fillTape to restore the structure - this is the simplest approach
-          state.fillTape(content);
+          // Manually reconstruct the tape structure since fillTape method isn't available during rehydration
+          const minTapeSize = 15;
+          const contentLength = content ? content.length : 0;
+          const bufferSize = 5;
+          const initialTapeSize = Math.max(minTapeSize, contentLength + 2 * bufferSize);
           
-          // Set head position
-          if (headPos < state.tapeCellsById.length) {
-            state.tapePointer = state.tapeCellsById[headPos];
+          const cellIds: string[] = [];
+          const contentStartPos = Math.floor((initialTapeSize - contentLength) / 2);
+          
+          // Clear existing tape data
+          for (const key in state) {
+            if (key.startsWith(CELL_ID_PREFIX)) {
+              delete (state as any)[key];
+            }
           }
+          
+          // Generate cell IDs and create cells
+          for (let i = 0; i < initialTapeSize; i++) {
+            const cellId = generateCellId();
+            cellIds.push(cellId);
+            
+            // Determine cell value
+            let cellValue = BLANK;
+            if (content && i >= contentStartPos && i < contentStartPos + contentLength) {
+              const contentIndex = i - contentStartPos;
+              const rawValue = content[contentIndex] === ' ' || content[contentIndex] === '#' ? BLANK : content[contentIndex];
+              cellValue = rawValue === BLANK ? BLANK : capitalizeAlphabet(rawValue);
+            }
+            
+            (state as any)[cellId] = {
+              val: cellValue,
+              prev: i > 0 ? cellIds[i - 1] : null,
+              next: null,
+              highlight: false,
+            };
+            
+            // Set next pointer for previous cell
+            if (i > 0) {
+              (state as any)[cellIds[i - 1]].next = cellId;
+            }
+          }
+          
+          // Set up tape structure
+          state.tapeHead = cellIds[0];
+          state.tapeTail = cellIds[cellIds.length - 1];
+          state.tapeCellsById = cellIds;
+          
+          // Position head at the start of content (or center if no content)
+          const headPosition = content ? Math.min(headPos, cellIds.length - 1) : Math.floor(initialTapeSize / 2);
+          state.tapePointer = cellIds[headPosition];
+          
+          state.anchorCell = 0;
+          state.highlightedCellOrder = -1;
         }
       },
     }

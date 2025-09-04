@@ -30105,10 +30105,43 @@
               if (state && state.tapeContent) {
                 const content = state.tapeContent;
                 const headPos = state.headPosition || 0;
-                state.fillTape(content);
-                if (headPos < state.tapeCellsById.length) {
-                  state.tapePointer = state.tapeCellsById[headPos];
+                const minTapeSize = 15;
+                const contentLength = content ? content.length : 0;
+                const bufferSize = 5;
+                const initialTapeSize = Math.max(minTapeSize, contentLength + 2 * bufferSize);
+                const cellIds = [];
+                const contentStartPos = Math.floor((initialTapeSize - contentLength) / 2);
+                for (const key in state) {
+                  if (key.startsWith(CELL_ID_PREFIX)) {
+                    delete state[key];
+                  }
                 }
+                for (let i = 0; i < initialTapeSize; i++) {
+                  const cellId = generateCellId();
+                  cellIds.push(cellId);
+                  let cellValue = BLANK;
+                  if (content && i >= contentStartPos && i < contentStartPos + contentLength) {
+                    const contentIndex = i - contentStartPos;
+                    const rawValue = content[contentIndex] === " " || content[contentIndex] === "#" ? BLANK : content[contentIndex];
+                    cellValue = rawValue === BLANK ? BLANK : capitalizeAlphabet2(rawValue);
+                  }
+                  state[cellId] = {
+                    val: cellValue,
+                    prev: i > 0 ? cellIds[i - 1] : null,
+                    next: null,
+                    highlight: false
+                  };
+                  if (i > 0) {
+                    state[cellIds[i - 1]].next = cellId;
+                  }
+                }
+                state.tapeHead = cellIds[0];
+                state.tapeTail = cellIds[cellIds.length - 1];
+                state.tapeCellsById = cellIds;
+                const headPosition = content ? Math.min(headPos, cellIds.length - 1) : Math.floor(initialTapeSize / 2);
+                state.tapePointer = cellIds[headPosition];
+                state.anchorCell = 0;
+                state.highlightedCellOrder = -1;
               }
             }
           }
