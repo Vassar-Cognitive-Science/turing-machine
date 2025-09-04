@@ -23,6 +23,15 @@ export function TapeDisplay(): React.ReactElement {
   // Find the head cell to position the START indicator
   const headIndex = visibleCells.findIndex((cell: VisibleCell) => cell.isHead);
   
+  // Debug logging
+  console.log('TapeDisplay render:', {
+    visibleCellsLength: visibleCells.length,
+    headIndex,
+    tapePointer: tape.tapePointer,
+    tapeCellsById: tape.tapeCellsById?.length || 0,
+    visibleCells: visibleCells.map(c => ({ id: c.id, isHead: c.isHead, val: c.val }))
+  });
+  
   // Track drag state
   const [isDragging, setIsDragging] = useState<boolean>(false);
   
