@@ -429,7 +429,8 @@ export const useTrialStore = create<TrialStore>()(
               const beforeState = tapeStore.tapeInternalState;
               
               // Execute rule operations synchronously
-              const writeValue = rule.write || '#';
+              // Handle WRITE * wildcard - write the currently read symbol
+              const writeValue = (rule.write === '*' || rule.write === '∗') ? beforeSymbol : (rule.write || '#');
               
               // Apply all changes and get fresh state after each operation
               tapeStore.writeToCurrentCell(writeValue);

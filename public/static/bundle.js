@@ -33371,7 +33371,7 @@
                       const beforeWrite2 = tapeStore.getTapeAsString();
                       const beforeSymbol = tapeStore.readCurrentCell();
                       const beforeState = tapeStore.tapeInternalState;
-                      const writeValue = rule.write || "#";
+                      const writeValue = rule.write === "*" || rule.write === "\u2217" ? beforeSymbol : rule.write || "#";
                       tapeStore.writeToCurrentCell(writeValue);
                       tapeStore.setInternalState(rule.new_state);
                       if (rule.direction === "L" || rule.isLeft) {
@@ -33862,7 +33862,8 @@
             rule,
             timestamp: Date.now()
           };
-          writeToCurrentCell(rule.write || "#");
+          const writeValue = rule.write === "*" || rule.write === "\u2217" ? currentSymbol : rule.write || "#";
+          writeToCurrentCell(writeValue);
           setInternalState(rule.new_state);
           if (rule.direction === "L" || rule.isLeft) {
             moveHeadLeft();
@@ -33871,7 +33872,7 @@
           }
           historyEntry.afterState = {
             state: rule.new_state,
-            symbol: rule.write || "#",
+            symbol: writeValue,
             headPosition: useTapeStore.getState().getCurrentHeadPosition(),
             tapeContent: useTapeStore.getState().getTapeAsString()
           };
@@ -85001,24 +85002,6 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
             Button_default,
             {
-              onClick: machine.addSeedRules,
-              variant: "outlined",
-              size: "medium",
-              color: "success",
-              children: "Load Test Rules"
-            },
-            void 0,
-            false,
-            {
-              fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 269,
-              columnNumber: 11
-            },
-            this
-          ),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
-            Button_default,
-            {
               onClick: handleClearAllRules,
               variant: "outlined",
               size: "medium",
@@ -85029,7 +85012,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             false,
             {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 277,
+              lineNumber: 269,
               columnNumber: 11
             },
             this
@@ -85048,7 +85031,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         // Table View
         rules.length === 0 ? /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { color: "text.secondary", align: "center", children: "No rules defined. Add a rule to get started." }, void 0, false, {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 291,
+          lineNumber: 283,
           columnNumber: 11
         }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
           DndContext,
@@ -85059,20 +85042,20 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { container: true, spacing: 1, children: [
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 0.5, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "#" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 301,
+                lineNumber: 293,
                 columnNumber: 79
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 301,
+                lineNumber: 293,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 0.5, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Order" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 302,
+                lineNumber: 294,
                 columnNumber: 79
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 302,
+                lineNumber: 294,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
@@ -85110,40 +85093,40 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 false,
                 {
                   fileName: "src/common/components/machine/RulesTable.tsx",
-                  lineNumber: 304,
+                  lineNumber: 296,
                   columnNumber: 17
                 },
                 this
               ) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 303,
+                lineNumber: 295,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Read" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 335,
+                lineNumber: 327,
                 columnNumber: 77
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 335,
+                lineNumber: 327,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Write" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 336,
+                lineNumber: 328,
                 columnNumber: 77
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 336,
+                lineNumber: 328,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Move" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 337,
+                lineNumber: 329,
                 columnNumber: 77
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 337,
+                lineNumber: 329,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 2, sx: { display: "flex", alignItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(
@@ -85181,36 +85164,36 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 false,
                 {
                   fileName: "src/common/components/machine/RulesTable.tsx",
-                  lineNumber: 339,
+                  lineNumber: 331,
                   columnNumber: 17
                 },
                 this
               ) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 338,
+                lineNumber: 330,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Grid_default, { size: 1, children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Typography_default, { variant: "body2", fontWeight: "bold", children: "Actions" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 370,
+                lineNumber: 362,
                 columnNumber: 30
               }, this) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 370,
+                lineNumber: 362,
                 columnNumber: 15
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(SortableContext, { items: displayRules.map((rule) => rule.id), strategy: verticalListSortingStrategy, children: displayRules.map((rule, index2) => /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(SortableRuleRow, { rule, machine, rowNumber: index2 + 1 }, rule.id, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 374,
+                lineNumber: 366,
                 columnNumber: 19
               }, this)) }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 372,
+                lineNumber: 364,
                 columnNumber: 15
               }, this)
             ] }, void 0, true, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 300,
+              lineNumber: 292,
               columnNumber: 13
             }, this)
           },
@@ -85218,7 +85201,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 295,
+            lineNumber: 287,
             columnNumber: 11
           },
           this
@@ -85236,7 +85219,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           false,
           {
             fileName: "src/common/components/machine/RulesTable.tsx",
-            lineNumber: 382,
+            lineNumber: 374,
             columnNumber: 9
           },
           this
@@ -85252,32 +85235,32 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DialogTitle_default, { id: "clear-confirm-dialog-title", children: "Clear All Rules" }, void 0, false, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 395,
+              lineNumber: 387,
               columnNumber: 9
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DialogContent_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DialogContentText_default, { id: "clear-confirm-dialog-description", children: "Are you sure you want to clear all rules? This action cannot be undone." }, void 0, false, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 399,
+              lineNumber: 391,
               columnNumber: 11
             }, this) }, void 0, false, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 398,
+              lineNumber: 390,
               columnNumber: 9
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(DialogActions_default, { children: [
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Button_default, { onClick: handleCancelClear, color: "primary", children: "Cancel" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 404,
+                lineNumber: 396,
                 columnNumber: 11
               }, this),
               /* @__PURE__ */ (0, import_jsx_dev_runtime9.jsxDEV)(Button_default, { onClick: handleConfirmClear, color: "warning", variant: "contained", children: "Clear All" }, void 0, false, {
                 fileName: "src/common/components/machine/RulesTable.tsx",
-                lineNumber: 407,
+                lineNumber: 399,
                 columnNumber: 11
               }, this)
             ] }, void 0, true, {
               fileName: "src/common/components/machine/RulesTable.tsx",
-              lineNumber: 403,
+              lineNumber: 395,
               columnNumber: 9
             }, this)
           ]
@@ -85286,7 +85269,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         true,
         {
           fileName: "src/common/components/machine/RulesTable.tsx",
-          lineNumber: 389,
+          lineNumber: 381,
           columnNumber: 7
         },
         this
@@ -87544,7 +87527,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
           return symbol;
         };
-        const writeValue = normalizeBlankForWrite(rule.write || "#");
+        let writeValue;
+        if (rule.write === "*" || rule.write === "\u2217") {
+          writeValue = currentSymbol;
+        } else {
+          writeValue = normalizeBlankForWrite(rule.write || "#");
+        }
         tape.writeCurrentCell(writeValue);
         tape.setState(rule.new_state);
         if (rule.direction === "L") {

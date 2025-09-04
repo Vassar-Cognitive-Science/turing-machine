@@ -115,7 +115,9 @@ export const useMachineExecution = (): MachineExecution => {
     };
     
     // Execute the rule
-    writeToCurrentCell(rule.write || '#');
+    // Handle WRITE * wildcard - write the currently read symbol
+    const writeValue = (rule.write === '*' || rule.write === '∗') ? currentSymbol : (rule.write || '#');
+    writeToCurrentCell(writeValue);
     setInternalState(rule.new_state);
     
     // Move head
@@ -128,7 +130,7 @@ export const useMachineExecution = (): MachineExecution => {
     // Record after state
     historyEntry.afterState = {
       state: rule.new_state,
-      symbol: rule.write || '#',
+      symbol: writeValue,
       headPosition: useTapeStore.getState().getCurrentHeadPosition(),
       tapeContent: useTapeStore.getState().getTapeAsString()
     };

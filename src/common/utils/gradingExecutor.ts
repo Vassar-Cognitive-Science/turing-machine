@@ -206,7 +206,13 @@ export async function executeTest(
         return symbol;
       };
       
-      const writeValue = normalizeBlankForWrite(rule.write || '#');
+      // Handle WRITE * wildcard - write the currently read symbol
+      let writeValue;
+      if (rule.write === '*' || rule.write === '∗') {
+        writeValue = currentSymbol;
+      } else {
+        writeValue = normalizeBlankForWrite(rule.write || '#');
+      }
       tape.writeCurrentCell(writeValue);
       tape.setState(rule.new_state);
       
