@@ -32,7 +32,10 @@ node_modules
 jspm_packages
 
 # Build output (but keep build scripts)
-public/static/bundle.js*
+public/static/bundle.*
+public/static/*.js
+public/static/*.css
+public/static/*.map
 
 # Optional npm cache directory
 .npm
