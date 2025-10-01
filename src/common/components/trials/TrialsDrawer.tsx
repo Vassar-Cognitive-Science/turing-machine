@@ -47,14 +47,17 @@ export function TrialsDrawer({
     importTrialsFromYAML,
     loadTrialToTape,
     clearAllTrials,
+    getTrial,
   } = useTrialStore();
 
-  // Subscribe to testsById and force re-render by creating new array references
+  // Subscribe to testsById which changes when trials are added/removed
   const testsById = useTrialStore((state) => state.testsById);
-  const allState = useTrialStore((state) => state);
+
+  // Fetch trials using getTrial for each ID when testsById changes
   const trials = React.useMemo(() => {
-    return testsById.map((id) => (allState as any)[id]).filter((t: any) => t !== null && t !== undefined);
-  }, [testsById, allState]);
+    return testsById.map((id) => getTrial(id)).filter((t): t is NonNullable<typeof t> => t !== null);
+  }, [testsById, getTrial]);
+
   const stats = getTrialStats();
   
   const [editingTrialId, setEditingTrialId] = useState<string | null>(null);
