@@ -154,7 +154,8 @@ export function RulesTable({
   onAddRule,
 }: RulesTableProps): React.ReactElement {
   const machine = useMachineStore();
-  const rules = machine.getAllRules();
+  // Use selector to subscribe to rules array directly, avoiding new reference on every render
+  const rules = useMachineStore((state) => state.getAllRules());
   const [currentView, setCurrentView] = useState<RulesViewType>('table');
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const [sortField, setSortField] = useState<SortField>('none');
