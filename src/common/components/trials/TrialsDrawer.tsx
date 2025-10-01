@@ -49,10 +49,10 @@ export function TrialsDrawer({
     clearAllTrials,
   } = useTrialStore();
 
-  // Subscribe to testsById so component re-renders when trials are imported
-  const testsById = useTrialStore((state) => state.testsById);
-  const getTrial = useTrialStore((state) => state.getTrial);
-  const trials = testsById.map((id) => getTrial(id)).filter((t): t is NonNullable<typeof t> => t !== null);
+  // Subscribe to all trials - this will re-render when trials are imported
+  const trials = useTrialStore((state) => {
+    return state.testsById.map((id) => (state as any)[id]).filter((t: any) => t !== null && t !== undefined);
+  });
   const stats = getTrialStats();
   
   const [editingTrialId, setEditingTrialId] = useState<string | null>(null);
