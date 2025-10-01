@@ -154,12 +154,12 @@ export function RulesTable({
   onAddRule,
 }: RulesTableProps): React.ReactElement {
   const machine = useMachineStore();
-  // Subscribe to rowsById to detect when rules change, then build the rules array with useMemo
+  // Subscribe to rowsById and build rules array, avoiding new reference unless rowsById actually changes
   const rowsById = useMachineStore((state) => state.rowsById);
-  const getRule = useMachineStore((state) => state.getRule);
   const rules = useMemo(() => {
-    return rowsById.map((id) => getRule(id)).filter((r): r is NonNullable<typeof r> => r !== null);
-  }, [rowsById, getRule]);
+    const state = useMachineStore.getState() as any;
+    return rowsById.map((id) => ({ id, ...state[id] })).filter((r) => r.id);
+  }, [rowsById]);
   const [currentView, setCurrentView] = useState<RulesViewType>('table');
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const [sortField, setSortField] = useState<SortField>('none');
