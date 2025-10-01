@@ -463,7 +463,7 @@ export const useTrialOperations = (): TrialOperations => {
   } = useTapeStore();
   
   const createTrial = (name: string, startTape: string = '', expectedTape: string = ''): void => {
-    addTrial(name, useTapeStore.getState().tapeInternalState, startTape, expectedTape);
+    addTrial(name, 'START', startTape, expectedTape);
   };
   
   const runTrialWithState = async (trialId?: string): Promise<void> => {
