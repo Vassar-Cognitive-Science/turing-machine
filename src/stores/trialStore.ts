@@ -310,31 +310,23 @@ export const useTrialStore = create<TrialStore>()(
             // Set up trial conditions
             tapeStore.setInternalState(trial.startState);
             tapeStore.fillTape(trial.startTape);
-            
-            // Set head position if specified
-            // Note: fillTape adds 5 padding cells before content, so we need to adjust the position
-            if (trial.startTapeHead !== undefined && trial.startTapeHead >= 0) {
-              // Try to use the setHead method if it exists, otherwise fallback
-              if (typeof (tapeStore as any).setHead === 'function') {
-                (tapeStore as any).setHead(trial.startTapeHead);
-              } else {
-                // Fallback: calculate position accounting for padding
-                const paddingBefore = 5; // fillTape adds 5 padding cells before content
-                const currentPos = tapeStore.getCurrentHeadPosition();
-                const targetPos = trial.startTapeHead + paddingBefore; // Adjust for padding
-                const diff = targetPos - currentPos;
-                
-                if (diff > 0) {
-                  for (let i = 0; i < diff; i++) {
-                    tapeStore.moveHeadRight();
-                  }
-                } else if (diff < 0) {
-                  for (let i = 0; i < Math.abs(diff); i++) {
-                    tapeStore.moveHeadLeft();
-                  }
-                }
+
+            // fillTape centers content and places head at start of content
+            // Now adjust head position based on trial.startTapeHead (relative to content start)
+            const targetOffset = trial.startTapeHead || 0;
+
+            if (targetOffset > 0) {
+              // Move right from content start
+              for (let i = 0; i < targetOffset; i++) {
+                tapeStore.moveHeadRight();
+              }
+            } else if (targetOffset < 0) {
+              // Move left from content start
+              for (let i = 0; i < Math.abs(targetOffset); i++) {
+                tapeStore.moveHeadLeft();
               }
             }
+            // If targetOffset is 0, head is already at content start (fillTape default)
             
             // Get fresh state after setup to ensure all changes are applied
             tapeStore = useTapeStore.getState();
@@ -670,7 +662,6 @@ export const useTrialStore = create<TrialStore>()(
 
           // fillTape centers content and places head at start of content
           // Now adjust head position based on trial.startTapeHead (relative to content start)
-          const currentPos = tapeStore.getCurrentHeadPosition();
           const targetOffset = trial.startTapeHead || 0;
 
           if (targetOffset > 0) {
