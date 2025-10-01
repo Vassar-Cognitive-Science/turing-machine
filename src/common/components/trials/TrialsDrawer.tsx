@@ -41,7 +41,6 @@ export function TrialsDrawer({
   onAddTrial,
 }: TrialsDrawerProps): React.ReactElement {
   const {
-    getAllTrials,
     getTrialStats,
     isRunningTrial,
     exportTrialsAsYAML,
@@ -49,8 +48,11 @@ export function TrialsDrawer({
     loadTrialToTape,
     clearAllTrials,
   } = useTrialStore();
-  
-  const trials = getAllTrials();
+
+  // Subscribe to testsById so component re-renders when trials are imported
+  const testsById = useTrialStore((state) => state.testsById);
+  const getTrial = useTrialStore((state) => state.getTrial);
+  const trials = testsById.map((id) => getTrial(id)).filter((t): t is NonNullable<typeof t> => t !== null);
   const stats = getTrialStats();
   
   const [editingTrialId, setEditingTrialId] = useState<string | null>(null);

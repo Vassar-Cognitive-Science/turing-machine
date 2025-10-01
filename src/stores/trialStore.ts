@@ -377,9 +377,9 @@ export const useTrialStore = create<TrialStore>()(
                 const finalOutput = tapeStore.getTapeAsString();
                 const cleanedFinalOutput = cleanTapeOutput(finalOutput);
                 
-                // Compare normalized outputs (ignoring blank spaces)
-                const normalizedFinalOutput = normalizeTapeOutput(finalOutput);
-                const normalizedExpectedOutput = normalizeTapeOutput(trial.expectedTape);
+                // Compare normalized outputs (ignoring blank spaces and case)
+                const normalizedFinalOutput = normalizeTapeOutput(finalOutput).toLowerCase();
+                const normalizedExpectedOutput = normalizeTapeOutput(trial.expectedTape).toLowerCase();
                 const passed = normalizedFinalOutput === normalizedExpectedOutput;
                 
                 // Only restore state if requested (for batch runs)
