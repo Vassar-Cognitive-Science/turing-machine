@@ -622,26 +622,31 @@ export const useTrialStore = create<TrialStore>()(
 
       importTrialsFromYAML: (yamlContent: string): { success: boolean; message: string; count?: number } => {
         try {
+          console.log('importTrialsFromYAML called');
           const validation = validateYAMLTestSuite(yamlContent);
           if (!validation.valid) {
-            return { 
-              success: false, 
-              message: `Invalid YAML format: ${validation.errors.join(', ')}` 
+            console.log('YAML validation failed:', validation.errors);
+            return {
+              success: false,
+              message: `Invalid YAML format: ${validation.errors.join(', ')}`
             };
           }
 
           const trials = convertYAMLToTrials(yamlContent);
+          console.log('Converted YAML to trials:', trials);
           get().importTrials(trials);
-          
-          return { 
-            success: true, 
+          console.log('Called importTrials');
+
+          return {
+            success: true,
             message: `Successfully imported ${trials.length} test(s)`,
-            count: trials.length 
+            count: trials.length
           };
         } catch (error) {
-          return { 
-            success: false, 
-            message: error instanceof Error ? error.message : 'Unknown error occurred' 
+          console.error('Error importing YAML:', error);
+          return {
+            success: false,
+            message: error instanceof Error ? error.message : 'Unknown error occurred'
           };
         }
       },
@@ -692,7 +697,9 @@ export const useTrialStore = create<TrialStore>()(
       },
 
       importTrials: (trialsData: Partial<TrialData>[]): void => {
+        console.log('importTrials called with data:', trialsData);
         set((state) => {
+          console.log('Inside set function, current testsById:', state.testsById);
           const newTestsById = [...state.testsById];
           trialsData.forEach(trialData => {
             const trialId = generateTrialId();
