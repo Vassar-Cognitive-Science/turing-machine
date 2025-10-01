@@ -705,8 +705,8 @@ export const useTrialStore = create<TrialStore>()(
             const trialId = generateTrialId();
             newTestsById.push(trialId);
             (state as any)[trialId] = {
-              id: trialId,
               ...trialData,
+              id: trialId, // Override imported ID with generated UUID
               status: TEST_STATUS.PENDING,
               result: null,
               error: null,
