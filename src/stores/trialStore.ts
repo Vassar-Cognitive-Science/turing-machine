@@ -708,8 +708,18 @@ export const useTrialStore = create<TrialStore>()(
               actualOutput: "",
               createdAt: new Date().toISOString(),
             } as TrialData;
+            console.log('Imported trial:', trialId, (state as any)[trialId]);
           });
           state.testsById = newTestsById;
+          console.log('After import, testsById:', state.testsById);
+        });
+
+        // Debug: Check state after set
+        const afterState = get() as any;
+        console.log('State after import:');
+        console.log('  testsById:', afterState.testsById);
+        afterState.testsById.forEach((id: string) => {
+          console.log(`  Trial ${id}:`, afterState[id]);
         });
       },
 

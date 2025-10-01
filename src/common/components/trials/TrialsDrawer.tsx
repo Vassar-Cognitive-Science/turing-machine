@@ -55,7 +55,10 @@ export function TrialsDrawer({
 
   // Fetch trials using getTrial for each ID when testsById changes
   const trials = React.useMemo(() => {
-    return testsById.map((id) => getTrial(id)).filter((t): t is NonNullable<typeof t> => t !== null);
+    console.log('TrialsDrawer: testsById changed:', testsById);
+    const fetchedTrials = testsById.map((id) => getTrial(id)).filter((t): t is NonNullable<typeof t> => t !== null);
+    console.log('TrialsDrawer: fetched trials:', fetchedTrials);
+    return fetchedTrials;
   }, [testsById, getTrial]);
 
   const stats = getTrialStats();
