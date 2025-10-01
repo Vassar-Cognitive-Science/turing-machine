@@ -49,10 +49,12 @@ export function TrialsDrawer({
     clearAllTrials,
   } = useTrialStore();
 
-  // Subscribe to all trials - this will re-render when trials are imported
-  const trials = useTrialStore((state) => {
-    return state.testsById.map((id) => (state as any)[id]).filter((t: any) => t !== null && t !== undefined);
-  });
+  // Subscribe to testsById and force re-render by creating new array references
+  const testsById = useTrialStore((state) => state.testsById);
+  const allState = useTrialStore((state) => state);
+  const trials = React.useMemo(() => {
+    return testsById.map((id) => (allState as any)[id]).filter((t: any) => t !== null && t !== undefined);
+  }, [testsById, allState]);
   const stats = getTrialStats();
   
   const [editingTrialId, setEditingTrialId] = useState<string | null>(null);

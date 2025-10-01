@@ -693,9 +693,10 @@ export const useTrialStore = create<TrialStore>()(
 
       importTrials: (trialsData: Partial<TrialData>[]): void => {
         set((state) => {
+          const newTestsById = [...state.testsById];
           trialsData.forEach(trialData => {
             const trialId = generateTrialId();
-            state.testsById.push(trialId);
+            newTestsById.push(trialId);
             (state as any)[trialId] = {
               id: trialId,
               ...trialData,
@@ -708,6 +709,7 @@ export const useTrialStore = create<TrialStore>()(
               createdAt: new Date().toISOString(),
             } as TrialData;
           });
+          state.testsById = newTestsById;
         });
       },
 
