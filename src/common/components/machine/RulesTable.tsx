@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Paper,
   Typography,
@@ -154,12 +154,36 @@ export function RulesTable({
   onAddRule,
 }: RulesTableProps): React.ReactElement {
   const machine = useMachineStore();
-  // Subscribe to rowsById and build rules array, avoiding new reference unless rowsById actually changes
-  const rowsById = useMachineStore((state) => state.rowsById);
-  const rules = useMemo(() => {
-    const state = useMachineStore.getState() as any;
-    return rowsById.map((id) => ({ id, ...state[id] })).filter((r) => r.id);
-  }, [rowsById]);
+  // Subscribe to the entire state to trigger updates when any rule field changes
+  // We use a selector that returns a stable reference when rules haven't changed
+  const rules = useMachineStore((state) => {
+    const allState = state as any;
+    return state.rowsById.map((id) => ({
+      id,
+      in_state: allState[id]?.in_state || '',
+      read: allState[id]?.read || '',
+      write: allState[id]?.write || '',
+      direction: allState[id]?.direction || 'R',
+      new_state: allState[id]?.new_state || '',
+      isLeft: allState[id]?.isLeft || false,
+      in_state_error: allState[id]?.in_state_error || false,
+      read_error: allState[id]?.read_error || false,
+      write_error: allState[id]?.write_error || false,
+      new_state_error: allState[id]?.new_state_error || false,
+    }));
+  }, (a, b) => {
+    // Custom equality function: only return false if rules actually changed
+    if (a.length !== b.length) return false;
+    return a.every((ruleA, idx) => {
+      const ruleB = b[idx];
+      return ruleA.id === ruleB.id &&
+        ruleA.in_state === ruleB.in_state &&
+        ruleA.read === ruleB.read &&
+        ruleA.write === ruleB.write &&
+        ruleA.direction === ruleB.direction &&
+        ruleA.new_state === ruleB.new_state;
+    });
+  });
   const [currentView, setCurrentView] = useState<RulesViewType>('table');
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const [sortField, setSortField] = useState<SortField>('none');
