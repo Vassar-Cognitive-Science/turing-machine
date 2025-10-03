@@ -279,23 +279,12 @@ function AppModern(): React.ReactElement {
       
       // Update the browser URL to the saved URL
       window.history.pushState({}, '', `/${result.id}`);
-      
-      // Copy to clipboard
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(shareUrl);
-        setSnackbar({ 
-          open: true, 
-          message: `Machine saved! URL copied to clipboard: ${shareUrl}`, 
-          severity: 'success' 
-        });
-      } else {
-        // Fallback for older browsers
-        setSnackbar({ 
-          open: true, 
-          message: `Machine saved! URL: ${shareUrl}`, 
-          severity: 'success' 
-        });
-      }
+
+      setSnackbar({
+        open: true,
+        message: `Machine saved! URL: ${shareUrl}`,
+        severity: 'success'
+      });
 
     } catch (error) {
       console.error('Save error:', error);
