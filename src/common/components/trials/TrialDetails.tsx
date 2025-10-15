@@ -224,19 +224,37 @@ export const TrialDetails: React.FC<TrialDetailsProps> = ({
                     <Typography variant="body2" color="textSecondary">
                       Status:
                     </Typography>
-                    <Chip 
-                      label={trial.status.toUpperCase()} 
+                    <Chip
+                      label={trial.status.toUpperCase()}
                       color={getStatusColor(trial.status) as any}
                       size="small"
                     />
                   </Box>
-                  
+
                   <Box sx={{ flex: '1 1 100px' }}>
                     <Typography variant="body2" color="textSecondary">
                       Steps:
                     </Typography>
                     <Typography variant="body1" fontFamily="monospace">
                       {trial.steps}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ flex: '1 1 100px' }}>
+                    <Typography variant="body2" color="textSecondary">
+                      Rules:
+                    </Typography>
+                    <Typography variant="body1" fontFamily="monospace">
+                      {trial.machineRuleCount ?? 'N/A'}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ flex: '1 1 100px' }}>
+                    <Typography variant="body2" color="textSecondary">
+                      States:
+                    </Typography>
+                    <Typography variant="body1" fontFamily="monospace">
+                      {trial.machineUniqueStates ?? 'N/A'}
                     </Typography>
                   </Box>
                 </Box>

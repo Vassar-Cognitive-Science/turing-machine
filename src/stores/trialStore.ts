@@ -71,6 +71,8 @@ export interface TrialData {
   steps: number;
   actualOutput: string;
   createdAt: string;
+  machineRuleCount?: number;
+  machineUniqueStates?: number;
 }
 
 interface TrialResult {
@@ -80,6 +82,8 @@ interface TrialResult {
   executionTime: number;
   finalState: string;
   error?: string;
+  machineRuleCount?: number;
+  machineUniqueStates?: number;
 }
 
 interface TrialStats {
@@ -238,7 +242,7 @@ export const useTrialStore = create<TrialStore>()(
           // This would integrate with the machine store to actually run the trial
           // For now, we'll simulate the execution
           const result = await get().executeTrial(trialId, restoreState);
-          
+
           set((state) => {
             state.runningTrials = state.runningTrials.filter(id => id !== trialId);
             (state as any)[trialId].status = result.passed ? TEST_STATUS.PASSED : TEST_STATUS.FAILED;
@@ -248,6 +252,9 @@ export const useTrialStore = create<TrialStore>()(
             (state as any)[trialId].executionTime = result.executionTime;
             // Copy error to trial level for easier access in UI
             (state as any)[trialId].error = result.error || null;
+            // Copy machine metrics to trial level
+            (state as any)[trialId].machineRuleCount = result.machineRuleCount;
+            (state as any)[trialId].machineUniqueStates = result.machineUniqueStates;
           });
         } catch (error) {
           set((state) => {
@@ -301,7 +308,17 @@ export const useTrialStore = create<TrialStore>()(
             const { useMachineStore, useTapeStore } = require('./index');
             const machineStore = useMachineStore.getState();
             let tapeStore = useTapeStore.getState();
-            
+
+            // Calculate machine metrics
+            const allRules = machineStore.getAllRules();
+            const ruleCount = allRules.length;
+            const uniqueStates = new Set<string>();
+            allRules.forEach((rule: any) => {
+              if (rule.in_state) uniqueStates.add(rule.in_state);
+              if (rule.new_state) uniqueStates.add(rule.new_state);
+            });
+            const uniqueStateCount = uniqueStates.size;
+
             // Save current state
             const originalState = {
               tapeInternalState: tapeStore.tapeInternalState,
@@ -352,7 +369,9 @@ export const useTrialStore = create<TrialStore>()(
                 steps: 0,
                 executionTime: Date.now() - startTime,
                 finalState: initialState,
-                error: `Machine failed to initialize from halt state to '${trial.startState}'`
+                error: `Machine failed to initialize from halt state to '${trial.startState}'`,
+                machineRuleCount: ruleCount,
+                machineUniqueStates: uniqueStateCount
               });
               return;
             }
@@ -388,7 +407,9 @@ export const useTrialStore = create<TrialStore>()(
                   output: cleanedFinalOutput, // Return cleaned output without leading/trailing blanks
                   steps,
                   executionTime: Date.now() - startTime,
-                  finalState: 'halt'
+                  finalState: 'halt',
+                  machineRuleCount: ruleCount,
+                  machineUniqueStates: uniqueStateCount
                 });
                 return;
               }
@@ -412,7 +433,9 @@ export const useTrialStore = create<TrialStore>()(
                   steps, // Number of successful steps completed before failure
                   executionTime: Date.now() - startTime,
                   finalState: currentState,
-                  error: `No rule matches: READ '${currentSymbol}' in STATE '${currentState}' (after ${steps} step(s))`
+                  error: `No rule matches: READ '${currentSymbol}' in STATE '${currentState}' (after ${steps} step(s))`,
+                  machineRuleCount: ruleCount,
+                  machineUniqueStates: uniqueStateCount
                 });
                 return;
               }
@@ -471,7 +494,9 @@ export const useTrialStore = create<TrialStore>()(
               steps,
               executionTime: Date.now() - startTime,
               finalState: timeoutState,
-              error: `Test stopped after ${steps} steps (maximum limit: ${MAX_TEST_STEP_LIMIT}). Machine may be in an infinite loop.`
+              error: `Test stopped after ${steps} steps (maximum limit: ${MAX_TEST_STEP_LIMIT}). Machine may be in an infinite loop.`,
+              machineRuleCount: ruleCount,
+              machineUniqueStates: uniqueStateCount
             });
             
           } catch (error) {
