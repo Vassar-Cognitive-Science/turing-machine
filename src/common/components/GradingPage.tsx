@@ -50,6 +50,9 @@ interface GradingResult {
     actualOutput: string;
     expectedOutput: string;
     error?: string;
+    steps?: number;
+    machineRuleCount?: number;
+    machineUniqueStates?: number;
   }[];
   totalPassed: number;
   totalFailed: number;
@@ -213,13 +216,16 @@ function GradingPage(): React.ReactElement {
         for (let i = 0; i < testCases.length; i++) {
           const testCase = testCases[i];
           const result = results[i];
-          
+
           testResults.push({
             testName: testCase.name,
             passed: result.passed,
             actualOutput: result.actualOutput,
             expectedOutput: result.expectedOutput,
             error: result.error,
+            steps: result.steps,
+            machineRuleCount: result.machineRuleCount,
+            machineUniqueStates: result.machineUniqueStates,
           });
 
           if (result.passed) {
@@ -481,14 +487,43 @@ function GradingPage(): React.ReactElement {
                     </TableCell>
                     {testCases.map(test => {
                       const testResult = result.testResults.find(tr => tr.testName === test.name);
+
+                      // Build detailed tooltip content
+                      let tooltipContent = '';
+                      if (testResult) {
+                        tooltipContent = `Expected: "${testResult.expectedOutput}"\nActual: "${testResult.actualOutput}"`;
+                        if (testResult.steps !== undefined) {
+                          tooltipContent += `\nSteps: ${testResult.steps}`;
+                        }
+                        if (testResult.machineRuleCount !== undefined) {
+                          tooltipContent += `\nRules: ${testResult.machineRuleCount}`;
+                        }
+                        if (testResult.machineUniqueStates !== undefined) {
+                          tooltipContent += `\nStates: ${testResult.machineUniqueStates}`;
+                        }
+                        if (testResult.error) {
+                          tooltipContent += `\nError: ${testResult.error}`;
+                        }
+                        // Check if outputs match when normalized
+                        if (!testResult.passed) {
+                          const expLower = testResult.expectedOutput.toLowerCase().trim();
+                          const actLower = testResult.actualOutput.toLowerCase().trim();
+                          if (expLower === actLower) {
+                            tooltipContent += '\n⚠️ Match ignoring case/whitespace';
+                          }
+                        }
+                      }
+
                       return (
                         <TableCell key={test.name} align="center">
                           {testResult ? (
-                            <Chip
-                              label={testResult.passed ? 'PASS' : 'FAIL'}
-                              color={testResult.passed ? 'success' : 'error'}
-                              size="small"
-                            />
+                            <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{tooltipContent}</span>} arrow>
+                              <Chip
+                                label={testResult.passed ? 'PASS' : 'FAIL'}
+                                color={testResult.passed ? 'success' : 'error'}
+                                size="small"
+                              />
+                            </Tooltip>
                           ) : (
                             <Chip
                               label="ERROR"

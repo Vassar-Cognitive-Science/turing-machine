@@ -259,15 +259,98 @@ export const TrialDetails: React.FC<TrialDetailsProps> = ({
                   </Box>
                 </Box>
 
+                {/* Comparison view for expected vs actual */}
+                <Box>
+                  <Typography variant="body2" color="textSecondary" gutterBottom>
+                    Output Comparison:
+                  </Typography>
+
+                  <Stack spacing={1}>
+                    {/* Expected Output */}
+                    <Box>
+                      <Typography variant="caption" color="textSecondary">
+                        Expected:
+                      </Typography>
+                      <Box
+                        sx={{
+                          p: 1,
+                          backgroundColor: 'grey.100',
+                          borderRadius: 1,
+                          fontFamily: 'monospace',
+                          fontSize: '0.875rem',
+                          wordBreak: 'break-all',
+                          border: '1px solid',
+                          borderColor: 'grey.300'
+                        }}
+                      >
+                        {trial.expectedTape || '(empty)'}
+                      </Box>
+                    </Box>
+
+                    {/* Actual Output */}
+                    <Box>
+                      <Typography variant="caption" color="textSecondary">
+                        Actual:
+                      </Typography>
+                      <Box
+                        sx={{
+                          p: 1,
+                          backgroundColor: trial.status === 'passed' ? 'success.light' : 'error.light',
+                          borderRadius: 1,
+                          fontFamily: 'monospace',
+                          fontSize: '0.875rem',
+                          wordBreak: 'break-all',
+                          border: '1px solid',
+                          borderColor: trial.status === 'passed' ? 'success.main' : 'error.main',
+                          opacity: 0.9
+                        }}
+                      >
+                        {trial.actualOutput || '(empty)'}
+                      </Box>
+                    </Box>
+
+                    {/* Character-by-character diff for failed tests */}
+                    {trial.status === 'failed' && trial.expectedTape !== trial.actualOutput && (
+                      <Box>
+                        <Typography variant="caption" color="error.main" fontWeight="medium">
+                          Difference:
+                        </Typography>
+                        <Box
+                          sx={{
+                            p: 1,
+                            backgroundColor: 'warning.light',
+                            borderRadius: 1,
+                            fontFamily: 'monospace',
+                            fontSize: '0.75rem',
+                            border: '1px solid',
+                            borderColor: 'warning.main',
+                            opacity: 0.9
+                          }}
+                        >
+                          Expected: "{trial.expectedTape}" (length: {trial.expectedTape.length})
+                          <br />
+                          Actual: "{trial.actualOutput}" (length: {trial.actualOutput?.length || 0})
+                          <br />
+                          {trial.expectedTape.toLowerCase().trim() === trial.actualOutput?.toLowerCase().trim()
+                            ? '⚠️ Outputs match when ignoring case/whitespace'
+                            : trial.expectedTape.trim() === trial.actualOutput?.trim()
+                            ? '⚠️ Outputs match when ignoring leading/trailing spaces'
+                            : '❌ Outputs differ in content'}
+                        </Box>
+                      </Box>
+                    )}
+                  </Stack>
+                </Box>
+
                 {/* Error Details - Show prominently for failed tests */}
                 {trial.error && (
                   <Box sx={{ mt: 1 }}>
                     <Typography variant="body2" color="error.main" fontWeight="medium">
                       Error Details:
                     </Typography>
-                    <Box 
-                      sx={{ 
-                        p: 1.5, 
+                    <Box
+                      sx={{
+                        p: 1.5,
                         backgroundColor: 'error.light',
                         borderRadius: 1,
                         fontFamily: 'monospace',
@@ -282,25 +365,6 @@ export const TrialDetails: React.FC<TrialDetailsProps> = ({
                     </Box>
                   </Box>
                 )}
-                
-                <Box>
-                  <Typography variant="body2" color="textSecondary">
-                    Actual Output:
-                  </Typography>
-                  <Box 
-                    sx={{ 
-                      p: 1, 
-                      backgroundColor: trial.status === 'passed' ? 'success.light' : 'error.light',
-                      borderRadius: 1,
-                      fontFamily: 'monospace',
-                      fontSize: '0.875rem',
-                      wordBreak: 'break-all',
-                      opacity: 0.8
-                    }}
-                  >
-                    {trial.actualOutput || '(empty)'}
-                  </Box>
-                </Box>
               </Stack>
             </Paper>
           )}
