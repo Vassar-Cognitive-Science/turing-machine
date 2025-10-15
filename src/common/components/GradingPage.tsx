@@ -446,6 +446,8 @@ function GradingPage(): React.ReactElement {
               <TableHead>
                 <TableRow>
                   <TableCell>Student Name</TableCell>
+                  <TableCell align="center">Rules</TableCell>
+                  <TableCell align="center">States</TableCell>
                   <TableCell align="center">Total Passed</TableCell>
                   <TableCell align="center">Total Failed</TableCell>
                   {testCases.map(test => (
@@ -456,86 +458,113 @@ function GradingPage(): React.ReactElement {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {results.map((result) => (
-                  <TableRow key={result.studentName}>
-                    <TableCell component="th" scope="row">
-                      {result.studentName}
-                      {result.loadError && (
-                        <Tooltip title={result.loadError}>
-                          <Chip
-                            label="Load Error"
-                            size="small"
-                            color="error"
-                            sx={{ ml: 1 }}
-                          />
-                        </Tooltip>
-                      )}
-                    </TableCell>
-                    <TableCell align="center">
-                      <Chip 
-                        label={result.totalPassed} 
-                        color="success" 
-                        size="small" 
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Chip 
-                        label={result.totalFailed} 
-                        color="error" 
-                        size="small" 
-                      />
-                    </TableCell>
-                    {testCases.map(test => {
-                      const testResult = result.testResults.find(tr => tr.testName === test.name);
+                {results.map((result) => {
+                  // Get machine metrics from first test result (all tests for same machine have same metrics)
+                  const firstTest = result.testResults[0];
+                  const ruleCount = firstTest?.machineRuleCount ?? 'N/A';
+                  const stateCount = firstTest?.machineUniqueStates ?? 'N/A';
 
-                      // Build detailed tooltip content
-                      let tooltipContent = '';
-                      if (testResult) {
-                        tooltipContent = `Expected: "${testResult.expectedOutput}"\nActual: "${testResult.actualOutput}"`;
-                        if (testResult.steps !== undefined) {
-                          tooltipContent += `\nSteps: ${testResult.steps}`;
-                        }
-                        if (testResult.machineRuleCount !== undefined) {
-                          tooltipContent += `\nRules: ${testResult.machineRuleCount}`;
-                        }
-                        if (testResult.machineUniqueStates !== undefined) {
-                          tooltipContent += `\nStates: ${testResult.machineUniqueStates}`;
-                        }
-                        if (testResult.error) {
-                          tooltipContent += `\nError: ${testResult.error}`;
-                        }
-                        // Check if outputs match when normalized
-                        if (!testResult.passed) {
-                          const expLower = testResult.expectedOutput.toLowerCase().trim();
-                          const actLower = testResult.actualOutput.toLowerCase().trim();
-                          if (expLower === actLower) {
-                            tooltipContent += '\n⚠️ Match ignoring case/whitespace';
+                  return (
+                    <TableRow key={result.studentName}>
+                      <TableCell component="th" scope="row">
+                        {result.studentName}
+                        {result.loadError && (
+                          <Tooltip title={result.loadError}>
+                            <Chip
+                              label="Load Error"
+                              size="small"
+                              color="error"
+                              sx={{ ml: 1 }}
+                            />
+                          </Tooltip>
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography variant="body2" fontFamily="monospace">
+                          {ruleCount}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography variant="body2" fontFamily="monospace">
+                          {stateCount}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          label={result.totalPassed}
+                          color="success"
+                          size="small"
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          label={result.totalFailed}
+                          color="error"
+                          size="small"
+                        />
+                      </TableCell>
+                      {testCases.map(test => {
+                        const testResult = result.testResults.find(tr => tr.testName === test.name);
+
+                        // Build detailed tooltip content
+                        let tooltipContent = '';
+                        if (testResult) {
+                          tooltipContent = `Expected: "${testResult.expectedOutput}"\nActual: "${testResult.actualOutput}"`;
+                          if (testResult.steps !== undefined) {
+                            tooltipContent += `\nSteps: ${testResult.steps}`;
+                          }
+                          if (testResult.machineRuleCount !== undefined) {
+                            tooltipContent += `\nRules: ${testResult.machineRuleCount}`;
+                          }
+                          if (testResult.machineUniqueStates !== undefined) {
+                            tooltipContent += `\nStates: ${testResult.machineUniqueStates}`;
+                          }
+                          if (testResult.error) {
+                            tooltipContent += `\nError: ${testResult.error}`;
+                          }
+                          // Check if outputs match when normalized
+                          if (!testResult.passed) {
+                            const expLower = testResult.expectedOutput.toLowerCase().trim();
+                            const actLower = testResult.actualOutput.toLowerCase().trim();
+                            if (expLower === actLower) {
+                              tooltipContent += '\n⚠️ Match ignoring case/whitespace';
+                            }
                           }
                         }
-                      }
 
-                      return (
-                        <TableCell key={test.name} align="center">
-                          {testResult ? (
-                            <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{tooltipContent}</span>} arrow>
+                        // Build label with steps for passed tests
+                        let chipLabel = 'ERROR';
+                        if (testResult) {
+                          if (testResult.passed) {
+                            chipLabel = `PASS (${testResult.steps ?? '?'})`;
+                          } else {
+                            chipLabel = 'FAIL';
+                          }
+                        }
+
+                        return (
+                          <TableCell key={test.name} align="center">
+                            {testResult ? (
+                              <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{tooltipContent}</span>} arrow>
+                                <Chip
+                                  label={chipLabel}
+                                  color={testResult.passed ? 'success' : 'error'}
+                                  size="small"
+                                />
+                              </Tooltip>
+                            ) : (
                               <Chip
-                                label={testResult.passed ? 'PASS' : 'FAIL'}
-                                color={testResult.passed ? 'success' : 'error'}
+                                label="ERROR"
+                                color="warning"
                                 size="small"
                               />
-                            </Tooltip>
-                          ) : (
-                            <Chip
-                              label="ERROR"
-                              color="warning"
-                              size="small"
-                            />
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                ))}
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>

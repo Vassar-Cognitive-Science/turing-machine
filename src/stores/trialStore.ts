@@ -6,7 +6,7 @@ import type { Trial, TrialStore } from '../types';
 import { convertTrialsToYAML, convertYAMLToTrials, downloadYAMLFile, validateYAMLTestSuite } from '../common/utils/yamlConverter';
 
 // Constants
-const MAX_TEST_STEP_LIMIT = 10000; // Detect infinite loops after 10000 steps
+const MAX_TEST_STEP_LIMIT = 2000; // Detect infinite loops after 2000 steps
 
 // Trial test result statuses
 const TEST_STATUS = {
@@ -296,7 +296,7 @@ export const useTrialStore = create<TrialStore>()(
 
       // Real trial execution using machine stores
       executeTrial: async (trialId: string, restoreState: boolean = false): Promise<TrialResult> => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
           const trial = (get() as any)[trialId];
           if (!trial) {
             reject(new Error('Trial not found'));
@@ -378,6 +378,11 @@ export const useTrialStore = create<TrialStore>()(
             
             // Execute synchronously in a tight loop for maximum speed
             while (steps < maxSteps) {
+              // Yield to event loop every 100 steps to prevent browser freeze
+              if (steps % 100 === 0 && steps > 0) {
+                await new Promise(resolve => setTimeout(resolve, 0));
+              }
+
               // Get fresh tape store state for each iteration
               tapeStore = useTapeStore.getState();
               

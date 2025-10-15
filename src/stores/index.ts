@@ -174,13 +174,18 @@ export const useMachineExecution = (): MachineExecution => {
     };
     (useMachineStore.getState() as any).recordHistory(initialHistoryEntry);
     let stepCount = 0;
-    const maxSteps = 10000; // Prevent infinite loops
-    
-    const execute = (): void => {
+    const maxSteps = 2000; // Prevent infinite loops
+
+    const execute = async (): Promise<void> => {
       if (!useMachineStore.getState().isRunning) return;
-      
+
       stepCount++;
-      
+
+      // Yield to event loop every 100 steps to prevent browser freeze
+      if (stepCount % 100 === 0 && stepCount > 0) {
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+
       // Safety check for infinite loops
       if (stepCount > maxSteps) {
         // Don't clear currentRule on infinite loop protection - keep last rule highlighted
@@ -245,12 +250,17 @@ export const useMachineExecution = (): MachineExecution => {
     };
     (useMachineStore.getState() as any).recordHistory(initialHistoryEntry);
     let stepCount = 0;
-    const maxSteps = 10000; // Prevent infinite loops
+    const maxSteps = 2000; // Prevent infinite loops
     
     // Run synchronously without delays for maximum speed
     while (useMachineStore.getState().isRunning && stepCount < maxSteps) {
       stepCount++;
-      
+
+      // Yield to event loop every 100 steps to prevent browser freeze
+      if (stepCount % 100 === 0 && stepCount > 0) {
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+
       const success = step();
       if (!success) {
         // Error already handled in step()
