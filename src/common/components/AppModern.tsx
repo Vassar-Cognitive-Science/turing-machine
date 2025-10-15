@@ -172,6 +172,8 @@ function AppModern(): React.ReactElement {
         
         // Restore trials
         if (serializedState.trials && Array.isArray(serializedState.trials)) {
+          // Clear existing trials before importing to prevent duplicates
+          (trial as any).clearAllTrials?.();
           (trial as any).importTrials?.(serializedState.trials);
         }
         

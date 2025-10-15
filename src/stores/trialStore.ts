@@ -272,11 +272,13 @@ export const useTrialStore = create<TrialStore>()(
         });
 
         const trials = get().testsById;
-        
+
         try {
           // Run trials sequentially to avoid interference, with state restoration between tests
           for (const trialId of trials) {
             await get().runTrial(trialId, true);
+            // Small delay between trials to allow UI to update
+            await new Promise(resolve => setTimeout(resolve, 50));
           }
         } finally {
           set((state) => {
