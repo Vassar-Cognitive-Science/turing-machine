@@ -1,5 +1,4 @@
 import type { Rule, SharedMachineState } from '../../types';
-import { useMachineStore, useTapeStore, useTrialStore } from '../../stores';
 
 interface TestCase {
   name: string;
@@ -19,88 +18,234 @@ interface TestResult {
   machineUniqueStates?: number;
 }
 
-// The grading system now uses the same execution engine as the main app
-// This ensures consistent results between manual testing and automated grading
+// Constants
+const MAX_TEST_STEP_LIMIT = 10000;
 
-// Execute a single test case against a machine using the same engine as the main app
+// Normalize tape output by removing leading/trailing blank symbols
+const normalizeTapeOutput = (output: string): string => {
+  let normalized = output
+    .replace(/#/g, ' ')
+    .replace(/∅/g, ' ')
+    .replace(/\u2205/g, ' ')
+    .replace(/_/g, ' ');
+
+  normalized = normalized.trim();
+  normalized = normalized.replace(/\s+/g, ' ');
+
+  return normalized;
+};
+
+// Clean tape output for display
+const cleanTapeOutput = (output: string): string => {
+  return output
+    .replace(/^#+/, '')
+    .replace(/#+$/, '')
+    .replace(/^∅+/, '')
+    .replace(/∅+$/, '')
+    .trim();
+};
+
+// Capitalize alphabet characters (mimic main app behavior)
+const capitalizeAlphabet = (value: string): string => {
+  if (!value) return value;
+  return value.trim().replace(/[a-z]/g, (char) => char.toUpperCase());
+};
+
+// Simple tape implementation for isolated execution
+class IsolatedTape {
+  private cells: Map<number, string> = new Map();
+  private headPosition: number = 0;
+  private currentState: string = '0';
+
+  constructor(initialContent: string = '', startState: string = '0') {
+    this.currentState = capitalizeAlphabet(startState);
+    this.loadContent(initialContent);
+  }
+
+  private loadContent(content: string): void {
+    this.cells.clear();
+    this.headPosition = 0;
+
+    for (let i = 0; i < content.length; i++) {
+      const char = content[i];
+      const processedChar = (char === ' ' || char === '#' || char === '∅') ? '#' : capitalizeAlphabet(char);
+      if (processedChar !== '#') {
+        this.cells.set(i, processedChar);
+      }
+    }
+  }
+
+  readCurrentCell(): string {
+    const value = this.cells.get(this.headPosition);
+    return value || '#';
+  }
+
+  writeCurrentCell(symbol: string): void {
+    const processed = capitalizeAlphabet(symbol || '#');
+    if (processed === '#' || processed === '∅' || processed === '') {
+      this.cells.delete(this.headPosition);
+    } else {
+      this.cells.set(this.headPosition, processed);
+    }
+  }
+
+  moveLeft(): void {
+    this.headPosition--;
+  }
+
+  moveRight(): void {
+    this.headPosition++;
+  }
+
+  setState(state: string): void {
+    this.currentState = capitalizeAlphabet(state);
+  }
+
+  getState(): string {
+    return this.currentState;
+  }
+
+  getContent(): string {
+    if (this.cells.size === 0) return '';
+
+    const minPos = Math.min(...this.cells.keys());
+    const maxPos = Math.max(...this.cells.keys());
+
+    let result = '';
+    for (let i = minPos; i <= maxPos; i++) {
+      result += this.cells.get(i) || '#';
+    }
+
+    return cleanTapeOutput(result);
+  }
+}
+
+// Find matching rule using the same logic as main app
+function matchRule(rules: Rule[], currentState: string, readSymbol: string): Rule | null {
+  const normalizedCurrentState = capitalizeAlphabet(currentState || '');
+  const normalizedReadSymbol = capitalizeAlphabet(readSymbol || '');
+
+  if (!normalizedCurrentState) return null;
+
+  let exactMatch: Rule | null = null;
+  let wildcardMatch: Rule | null = null;
+
+  for (const rule of rules) {
+    if (!rule || !rule.in_state || rule.in_state.trim() === '') {
+      continue;
+    }
+
+    const normalizedRuleState = capitalizeAlphabet(rule.in_state || '');
+    const normalizedRuleRead = capitalizeAlphabet(rule.read || '');
+
+    if (normalizedRuleState === normalizedCurrentState) {
+      if (normalizedRuleRead === normalizedReadSymbol ||
+          (rule.read === '' && readSymbol === '#') ||
+          (rule.read === '#' && readSymbol === '#')) {
+        exactMatch = rule;
+        break;
+      } else if (rule.read === "*" || rule.read === "∗") {
+        wildcardMatch = rule;
+      }
+    }
+  }
+
+  return exactMatch || wildcardMatch;
+}
+
+// Execute a single test case - mirrors the trial execution logic
 export async function executeTest(
   machineState: SharedMachineState,
   testCase: TestCase
 ): Promise<TestResult> {
   console.log(`\n=== Executing test: ${testCase.name} ===`);
-  console.log(`Input: "${testCase.input}"`);
-  console.log(`Expected: "${testCase.expected}"`);
+  const startTime = Date.now();
 
   try {
-    // Check if machine state has the expected structure
     if (!machineState.machine?.rules || !Array.isArray(machineState.machine.rules)) {
-      console.error('Invalid machine state:', machineState);
       throw new Error('Invalid machine state: missing rules');
     }
 
-    // Load the machine state into the stores
-    const machineStore = useMachineStore.getState();
-    const tapeStore = useTapeStore.getState();
-    const trialStore = useTrialStore.getState();
+    const rules = machineState.machine.rules;
 
-    // Save current state to restore later
-    const originalRules = machineStore.getAllRules();
-    const originalTape = tapeStore.getTapeAsString();
-    const originalState = tapeStore.tapeInternalState;
+    // Calculate machine metrics
+    const ruleCount = rules.length;
+    const uniqueStates = new Set<string>();
+    rules.forEach((rule: Rule) => {
+      if (rule.in_state) uniqueStates.add(capitalizeAlphabet(rule.in_state));
+      if (rule.new_state) uniqueStates.add(capitalizeAlphabet(rule.new_state));
+    });
+    const uniqueStateCount = uniqueStates.size;
 
-    try {
-      // Load the machine rules
-      machineStore.clearAllRules();
-      machineStore.loadRules(machineState.machine.rules);
+    const startState = testCase.startState || '0';
+    const tape = new IsolatedTape(testCase.input, startState);
 
-      // Create a temporary trial for this test
-      const startState = testCase.startState || '0';
+    let steps = 0;
 
-      // Add trial
-      (trialStore as any).addTrial(
-        testCase.name,
-        startState,
-        testCase.input,
-        testCase.expected,
-        0, // tapePointer
-        0, // expectedTapePointer
-        0, // startTapeHead
-        0  // expectedTapeHead
-      );
+    // Execute machine
+    while (steps < MAX_TEST_STEP_LIMIT) {
+      const currentState = tape.getState();
+      const currentSymbol = tape.readCurrentCell();
 
-      // Get the trial ID (it's the last one added)
-      const trialId = (trialStore as any).testsById[(trialStore as any).testsById.length - 1];
+      // Check for halt
+      if (currentState.toLowerCase() === 'halt') {
+        const finalOutput = tape.getContent();
+        const normalizedFinal = normalizeTapeOutput(finalOutput).toLowerCase();
+        const normalizedExpected = normalizeTapeOutput(testCase.expected).toLowerCase();
+        const passed = normalizedFinal === normalizedExpected;
 
-      // Execute the trial using the same engine as the main app
-      const result = await (trialStore as any).executeTrial(trialId, false);
-
-      // Clean up the trial
-      (trialStore as any).deleteTrial(trialId);
-
-      console.log(`Test result: ${result.passed ? 'PASSED' : 'FAILED'}`);
-      console.log(`Steps: ${result.steps}`);
-      console.log(`Actual output: "${result.output}"`);
-
-      return {
-        passed: result.passed,
-        actualOutput: result.output,
-        expectedOutput: testCase.expected,
-        steps: result.steps,
-        executionTime: result.executionTime,
-        error: result.error,
-        machineRuleCount: result.machineRuleCount,
-        machineUniqueStates: result.machineUniqueStates,
-      };
-
-    } finally {
-      // Restore original state
-      machineStore.clearAllRules();
-      if (originalRules.length > 0) {
-        machineStore.loadRules(originalRules);
+        return {
+          passed,
+          actualOutput: finalOutput,
+          expectedOutput: testCase.expected,
+          steps,
+          executionTime: Date.now() - startTime,
+          machineRuleCount: ruleCount,
+          machineUniqueStates: uniqueStateCount
+        };
       }
-      tapeStore.setInternalState(originalState);
-      tapeStore.fillTape(originalTape);
+
+      // Find matching rule
+      const rule = matchRule(rules, currentState, currentSymbol);
+
+      if (!rule) {
+        return {
+          passed: false,
+          actualOutput: tape.getContent(),
+          expectedOutput: testCase.expected,
+          steps,
+          executionTime: Date.now() - startTime,
+          error: `No rule matches: READ '${currentSymbol}' in STATE '${currentState}' (after ${steps} step(s))`,
+          machineRuleCount: ruleCount,
+          machineUniqueStates: uniqueStateCount
+        };
+      }
+
+      // Execute rule
+      const writeValue = (rule.write === '*' || rule.write === '∗') ? currentSymbol : (rule.write || '#');
+      tape.writeCurrentCell(writeValue);
+      tape.setState(rule.new_state);
+
+      if (rule.direction === 'L') {
+        tape.moveLeft();
+      } else {
+        tape.moveRight();
+      }
+
+      steps++;
     }
+
+    // Timeout
+    return {
+      passed: false,
+      actualOutput: tape.getContent(),
+      expectedOutput: testCase.expected,
+      steps,
+      executionTime: Date.now() - startTime,
+      error: `Test stopped after ${steps} steps (maximum limit: ${MAX_TEST_STEP_LIMIT}). Machine may be in an infinite loop.`,
+      machineRuleCount: ruleCount,
+      machineUniqueStates: uniqueStateCount
+    };
 
   } catch (error) {
     return {
@@ -108,7 +253,7 @@ export async function executeTest(
       actualOutput: '',
       expectedOutput: testCase.expected,
       steps: 0,
-      executionTime: 0,
+      executionTime: Date.now() - startTime,
       error: (error as Error).message,
     };
   }
