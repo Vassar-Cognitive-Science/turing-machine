@@ -262,25 +262,51 @@ function GradingPage(): React.ReactElement {
     if (results.length === 0) return;
 
     const csvData = [];
-    
-    // Add header
+
+    // Add header with new columns
     const testNames = testCases.map(t => t.name);
-    csvData.push(['Student Name', 'Total Passed', 'Total Failed', ...testNames]);
+    const testStepHeaders = testCases.map(t => `${t.name} (Steps)`);
+    csvData.push([
+      'Student Name',
+      'Rules',
+      'States',
+      'Total Passed',
+      'Total Failed',
+      ...testNames,
+      ...testStepHeaders
+    ]);
 
     // Add data rows
     for (const result of results) {
+      // Get machine metrics from first test result
+      const firstTest = result.testResults[0];
+      const ruleCount = firstTest?.machineRuleCount ?? 'N/A';
+      const stateCount = firstTest?.machineUniqueStates ?? 'N/A';
+
       const row = [
         result.studentName,
+        ruleCount.toString(),
+        stateCount.toString(),
         result.totalPassed.toString(),
         result.totalFailed.toString(),
       ];
-      
-      // Add test results
+
+      // Add test results (PASS/FAIL)
       for (const testCase of testCases) {
         const testResult = result.testResults.find(tr => tr.testName === testCase.name);
         row.push(testResult ? (testResult.passed ? 'PASS' : 'FAIL') : 'ERROR');
       }
-      
+
+      // Add step counts for each test
+      for (const testCase of testCases) {
+        const testResult = result.testResults.find(tr => tr.testName === testCase.name);
+        if (testResult && testResult.steps !== undefined) {
+          row.push(testResult.steps.toString());
+        } else {
+          row.push('N/A');
+        }
+      }
+
       csvData.push(row);
     }
 
