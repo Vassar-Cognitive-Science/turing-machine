@@ -19,7 +19,7 @@ interface TestResult {
 }
 
 // Constants
-const MAX_TEST_STEP_LIMIT = 10000;
+const MAX_TEST_STEP_LIMIT = 2000;
 
 // Normalize tape output by removing leading/trailing blank symbols
 const normalizeTapeOutput = (output: string): string => {
@@ -184,6 +184,11 @@ export async function executeTest(
 
     // Execute machine
     while (steps < MAX_TEST_STEP_LIMIT) {
+      // Yield to event loop every 100 steps to prevent browser freeze
+      if (steps % 100 === 0 && steps > 0) {
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+
       const currentState = tape.getState();
       const currentSymbol = tape.readCurrentCell();
 
