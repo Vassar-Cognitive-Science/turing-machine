@@ -78,5 +78,5 @@ db.saves.insertMany([
 print("MongoDB initialized successfully for Turing Machine development");
 print("Created 'saves' collection with indexes and sample data");
 print("Sample URLs available:");
-print("  - http://localhost:3000/test123");
-print("  - http://localhost:3000/sample456");
+print("  - http://localhost:3001/test123");
+print("  - http://localhost:3001/sample456");

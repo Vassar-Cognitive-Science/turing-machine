@@ -75,6 +75,6 @@
     "pm2:logs": "pm2 logs turing-machine",
     "pm2:monit": "pm2 monit",
     "pm2:status": "pm2 status",
-    "health": "curl -f http://localhost:3000/api/health || echo 'Health check failed'"
+    "health": "curl -f http://localhost:3001/api/health || echo 'Health check failed'"
   }
 }

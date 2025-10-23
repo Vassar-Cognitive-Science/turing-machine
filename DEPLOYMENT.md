@@ -34,7 +34,7 @@ npm run db:reset    # Reset database with fresh data
 The database will be automatically initialized with:
 - Sample machine states for testing
 - Proper indexes for performance
-- Test URLs: `http://localhost:3000/test123`, `http://localhost:3000/sample456`
+- Test URLs: `http://localhost:3001/test123`, `http://localhost:3001/sample456`
 
 ### 2. Development Server
 ```bash

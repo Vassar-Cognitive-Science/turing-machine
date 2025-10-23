@@ -18,7 +18,7 @@ const POST_DATA_SIZE_LIMIE = '50mb',
 	url = "mongodb://localhost:27017/" + databaseName;
 
 const app = new Express(),
-	port = process.env.PORT || (DEV_ENVIRONMENT ? 3000 : 80);
+	port = process.env.PORT || (DEV_ENVIRONMENT ? 3001 : 80);
 
 // In development, proxy static assets to esbuild dev server
 if (DEV_ENVIRONMENT && process.env.ESBUILD_HOST && process.env.ESBUILD_PORT) {
